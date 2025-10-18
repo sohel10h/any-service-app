@@ -10,7 +10,7 @@ class AppTheme {
       colorSchemeSeed: AppColors.primary,
       scaffoldBackgroundColor: AppColors.scaffoldBackground,
       brightness: Brightness.light,
-      textTheme: GoogleFonts.nunitoSansTextTheme(),
+      textTheme: GoogleFonts.rubikTextTheme(),
       appBarTheme: AppBarTheme(
         foregroundColor: AppColors.black,
         backgroundColor: AppColors.scaffoldBackground,
@@ -20,9 +20,7 @@ class AppTheme {
           color: AppColors.black,
           fontWeight: FontWeight.w600,
         ),
-        iconTheme: IconThemeData(
-          color: AppColors.white,
-        ),
+        iconTheme: IconThemeData(color: AppColors.white),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -30,7 +28,7 @@ class AppTheme {
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           textStyle: TextStyle(
             fontSize: 16.sp,
@@ -45,7 +43,7 @@ class AppTheme {
           padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 16.w),
           side: BorderSide(color: AppColors.primary),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           textStyle: TextStyle(
             fontSize: 16.sp,

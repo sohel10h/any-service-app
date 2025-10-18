@@ -43,6 +43,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   form_field_validator: ^1.1.0
   cached_network_image: ^3.4.1
+  flutter_intl_phone_field: ^0.0.7
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:service_la/routes/app_routes.dart';
 
 class SplashController extends GetxController {
+  String authToken = "";
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -10,6 +12,6 @@ class SplashController extends GetxController {
 
   void _checkLoggedIn() async {
     await Future.delayed(const Duration(seconds: 3));
-    Get.offAllNamed(AppRoutes.landingScreen);
+    authToken.isEmpty ? Get.offAllNamed(AppRoutes.sigInScreen) : Get.offAllNamed(AppRoutes.landingScreen);
   }
 }

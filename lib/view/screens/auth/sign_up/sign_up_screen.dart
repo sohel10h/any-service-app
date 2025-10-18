@@ -5,11 +5,12 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/validators.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/auth/custom_auth_clipper.dart';
+import 'package:service_la/view/widgets/text_field/custom_phone_field.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
-import 'package:service_la/view/screens/auth/sign_in/controller/sign_in_controller.dart';
+import 'package:service_la/view/screens/auth/sign_up/controller/sign_up_controller.dart';
 
-class SigInScreen extends GetWidget<SignInController> {
-  const SigInScreen({super.key});
+class SigUpScreen extends GetWidget<SignUpController> {
+  const SigUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class SigInScreen extends GetWidget<SignInController> {
                   ClipPath(
                     clipper: CustomAuthClipper(),
                     child: Container(
-                      height: 230.h,
+                      height: 170.h,
                       width: double.infinity,
                       color: AppColors.containerB63B1F,
                     ),
@@ -71,16 +72,53 @@ class SigInScreen extends GetWidget<SignInController> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: CustomTextField(
+                  controller: controller.firstNameController,
+                  focusNode: controller.firstNameFocusNode,
+                  label: "First Name",
+                  hintText: "Enter your first name",
+                  onChanged: (email) => controller.formKey.currentState?.validate(),
+                  validator: Validators.requiredWithFieldName("First Name").call,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: CustomTextField(
+                  controller: controller.lastNameController,
+                  focusNode: controller.lastNameFocusNode,
+                  label: "Last Name",
+                  hintText: "Enter your last name",
+                  onChanged: (email) => controller.formKey.currentState?.validate(),
+                  validator: Validators.requiredWithFieldName("Last Name").call,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: CustomTextField(
                   controller: controller.emailController,
                   focusNode: controller.emailFocusNode,
-                  label: "Email",
-                  hintText: "Enter your email",
+                  label: "Email Address",
+                  hintText: "Enter your email address",
                   textInputType: TextInputType.emailAddress,
                   onChanged: (email) => controller.formKey.currentState?.validate(),
                   validator: Validators.email.call,
                 ),
               ),
               SizedBox(height: 16.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: CustomPhoneField(
+                  controller: controller.phoneController,
+                  focusNode: controller.phoneFocusNode,
+                  label: "Phone Number",
+                  hintText: "Phone number",
+                  readOnly: false,
+                  initialCountryCode: "BD",
+                  onChanged: (phone) => controller.formKey.currentState?.validate(),
+                ),
+              ),
+              SizedBox(height: 12.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Obx(
@@ -107,44 +145,56 @@ class SigInScreen extends GetWidget<SignInController> {
                   ),
                 ),
               ),
+              SizedBox(height: 16.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: CustomTextField(
+                  controller: controller.confirmPasswordController,
+                  focusNode: controller.confirmPasswordFocusNode,
+                  label: "Confirm Password",
+                  hintText: "Enter your confirm password",
+                  obscureText: !controller.isConfirmPasswordVisible.value,
+                  suffixIcon: IconButton(
+                    icon: SvgPicture.asset(
+                      controller.isConfirmPasswordVisible.value ? "assets/svgs/logo.svg" : "assets/svgs/close_eye.svg",
+                      width: 24.w,
+                      height: 24.h,
+                      colorFilter: ColorFilter.mode(
+                        controller.isConfirmPasswordVisible.value ? AppColors.primary : AppColors.lightBlack,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    onPressed: () => controller.isConfirmPasswordVisible.toggle(),
+                  ),
+                  onChanged: (confirmPassword) => controller.formKey.currentState?.validate(),
+                  validator: Validators.confirmPassword(controller.password.value).call,
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.only(left: 4.w, top: 8.h, right: 8.w, bottom: 8.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Obx(
-                          () => Theme(
-                            data: Theme.of(context).copyWith(
-                              checkboxTheme: CheckboxThemeData(
-                                side: BorderSide(color: AppColors.textCCD6DD),
-                              ),
-                            ),
-                            child: Checkbox(
-                              value: controller.isRememberMe.value,
-                              onChanged: (val) => controller.isRememberMe.value = val ?? false,
-                              activeColor: AppColors.primary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4.r),
-                              ),
-                            ),
+                    Obx(
+                      () => Theme(
+                        data: Theme.of(context).copyWith(
+                          checkboxTheme: CheckboxThemeData(
+                            side: BorderSide(color: AppColors.textCCD6DD),
                           ),
                         ),
-                        Text(
-                          "Remember me",
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: AppColors.textCCD6DD,
-                            fontWeight: FontWeight.w400,
+                        child: Checkbox(
+                          value: controller.isAgreeWithTAndC.value,
+                          onChanged: (val) => controller.isAgreeWithTAndC.value = val ?? false,
+                          activeColor: AppColors.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.r),
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                    TextButton(
-                      onPressed: () {},
+                    Expanded(
                       child: Text(
-                        "Forgot Password ?",
+                        "I agree with the Terms & Condition",
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: AppColors.textCCD6DD,
@@ -165,7 +215,7 @@ class SigInScreen extends GetWidget<SignInController> {
                         return;
                       }
                     },
-                    child: const Text("Sign In"),
+                    child: const Text("Sign Up"),
                   ),
                 ),
               ),
@@ -247,7 +297,7 @@ class SigInScreen extends GetWidget<SignInController> {
                   children: [
                     Flexible(
                       child: Text(
-                        "You don’t have an account yet? ",
+                        "Already have an account? ",
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: AppColors.text524B6B,
@@ -258,9 +308,9 @@ class SigInScreen extends GetWidget<SignInController> {
                     ),
                     SizedBox(width: 4.w),
                     GestureDetector(
-                      onTap: controller.goToSignUpScreen,
+                      onTap: controller.goToSignInScreen,
                       child: Text(
-                        "Sign up",
+                        "Sign In",
                         style: TextStyle(
                           fontSize: 13.sp,
                           color: AppColors.textFF9228,

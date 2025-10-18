@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:service_la/routes/app_routes.dart';
 
 class SignInController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -8,13 +9,15 @@ class SignInController extends GetxController {
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
   final RxBool isPasswordVisible = false.obs;
-  final RxBool rememberMe = false.obs;
+  final RxBool isRememberMe = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     _addListenerFocusNodes();
   }
+
+  void goToSignUpScreen() => Get.offAllNamed(AppRoutes.sigUpScreen);
 
   void _addListenerFocusNodes() {
     emailFocusNode.addListener(update);

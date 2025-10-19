@@ -10,11 +10,13 @@ class CustomTextField extends StatefulWidget {
   final TextStyle? labelStyle;
   final String? prefixIconPath;
   final String hintText;
+  final TextStyle? hintStyle;
   final int? maxLines;
   final bool? obscureText;
   final bool? readonly;
   final Widget? suffixIcon;
   final TextInputType? textInputType;
+  final TextInputAction? textInputAction;
   final Color? fillColor;
   final Function(String value)? onChanged;
   final String? Function(String?)? validator;
@@ -28,11 +30,13 @@ class CustomTextField extends StatefulWidget {
     this.labelStyle,
     this.prefixIconPath,
     required this.hintText,
+    this.hintStyle,
     this.maxLines,
     this.obscureText,
     this.readonly = false,
     this.suffixIcon,
     this.textInputType,
+    this.textInputAction,
     this.fillColor,
     this.onChanged,
     this.validator,
@@ -90,9 +94,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
           focusNode: widget.focusNode,
           readOnly: widget.readonly!,
           keyboardType: widget.textInputType ?? TextInputType.text,
+          textInputAction: widget.textInputAction ?? TextInputAction.done,
           validator: (value) => widget.validator != null ? widget.validator!(value) : null,
           maxLines: widget.maxLines ?? 1,
           onChanged: widget.onChanged != null ? (value) => widget.onChanged?.call(value) : null,
+          cursorColor: AppColors.primary,
           decoration: InputDecoration(
             prefixIcon: widget.prefixIconPath == null
                 ? null
@@ -110,11 +116,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   ),
             suffixIcon: widget.suffixIcon,
             hintText: widget.hintText,
-            hintStyle: TextStyle(
-              fontSize: 12.sp,
-              color: isFocused ? AppColors.text0D0140 : AppColors.text0D0140.withValues(alpha: .60),
-              fontWeight: FontWeight.w400,
-            ),
+            hintStyle: widget.hintStyle ??
+                TextStyle(
+                  fontSize: 12.sp,
+                  color: isFocused ? AppColors.text0D0140 : AppColors.text0D0140.withValues(alpha: .60),
+                  fontWeight: FontWeight.w400,
+                ),
             filled: true,
             fillColor: widget.fillColor ?? AppColors.white,
             border: widget.enabledBorder ??

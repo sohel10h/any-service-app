@@ -16,9 +16,20 @@ class AppColors {
   static Color textA1A1A1 = colorFromHex('#A1A1A1');
   static Color text524B6B = colorFromHex('#524B6B');
   static Color textFF9228 = colorFromHex('#FF9228');
+  static Color text757575 = colorFromHex('#757575');
+  static Color text333333 = colorFromHex('#333333');
   static Color containerB63B1F = colorFromHex('#B63B1F');
+  static Color container4485FD = colorFromHex('#4485FD');
+  static Color containerA584FF = colorFromHex('#A584FF');
+  static Color containerFF7854 = colorFromHex('#FF7854');
+  static Color containerFEA725 = colorFromHex('#FEA725');
+  static Color container00CC6A = colorFromHex('#00CC6A');
+  static Color container00C9E4 = colorFromHex('#00C9E4');
+  static Color containerFD44B3 = colorFromHex('#FD44B3');
+  static Color containerFD4444 = colorFromHex('#FD4444');
   static Color borderE3E5E5 = colorFromHex('#E3E5E5');
   static Color borderE8E8E8 = colorFromHex('#E8E8E8');
+  static Color backgroundD4F1F9 = colorFromHex('#D4F1F9');
 
   static Color colorFromHex(String hexColor) {
     final hexCode = hexColor.replaceAll('#', '');

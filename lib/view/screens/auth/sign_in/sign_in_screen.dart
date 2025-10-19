@@ -5,6 +5,7 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/validators.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/auth/custom_auth_clipper.dart';
+import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/auth/sign_in/controller/sign_in_controller.dart';
 
@@ -157,16 +158,16 @@ class SigInScreen extends GetWidget<SignInController> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (!(controller.formKey.currentState?.validate() ?? true)) {
-                        return;
-                      }
-                    },
-                    child: const Text("Sign In"),
-                  ),
+                child: Obx(
+                  () => controller.isLoading.value
+                      ? CustomProgressBar()
+                      : SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: controller.signInButtonOnTap,
+                            child: const Text("Sign In"),
+                          ),
+                        ),
                 ),
               ),
               Padding(

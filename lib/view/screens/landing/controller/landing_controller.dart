@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/screens/home/home_screen.dart';
+import 'package:service_la/view/screens/settings/settings_screen.dart';
 
 class LandingController extends GetxController {
   var currentIndex = 0.obs;
@@ -24,7 +25,7 @@ class LandingController extends GetxController {
 
   List<Widget> screens = [
     HomeScreen(),
-    Scaffold(body: Center(child: Text("Settings"))),
+    SettingsScreen(),
   ];
 
   var bottomNavigationBarItems = [

@@ -29,7 +29,7 @@ class ServiceLa extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           translations: TextLanguages(),
-          locale: const Locale("en", "UK"),
+          locale: const Locale("en", "US"),
           initialBinding: ViewModelBindings(),
           title: "Service La",
           theme: AppTheme.defaultTheme,

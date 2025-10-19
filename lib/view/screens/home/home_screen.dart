@@ -30,9 +30,36 @@ class HomeScreen extends GetWidget<HomeController> {
               ),
             ],
           ),
-          SizedBox(height: 40.h),
+          SizedBox(height: 56.h),
+          _buildLiveBiddingArena(),
+          SizedBox(height: 8.h),
           _buildCategorySection(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLiveBiddingArena() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.r),
+        child: Container(
+          height: 270.h,
+          color: AppColors.primary,
+          child: Stack(
+            children: List.generate(7, (index) {
+              final svgIndex = 7 - index;
+              return Positioned(
+                right: 0,
+                bottom: 0,
+                child: SvgPicture.asset(
+                  "assets/svgs/container_shape_$svgIndex.svg",
+                ),
+              );
+            }),
+          ),
+        ),
       ),
     );
   }

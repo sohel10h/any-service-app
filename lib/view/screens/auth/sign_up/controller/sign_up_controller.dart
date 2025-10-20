@@ -27,6 +27,20 @@ class SignUpController extends GetxController {
     _addListenerFocusNodes();
   }
 
+  void registerButtonOnTap() {
+    if (!(formKey.currentState?.validate() ?? true)) {
+      return;
+    }
+    _goToOtpVerificationScreen();
+  }
+
+  void _goToOtpVerificationScreen() => Get.offAllNamed(
+        AppRoutes.otpVerificationScreen,
+        arguments: {
+          "email": emailController.text,
+        },
+      );
+
   void goToSignInScreen() => Get.offAllNamed(AppRoutes.sigInScreen);
 
   void _addListenerFocusNodes() {

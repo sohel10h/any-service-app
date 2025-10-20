@@ -37,6 +37,7 @@ class SigInScreen extends GetWidget<SignInController> {
                       color: AppColors.text181D27,
                       fontWeight: FontWeight.w600,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 SizedBox(height: 8.h),

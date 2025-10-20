@@ -5,6 +5,7 @@ import 'package:service_la/view/screens/landing/controller/landing_controller.da
 import 'package:service_la/view/screens/settings/controller/settings_controller.dart';
 import 'package:service_la/view/screens/auth/sign_in/controller/sign_in_controller.dart';
 import 'package:service_la/view/screens/auth/sign_up/controller/sign_up_controller.dart';
+import 'package:service_la/view/screens/auth/verification/controller/otp_verification_controller.dart';
 
 class ViewModelBindings extends Bindings {
   @override
@@ -15,5 +16,6 @@ class ViewModelBindings extends Bindings {
     Get.lazyPut<SignUpController>(() => SignUpController(), fenix: true);
     Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
     Get.lazyPut<SettingsController>(() => SettingsController(), fenix: true);
+    Get.lazyPut<OtpVerificationController>(() => OtpVerificationController(), fenix: true);
   }
 }

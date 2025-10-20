@@ -40,6 +40,7 @@ class SigUpScreen extends GetWidget<SignUpController> {
                           color: AppColors.text181D27,
                           fontWeight: FontWeight.w600,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 8.h),
                       Text(
@@ -49,6 +50,7 @@ class SigUpScreen extends GetWidget<SignUpController> {
                           color: AppColors.text535862,
                           fontWeight: FontWeight.w400,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 24.h),
                       Form(
@@ -156,11 +158,7 @@ class SigUpScreen extends GetWidget<SignUpController> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (!(controller.formKey.currentState?.validate() ?? true)) {
-                          return;
-                        }
-                      },
+                      onPressed: controller.registerButtonOnTap,
                       child: const Text("Register"),
                     ),
                   ),

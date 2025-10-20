@@ -6,6 +6,7 @@ import 'package:service_la/view/screens/landing/landing_screen.dart';
 import 'package:service_la/view/screens/settings/settings_screen.dart';
 import 'package:service_la/view/screens/auth/sign_in/sign_in_screen.dart';
 import 'package:service_la/view/screens/auth/sign_up/sign_up_screen.dart';
+import 'package:service_la/view/screens/auth/verification/otp_verification_screen.dart';
 
 abstract class AppPages {
   static const initial = AppRoutes.splashScreen;
@@ -34,6 +35,10 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.settingsScreen,
       page: () => const SettingsScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.otpVerificationScreen,
+      page: () => const OtpVerificationScreen(),
     ),
   ];
 }

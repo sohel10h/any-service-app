@@ -23,6 +23,7 @@ class AppColors {
   static Color text414651 = colorFromHex('#414651');
   static Color text717680 = colorFromHex('#414651');
   static Color textF25B39 = colorFromHex('#F25B39');
+  static Color text090A0A = colorFromHex('#090A0A');
   static Color containerB63B1F = colorFromHex('#B63B1F');
   static Color container4485FD = colorFromHex('#4485FD');
   static Color containerA584FF = colorFromHex('#A584FF');

@@ -10,7 +10,7 @@ class AppTheme {
       colorSchemeSeed: AppColors.primary,
       scaffoldBackgroundColor: AppColors.scaffoldBackground,
       brightness: Brightness.light,
-      textTheme: GoogleFonts.rubikTextTheme(),
+      textTheme: GoogleFonts.interTextTheme(),
       appBarTheme: AppBarTheme(
         foregroundColor: AppColors.black,
         backgroundColor: AppColors.scaffoldBackground,

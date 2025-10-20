@@ -82,9 +82,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 widget.label ?? "",
                 style: widget.labelStyle ??
                     TextStyle(
-                      fontSize: 12.sp,
-                      color: AppColors.text0D0140,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 14.sp,
+                      color: AppColors.text414651,
+                      fontWeight: FontWeight.w500,
                     ),
               ),
         widget.label == null ? const SizedBox.shrink() : SizedBox(height: 10.h),
@@ -118,8 +118,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
             hintText: widget.hintText,
             hintStyle: widget.hintStyle ??
                 TextStyle(
-                  fontSize: 12.sp,
-                  color: isFocused ? AppColors.text0D0140 : AppColors.text0D0140.withValues(alpha: .60),
+                  fontSize: 14.sp,
+                  color: isFocused ? AppColors.text717680 : AppColors.text717680.withValues(alpha: .60),
                   fontWeight: FontWeight.w400,
                 ),
             filled: true,

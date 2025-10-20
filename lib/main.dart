@@ -5,14 +5,12 @@ import 'package:service_la/routes/app_pages.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/theme/app_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/bindings/view_model_bindings.dart';
 import 'package:service_la/common/translations/text_languages.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  HelperFunction.changeStatusBarColor();
   runApp(const ServiceLa());
 }
 

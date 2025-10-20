@@ -1,15 +1,18 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
-import 'package:service_la/common/utils/storage/storage_helper.dart';
 
-class SignInController extends GetxController {
+class SignUpCompleteController extends GetxController {
   final formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  FocusNode emailFocusNode = FocusNode();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  FocusNode nameFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
+  FocusNode confirmPasswordFocusNode = FocusNode();
+  RxString password = "".obs;
   final RxBool isPasswordVisible = false.obs;
+  final RxBool isConfirmPasswordVisible = false.obs;
   final RxBool isRememberMe = false.obs;
   RxBool isLoading = false.obs;
 
@@ -19,30 +22,27 @@ class SignInController extends GetxController {
     _addListenerFocusNodes();
   }
 
-  void signInButtonOnTap() async {
+  void submitButtonOnTap() async {
     if (!(formKey.currentState?.validate() ?? true)) {
       return;
     }
-    StorageHelper.setValue("authToken", "authToken");
     isLoading.value = true;
     await Future.delayed(Duration(seconds: 3));
-    _goToLandingScreen();
+    _goToSignInScreen();
   }
 
-  void _goToLandingScreen() => Get.offAllNamed(AppRoutes.landingScreen);
-
-  void goToSignUpScreen() => Get.offAllNamed(AppRoutes.signUpScreen);
+  void _goToSignInScreen() => Get.offAllNamed(AppRoutes.signInScreen);
 
   void _addListenerFocusNodes() {
-    emailFocusNode.addListener(update);
+    nameFocusNode.addListener(update);
     passwordFocusNode.addListener(update);
   }
 
   @override
   void onClose() {
-    emailController.dispose();
+    nameController.dispose();
     passwordController.dispose();
-    emailFocusNode.dispose();
+    nameFocusNode.dispose();
     passwordFocusNode.dispose();
     super.onClose();
   }

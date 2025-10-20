@@ -41,7 +41,7 @@ class SignUpController extends GetxController {
         },
       );
 
-  void goToSignInScreen() => Get.offAllNamed(AppRoutes.sigInScreen);
+  void goToSignInScreen() => Get.offAllNamed(AppRoutes.signInScreen);
 
   void _addListenerFocusNodes() {
     firstNameFocusNode.addListener(update);

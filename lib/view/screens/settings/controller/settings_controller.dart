@@ -14,5 +14,5 @@ class SettingsController extends GetxController {
     _goToSignInScreen();
   }
 
-  void _goToSignInScreen() => Get.offAllNamed(AppRoutes.sigInScreen);
+  void _goToSignInScreen() => Get.offAllNamed(AppRoutes.signInScreen);
 }

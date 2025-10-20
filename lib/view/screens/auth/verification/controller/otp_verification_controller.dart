@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:service_la/routes/app_routes.dart';
 
 class OtpVerificationController extends GetxController {
   String email = "";
@@ -19,7 +20,10 @@ class OtpVerificationController extends GetxController {
     if (!(formKey.currentState?.validate() ?? true)) {
       return;
     }
+    _goToSignUpCompleteScreen();
   }
+
+  void _goToSignUpCompleteScreen() => Get.offAllNamed(AppRoutes.signUpCompleteScreen);
 
   void _addListenerFocusNodes() {
     otpFocusNode.addListener(update);

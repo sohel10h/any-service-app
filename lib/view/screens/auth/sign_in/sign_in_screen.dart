@@ -8,8 +8,8 @@ import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/auth/sign_in/controller/sign_in_controller.dart';
 
-class SigInScreen extends GetWidget<SignInController> {
-  const SigInScreen({super.key});
+class SignInScreen extends GetWidget<SignInController> {
+  const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

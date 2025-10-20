@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/local/category_model.dart';
 import 'package:service_la/view/widgets/home/category_section.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
@@ -13,6 +14,7 @@ class HomeScreen extends GetWidget<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    HelperFunction.changeStatusBarColor();
     return Scaffold(
       backgroundColor: AppColors.backgroundD4F1F9.withValues(alpha: .2),
       body: ListView(

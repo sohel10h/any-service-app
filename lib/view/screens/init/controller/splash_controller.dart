@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/routes/app_routes.dart';
+import 'package:service_la/common/utils/storage/storage_helper.dart';
 
 class SplashController extends GetxController {
   String authToken = "";
@@ -14,7 +14,7 @@ class SplashController extends GetxController {
 
   void _checkLoggedIn() async {
     await Future.delayed(const Duration(seconds: 3));
-    authToken.isEmpty ? Get.offAllNamed(AppRoutes.sigInScreen) : Get.offAllNamed(AppRoutes.landingScreen);
+    authToken.isEmpty ? Get.offAllNamed(AppRoutes.signInScreen) : Get.offAllNamed(AppRoutes.landingScreen);
   }
 
   void _getStorageValue() {

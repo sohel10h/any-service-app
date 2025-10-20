@@ -7,8 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/auth/sign_up/controller/sign_up_controller.dart';
 
-class SigUpScreen extends GetWidget<SignUpController> {
-  const SigUpScreen({super.key});
+class SignUpScreen extends GetWidget<SignUpController> {
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

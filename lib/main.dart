@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:service_la/routes/app_pages.dart';
 import 'package:service_la/routes/app_routes.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:service_la/common/theme/app_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/bindings/view_model_bindings.dart';
@@ -11,7 +13,12 @@ import 'package:service_la/common/translations/text_languages.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  runApp(const ServiceLa());
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => const ServiceLa(),
+    ),
+  );
 }
 
 class ServiceLa extends StatelessWidget {

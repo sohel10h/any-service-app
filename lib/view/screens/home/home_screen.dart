@@ -159,13 +159,6 @@ class HomeScreen extends GetWidget<HomeController> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16.r),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12.withValues(alpha: 0.05),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
             ),
             child: CustomTextField(
               controller: controller.searchController,
@@ -188,8 +181,8 @@ class HomeScreen extends GetWidget<HomeController> {
         ),
         SizedBox(width: 12.w),
         Container(
-          height: 50.h,
-          width: 50.w,
+          height: 44.h,
+          width: 44.w,
           decoration: BoxDecoration(
             color: AppColors.white,
             borderRadius: BorderRadius.circular(12.r),

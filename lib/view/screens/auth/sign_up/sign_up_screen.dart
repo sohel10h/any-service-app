@@ -70,6 +70,7 @@ class SignUpScreen extends GetWidget<SignUpController> {
                   ),
                 ),
               ),
+              SizedBox(height: 8.h),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

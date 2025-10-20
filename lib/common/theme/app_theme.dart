@@ -28,7 +28,7 @@ class AppTheme {
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           textStyle: TextStyle(
             fontSize: 16.sp,
@@ -43,7 +43,7 @@ class AppTheme {
           padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 16.w),
           side: BorderSide(color: AppColors.primary),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           textStyle: TextStyle(
             fontSize: 16.sp,

@@ -137,7 +137,7 @@ class _CustomPhoneFieldState extends State<CustomPhoneField> {
                   borderSide: BorderSide(color: AppColors.borderE3E5E5),
                 ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(color: AppColors.borderE3E5E5),
             ),
           ),

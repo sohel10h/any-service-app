@@ -32,8 +32,11 @@ class AppColors {
   static Color container00C9E4 = colorFromHex('#00C9E4');
   static Color containerFD44B3 = colorFromHex('#FD44B3');
   static Color containerFD4444 = colorFromHex('#FD4444');
+  static Color containerFAFAFA = colorFromHex('#FAFAFA');
   static Color borderE3E5E5 = colorFromHex('#E3E5E5');
   static Color borderE8E8E8 = colorFromHex('#E8E8E8');
+  static Color borderD5D7DA = colorFromHex('#D5D7DA');
+  static Color dividerE9EAEB = colorFromHex('#E9EAEB');
   static Color backgroundD4F1F9 = colorFromHex('#D4F1F9');
 
   static Color colorFromHex(String hexColor) {

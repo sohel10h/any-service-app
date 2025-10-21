@@ -3,5 +3,7 @@ abstract class AuthApiService {
 
   Future<dynamic> validateOtp(dynamic params);
 
-  Future<dynamic> signup(dynamic params);
+  Future<dynamic> signUp(dynamic params);
+
+  Future<dynamic> signIn(dynamic params);
 }

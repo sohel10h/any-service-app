@@ -52,6 +52,7 @@ class OtpVerificationController extends GetxController {
           HelperFunction.snackbar(
             "OTP verified successfully. Proceeding to the next step.",
             title: "Success",
+            icon: Icons.check,
             backgroundColor: AppColors.green,
           );
           _goToSignUpCompleteScreen(validateOtp.data?.sessionToken ?? "");

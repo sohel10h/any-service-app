@@ -48,7 +48,7 @@ class SignUpCompleteController extends GetxController {
         ApiParams.sessionToken: sessionToken,
       };
       log("SignUp POST Params: $params");
-      var response = await _authRepo.signup(params);
+      var response = await _authRepo.signUp(params);
 
       if (response is String) {
         HelperFunction.snackbar("Sign up failed. Please check your details and try again.");
@@ -59,6 +59,7 @@ class SignUpCompleteController extends GetxController {
           HelperFunction.snackbar(
             "Sign Up complete. You can now sign in and explore.",
             title: "Success",
+            icon: Icons.check,
             backgroundColor: AppColors.green,
           );
           _goToSignInScreen();

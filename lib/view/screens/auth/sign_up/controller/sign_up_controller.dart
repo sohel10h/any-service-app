@@ -62,6 +62,7 @@ class SignUpController extends GetxController {
           HelperFunction.snackbar(
             "OTP sent successfully to your email.",
             title: "Success",
+            icon: Icons.check,
             backgroundColor: AppColors.green,
           );
           _goToOtpVerificationScreen();

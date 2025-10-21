@@ -18,6 +18,6 @@ class SplashController extends GetxController {
   }
 
   void _getStorageValue() {
-    authToken = StorageHelper.getValue("authToken");
+    authToken = StorageHelper.getValue(StorageHelper.authToken);
   }
 }

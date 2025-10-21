@@ -150,7 +150,7 @@ class SignInScreen extends GetWidget<SignInController> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   child: Obx(
-                    () => controller.isLoading.value
+                    () => controller.isLoadingSignIn.value
                         ? CustomProgressBar()
                         : SizedBox(
                             width: double.infinity,

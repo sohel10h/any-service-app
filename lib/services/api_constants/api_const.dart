@@ -5,5 +5,6 @@ class ApiConstant {
   //END POINTS
   static const String sendOtpPath = "/sendOtp";
   static const String validateOtpPath = "/validateOtp";
-  static const String signupPath = "/signup";
+  static const String signUpPath = "/signup";
+  static const String signInPath = "/signin";
 }

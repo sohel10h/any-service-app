@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:service_la/data/network/auth_api_service.dart';
 import 'package:service_la/data/model/network/sign_up_model.dart';
+import 'package:service_la/data/model/network/sign_in_model.dart';
 import 'package:service_la/data/model/network/send_otp_model.dart';
 import 'package:service_la/data/implementation/auth_information.dart';
 import 'package:service_la/data/model/network/validate_otp_model.dart';
@@ -29,11 +30,21 @@ class AuthRepo {
     }
   }
 
-  Future<dynamic> signup(dynamic params) async {
+  Future<dynamic> signUp(dynamic params) async {
     try {
-      dynamic response = await authApiService.signup(params);
+      dynamic response = await authApiService.signUp(params);
       log("SignUp details from auth repo: $response");
       return SignUpModel.fromJson(jsonDecode(response.toString()));
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future<dynamic> signIn(dynamic params) async {
+    try {
+      dynamic response = await authApiService.signIn(params);
+      log("SignIn details from auth repo: $response");
+      return SignInModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
       return e;
     }

@@ -9,6 +9,8 @@ class AppColors {
   static const Color lightBlack = Colors.black45;
   static const Color blueGrey = Colors.blueGrey;
   static const Color red = Colors.red;
+  static const Color green = Colors.green;
+  static const Color yellow = Colors.yellow;
   static Color text9AA0B8 = colorFromHex('#9AA0B8');
   static Color text0C174B = colorFromHex('#0C174B');
   static Color text0D0140 = colorFromHex('#0D0140');

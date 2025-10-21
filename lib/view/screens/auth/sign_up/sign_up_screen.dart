@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/validators.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/auth/sign_up/controller/sign_up_controller.dart';
 
@@ -156,12 +157,16 @@ class SignUpScreen extends GetWidget<SignUpController> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: controller.registerButtonOnTap,
-                      child: const Text("Register"),
-                    ),
+                  Obx(
+                    () => controller.isLoadingSendOtp.value
+                        ? CustomProgressBar()
+                        : SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: controller.registerButtonOnTap,
+                              child: const Text("Register"),
+                            ),
+                          ),
                   ),
                   SizedBox(height: 16.h),
                   Padding(

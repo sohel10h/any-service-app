@@ -14,7 +14,7 @@ class SplashController extends GetxController {
 
   void _checkLoggedIn() async {
     await Future.delayed(const Duration(seconds: 3));
-    authToken.isEmpty ? Get.offAllNamed(AppRoutes.signInScreen) : Get.offAllNamed(AppRoutes.landingScreen);
+    authToken.isEmpty ? Get.offAllNamed(AppRoutes.signUpScreen) : Get.offAllNamed(AppRoutes.landingScreen);
   }
 
   void _getStorageValue() {

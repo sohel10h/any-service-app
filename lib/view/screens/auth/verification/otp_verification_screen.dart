@@ -1,12 +1,11 @@
 import 'package:get/get.dart';
-import 'package:pinput/pinput.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/validators.dart';
-import 'package:service_la/view/screens/auth/verification/controller/otp_verification_controller.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/text_field/custom_otp_field.dart';
+import 'package:service_la/view/screens/auth/verification/controller/otp_verification_controller.dart';
 
 class OtpVerificationScreen extends GetWidget<OtpVerificationController> {
   const OtpVerificationScreen({super.key});
@@ -54,7 +53,7 @@ class OtpVerificationScreen extends GetWidget<OtpVerificationController> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: "We sent a verification link to\n",
+                        text: "We sent a verification code to\n",
                         style: TextStyle(
                           fontSize: 16.sp,
                           color: AppColors.text535862,

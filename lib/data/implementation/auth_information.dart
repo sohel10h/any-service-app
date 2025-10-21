@@ -8,4 +8,10 @@ class AuthInformation extends AuthApiService {
     dynamic response = await ApiService().post(ApiConstant.sendOtpPath, params);
     return response;
   }
+
+  @override
+  Future validateOtp(params) async {
+    dynamic response = await ApiService().post(ApiConstant.validateOtpPath, params);
+    return response;
+  }
 }

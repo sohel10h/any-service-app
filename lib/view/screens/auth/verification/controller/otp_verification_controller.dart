@@ -1,6 +1,12 @@
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
+import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/data/repository/auth_repo.dart';
+import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/services/api_constants/api_params.dart';
+import 'package:service_la/data/model/network/validate_otp_model.dart';
 
 class OtpVerificationController extends GetxController {
   String email = "";
@@ -8,6 +14,8 @@ class OtpVerificationController extends GetxController {
   final formKey = GlobalKey<FormState>();
   TextEditingController otpController = TextEditingController();
   FocusNode otpFocusNode = FocusNode();
+  final AuthRepo _authRepo = AuthRepo();
+  RxBool isLoadingValidateOtp = false.obs;
 
   @override
   void onInit() {
@@ -20,10 +28,50 @@ class OtpVerificationController extends GetxController {
     if (!(formKey.currentState?.validate() ?? true)) {
       return;
     }
-    _goToSignUpCompleteScreen();
+    _validateOtp();
   }
 
-  void _goToSignUpCompleteScreen() => Get.offAllNamed(AppRoutes.signUpCompleteScreen);
+  Future<void> _validateOtp() async {
+    HelperFunction.hideKeyboard();
+    isLoadingValidateOtp.value = true;
+    try {
+      dynamic params = {
+        ApiParams.otpCode: otpNumber,
+        ApiParams.identifier: email,
+        ApiParams.identifierType: ApiParams.email,
+      };
+      log("ValidateOtp POST Params: $params");
+      var response = await _authRepo.validateOtp(params);
+
+      if (response is String) {
+        log("ValidateOtp failed from controller = $response");
+      } else {
+        ValidateOtpModel validateOtp = response as ValidateOtpModel;
+        if (validateOtp.status == 200 || validateOtp.status == 201) {
+          HelperFunction.snackbar(
+            "OTP verified successfully. Proceeding to the next step.",
+            title: "Success",
+            backgroundColor: AppColors.green,
+          );
+          _goToSignUpCompleteScreen(validateOtp.data?.sessionToken ?? "");
+        } else {
+          HelperFunction.snackbar("Verification failed. The code you entered is incorrect.");
+        }
+      }
+    } catch (e) {
+      log("ValidateOtp catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingValidateOtp.value = false;
+    }
+  }
+
+  void _goToSignUpCompleteScreen(String sessionToken) => Get.offAllNamed(
+        AppRoutes.signUpCompleteScreen,
+        arguments: {
+          "email": email,
+          "sessionToken": sessionToken,
+        },
+      );
 
   void _addListenerFocusNodes() {
     otpFocusNode.addListener(update);

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/validators.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/text_field/custom_otp_field.dart';
 import 'package:service_la/view/screens/auth/verification/controller/otp_verification_controller.dart';
 
@@ -88,15 +89,19 @@ class OtpVerificationScreen extends GetWidget<OtpVerificationController> {
                 ),
               ),
               SizedBox(height: 32.h),
-              SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.sp),
-                  child: ElevatedButton(
-                    onPressed: controller.verifyEmailButtonOnTap,
-                    child: const Text("Verify Email"),
-                  ),
-                ),
+              Obx(
+                () => controller.isLoadingValidateOtp.value
+                    ? CustomProgressBar()
+                    : SizedBox(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                          child: ElevatedButton(
+                            onPressed: controller.verifyEmailButtonOnTap,
+                            child: const Text("Verify Email"),
+                          ),
+                        ),
+                      ),
               ),
               SizedBox(height: 16.h),
               Padding(

@@ -18,7 +18,12 @@ class HelperFunction {
         ),
       );
 
-  static void hideKeyboard() => FocusScope.of(Get.context!).unfocus();
+  static Future<void> hideKeyboard() async {
+    await Future.delayed(const Duration(milliseconds: 100));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(Get.context!).unfocus();
+    });
+  }
 
   static void snackbar(String message, {String? title, Color? textColor, Color? backgroundColor, IconData? icon, Color? iconColor}) {
     Get.snackbar(

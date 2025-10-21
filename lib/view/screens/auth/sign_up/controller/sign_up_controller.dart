@@ -54,7 +54,8 @@ class SignUpController extends GetxController {
       var response = await _authRepo.sendOtp(params);
 
       if (response is String) {
-        log("SendOtp failed from controller = $response");
+        HelperFunction.snackbar("Failed to send OTP. Please try again.");
+        log("SendOtp failed from controller response: $response");
       } else {
         SendOtpModel sendOtp = response as SendOtpModel;
         if (sendOtp.status == 200 || sendOtp.status == 201) {
@@ -66,9 +67,11 @@ class SignUpController extends GetxController {
           _goToOtpVerificationScreen();
         } else {
           HelperFunction.snackbar("Failed to send OTP. Please try again.");
+          log("SendOtp failed from controller: ${sendOtp.status}");
         }
       }
     } catch (e) {
+      HelperFunction.snackbar("Failed to send OTP. Please try again.");
       log("SendOtp catch error from controller: ${e.toString()}");
     } finally {
       isLoadingSendOtp.value = false;

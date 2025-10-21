@@ -126,7 +126,7 @@ class SignUpCompleteScreen extends GetWidget<SignUpCompleteController> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Obx(
-                    () => controller.isLoading.value
+                    () => controller.isLoadingSignUp.value
                         ? CustomProgressBar()
                         : SizedBox(
                             width: double.infinity,

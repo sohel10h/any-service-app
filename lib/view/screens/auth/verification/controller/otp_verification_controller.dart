@@ -44,7 +44,8 @@ class OtpVerificationController extends GetxController {
       var response = await _authRepo.validateOtp(params);
 
       if (response is String) {
-        log("ValidateOtp failed from controller = $response");
+        HelperFunction.snackbar("Verification failed. The code you entered is incorrect.");
+        log("ValidateOtp failed from controller response: $response");
       } else {
         ValidateOtpModel validateOtp = response as ValidateOtpModel;
         if (validateOtp.status == 200 || validateOtp.status == 201) {
@@ -56,9 +57,11 @@ class OtpVerificationController extends GetxController {
           _goToSignUpCompleteScreen(validateOtp.data?.sessionToken ?? "");
         } else {
           HelperFunction.snackbar("Verification failed. The code you entered is incorrect.");
+          log("ValidateOtp failed from controller: ${validateOtp.status}");
         }
       }
     } catch (e) {
+      HelperFunction.snackbar("Verification failed. The code you entered is incorrect.");
       log("ValidateOtp catch error from controller: ${e.toString()}");
     } finally {
       isLoadingValidateOtp.value = false;
@@ -68,7 +71,6 @@ class OtpVerificationController extends GetxController {
   void _goToSignUpCompleteScreen(String sessionToken) => Get.offAllNamed(
         AppRoutes.signUpCompleteScreen,
         arguments: {
-          "email": email,
           "sessionToken": sessionToken,
         },
       );
@@ -79,7 +81,7 @@ class OtpVerificationController extends GetxController {
 
   void _getArguments() {
     if (Get.arguments != null) {
-      email = Get.arguments["email"];
+      email = Get.arguments["email"] ?? "";
     }
   }
 

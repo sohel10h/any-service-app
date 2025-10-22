@@ -32,7 +32,8 @@ class HomeScreen extends GetWidget<HomeController> {
               ),
             ],
           ),
-          SizedBox(height: 56.h),
+
+          SizedBox(height: 48.h),
           _buildLiveBiddingArena(),
           SizedBox(height: 8.h),
           _buildCategorySection(),
@@ -44,22 +45,81 @@ class HomeScreen extends GetWidget<HomeController> {
   Widget _buildLiveBiddingArena() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10.r),
-        child: Container(
-          height: 270.h,
-          color: AppColors.primary,
-          child: Stack(
-            children: List.generate(7, (index) {
-              final svgIndex = 7 - index;
-              return Positioned(
-                right: 0,
-                bottom: 0,
-                child: SvgPicture.asset(
-                  "assets/svgs/container_shape_$svgIndex.svg",
+      child: Container(
+        height: 199.h,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: AppColors.borderD5D7DA),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.borderD5D7DA.withValues(alpha: .7),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(12.sp),
+          child: Column(
+            children: [
+              CustomTextField(
+                controller: controller.searchController,
+                focusNode: controller.searchFocusNode,
+                hintText: "What service do you need today?",
+                hintStyle: TextStyle(
+                  fontSize: 14.sp,
+                  color: AppColors.text6A7282,
+                  fontWeight: FontWeight.w400,
                 ),
-              );
-            }),
+                maxLines: 5,
+                fillColor: AppColors.containerF4F4F4,
+                onChanged: (service) {},
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Add details to get better quotes",
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: AppColors.text99A1AF,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        "assets/svgs/image.svg",
+                        width: 20.w,
+                        height: 20.h,
+                      ),
+                      SizedBox(width: 8.w),
+                      SvgPicture.asset(
+                        "assets/svgs/location.svg",
+                        width: 20.w,
+                        height: 20.h,
+                      ),
+                      SizedBox(width: 8.w),
+                      SvgPicture.asset(
+                        "assets/svgs/tag.svg",
+                        width: 20.w,
+                        height: 20.h,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -75,56 +135,80 @@ class HomeScreen extends GetWidget<HomeController> {
           title: "Home cleaning",
           iconPath: "assets/svgs/home_cleaning.svg",
           providers: 245,
-          color: AppColors.container4485FD,
+          colors: [
+            AppColors.container51A2FF,
+            AppColors.container155DFC,
+          ],
           onTap: () {},
         ),
         CategoryItemModel(
           title: "Plumbing Services",
           iconPath: "assets/svgs/plumbing.svg",
           providers: 245,
-          color: AppColors.containerA584FF,
+          colors: [
+            AppColors.containerC27AFF,
+            AppColors.container9810FA,
+          ],
           onTap: () {},
         ),
         CategoryItemModel(
           title: "At-Home Haircut",
           iconPath: "assets/svgs/haircut.svg",
           providers: 245,
-          color: AppColors.containerFF7854,
+          colors: [
+            AppColors.containerFF8904,
+            AppColors.containerF54900,
+          ],
           onTap: () {},
         ),
         CategoryItemModel(
           title: "Locksmith Services",
           iconPath: "assets/svgs/locksmith.svg",
           providers: 245,
-          color: AppColors.containerFEA725,
+          colors: [
+            AppColors.containerFDC700,
+            AppColors.containerD08700,
+          ],
           onTap: () {},
         ),
         CategoryItemModel(
           title: "Professional Chef",
           iconPath: "assets/svgs/chef.svg",
           providers: 245,
-          color: AppColors.container00CC6A,
+          colors: [
+            AppColors.container05DF72,
+            AppColors.container00A63E,
+          ],
           onTap: () {},
         ),
         CategoryItemModel(
           title: "Car Cleaning",
           iconPath: "assets/svgs/car_cleaning.svg",
           providers: 245,
-          color: AppColors.container00C9E4,
+          colors: [
+            AppColors.container00D3F2,
+            AppColors.container0092B8,
+          ],
           onTap: () {},
         ),
         CategoryItemModel(
           title: "Swimming Pool Cleaning",
           iconPath: "assets/svgs/swimming.svg",
           providers: 245,
-          color: AppColors.containerFD44B3,
+          colors: [
+            AppColors.containerFB64B6,
+            AppColors.containerE60076,
+          ],
           onTap: () {},
         ),
         CategoryItemModel(
           title: "Electricity Services",
-          iconPath: "assets/svgs/electricity.svg",
+          iconPath: "assets/svgs/settings_services.svg",
           providers: 245,
-          color: AppColors.containerFD4444,
+          colors: [
+            AppColors.containerFF6467,
+            AppColors.containerE7000B,
+          ],
           onTap: () {},
         ),
       ],
@@ -133,7 +217,7 @@ class HomeScreen extends GetWidget<HomeController> {
 
   Widget _buildTopHeader() {
     return Container(
-      height: 130.h,
+      height: 135.h,
       padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 8.h),
       decoration: BoxDecoration(
         color: AppColors.primary,
@@ -143,7 +227,7 @@ class HomeScreen extends GetWidget<HomeController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 12.h),
+            SizedBox(height: 8.h),
             _buildSearchBar(),
           ],
         ),
@@ -158,7 +242,7 @@ class HomeScreen extends GetWidget<HomeController> {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16.r),
+              borderRadius: BorderRadius.circular(32.r),
             ),
             child: CustomTextField(
               controller: controller.searchController,
@@ -173,26 +257,26 @@ class HomeScreen extends GetWidget<HomeController> {
               textInputAction: TextInputAction.search,
               onChanged: (email) => controller.formKey.currentState?.validate(),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(32.r),
+                borderSide: BorderSide(color: AppColors.borderE3E7EC),
               ),
             ),
           ),
         ),
         SizedBox(width: 12.w),
         Container(
-          height: 44.h,
-          width: 44.w,
+          height: 50.h,
+          width: 50.w,
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.circular(12.r),
+            shape: BoxShape.circle,
           ),
           child: Transform.scale(
-            scale: .5,
+            scale: .4,
             child: SvgPicture.asset(
-              "assets/svgs/message.svg",
-              width: 18.w,
-              height: 18.h,
+              "assets/svgs/notification.svg",
+              width: 24.w,
+              height: 24.h,
             ),
           ),
         ),
@@ -214,13 +298,7 @@ class HomeScreen extends GetWidget<HomeController> {
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(16.r),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.08),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          border: Border.all(color: AppColors.borderD5D7DA),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

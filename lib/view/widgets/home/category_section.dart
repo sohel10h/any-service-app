@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/data/model/local/category_model.dart';
-import 'package:service_la/view/widgets/home/category_card_item.dart';
 import 'package:service_la/view/widgets/home/delayed_widget.dart';
+import 'package:service_la/view/widgets/home/category_card_item.dart';
 
 class CategorySection extends StatelessWidget {
   final String title;
@@ -76,8 +76,8 @@ class CategorySection extends StatelessWidget {
       itemCount: items.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 2,
-        crossAxisSpacing: 10.w,
+        childAspectRatio: 1.8,
+        crossAxisSpacing: 8.w,
         mainAxisSpacing: 12.h,
       ),
       itemBuilder: (context, index) {

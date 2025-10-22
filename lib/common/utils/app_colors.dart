@@ -26,6 +26,8 @@ class AppColors {
   static Color text717680 = colorFromHex('#414651');
   static Color textF25B39 = colorFromHex('#F25B39');
   static Color text090A0A = colorFromHex('#090A0A');
+  static Color text6A7282 = colorFromHex('#6A7282');
+  static Color text99A1AF = colorFromHex('#99A1AF');
   static Color containerB63B1F = colorFromHex('#B63B1F');
   static Color container4485FD = colorFromHex('#4485FD');
   static Color containerA584FF = colorFromHex('#A584FF');
@@ -36,9 +38,28 @@ class AppColors {
   static Color containerFD44B3 = colorFromHex('#FD44B3');
   static Color containerFD4444 = colorFromHex('#FD4444');
   static Color containerFAFAFA = colorFromHex('#FAFAFA');
+  static Color containerF4F4F4 = colorFromHex('#F4F4F4');
+  static Color container51A2FF = colorFromHex('#51A2FF');
+  static Color container155DFC = colorFromHex('#155DFC');
+  static Color container00C950 = colorFromHex('#00C950');
+  static Color containerC27AFF = colorFromHex('#C27AFF');
+  static Color container9810FA = colorFromHex('#9810FA');
+  static Color containerFF8904 = colorFromHex('#FF8904');
+  static Color containerF54900 = colorFromHex('#F54900');
+  static Color containerFDC700 = colorFromHex('#FDC700');
+  static Color containerD08700 = colorFromHex('#D08700');
+  static Color container05DF72 = colorFromHex('#05DF72');
+  static Color container00A63E = colorFromHex('#00A63E');
+  static Color container00D3F2 = colorFromHex('#00D3F2');
+  static Color container0092B8 = colorFromHex('#0092B8');
+  static Color containerFB64B6 = colorFromHex('#FB64B6');
+  static Color containerE60076 = colorFromHex('#E60076');
+  static Color containerFF6467 = colorFromHex('#FF6467');
+  static Color containerE7000B = colorFromHex('#E7000B');
   static Color borderE3E5E5 = colorFromHex('#E3E5E5');
   static Color borderE8E8E8 = colorFromHex('#E8E8E8');
   static Color borderD5D7DA = colorFromHex('#D5D7DA');
+  static Color borderE3E7EC = colorFromHex('#E3E7EC');
   static Color dividerE9EAEB = colorFromHex('#E9EAEB');
   static Color backgroundD4F1F9 = colorFromHex('#D4F1F9');
 

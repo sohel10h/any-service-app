@@ -28,6 +28,8 @@ class AppColors {
   static Color text090A0A = colorFromHex('#090A0A');
   static Color text6A7282 = colorFromHex('#6A7282');
   static Color text99A1AF = colorFromHex('#99A1AF');
+  static Color text101828 = colorFromHex('#101828');
+  static Color text364153 = colorFromHex('#364153');
   static Color containerB63B1F = colorFromHex('#B63B1F');
   static Color container4485FD = colorFromHex('#4485FD');
   static Color containerA584FF = colorFromHex('#A584FF');
@@ -56,6 +58,9 @@ class AppColors {
   static Color containerE60076 = colorFromHex('#E60076');
   static Color containerFF6467 = colorFromHex('#FF6467');
   static Color containerE7000B = colorFromHex('#E7000B');
+  static Color containerE5E7EB = colorFromHex('#E5E7EB');
+  static Color containerEE4E2E = colorFromHex('#EE4E2E');
+  static Color containerF3F4F6 = colorFromHex('#F3F4F6');
   static Color borderE3E5E5 = colorFromHex('#E3E5E5');
   static Color borderE8E8E8 = colorFromHex('#E8E8E8');
   static Color borderD5D7DA = colorFromHex('#D5D7DA');

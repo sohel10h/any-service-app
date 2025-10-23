@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1083869564471",
+    "project_id": "servicela-8246e",
+    "storage_bucket": "servicela-8246e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083869564471:android:8c2011f2fbb52e3501b9b2",
+        "android_client_info": {
+          "package_name": "com.anyservicela"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJLwhMeQrz8_NLO0gnmCIojivRKJfjBt0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

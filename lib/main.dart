@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:service_la/routes/app_pages.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,7 +17,7 @@ Future<void> main() async {
   await GetStorage.init();
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode,
+      enabled: false,
       builder: (context) => const ServiceLa(),
     ),
   );

@@ -25,7 +25,7 @@ class _DelayedWidgetState extends State<DelayedWidget> {
   Widget build(BuildContext context) {
     return AnimatedOpacity(
       opacity: _visible ? 1.0 : 0.0,
-      duration: const Duration(milliseconds: 3000), // smoother fade
+      duration: const Duration(milliseconds: 600), // smoother fade
       curve: Curves.easeOutQuad,
       child: widget.child,
     );

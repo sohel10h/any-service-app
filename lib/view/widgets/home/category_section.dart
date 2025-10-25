@@ -88,7 +88,7 @@ class CategorySection extends StatelessWidget {
           delay: Duration(milliseconds: 120 * index),
           child: TweenAnimationBuilder<Offset>(
             tween: Tween(begin: Offset(offsetX, 0), end: const Offset(0, 0)),
-            duration: const Duration(milliseconds: 6000), // smoother timing
+            duration: const Duration(milliseconds: 1000), // smoother timing
             curve: Curves.easeOutQuart, // very smooth easing curve
             builder: (context, offset, child) {
               // fade in progressively with movement

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -11,6 +11,7 @@ class CustomTextField extends StatefulWidget {
   final String? prefixIconPath;
   final String hintText;
   final TextStyle? hintStyle;
+  final double? height;
   final int? maxLines;
   final bool? obscureText;
   final bool? readonly;
@@ -31,6 +32,7 @@ class CustomTextField extends StatefulWidget {
     this.prefixIconPath,
     required this.hintText,
     this.hintStyle,
+    this.height,
     this.maxLines,
     this.obscureText,
     this.readonly = false,
@@ -88,58 +90,67 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     ),
               ),
         widget.label == null ? const SizedBox.shrink() : SizedBox(height: 10.h),
-        TextFormField(
-          controller: widget.controller,
-          obscureText: widget.obscureText ?? false,
-          focusNode: widget.focusNode,
-          readOnly: widget.readonly!,
-          keyboardType: widget.textInputType ?? TextInputType.text,
-          textInputAction: widget.textInputAction ?? TextInputAction.done,
-          validator: (value) => widget.validator != null ? widget.validator!(value) : null,
-          maxLines: widget.maxLines ?? 1,
-          onChanged: widget.onChanged != null ? (value) => widget.onChanged?.call(value) : null,
-          cursorColor: AppColors.primary,
-          decoration: InputDecoration(
-            prefixIcon: widget.prefixIconPath == null
-                ? null
-                : Padding(
-                    padding: EdgeInsets.all(12.r),
-                    child: SvgPicture.asset(
-                      widget.prefixIconPath ?? "",
-                      width: 24.w,
-                      height: 24.h,
-                      colorFilter: ColorFilter.mode(
-                        isFocused ? AppColors.primary : AppColors.lightBlack,
-                        BlendMode.srcIn,
-                      ),
-                    ),
+        widget.height == null
+            ? _child()
+            : SizedBox(
+                height: widget.height,
+                child: _child(),
+              ),
+      ],
+    );
+  }
+
+  Widget _child() {
+    return TextFormField(
+      controller: widget.controller,
+      obscureText: widget.obscureText ?? false,
+      focusNode: widget.focusNode,
+      readOnly: widget.readonly!,
+      keyboardType: widget.textInputType ?? TextInputType.text,
+      textInputAction: widget.textInputAction ?? TextInputAction.done,
+      validator: (value) => widget.validator != null ? widget.validator!(value) : null,
+      maxLines: widget.maxLines ?? 1,
+      onChanged: widget.onChanged != null ? (value) => widget.onChanged?.call(value) : null,
+      cursorColor: AppColors.primary,
+      decoration: InputDecoration(
+        prefixIcon: widget.prefixIconPath == null
+            ? null
+            : Padding(
+                padding: EdgeInsets.all(12.r),
+                child: SvgPicture.asset(
+                  widget.prefixIconPath ?? "",
+                  width: 24.w,
+                  height: 24.h,
+                  colorFilter: ColorFilter.mode(
+                    isFocused ? AppColors.primary : AppColors.lightBlack,
+                    BlendMode.srcIn,
                   ),
-            suffixIcon: widget.suffixIcon,
-            hintText: widget.hintText,
-            hintStyle: widget.hintStyle ??
-                TextStyle(
-                  fontSize: 14.sp,
-                  color: isFocused ? AppColors.text717680 : AppColors.text717680.withValues(alpha: .60),
-                  fontWeight: FontWeight.w400,
                 ),
-            filled: true,
-            fillColor: widget.fillColor ?? AppColors.white,
-            border: widget.enabledBorder ??
-                OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-            enabledBorder: widget.enabledBorder ??
-                OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                  borderSide: BorderSide(color: AppColors.borderE3E5E5),
-                ),
-            focusedBorder: OutlineInputBorder(
+              ),
+        suffixIcon: widget.suffixIcon,
+        hintText: widget.hintText,
+        hintStyle: widget.hintStyle ??
+            TextStyle(
+              fontSize: 14.sp,
+              color: isFocused ? AppColors.text717680 : AppColors.text717680.withValues(alpha: .60),
+              fontWeight: FontWeight.w400,
+            ),
+        filled: true,
+        fillColor: widget.fillColor ?? AppColors.white,
+        border: widget.enabledBorder ??
+            OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+        enabledBorder: widget.enabledBorder ??
+            OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(color: AppColors.borderE3E5E5),
             ),
-          ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.r),
+          borderSide: BorderSide(color: AppColors.borderE3E5E5),
         ),
-      ],
+      ),
     );
   }
 }

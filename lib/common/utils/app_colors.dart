@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static Color primary = colorFromHex('#DC593B');
-  static Color secondary = colorFromHex('#B63B1F');
+  static Color primary = colorFromHex('#EE4E2E');
+  static Color secondary = colorFromHex('#DC593B');
   static Color scaffoldBackground = colorFromHex('#FFFFFF');
   static const Color white = Colors.white;
   static const Color black = Colors.black;

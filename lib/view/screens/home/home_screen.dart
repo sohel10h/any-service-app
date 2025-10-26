@@ -26,14 +26,14 @@ class HomeScreen extends GetWidget<HomeController> {
             children: [
               _buildTopHeader(),
               Positioned(
-                top: 80.h,
+                top: 50.h,
                 left: 0,
                 right: 0,
                 child: _buildServiceSummaryCard(),
               ),
             ],
           ),
-          SizedBox(height: 48.h),
+          SizedBox(height: 28.h),
           _buildServiceRequestSection(context),
           SizedBox(height: 8.h),
           _buildCategorySection(),
@@ -54,16 +54,15 @@ class HomeScreen extends GetWidget<HomeController> {
             behavior: HitTestBehavior.opaque,
             onTap: () => DialogHelper.showServiceRequestModal(context),
             child: Container(
-              height: 199.h,
               decoration: BoxDecoration(
                 color: AppColors.white,
-                borderRadius: BorderRadius.circular(16.r),
+                borderRadius: BorderRadius.circular(8.r),
                 border: Border.all(color: AppColors.borderD5D7DA),
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.borderD5D7DA.withValues(alpha: 0.7),
-                    spreadRadius: 5,
-                    blurRadius: 7,
+                    spreadRadius: 3,
+                    blurRadius: 5,
                     offset: const Offset(0, 3),
                   ),
                 ],
@@ -82,7 +81,7 @@ class HomeScreen extends GetWidget<HomeController> {
                           color: AppColors.text6A7282,
                           fontWeight: FontWeight.w400,
                         ),
-                        maxLines: 5,
+                        maxLines: 2,
                         readonly: true,
                         fillColor: AppColors.containerF4F4F4,
                         enabledBorder: OutlineInputBorder(
@@ -218,8 +217,8 @@ class HomeScreen extends GetWidget<HomeController> {
 
   Widget _buildTopHeader() {
     return Container(
-      height: 135.h,
-      padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 8.h),
+      height: 80.h,
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
         color: AppColors.primary,
       ),
@@ -240,46 +239,43 @@ class HomeScreen extends GetWidget<HomeController> {
     return Row(
       children: [
         Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(32.r),
+          child: CustomTextField(
+            height: 35.h,
+            controller: controller.searchController,
+            focusNode: controller.searchFocusNode,
+            hintText: "Search services...",
+            labelStyle: TextStyle(
+              fontSize: 12.sp,
+              color: AppColors.text414651,
+              fontWeight: FontWeight.w500,
             ),
-            child: CustomTextField(
-              controller: controller.searchController,
-              focusNode: controller.searchFocusNode,
-              hintText: "Search services...",
-              hintStyle: TextStyle(
-                fontSize: 14.sp,
-                color: AppColors.text757575,
-                fontWeight: FontWeight.w400,
-              ),
-              prefixIconPath: "assets/svgs/search.svg",
-              textInputAction: TextInputAction.search,
-              onChanged: (email) => controller.formKey.currentState?.validate(),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(32.r),
-                borderSide: BorderSide(color: AppColors.borderE3E7EC),
-              ),
+            hintStyle: TextStyle(
+              fontSize: 12.sp,
+              color: AppColors.text757575,
+              fontWeight: FontWeight.w400,
+            ),
+            prefixIconPath: "assets/svgs/search.svg",
+            textInputAction: TextInputAction.search,
+            onChanged: (email) => controller.formKey.currentState?.validate(),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6.r),
+              borderSide: BorderSide(color: AppColors.borderE3E7EC),
             ),
           ),
         ),
-        SizedBox(width: 12.w),
-        Container(
-          height: 50.h,
-          width: 50.w,
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            shape: BoxShape.circle,
-          ),
-          child: Transform.scale(
-            scale: .4,
-            child: SvgPicture.asset(
-              "assets/svgs/notification.svg",
-              width: 24.w,
-              height: 24.h,
-            ),
-          ),
+        SizedBox(width: 16.w),
+        SvgPicture.asset(
+          "assets/svgs/notification_outline.svg",
+          width: 24.w,
+          height: 24.h,
+          colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+        ),
+        SizedBox(width: 16.w),
+        SvgPicture.asset(
+          "assets/svgs/message.svg",
+          width: 24.w,
+          height: 24.h,
+          colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
         ),
       ],
     );
@@ -295,10 +291,10 @@ class HomeScreen extends GetWidget<HomeController> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 18.h, horizontal: 10.w),
+        padding: EdgeInsets.all(8.sp),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(8.r),
           border: Border.all(color: AppColors.borderD5D7DA),
         ),
         child: Row(
@@ -306,12 +302,12 @@ class HomeScreen extends GetWidget<HomeController> {
           children: [
             _buildServiceItem(items[0]),
             SizedBox(
-              height: 50.h,
+              height: 20.h,
               child: VerticalDivider(color: AppColors.black.withValues(alpha: .2)),
             ),
             _buildServiceItem(items[1]),
             SizedBox(
-              height: 50.h,
+              height: 20.h,
               child: VerticalDivider(color: AppColors.black.withValues(alpha: .2)),
             ),
             _buildServiceItem(items[2]),
@@ -329,7 +325,7 @@ class HomeScreen extends GetWidget<HomeController> {
           Text(
             item.title,
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 11.sp,
               color: AppColors.black,
               fontWeight: FontWeight.w600,
             ),
@@ -340,7 +336,7 @@ class HomeScreen extends GetWidget<HomeController> {
           Text(
             item.subtitle,
             style: TextStyle(
-              fontSize: 10.sp,
+              fontSize: 9.sp,
               color: AppColors.black.withValues(alpha: .6),
               fontWeight: FontWeight.w400,
             ),

@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,7 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/view/widgets/home/custom_dropdown_chip.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
+import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/home/controller/home_controller.dart';
+import 'package:service_la/view/widgets/home/service_request_bottom_sheet.dart';
 
 class ServiceRequestModal extends GetWidget<HomeController> {
   const ServiceRequestModal({super.key});
@@ -25,44 +26,40 @@ class ServiceRequestModal extends GetWidget<HomeController> {
         color: Colors.transparent,
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: Stack(
-            children: [
-              GestureDetector(
-                onTap: () => Get.back(),
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 400),
-                  opacity: 1,
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                    child: Container(color: Colors.black.withValues(alpha: 0.3)),
+          body: SafeArea(
+            child: Stack(
+              children: [
+                GestureDetector(
+                  onTap: () => Get.back(),
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 400),
+                    opacity: 1,
                   ),
                 ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.easeOutCubic,
-                  height: size.height * 0.85,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                  ),
-                  child: Column(
-                    children: [
-                      _header(),
-                      Divider(color: AppColors.containerE5E7EB, height: 1),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                          child: _body(context),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeOutCubic,
+                    height: size.height * 1,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                    ),
+                    child: Column(
+                      children: [
+                        _header(),
+                        Divider(color: AppColors.containerE5E7EB, height: 1),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: _body(context),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -118,94 +115,117 @@ class ServiceRequestModal extends GetWidget<HomeController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            CircleAvatar(
-              radius: 16.r,
-              child: NetworkImageLoader(
-                HelperFunction.placeholderImageUrl30,
-                height: 35.w,
-                width: 35.w,
-                radius: 32.r,
+        SizedBox(height: 8.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 16.r,
+                child: NetworkImageLoader(
+                  HelperFunction.placeholderImageUrl30,
+                  height: 35.w,
+                  width: 35.w,
+                  radius: 32.r,
+                ),
               ),
-            ),
-            SizedBox(width: 8.w),
-            Text(
-              "Individual Request",
-              style: TextStyle(
-                fontSize: 15.sp,
-                color: AppColors.text101828,
-                fontWeight: FontWeight.w600,
+              SizedBox(width: 8.w),
+              Text(
+                "Individual Request",
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  color: AppColors.text101828,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         SizedBox(height: 8.h),
-        Wrap(
-          spacing: 8.w,
-          runSpacing: 8.h,
-          children: [
-            CustomDropdownChip<String>(
-              options: controller.requestTypeOptions,
-              selectedValue: controller.requestType,
-              iconPath: "assets/svgs/person_small.svg",
-              labelBuilder: (v) => v,
-              onChanged: (val) {
-                // handle change
-              },
-            ),
-            CustomDropdownChip<String>(
-              options: controller.urgencyOptions,
-              selectedValue: controller.urgency,
-              iconPath: "assets/svgs/clock_small.svg",
-              labelBuilder: (v) => v,
-            ),
-            CustomDropdownChip<String>(
-              options: controller.budgetOptions,
-              selectedValue: controller.budget,
-              iconPath: "assets/svgs/dollar_small.svg",
-              labelBuilder: (v) => v,
-            ),
-          ],
-        ),
-        const SizedBox(height: 24),
-        TextField(
-          maxLines: null,
-          decoration: InputDecoration(
-            hintText: "What service do you need?",
-            hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 15),
-            border: InputBorder.none,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              SizedBox(
+                height: 30.h,
+                child: CustomDropdownChip<String>(
+                  options: controller.requestTypeOptions,
+                  selectedValue: controller.requestType,
+                  iconPath: "assets/svgs/person_small.svg",
+                  labelBuilder: (v) => v,
+                  onChanged: (val) {
+                    // handle change
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 30.h,
+                child: CustomDropdownChip<String>(
+                  options: controller.urgencyOptions,
+                  selectedValue: controller.urgency,
+                  iconPath: "assets/svgs/clock_small.svg",
+                  labelBuilder: (v) => v,
+                ),
+              ),
+              SizedBox(
+                height: 30.h,
+                child: CustomDropdownChip<String>(
+                  options: controller.budgetOptions,
+                  selectedValue: controller.budget,
+                  iconPath: "assets/svgs/dollar_small.svg",
+                  labelBuilder: (v) => v,
+                ),
+              ),
+              SizedBox(
+                height: 30.h,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () => _showBottomSheet(context),
+                  icon: SvgPicture.asset(
+                    "assets/svgs/image_outline.svg",
+                    width: 30.w,
+                    height: 30.h,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 20),
-        Center(
-          child: Container(
-            width: 40,
-            height: 4,
-            margin: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(10),
-            ),
+        SizedBox(height: 8.h),
+        CustomTextField(
+          controller: controller.searchController,
+          focusNode: controller.searchFocusNode,
+          hintText: "What service do you need?",
+          labelStyle: TextStyle(
+            fontSize: 15.sp,
+            color: AppColors.text414651,
+            fontWeight: FontWeight.w500,
           ),
+          hintStyle: TextStyle(
+            fontSize: 15.sp,
+            color: AppColors.text99A1AF,
+            fontWeight: FontWeight.w400,
+          ),
+          maxLines: 5,
+          textInputType: TextInputType.multiline,
+          onChanged: (service) {},
+          enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
         ),
-        const SizedBox(height: 12),
-        _bottomOption(Icons.image_outlined, "Photo/video", color: Colors.green),
-        _bottomOption(Icons.sell_outlined, "Tag service", color: Colors.blue),
-        _bottomOption(Icons.category_outlined, "Service category", color: Colors.amber),
-        _bottomOption(Icons.location_on_outlined, "Check in", color: Colors.redAccent),
-        _bottomOption(Icons.access_time_outlined, "Urgent request", color: Colors.deepOrange),
-        _bottomOption(Icons.attach_money_outlined, "Budget range", color: Colors.green),
-        const SizedBox(height: 20),
+        SizedBox(height: 20.h),
       ],
     );
   }
 
-  Widget _bottomOption(IconData icon, String text, {Color? color}) {
-    return ListTile(
-      leading: Icon(icon, color: color ?? Colors.black54),
-      title: Text(text, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15)),
-      onTap: () {},
+  void _showBottomSheet(BuildContext context) async {
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    await Get.bottomSheet(
+      const ServiceRequestBottomSheet(),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
     );
   }
 }

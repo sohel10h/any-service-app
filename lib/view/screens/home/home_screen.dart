@@ -255,7 +255,7 @@ class HomeScreen extends GetWidget<HomeController> {
             ),
             prefixIconPath: "assets/svgs/search.svg",
             textInputAction: TextInputAction.search,
-            onChanged: (email) => controller.formKey.currentState?.validate(),
+            onChanged: (searchServices) => controller.formKey.currentState?.validate(),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(6.r),
               borderSide: BorderSide(color: AppColors.borderE3E7EC),

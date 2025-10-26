@@ -17,7 +17,6 @@ class HomeScreen extends GetWidget<HomeController> {
   Widget build(BuildContext context) {
     HelperFunction.changeStatusBarColor();
     return Scaffold(
-      backgroundColor: AppColors.backgroundD4F1F9.withValues(alpha: .2),
       body: ListView(
         children: [
           Stack(
@@ -77,7 +76,7 @@ class HomeScreen extends GetWidget<HomeController> {
                         focusNode: controller.serviceFocusNode,
                         hintText: "What service do you need today?",
                         hintStyle: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 12.sp,
                           color: AppColors.text6A7282,
                           fontWeight: FontWeight.w400,
                         ),

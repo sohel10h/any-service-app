@@ -24,9 +24,7 @@ class LandingScreen extends GetWidget<LandingController> {
             alignment: Alignment.bottomCenter,
             children: [
               Positioned.fill(
-                child: SafeArea(
-                  child: controller.screens[controller.currentIndex.value],
-                ),
+                child: controller.screens[controller.currentIndex.value],
               ),
               Positioned(
                 left: 0,

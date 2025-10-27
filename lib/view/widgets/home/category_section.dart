@@ -71,6 +71,7 @@ class CategorySection extends StatelessWidget {
 
   Widget _buildGrid() {
     return GridView.builder(
+      padding: EdgeInsets.zero,
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: items.length,
@@ -88,8 +89,10 @@ class CategorySection extends StatelessWidget {
           delay: Duration(milliseconds: 120 * index),
           child: TweenAnimationBuilder<Offset>(
             tween: Tween(begin: Offset(offsetX, 0), end: const Offset(0, 0)),
-            duration: const Duration(milliseconds: 1000), // smoother timing
-            curve: Curves.easeOutQuart, // very smooth easing curve
+            duration: const Duration(milliseconds: 1000),
+            // smoother timing
+            curve: Curves.easeOutQuart,
+            // very smooth easing curve
             builder: (context, offset, child) {
               // fade in progressively with movement
               final opacity = 1 - (offset.dx.abs() / 80);

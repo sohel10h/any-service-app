@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/local/category_model.dart';
 import 'package:service_la/view/widgets/home/category_section.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
@@ -14,7 +13,6 @@ class HomeScreen extends GetWidget<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    HelperFunction.changeStatusBarColor();
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.only(bottom: 110.h),
@@ -25,14 +23,14 @@ class HomeScreen extends GetWidget<HomeController> {
             children: [
               _buildTopHeader(),
               Positioned(
-                top: 50.h,
+                top: 75.h,
                 left: 0,
                 right: 0,
                 child: _buildServiceSummaryCard(),
               ),
             ],
           ),
-          SizedBox(height: 28.h),
+          SizedBox(height: 16.h),
           _buildCategorySection(),
         ],
       ),
@@ -130,7 +128,7 @@ class HomeScreen extends GetWidget<HomeController> {
 
   Widget _buildTopHeader() {
     return Container(
-      height: 80.h,
+      height: 105.h,
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
         color: AppColors.primary,

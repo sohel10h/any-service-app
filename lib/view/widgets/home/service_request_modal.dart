@@ -26,38 +26,37 @@ class ServiceRequestModal extends GetWidget<HomeController> {
         color: Colors.transparent,
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: SafeArea(
-            child: Stack(
-              children: [
-                GestureDetector(
-                  onTap: () => Get.back(),
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 400),
-                    opacity: 1,
+          body: Stack(
+            children: [
+              GestureDetector(
+                onTap: () => Get.back(),
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 400),
+                  opacity: 1,
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeOutCubic,
+                  height: size.height * 1,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 16.h),
+                      _header(),
+                      Divider(color: AppColors.containerE5E7EB, height: 0.h, thickness: 5),
+                      SingleChildScrollView(
+                        child: _body(context),
+                      ),
+                    ],
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeOutCubic,
-                    height: size.height * 1,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                    ),
-                    child: Column(
-                      children: [
-                        _header(),
-                        Divider(color: AppColors.containerE5E7EB, height: 1),
-                        SingleChildScrollView(
-                          child: _body(context),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -69,6 +68,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           IconButton(
             onPressed: () => Get.back(),
@@ -78,29 +78,27 @@ class ServiceRequestModal extends GetWidget<HomeController> {
               height: 21.h,
             ),
           ),
-          Text(
-            "Create request",
-            style: TextStyle(
-              fontSize: 17.sp,
-              color: AppColors.text101828,
-              fontWeight: FontWeight.w700,
+          Expanded(
+            child: Center(
+              child: Text(
+                "Create request",
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: AppColors.text101828,
+                  fontWeight: FontWeight.w700,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(right: 8.w),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-              decoration: BoxDecoration(
-                color: AppColors.containerE5E7EB,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                "Post",
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  color: AppColors.text99A1AF,
-                  fontWeight: FontWeight.w600,
-                ),
+          TextButton(
+            onPressed: () {},
+            child: Text(
+              "Post",
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: AppColors.text9AA0B8,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),

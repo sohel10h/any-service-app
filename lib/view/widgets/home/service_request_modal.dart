@@ -49,10 +49,8 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                       children: [
                         _header(),
                         Divider(color: AppColors.containerE5E7EB, height: 1),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: _body(context),
-                          ),
+                        SingleChildScrollView(
+                          child: _body(context),
                         ),
                       ],
                     ),

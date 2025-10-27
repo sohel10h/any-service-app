@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/local/category_model.dart';
 import 'package:service_la/view/widgets/home/category_section.dart';
@@ -18,7 +17,7 @@ class HomeScreen extends GetWidget<HomeController> {
     HelperFunction.changeStatusBarColor();
     return Scaffold(
       body: ListView(
-        padding: EdgeInsets.only(bottom: 90.h),
+        padding: EdgeInsets.only(bottom: 110.h),
         children: [
           Stack(
             fit: StackFit.loose,
@@ -34,94 +33,8 @@ class HomeScreen extends GetWidget<HomeController> {
             ],
           ),
           SizedBox(height: 28.h),
-          _buildServiceRequestSection(context),
-          SizedBox(height: 8.h),
           _buildCategorySection(),
         ],
-      ),
-    );
-  }
-
-  Widget _buildServiceRequestSection(BuildContext context) {
-    return Hero(
-      tag: "service_request_modal",
-      createRectTween: (begin, end) => MaterialRectCenterArcTween(begin: begin, end: end),
-      child: Material(
-        color: Colors.transparent,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => DialogHelper.showServiceRequestModal(context),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(color: AppColors.borderD5D7DA),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.borderD5D7DA.withValues(alpha: 0.7),
-                    spreadRadius: 3,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(12.sp),
-                child: Column(
-                  children: [
-                    IgnorePointer(
-                      child: CustomTextField(
-                        controller: controller.serviceController,
-                        focusNode: controller.serviceFocusNode,
-                        hintText: "What service do you need today?",
-                        hintStyle: TextStyle(
-                          fontSize: 12.sp,
-                          color: AppColors.text6A7282,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        maxLines: 2,
-                        readonly: true,
-                        fillColor: AppColors.containerF4F4F4,
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.r),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "Add details to get better quotes",
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              color: AppColors.text99A1AF,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Row(
-                          children: [
-                            SvgPicture.asset("assets/svgs/image.svg", width: 20.w),
-                            SizedBox(width: 8.w),
-                            SvgPicture.asset("assets/svgs/location.svg", width: 20.w),
-                            SizedBox(width: 8.w),
-                            SvgPicture.asset("assets/svgs/tag.svg", width: 20.w),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }

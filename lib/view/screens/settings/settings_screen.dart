@@ -13,7 +13,7 @@ class SettingsScreen extends GetWidget<SettingsController> {
     return Scaffold(
       appBar: CustomAppbar(title: "Settings"),
       body: SingleChildScrollView(
-        padding: EdgeInsets.only(bottom: 90.h),
+        padding: EdgeInsets.only(bottom: 110.h),
         child: Column(
           children: [
             InkWell(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 
 class LandingScreen extends GetWidget<LandingController> {
@@ -20,6 +21,7 @@ class LandingScreen extends GetWidget<LandingController> {
         },
         child: Scaffold(
           body: Stack(
+            alignment: Alignment.bottomCenter,
             children: [
               Positioned.fill(
                 child: SafeArea(
@@ -33,6 +35,27 @@ class LandingScreen extends GetWidget<LandingController> {
                 child: _CustomBottomNavBar(
                   currentIndex: controller.currentIndex.value,
                   onTap: controller.changeIndex,
+                ),
+              ),
+              Positioned(
+                bottom: 75.h,
+                child: Center(
+                  child: SizedBox(
+                    width: 56.w,
+                    height: 56.h,
+                    child: FloatingActionButton(
+                      heroTag: "service_request_modal",
+                      shape: const CircleBorder(),
+                      onPressed: () => DialogHelper.showServiceRequestModal(context),
+                      backgroundColor: AppColors.primary,
+                      elevation: 4,
+                      child: SvgPicture.asset(
+                        "assets/svgs/add.svg",
+                        width: 24.w,
+                        height: 24.h,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],

@@ -19,12 +19,23 @@ class LandingScreen extends GetWidget<LandingController> {
           }
         },
         child: Scaffold(
-          body: SafeArea(
-            child: controller.screens[controller.currentIndex.value],
-          ),
-          bottomNavigationBar: _CustomBottomNavBar(
-            currentIndex: controller.currentIndex.value,
-            onTap: controller.changeIndex,
+          body: Stack(
+            children: [
+              Positioned.fill(
+                child: SafeArea(
+                  child: controller.screens[controller.currentIndex.value],
+                ),
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 8.h,
+                child: _CustomBottomNavBar(
+                  currentIndex: controller.currentIndex.value,
+                  onTap: controller.changeIndex,
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -18,6 +18,7 @@ class HomeScreen extends GetWidget<HomeController> {
     HelperFunction.changeStatusBarColor();
     return Scaffold(
       body: ListView(
+        padding: EdgeInsets.only(bottom: 90.h),
         children: [
           Stack(
             fit: StackFit.loose,

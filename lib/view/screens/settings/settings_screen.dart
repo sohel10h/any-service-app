@@ -12,38 +12,40 @@ class SettingsScreen extends GetWidget<SettingsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppbar(title: "Settings"),
-      body: Column(
-        children: [
-          const Spacer(),
-          InkWell(
-            onTap: controller.logOut,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Container(
-                padding: EdgeInsets.all(16.sp),
-                decoration: BoxDecoration(
-                  color: AppColors.black.withValues(alpha: .1),
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Log Out",
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: AppColors.black,
-                        fontWeight: FontWeight.w400,
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(bottom: 90.h),
+        child: Column(
+          children: [
+            InkWell(
+              onTap: controller.logOut,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Container(
+                  padding: EdgeInsets.all(16.sp),
+                  decoration: BoxDecoration(
+                    color: AppColors.black.withValues(alpha: .1),
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Log Out",
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.black,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
-                    Icon(Icons.logout),
-                  ],
+                      Icon(Icons.logout),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 20.h),
-        ],
+            SizedBox(height: 20.h),
+          ],
+        ),
       ),
     );
   }

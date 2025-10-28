@@ -17,6 +17,5 @@ class LandingController extends GetxController {
     const SizedBox(), // Charity placeholder
     const SettingsScreen(),
     const SizedBox(), // Profile placeholder
-    const SizedBox(), // Messages placeholder
   ];
 }

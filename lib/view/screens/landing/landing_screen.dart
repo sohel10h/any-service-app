@@ -77,10 +77,9 @@ class _CustomBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = [
       _NavItem("Home", "assets/svgs/home.svg"),
-      _NavItem("Charity", "assets/svgs/charity.svg"),
-      _NavItem("Settings", "assets/svgs/configuration.svg"),
+      _NavItem("Bidding", "assets/svgs/charity.svg"),
+      _NavItem("Services", "assets/svgs/configuration.svg"),
       _NavItem("Profile", "assets/svgs/user.svg"),
-      _NavItem("Messages", "assets/svgs/message.svg"),
     ];
 
     return Container(

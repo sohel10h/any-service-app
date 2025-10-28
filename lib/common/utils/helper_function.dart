@@ -9,6 +9,7 @@ class HelperFunction {
   static String placeholderImageUrl48 = "https://placehold.co/48x48.png";
   static String placeholderImageUrl17 = "https://placehold.co/17x17.png";
   static String placeholderImageUrl30 = "https://placehold.co/30x30.png";
+  static String placeholderImageUrl178_84 = "https://placehold.co/178x84.png";
 
   static void changeStatusBarColor() => SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(

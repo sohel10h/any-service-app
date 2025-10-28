@@ -4,10 +4,10 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/data/model/local/category_model.dart';
 
-class CategoryCard extends StatelessWidget {
+class CategoryCardItem extends StatelessWidget {
   final CategoryItemModel item;
 
-  const CategoryCard({super.key, required this.item});
+  const CategoryCardItem({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {

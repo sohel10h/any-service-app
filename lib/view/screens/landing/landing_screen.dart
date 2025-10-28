@@ -110,8 +110,11 @@ class _CustomBottomNavBar extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
               decoration: BoxDecoration(
                 gradient: isSelected
-                    ? const LinearGradient(
-                        colors: [Color(0xFFFFA726), Color(0xFFFF5722)],
+                    ? LinearGradient(
+                        colors: [
+                          AppColors.containerFF8904,
+                          AppColors.containerF54900,
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       )

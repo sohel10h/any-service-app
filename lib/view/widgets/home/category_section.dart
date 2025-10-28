@@ -58,7 +58,7 @@ class CategorySection extends StatelessWidget {
                 ),
               ),
               SvgPicture.asset(
-                "assets/svgs/arrow_right.svg",
+                "assets/svgs/arrow_right_small.svg",
                 width: 16.w,
                 height: 16.h,
               )
@@ -101,7 +101,7 @@ class CategorySection extends StatelessWidget {
                 child: Transform.translate(offset: offset, child: child),
               );
             },
-            child: CategoryCard(item: items[index]),
+            child: CategoryCardItem(item: items[index]),
           ),
         );
       },

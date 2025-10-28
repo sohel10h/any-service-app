@@ -194,9 +194,9 @@ class HomeScreen extends GetWidget<HomeController> {
 
   Widget _buildServiceSummaryCard() {
     final items = [
-      _ServiceItem(title: "ServicePay", subtitle: "0.3% cashback"),
-      _ServiceItem(title: "Check in", subtitle: "0.3% cashback"),
-      _ServiceItem(title: "43", subtitle: "My vouchers"),
+      _ServiceItem(title: "1000+", subtitle: "Service Providers"),
+      _ServiceItem(title: "5000+", subtitle: "Happy Customers"),
+      _ServiceItem(title: "100+", subtitle: "5-star reviews"),
     ];
 
     return Padding(

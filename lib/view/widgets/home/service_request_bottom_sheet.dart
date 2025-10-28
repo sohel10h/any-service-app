@@ -12,9 +12,9 @@ class ServiceRequestBottomSheet extends GetWidget<HomeController> {
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       expand: false,
-      initialChildSize: 0.5,
-      minChildSize: 0.4,
-      maxChildSize: 0.6,
+      initialChildSize: 0.4,
+      minChildSize: 0.3,
+      maxChildSize: 0.5,
       builder: (context, scrollController) {
         return Container(
           decoration: BoxDecoration(
@@ -46,12 +46,34 @@ class ServiceRequestBottomSheet extends GetWidget<HomeController> {
                   controller: scrollController,
                   physics: const BouncingScrollPhysics(),
                   children: [
-                    _bottomOption("assets/svgs/image_outline.svg", "Photo/video", color: Colors.green),
-                    _bottomOption("assets/svgs/tag_outline.svg", "Tag service", color: Colors.blue),
-                    _bottomOption("assets/svgs/smile.svg", "Service category", color: Colors.amber),
-                    _bottomOption("assets/svgs/location_outline.svg", "Check in", color: Colors.red),
-                    _bottomOption("assets/svgs/clock_outline.svg", "Urgent request", color: Colors.orange),
-                    _bottomOption("assets/svgs/dollar.svg", "Budget range", color: Colors.teal),
+                    _bottomOption(
+                      "assets/svgs/image_outline.svg",
+                      "Photo/video",
+                      onTap: () {
+                        Get.back();
+                        controller.pickImages();
+                      },
+                    ),
+                    _bottomOption(
+                      "assets/svgs/tag_outline.svg",
+                      "Tag service",
+                      onTap: () {},
+                    ),
+                    _bottomOption(
+                      "assets/svgs/location_outline.svg",
+                      "Check in",
+                      onTap: () {},
+                    ),
+                    _bottomOption(
+                      "assets/svgs/clock_outline.svg",
+                      "Urgent request",
+                      onTap: () {},
+                    ),
+                    _bottomOption(
+                      "assets/svgs/dollar.svg",
+                      "Budget range",
+                      onTap: () {},
+                    ),
                     SizedBox(height: 24.h),
                   ],
                 ),
@@ -63,13 +85,12 @@ class ServiceRequestBottomSheet extends GetWidget<HomeController> {
     );
   }
 
-  Widget _bottomOption(String assetName, String text, {Color? color}) {
+  Widget _bottomOption(String assetName, String text, {required VoidCallback onTap}) {
     return ListTile(
       leading: SvgPicture.asset(
         assetName,
         width: 20.w,
         height: 20.h,
-        colorFilter: ColorFilter.mode(color ?? AppColors.text99A1AF, BlendMode.srcIn),
       ),
       title: Text(
         text,
@@ -79,9 +100,7 @@ class ServiceRequestBottomSheet extends GetWidget<HomeController> {
           fontWeight: FontWeight.w500,
         ),
       ),
-      onTap: () {
-        Get.back();
-      },
+      onTap: onTap,
     );
   }
 }

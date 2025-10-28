@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 
@@ -15,6 +17,9 @@ class HomeController extends GetxController {
   final Rx<String?> requestType = Rx<String?>(null);
   final Rx<String?> urgency = Rx<String?>(null);
   final Rx<String?> budget = Rx<String?>(null);
+  RxList<bool> imageLoadingFlags = <bool>[].obs;
+  final ImagePicker _picker = ImagePicker();
+  final RxList<XFile> selectedImages = <XFile>[].obs;
   final List<Map<String, dynamic>> bestSellingServices = [
     {
       "label": "BEST",
@@ -55,6 +60,48 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     _addListenerFocusNodes();
+  }
+
+  Future<void> pickImages() async {
+    final List<XFile> pickedImages = await _picker.pickMultiImage(limit: 3);
+    if (pickedImages.isNotEmpty) {
+      for (XFile image in pickedImages) {
+        if (selectedImages.length >= 4) {
+          HelperFunction.snackbar(
+            "You can only add up to 4 images.",
+            title: "Limit Reached",
+            icon: Icons.warning,
+            backgroundColor: AppColors.yellow,
+          );
+          break;
+        }
+        _addImage(image);
+        imageLoadingFlags.add(true);
+        final currentIndex = selectedImages.length - 1;
+        try {
+          final imageFile = await HelperFunction.getImageXFile(image);
+          selectedImages[currentIndex] = imageFile;
+          imageLoadingFlags[currentIndex] = false;
+          selectedImages.refresh();
+          imageLoadingFlags.refresh();
+        } catch (e) {
+          imageLoadingFlags[currentIndex] = false;
+          imageLoadingFlags.refresh();
+          log("Error loading image: $e");
+        }
+      }
+    } else {
+      log("🚫 No image selected.");
+    }
+  }
+
+  void _addImage(XFile image) {
+    selectedImages.add(image);
+  }
+
+  void removeImage(int index) {
+    selectedImages.removeAt(index);
+    imageLoadingFlags.removeAt(index);
   }
 
   void _addListenerFocusNodes() {

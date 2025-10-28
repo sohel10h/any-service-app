@@ -43,7 +43,7 @@ class BestSellingServicesSection extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  "Best Selling Services",
+                  "Most requested this week",
                   style: TextStyle(
                     fontSize: 11.sp,
                     color: AppColors.text6A7282,
@@ -82,6 +82,7 @@ class BestSellingServicesSection extends StatelessWidget {
     return SizedBox(
       height: 210.h,
       child: ListView.builder(
+        shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
         itemCount: controller.bestSellingServices.length,

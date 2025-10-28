@@ -1,8 +1,11 @@
+import 'dart:io';
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class HelperFunction {
   static String placeholderImageUrl42 = "https://placehold.co/42x42.png";
@@ -38,5 +41,45 @@ class HelperFunction {
       margin: EdgeInsets.all(8.sp),
       duration: Duration(seconds: 3),
     );
+  }
+
+  static Future<XFile> getImageXFile(XFile picked) async {
+    File imageFile = File(picked.path);
+    int originalSize = await imageFile.length();
+    log("📸 Original image path: ${imageFile.path}");
+    log("📦 Original image size: ${originalSize / (1024 * 1024)} MB");
+
+    // If image is larger than 2 MB
+    if (originalSize > 2 * 1024 * 1024) {
+      log("⚠️ Image exceeds 2 MB, starting compression...");
+
+      final compressed = await FlutterImageCompress.compressWithFile(
+        imageFile.absolute.path,
+        minWidth: 1080,
+        minHeight: 1080,
+        quality: 70,
+      );
+
+      if (compressed != null) {
+        final compressedFile = await _writeToTempFile(compressed);
+        int compressedSize = await compressedFile.length();
+        log("✅ Compression complete.");
+        log("📦 Compressed image path: ${compressedFile.path}");
+        log("📦 Compressed image size: ${compressedSize / (1024 * 1024)} MB");
+
+        return XFile(compressedFile.path);
+      } else {
+        log("❌ Compression failed. Using original image.");
+      }
+    } else {
+      log("✅ Image is under 2 MB. No compression needed.");
+    }
+    return picked;
+  }
+
+  static Future<File> _writeToTempFile(Uint8List bytes) async {
+    final tempDir = Directory.systemTemp;
+    final tempFile = File('${tempDir.path}/compressed_${DateTime.now().millisecondsSinceEpoch}.jpg');
+    return await tempFile.writeAsBytes(bytes);
   }
 }

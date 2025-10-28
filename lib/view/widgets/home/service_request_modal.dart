@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/home/custom_dropdown_chip.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
@@ -49,9 +51,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                       SizedBox(height: 16.h),
                       _header(),
                       Divider(color: AppColors.containerE5E7EB, height: 0.h, thickness: 5),
-                      SingleChildScrollView(
-                        child: _body(context),
-                      ),
+                      SingleChildScrollView(child: _body(context)),
                     ],
                   ),
                 ),
@@ -157,34 +157,13 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                   },
                 ),
               ),
-              SizedBox(
-                height: 30.h,
-                child: CustomDropdownChip<String>(
-                  options: controller.urgencyOptions,
-                  selectedValue: controller.urgency,
-                  iconPath: "assets/svgs/clock_small.svg",
-                  labelBuilder: (v) => v,
-                ),
-              ),
-              SizedBox(
-                height: 30.h,
-                child: CustomDropdownChip<String>(
-                  options: controller.budgetOptions,
-                  selectedValue: controller.budget,
-                  iconPath: "assets/svgs/dollar_small.svg",
-                  labelBuilder: (v) => v,
-                ),
-              ),
-              SizedBox(
-                height: 30.h,
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () => _showBottomSheet(context),
-                  icon: SvgPicture.asset(
-                    "assets/svgs/image_outline.svg",
-                    width: 30.w,
-                    height: 30.h,
-                  ),
+              IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () => _showBottomSheet(context),
+                icon: SvgPicture.asset(
+                  "assets/svgs/image_outline.svg",
+                  width: 22.w,
+                  height: 22.h,
                 ),
               ),
             ],
@@ -209,6 +188,53 @@ class ServiceRequestModal extends GetWidget<HomeController> {
           textInputType: TextInputType.multiline,
           onChanged: (service) {},
           enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+        ),
+        SizedBox(height: 16.h),
+        Obx(
+          () => SizedBox(
+            height: 120.h,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              padding: EdgeInsets.symmetric(horizontal: 8.w),
+              itemCount: controller.selectedImages.length,
+              itemBuilder: (context, index) {
+                final image = controller.selectedImages[index];
+                final isLoading = controller.imageLoadingFlags.length > index ? controller.imageLoadingFlags[index] : false;
+
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.r),
+                        child: Image.file(
+                          File(image.path),
+                          width: 120.w,
+                          height: 120.h,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      if (isLoading)
+                        Positioned.fill(
+                          child: CustomProgressBar(),
+                        ),
+                      isLoading
+                          ? SizedBox.shrink()
+                          : Positioned(
+                              top: 0,
+                              right: 0,
+                              child: GestureDetector(
+                                onTap: () => controller.removeImage(index),
+                                child: Icon(Icons.cancel, color: AppColors.red),
+                              ),
+                            ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
         ),
         SizedBox(height: 20.h),
       ],

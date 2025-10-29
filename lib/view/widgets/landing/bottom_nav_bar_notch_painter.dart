@@ -39,7 +39,7 @@ class BottomNavBarNotchPainter extends CustomPainter {
     // ✅ Half-moon notch under FAB
     path.arcToPoint(
       Offset(centerX + notchRadius * 2, 0),
-      radius: Radius.circular(notchRadius * 2),
+      radius: Radius.circular(notchRadius * 2.1),
       clockwise: false,
     );
 

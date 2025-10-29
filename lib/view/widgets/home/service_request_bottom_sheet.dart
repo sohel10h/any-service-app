@@ -1,8 +1,10 @@
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/view/screens/home/controller/home_controller.dart';
 
 class ServiceRequestBottomSheet extends GetWidget<HomeController> {
@@ -19,7 +21,9 @@ class ServiceRequestBottomSheet extends GetWidget<HomeController> {
         return Container(
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(24.r),
+            ),
             boxShadow: [
               BoxShadow(
                 color: AppColors.black.withValues(alpha: 0.08),
@@ -72,7 +76,15 @@ class ServiceRequestBottomSheet extends GetWidget<HomeController> {
                     _bottomOption(
                       "assets/svgs/dollar.svg",
                       "Budget range",
-                      onTap: () {},
+                      onTap: () async {
+                        Get.back();
+                        await Future.delayed(const Duration(milliseconds: 200));
+                        SchedulerBinding.instance.addPostFrameCallback((_) {
+                          if (Get.context?.mounted ?? false) {
+                            DialogHelper.showBudgetRangeSheet(Get.context!);
+                          }
+                        });
+                      },
                     ),
                     SizedBox(height: 24.h),
                   ],

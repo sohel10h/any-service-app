@@ -9,10 +9,15 @@ import 'package:service_la/data/model/local/file_option_model.dart';
 
 class HomeController extends GetxController {
   final formKey = GlobalKey<FormState>();
+  final budgetFormKey = GlobalKey<FormState>();
   final TextEditingController searchController = TextEditingController();
   final TextEditingController serviceController = TextEditingController();
+  final TextEditingController budgetFromController = TextEditingController();
+  final TextEditingController budgetToController = TextEditingController();
   FocusNode searchFocusNode = FocusNode();
   FocusNode serviceFocusNode = FocusNode();
+  FocusNode budgetFromFocusNode = FocusNode();
+  FocusNode budgetToFocusNode = FocusNode();
   final RxList<String> requestTypeOptions = ["Individual", "Company"].obs;
   final RxList<String> urgencyOptions = ["Normal", "Urgent"].obs;
   final RxList<String> budgetOptions = ["Low", "Medium", "High"].obs;
@@ -66,6 +71,18 @@ class HomeController extends GetxController {
     super.onInit();
     _addListenerFocusNodes();
     _initFileOptions();
+  }
+
+  void submitBudgetRange() {
+    if (!(budgetFormKey.currentState?.validate() ?? true)) {
+      return;
+    }
+    Get.back();
+    final from = budgetFromController.text.trim();
+    final to = budgetToController.text.trim();
+    log("Budget Range: From ৳$from To ৳$to");
+    budgetFromController.clear();
+    budgetToController.clear();
   }
 
   void onTextChanged(String value) {
@@ -155,6 +172,8 @@ class HomeController extends GetxController {
   void _addListenerFocusNodes() {
     searchFocusNode.addListener(update);
     serviceFocusNode.addListener(update);
+    budgetFromFocusNode.addListener(update);
+    budgetToFocusNode.addListener(update);
   }
 
   @override
@@ -162,7 +181,11 @@ class HomeController extends GetxController {
     super.onClose();
     searchController.dispose();
     serviceController.dispose();
+    budgetFromController.dispose();
+    budgetToController.dispose();
     searchFocusNode.dispose();
     serviceFocusNode.dispose();
+    budgetFromFocusNode.dispose();
+    budgetToFocusNode.dispose();
   }
 }

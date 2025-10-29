@@ -27,7 +27,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
 
     return Container(
       height: 30.h,
-      width: Get.width / 3.3,
+      width: Get.width / 3,
       decoration: BoxDecoration(
         color: AppColors.containerF3F4F6,
         borderRadius: BorderRadius.circular(6.r),
@@ -44,12 +44,16 @@ class CustomDropdownChip<T> extends StatelessWidget {
                 children: [
                   SvgPicture.asset(iconPath, width: 16.w, height: 16.h),
                   SizedBox(width: 6.w),
-                  Text(
-                    hasOptions ? "Select" : "No options",
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      color: AppColors.text364153,
-                      fontWeight: FontWeight.w500,
+                  Flexible(
+                    child: Text(
+                      hasOptions ? "Select" : "No options",
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: AppColors.text364153,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ),
                 ],

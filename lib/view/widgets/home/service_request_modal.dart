@@ -51,7 +51,9 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                       SizedBox(height: 16.h),
                       _header(),
                       Divider(color: AppColors.containerE5E7EB, height: 0.h, thickness: 5),
-                      SingleChildScrollView(child: _body(context)),
+                      Expanded(
+                        child: SingleChildScrollView(child: _body(context)),
+                      ),
                     ],
                   ),
                 ),
@@ -79,26 +81,30 @@ class ServiceRequestModal extends GetWidget<HomeController> {
             ),
           ),
           Expanded(
-            child: Center(
-              child: Text(
-                "Create request",
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: AppColors.text101828,
-                  fontWeight: FontWeight.w700,
-                ),
-                overflow: TextOverflow.ellipsis,
+            child: Text(
+              "Create request",
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppColors.text101828,
+                fontWeight: FontWeight.w700,
               ),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              "Post",
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: AppColors.text9AA0B8,
-                fontWeight: FontWeight.w600,
+          Flexible(
+            child: TextButton(
+              onPressed: () {},
+              child: Text(
+                "Post",
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: AppColors.text9AA0B8,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ),
           ),
@@ -114,27 +120,30 @@ class ServiceRequestModal extends GetWidget<HomeController> {
         SizedBox(height: 8.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 16.r,
-                child: NetworkImageLoader(
-                  HelperFunction.placeholderImageUrl30,
-                  height: 35.w,
-                  width: 35.w,
-                  radius: 32.r,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 16.r,
+                  child: NetworkImageLoader(
+                    HelperFunction.placeholderImageUrl30,
+                    height: 35.w,
+                    width: 35.w,
+                    radius: 32.r,
+                  ),
                 ),
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                "Individual Request",
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  color: AppColors.text101828,
-                  fontWeight: FontWeight.w600,
+                SizedBox(width: 8.w),
+                Text(
+                  "Individual Request",
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    color: AppColors.text101828,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         SizedBox(height: 8.h),

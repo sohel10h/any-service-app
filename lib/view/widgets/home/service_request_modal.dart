@@ -6,11 +6,11 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
-import 'package:service_la/view/widgets/home/custom_dropdown_chip.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/home/controller/home_controller.dart';
+import 'package:service_la/view/widgets/home/service_request_toggle_button.dart';
 
 class ServiceRequestModal extends GetWidget<HomeController> {
   const ServiceRequestModal({super.key});
@@ -206,25 +206,29 @@ class ServiceRequestModal extends GetWidget<HomeController> {
         SizedBox(height: 8.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Wrap(
-            spacing: 8.w,
-            runSpacing: 8.h,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              SizedBox(
-                height: 30.h,
-                child: CustomDropdownChip<String>(
-                  options: controller.requestTypeOptions,
-                  selectedValue: controller.requestType,
-                  iconPath: "assets/svgs/person_small.svg",
-                  labelBuilder: (v) => v,
-                  onChanged: (val) {
-                    // handle change
-                  },
-                ),
-              ),
-            ],
+          child: ServiceRequestToggleButton(
+            onValueChanged: (isIndividualSelected) {
+              controller.isIndividualSelected.value = isIndividualSelected;
+            },
           ),
+        ),
+        Obx(
+          () => controller.isIndividualSelected.value
+              ? SizedBox.shrink()
+              : Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 8.h),
+                      CustomTextField(
+                        controller: controller.companyNameController,
+                        focusNode: controller.companyNameFocusNode,
+                        hintText: "Enter your company name",
+                        onChanged: (companyName) {},
+                      ),
+                    ],
+                  ),
+                ),
         ),
         SizedBox(height: 8.h),
         CustomTextField(
@@ -237,7 +241,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
             fontWeight: FontWeight.w500,
           ),
           hintStyle: TextStyle(
-            fontSize: 15.sp,
+            fontSize: 18.sp,
             color: AppColors.text99A1AF,
             fontWeight: FontWeight.w400,
           ),

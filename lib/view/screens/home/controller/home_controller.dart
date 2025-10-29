@@ -14,10 +14,12 @@ class HomeController extends GetxController {
   final TextEditingController serviceController = TextEditingController();
   final TextEditingController budgetFromController = TextEditingController();
   final TextEditingController budgetToController = TextEditingController();
+  final TextEditingController companyNameController = TextEditingController();
   FocusNode searchFocusNode = FocusNode();
   FocusNode serviceFocusNode = FocusNode();
   FocusNode budgetFromFocusNode = FocusNode();
   FocusNode budgetToFocusNode = FocusNode();
+  FocusNode companyNameFocusNode = FocusNode();
   final RxList<String> requestTypeOptions = ["Individual", "Company"].obs;
   final RxList<String> urgencyOptions = ["Normal", "Urgent"].obs;
   final RxList<String> budgetOptions = ["Low", "Medium", "High"].obs;
@@ -29,6 +31,7 @@ class HomeController extends GetxController {
   final RxList<XFile> selectedImages = <XFile>[].obs;
   RxBool isKeyboardVisible = false.obs;
   RxBool hasUnsavedChanges = false.obs;
+  RxBool isIndividualSelected = true.obs;
   final List<Map<String, dynamic>> bestSellingServices = [
     {
       "label": "BEST",
@@ -174,6 +177,7 @@ class HomeController extends GetxController {
     serviceFocusNode.addListener(update);
     budgetFromFocusNode.addListener(update);
     budgetToFocusNode.addListener(update);
+    companyNameFocusNode.addListener(update);
   }
 
   @override
@@ -183,9 +187,11 @@ class HomeController extends GetxController {
     serviceController.dispose();
     budgetFromController.dispose();
     budgetToController.dispose();
+    companyNameController.dispose();
     searchFocusNode.dispose();
     serviceFocusNode.dispose();
     budgetFromFocusNode.dispose();
     budgetToFocusNode.dispose();
+    companyNameFocusNode.dispose();
   }
 }

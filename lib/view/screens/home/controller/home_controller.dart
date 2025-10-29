@@ -23,6 +23,7 @@ class HomeController extends GetxController {
   final ImagePicker _picker = ImagePicker();
   final RxList<XFile> selectedImages = <XFile>[].obs;
   RxBool isKeyboardVisible = false.obs;
+  RxBool hasUnsavedChanges = false.obs;
   final List<Map<String, dynamic>> bestSellingServices = [
     {
       "label": "BEST",
@@ -65,6 +66,16 @@ class HomeController extends GetxController {
     super.onInit();
     _addListenerFocusNodes();
     _initFileOptions();
+  }
+
+  void onTextChanged(String value) {
+    hasUnsavedChanges.value = value.trim().isNotEmpty || selectedImages.isNotEmpty;
+  }
+
+  void clearDraft() {
+    serviceController.clear();
+    selectedImages.clear();
+    hasUnsavedChanges.value = false;
   }
 
   void _initFileOptions() {
@@ -132,11 +143,13 @@ class HomeController extends GetxController {
 
   void _addImage(XFile image) {
     selectedImages.add(image);
+    hasUnsavedChanges.value = true;
   }
 
   void removeImage(int index) {
     selectedImages.removeAt(index);
     imageLoadingFlags.removeAt(index);
+    hasUnsavedChanges.value = serviceController.text.trim().isNotEmpty || selectedImages.isNotEmpty;
   }
 
   void _addListenerFocusNodes() {

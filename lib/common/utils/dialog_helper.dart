@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/view/widgets/home/service_request_modal.dart';
 import 'package:service_la/view/widgets/home/service_request_bottom_sheet.dart';
+import 'package:service_la/view/widgets/home/service_request_discard_bottom_sheet.dart';
 
 class DialogHelper {
   static void showServiceRequestModal(BuildContext context) {
@@ -26,10 +27,18 @@ class DialogHelper {
 
   static void showBottomSheet(BuildContext context) async {
     await Future.delayed(const Duration(milliseconds: 50));
-
     await Get.bottomSheet(
       const ServiceRequestBottomSheet(),
       isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    );
+  }
+
+  static void showDiscardWarning(BuildContext context) async {
+    await Future.delayed(const Duration(milliseconds: 50));
+    Get.bottomSheet(
+      const ServiceRequestDiscardBottomSheet(),
+      isDismissible: false,
       backgroundColor: Colors.transparent,
     );
   }

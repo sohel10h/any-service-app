@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/view/widgets/home/custom_dropdown_chip.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
@@ -29,79 +30,93 @@ class ServiceRequestModal extends GetWidget<HomeController> {
       },
       child: Material(
         color: Colors.transparent,
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Stack(
-            children: [
-              GestureDetector(
-                onTap: () => Get.back(),
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 400),
-                  opacity: 1,
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.easeOutCubic,
-                  height: size.height * 1,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
+        child: Obx(() {
+          return PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, result) async {
+              if (didPop) return;
+
+              if (controller.hasUnsavedChanges.value) {
+                DialogHelper.showDiscardWarning(context);
+              } else {
+                Get.back();
+              }
+            },
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Stack(
+                children: [
+                  GestureDetector(
+                    onTap: () => Get.back(),
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 400),
+                      opacity: 1,
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 16.h),
-                      _header(),
-                      Divider(color: AppColors.containerE5E7EB, height: 0.h, thickness: 5),
-                      Expanded(
-                        child: SingleChildScrollView(child: _body(context)),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeOutCubic,
+                      height: size.height * 1,
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              Obx(
-                () {
-                  if (!controller.isKeyboardVisible.value) return SizedBox.shrink();
-                  return Positioned(
-                    bottom: 0.h,
-                    left: 0,
-                    right: 0,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 0.w),
-                      child: Container(
-                        height: 50.h,
-                        decoration: BoxDecoration(
-                          color: AppColors.containerF4F4F4,
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: controller.fileOptions.map((option) {
-                            return IconButton(
-                              onPressed: option.onTap,
-                              icon: SvgPicture.asset(
-                                option.image ?? "",
-                                width: 24.w,
-                                height: 24.h,
-                              ),
-                            );
-                          }).toList(),
-                        ),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 16.h),
+                          _header(context),
+                          Divider(color: AppColors.containerE5E7EB, height: 0.h, thickness: 5),
+                          Expanded(
+                            child: SingleChildScrollView(child: _body(context)),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-              )
-            ],
-          ),
-        ),
+                  ),
+                  Obx(
+                    () {
+                      if (!controller.isKeyboardVisible.value) return SizedBox.shrink();
+                      return Positioned(
+                        bottom: 0.h,
+                        left: 0,
+                        right: 0,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 0.w),
+                          child: Container(
+                            height: 50.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.containerF4F4F4,
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: controller.fileOptions.map((option) {
+                                return IconButton(
+                                  onPressed: option.onTap,
+                                  icon: SvgPicture.asset(
+                                    option.image ?? "",
+                                    width: 24.w,
+                                    height: 24.h,
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
 
-  Widget _header() {
+  Widget _header(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
       child: Row(
@@ -109,7 +124,13 @@ class ServiceRequestModal extends GetWidget<HomeController> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           IconButton(
-            onPressed: () => Get.back(),
+            onPressed: () {
+              if (controller.hasUnsavedChanges.value) {
+                DialogHelper.showDiscardWarning(context);
+              } else {
+                Get.back();
+              }
+            },
             icon: SvgPicture.asset(
               "assets/svgs/close.svg",
               width: 21.w,
@@ -207,8 +228,8 @@ class ServiceRequestModal extends GetWidget<HomeController> {
         ),
         SizedBox(height: 8.h),
         CustomTextField(
-          controller: controller.searchController,
-          focusNode: controller.searchFocusNode,
+          controller: controller.serviceController,
+          focusNode: controller.serviceFocusNode,
           hintText: "What service do you need?",
           labelStyle: TextStyle(
             fontSize: 15.sp,
@@ -222,7 +243,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
           ),
           maxLines: 5,
           textInputType: TextInputType.multiline,
-          onChanged: (service) {},
+          onChanged: (service) => controller.onTextChanged(service),
           enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
         ),
         SizedBox(height: 16.h),

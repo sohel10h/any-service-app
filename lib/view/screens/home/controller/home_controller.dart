@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/data/model/local/file_option_model.dart';
 
 class HomeController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -20,6 +22,7 @@ class HomeController extends GetxController {
   RxList<bool> imageLoadingFlags = <bool>[].obs;
   final ImagePicker _picker = ImagePicker();
   final RxList<XFile> selectedImages = <XFile>[].obs;
+  RxBool isKeyboardVisible = false.obs;
   final List<Map<String, dynamic>> bestSellingServices = [
     {
       "label": "BEST",
@@ -55,11 +58,43 @@ class HomeController extends GetxController {
       "labelColorEnd": Colors.green,
     },
   ];
+  List<FileOptionModel> fileOptions = [];
 
   @override
   void onInit() {
     super.onInit();
     _addListenerFocusNodes();
+    _initFileOptions();
+  }
+
+  void _initFileOptions() {
+    fileOptions = [
+      FileOptionModel(
+        id: 0,
+        image: "assets/svgs/image_outline.svg",
+        onTap: pickImages,
+      ),
+      FileOptionModel(
+        id: 1,
+        image: "assets/svgs/tag_outline.svg",
+        onTap: () => log("Tag tapped"),
+      ),
+      FileOptionModel(
+        id: 2,
+        image: "assets/svgs/location_outline.svg",
+        onTap: () => log("Location tapped"),
+      ),
+      FileOptionModel(
+        id: 3,
+        image: "assets/svgs/clock_outline.svg",
+        onTap: () => log("Clock tapped"),
+      ),
+      FileOptionModel(
+        id: 4,
+        image: "assets/svgs/more_horizontal.svg",
+        onTap: () => DialogHelper.showBottomSheet(Get.context!),
+      ),
+    ];
   }
 
   Future<void> pickImages() async {

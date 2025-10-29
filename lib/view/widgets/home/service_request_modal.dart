@@ -5,12 +5,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/helper_function.dart';
-import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/home/custom_dropdown_chip.dart';
+import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/home/controller/home_controller.dart';
-import 'package:service_la/view/widgets/home/service_request_bottom_sheet.dart';
 
 class ServiceRequestModal extends GetWidget<HomeController> {
   const ServiceRequestModal({super.key});
@@ -18,6 +17,10 @@ class ServiceRequestModal extends GetWidget<HomeController> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final viewInsets = MediaQuery.of(context).viewInsets.bottom;
+      controller.isKeyboardVisible.value = viewInsets > 0;
+    });
 
     return Hero(
       tag: "service_request_modal",
@@ -58,6 +61,39 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                   ),
                 ),
               ),
+              Obx(
+                () {
+                  if (!controller.isKeyboardVisible.value) return SizedBox.shrink();
+                  return Positioned(
+                    bottom: 0.h,
+                    left: 0,
+                    right: 0,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 0.w),
+                      child: Container(
+                        height: 50.h,
+                        decoration: BoxDecoration(
+                          color: AppColors.containerF4F4F4,
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: controller.fileOptions.map((option) {
+                            return IconButton(
+                              onPressed: option.onTap,
+                              icon: SvgPicture.asset(
+                                option.image ?? "",
+                                width: 24.w,
+                                height: 24.h,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              )
             ],
           ),
         ),
@@ -166,15 +202,6 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                   },
                 ),
               ),
-              IconButton(
-                padding: EdgeInsets.zero,
-                onPressed: () => _showBottomSheet(context),
-                icon: SvgPicture.asset(
-                  "assets/svgs/image_outline.svg",
-                  width: 22.w,
-                  height: 22.h,
-                ),
-              ),
             ],
           ),
         ),
@@ -245,18 +272,8 @@ class ServiceRequestModal extends GetWidget<HomeController> {
             ),
           ),
         ),
-        SizedBox(height: 20.h),
+        controller.isKeyboardVisible.value ? SizedBox(height: 70.h) : SizedBox(height: 20.h),
       ],
-    );
-  }
-
-  void _showBottomSheet(BuildContext context) async {
-    await Future.delayed(const Duration(milliseconds: 50));
-
-    await Get.bottomSheet(
-      const ServiceRequestBottomSheet(),
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
     );
   }
 }

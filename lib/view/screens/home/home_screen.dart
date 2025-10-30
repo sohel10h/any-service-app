@@ -5,6 +5,7 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/data/model/local/category_model.dart';
 import 'package:service_la/view/widgets/home/category_section.dart';
+import 'package:service_la/view/widgets/home/cleaning_service_section.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/home/controller/home_controller.dart';
 import 'package:service_la/view/widgets/home/best_selling_services_section.dart';
@@ -35,6 +36,8 @@ class HomeScreen extends GetWidget<HomeController> {
           BestSellingServicesSection(controller: controller),
           SizedBox(height: 8.h),
           _buildCategorySection(),
+          SizedBox(height: 8.h),
+          CleaningServiceSection(controller: controller),
         ],
       ),
     );

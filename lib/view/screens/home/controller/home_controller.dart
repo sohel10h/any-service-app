@@ -6,6 +6,7 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/local/file_option_model.dart';
+import 'package:service_la/routes/app_routes.dart';
 
 class HomeController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -67,6 +68,24 @@ class HomeController extends GetxController {
       "labelColorEnd": Colors.green,
     },
   ];
+  final List<Map<String, dynamic>> cleaningServices = [
+    {
+      "serviceName": "Regular House Cleaning",
+      "providerName": "CleanMaster",
+      "profileImageUrl": HelperFunction.placeholderImageUrl35,
+      "rating": 4.9,
+      "price": "65",
+      "postedTime": "2 hours ago",
+    },
+    {
+      "serviceName": "Deep Cleaning",
+      "providerName": "CleanMaster",
+      "profileImageUrl": HelperFunction.placeholderImageUrl35,
+      "rating": 4.9,
+      "price": "120",
+      "postedTime": "3 hours ago",
+    },
+  ];
   List<FileOptionModel> fileOptions = [];
 
   @override
@@ -75,6 +94,8 @@ class HomeController extends GetxController {
     _addListenerFocusNodes();
     _initFileOptions();
   }
+
+  void goToServiceDetailsScreen() => Get.toNamed(AppRoutes.serviceDetailsScreen);
 
   void submitBudgetRange() {
     if (!(budgetFormKey.currentState?.validate() ?? true)) {

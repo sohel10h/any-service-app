@@ -87,7 +87,10 @@ class BestSellingServicesSection extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
         itemCount: controller.bestSellingServices.length,
         itemBuilder: (context, index) {
-          return BestSellingServicesCardItem(service: controller.bestSellingServices[index]);
+          return BestSellingServicesCardItem(
+            onTap: controller.goToServiceDetailsScreen,
+            service: controller.bestSellingServices[index],
+          );
         },
       ),
     );

@@ -31,6 +31,13 @@ class AppColors {
   static Color text101828 = colorFromHex('#101828');
   static Color text364153 = colorFromHex('#364153');
   static Color text4A5565 = colorFromHex('#4A5565');
+  static Color text0A0A0A = colorFromHex('#0A0A0A');
+  static Color text894B00 = colorFromHex('#894B00');
+  static Color text59168B = colorFromHex('#59168B');
+  static Color text00A63E = colorFromHex('#00A63E');
+  static Color text8200DB = colorFromHex('#8200DB');
+  static Color text008236 = colorFromHex('#008236');
+  static Color text1447E6 = colorFromHex('#1447E6');
   static Color containerB63B1F = colorFromHex('#B63B1F');
   static Color container4485FD = colorFromHex('#4485FD');
   static Color containerA584FF = colorFromHex('#A584FF');
@@ -64,10 +71,21 @@ class AppColors {
   static Color containerF3F4F6 = colorFromHex('#F3F4F6');
   static Color containerFB2C36 = colorFromHex('#FB2C36');
   static Color containerFF6900 = colorFromHex('#FF6900');
+  static Color containerDCFCE7 = colorFromHex('#DCFCE7');
+  static Color containerDBEAFE = colorFromHex('#DBEAFE');
+  static Color containerFFEDD4 = colorFromHex('#FFEDD4');
+  static Color containerFEF9C2 = colorFromHex('#FEF9C2');
+  static Color containerFAF5FF = colorFromHex('#FAF5FF');
+  static Color containerEFF6FF = colorFromHex('#EFF6FF');
+  static Color container1A4FD6 = colorFromHex('#1A4FD6');
   static Color borderE3E5E5 = colorFromHex('#E3E5E5');
   static Color borderE8E8E8 = colorFromHex('#E8E8E8');
   static Color borderD5D7DA = colorFromHex('#D5D7DA');
   static Color borderE3E7EC = colorFromHex('#E3E7EC');
+  static Color borderFFF085 = colorFromHex('#FFF085');
+  static Color borderE5E7EB = colorFromHex('#E5E7EB');
+  static Color borderE9D4FF = colorFromHex('#E9D4FF');
+  static Color borderFFC9C9 = colorFromHex('#FFC9C9');
   static Color dividerE9EAEB = colorFromHex('#E9EAEB');
   static Color backgroundD4F1F9 = colorFromHex('#D4F1F9');
 

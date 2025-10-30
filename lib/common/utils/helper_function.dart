@@ -15,6 +15,8 @@ class HelperFunction {
   static String placeholderImageUrl35 = "https://placehold.co/35x35.png";
   static String placeholderImageUrl178_84 = "https://placehold.co/178x84.png";
   static String placeholderImageUrl412_320 = "https://placehold.co/412x320.png";
+  static String imageUrl1 = "https://i.imgur.com/mqtYQc6.png";
+  static String imageUrl2 = "https://i.imgur.com/uCa4vK8.png";
 
   static void changeStatusBarColor() => SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(

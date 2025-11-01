@@ -17,7 +17,7 @@ class HomeScreen extends GetWidget<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        padding: EdgeInsets.only(bottom: 140.h),
+        padding: EdgeInsets.only(bottom: 100.h),
         children: [
           Stack(
             fit: StackFit.loose,

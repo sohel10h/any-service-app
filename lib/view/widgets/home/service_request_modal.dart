@@ -40,6 +40,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                 DialogHelper.showDiscardWarning(context);
               } else {
                 Get.back();
+                controller.landingController.changeIndex(0, context);
               }
             },
             child: Scaffold(
@@ -129,6 +130,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                 DialogHelper.showDiscardWarning(context);
               } else {
                 Get.back();
+                controller.landingController.changeIndex(0, context);
               }
             },
             icon: SvgPicture.asset(

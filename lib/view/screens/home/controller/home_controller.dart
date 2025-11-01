@@ -7,6 +7,7 @@ import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/local/file_option_model.dart';
 import 'package:service_la/routes/app_routes.dart';
+import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 
 class HomeController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -33,6 +34,7 @@ class HomeController extends GetxController {
   RxBool isKeyboardVisible = false.obs;
   RxBool hasUnsavedChanges = false.obs;
   RxBool isIndividualSelected = true.obs;
+  LandingController landingController = Get.find<LandingController>();
   final List<Map<String, dynamic>> bestSellingServices = [
     {
       "label": "BEST",

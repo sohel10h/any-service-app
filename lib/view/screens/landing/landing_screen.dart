@@ -17,7 +17,7 @@ class LandingScreen extends GetWidget<LandingController> {
         canPop: controller.currentIndex.value == 0,
         onPopInvokedWithResult: (didPop, result) async {
           if (!didPop && controller.currentIndex.value != 0) {
-            controller.changeIndex(0);
+            controller.changeIndex(0, context);
           }
         },
         child: Scaffold(
@@ -33,10 +33,10 @@ class LandingScreen extends GetWidget<LandingController> {
                 bottom: 16.h,
                 child: CustomBottomNavBar(
                   currentIndex: controller.currentIndex.value,
-                  onTap: controller.changeIndex,
+                  onTap: (index) => controller.changeIndex(index, context),
                 ),
               ),
-              Positioned(
+              /*Positioned(
                 bottom: 50.h,
                 child: Center(
                   child: SizedBox(
@@ -76,7 +76,7 @@ class LandingScreen extends GetWidget<LandingController> {
                     ),
                   ),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),

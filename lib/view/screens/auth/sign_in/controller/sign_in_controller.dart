@@ -1,13 +1,18 @@
+import 'dart:io';
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
+import 'package:service_la/data/repository/fcm_repo.dart';
 import 'package:service_la/data/repository/auth_repo.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/network/sign_in_model.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
+import 'package:service_la/data/model/network/user_device_token_model.dart';
 
 class SignInController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -19,11 +24,37 @@ class SignInController extends GetxController {
   final RxBool isRememberMe = false.obs;
   final AuthRepo _authRepo = AuthRepo();
   RxBool isLoadingSignIn = false.obs;
+  final FcmRepo _fcmRepo = FcmRepo();
 
   @override
   void onInit() {
     super.onInit();
     _addListenerFocusNodes();
+  }
+
+  Future<void> _sendUserDeviceTokens() async {
+    try {
+      dynamic params = {
+        ApiParams.deviceToken: await FirebaseMessaging.instance.getToken() ?? "",
+        ApiParams.deviceType: Platform.isAndroid ? AppDeviceType.android.typeValue : AppDeviceType.ios.typeValue,
+      };
+      log("UserDeviceTokens POST Params: $params");
+      var response = await _fcmRepo.userDeviceTokens(params);
+
+      if (response is String) {
+        log("UserDeviceTokens failed from controller response: $response");
+      } else {
+        UserDeviceTokenModel userDeviceToken = response as UserDeviceTokenModel;
+        if (userDeviceToken.status == 200 || userDeviceToken.status == 201) {
+        } else {
+          log("UserDeviceTokens failed from controller: ${userDeviceToken.status}");
+        }
+      }
+    } catch (e) {
+      log("UserDeviceTokens catch error from controller: ${e.toString()}");
+    } finally {
+      // statement
+    }
   }
 
   void signInButtonOnTap() async {
@@ -57,6 +88,7 @@ class SignInController extends GetxController {
             icon: Icons.check,
             backgroundColor: AppColors.green,
           );
+          await _sendUserDeviceTokens();
           _goToLandingScreen();
         } else {
           HelperFunction.snackbar("Sign in failed. Please check your email and password.");

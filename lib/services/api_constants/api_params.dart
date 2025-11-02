@@ -6,4 +6,6 @@ class ApiParams {
   static const String name = "name";
   static const String password = "password";
   static const String sessionToken = "session_token";
+  static const String deviceToken = "device_token";
+  static const String deviceType = "device_type";
 }

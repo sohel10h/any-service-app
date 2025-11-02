@@ -2,11 +2,11 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/local/file_option_model.dart';
-import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 
 class HomeController extends GetxController {

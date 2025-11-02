@@ -25,7 +25,7 @@ class ServiceDetailsController extends GetxController {
       isBest: true,
       belowBudget: true,
       shortlisted: false,
-      imageUrl: "https://i.pravatar.cc/150?img=2",
+      imageUrl: HelperFunction.userImage1,
     ),
     ProviderBidModel(
       name: "Sarah Johnson",
@@ -41,7 +41,7 @@ class ServiceDetailsController extends GetxController {
       isBest: false,
       belowBudget: true,
       shortlisted: true,
-      imageUrl: "https://i.pravatar.cc/150?img=8",
+      imageUrl: HelperFunction.userImage2,
     ),
   ].obs;
 

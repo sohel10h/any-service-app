@@ -13,10 +13,13 @@ class HelperFunction {
   static String placeholderImageUrl17 = "https://placehold.co/17x17.png";
   static String placeholderImageUrl30 = "https://placehold.co/30x30.png";
   static String placeholderImageUrl35 = "https://placehold.co/35x35.png";
+  static String placeholderImageUrl70 = "https://placehold.co/70x70.png";
   static String placeholderImageUrl178_84 = "https://placehold.co/178x84.png";
   static String placeholderImageUrl412_320 = "https://placehold.co/412x320.png";
   static String imageUrl1 = "https://i.imgur.com/mqtYQc6.png";
   static String imageUrl2 = "https://i.imgur.com/uCa4vK8.png";
+  static String userImage1 = "https://i.pravatar.cc/150?img=2";
+  static String userImage2 = "https://i.pravatar.cc/150?img=8";
 
   static void changeStatusBarColor() => SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(

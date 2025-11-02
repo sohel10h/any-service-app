@@ -1,0 +1,53 @@
+import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bid_item.dart';
+import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
+
+class VendorProfileBids extends GetWidget<VendorProfileController> {
+  const VendorProfileBids({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    "Your Bids",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: AppColors.text101828,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
+                    "${controller.bids.length} total",
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: AppColors.text4A5565,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 8.h),
+            ...controller.bids.map((bid) => VendorProfileBidItem(bid: bid)),
+          ],
+        ),
+      ),
+    );
+  }
+}

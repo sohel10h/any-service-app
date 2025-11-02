@@ -1,0 +1,101 @@
+import 'package:flutter/material.dart';
+import 'package:service_la/common/utils/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/view/widgets/common/network_image_loader.dart';
+import 'package:service_la/data/model/local/vendor_profile_service_model.dart';
+
+class VendorProfileServiceItem extends StatelessWidget {
+  final VendorProfileServiceModel service;
+
+  const VendorProfileServiceItem({required this.service, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 12.h),
+      color: AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14.r),
+        side: BorderSide(color: AppColors.borderE5E7EB),
+      ),
+      elevation: 1,
+      child: Padding(
+        padding: EdgeInsets.all(12.w),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            NetworkImageLoader(
+              service.image,
+              width: 70.w,
+              height: 70.w,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        service.title,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: AppColors.text101828,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      Icon(Icons.more_vert, color: Colors.grey),
+                    ],
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    service.category,
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      color: AppColors.text4A5565,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    service.price,
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      color: AppColors.container155DFC,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 6.h),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: service.statusColor,
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Text(
+                      service.status,
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: service.statusTextColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

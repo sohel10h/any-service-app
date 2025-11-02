@@ -6,6 +6,8 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final TextStyle? textStyle;
   final bool isBackButton;
+  final Widget? backButton;
+  final bool centerTitle;
   final List<Widget> actions;
   final VoidCallback? onBackButtonPressed;
   final String? iconPath;
@@ -17,8 +19,10 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.iconPath,
     this.isOnlyIcon,
     required this.title,
+    this.backButton,
     this.textStyle,
     this.isBackButton = true,
+    this.centerTitle = false,
     this.actions = const [],
   });
 
@@ -26,8 +30,14 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      leadingWidth: 10,
-      leading: isBackButton ? Icon(Icons.arrow_back_ios) : null,
+      leadingWidth: 56,
+      centerTitle: centerTitle,
+      leading: isBackButton
+          ? backButton
+          : Padding(
+              padding: EdgeInsets.only(left: 16.w),
+              child: Icon(Icons.arrow_back_ios, color: AppColors.black),
+            ),
       title: Text(
         title,
         style: textStyle ??

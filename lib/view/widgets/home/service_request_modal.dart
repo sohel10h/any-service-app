@@ -8,6 +8,7 @@ import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
+import 'package:service_la/view/widgets/home/service_request_budget_item.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/home/controller/home_controller.dart';
 import 'package:service_la/view/widgets/home/service_request_toggle_button.dart';
@@ -299,6 +300,13 @@ class ServiceRequestModal extends GetWidget<HomeController> {
             ),
           ),
         ),
+        SizedBox(height: 16.h),
+        controller.minBudget.value.isEmpty || controller.maxBudget.value.isEmpty
+            ? const SizedBox.shrink()
+            : Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: ServiceRequestBudgetItem(),
+              ),
         controller.isKeyboardVisible.value ? SizedBox(height: 70.h) : SizedBox(height: 20.h),
       ],
     );

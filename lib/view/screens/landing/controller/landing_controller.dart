@@ -11,12 +11,17 @@ class LandingController extends GetxController {
   RxInt currentIndex = 0.obs;
   RxBool isHideBottomNav = false.obs;
 
-  void changeIndex(int index, BuildContext context) {
+  void changeIndex(int index, BuildContext context) async {
     isHideBottomNav.value = false;
     log("Changed tab index: $index");
     currentIndex.value = index;
     if (currentIndex.value == 2) {
+      isHideBottomNav.value = true;
       DialogHelper.showServiceRequestModal(context);
+      await Future.delayed(Duration(microseconds: 100));
+      if (context.mounted) {
+        DialogHelper.showBottomSheet(context);
+      }
     }
     if (currentIndex.value == 4) {
       isHideBottomNav.value = true;

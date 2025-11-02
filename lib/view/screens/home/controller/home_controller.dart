@@ -35,6 +35,8 @@ class HomeController extends GetxController {
   RxBool hasUnsavedChanges = false.obs;
   RxBool isIndividualSelected = true.obs;
   LandingController landingController = Get.find<LandingController>();
+  RxString minBudget = "".obs;
+  RxString maxBudget = "".obs;
   final List<Map<String, dynamic>> bestSellingServices = [
     {
       "label": "BEST",
@@ -99,16 +101,34 @@ class HomeController extends GetxController {
 
   void goToServiceDetailsScreen() => Get.toNamed(AppRoutes.serviceDetailsScreen);
 
-  void submitBudgetRange() {
+  void clearBudgetRange() {
+    hasUnsavedChanges.value = false;
+    budgetFromController.clear();
+    budgetToController.clear();
+    minBudget.value = "";
+    maxBudget.value = "";
+  }
+
+  void editBudgetRange(BuildContext context) async {
+    budgetFromController.text = minBudget.value;
+    budgetToController.text = maxBudget.value;
+    await Future.delayed(Duration(microseconds: 300));
+    if (context.mounted) {
+      DialogHelper.showBudgetRangeSheet(context);
+    }
+  }
+
+  void addBudgetRange() {
     if (!(budgetFormKey.currentState?.validate() ?? true)) {
       return;
     }
     Get.back();
-    final from = budgetFromController.text.trim();
-    final to = budgetToController.text.trim();
-    log("Budget Range: From ৳$from To ৳$to");
+    minBudget.value = budgetFromController.text.trim();
+    maxBudget.value = budgetToController.text.trim();
+    log("Budget Range: From ৳${minBudget.value} To ৳${maxBudget.value}");
     budgetFromController.clear();
     budgetToController.clear();
+    hasUnsavedChanges.value = true;
   }
 
   void onTextChanged(String value) {
@@ -118,6 +138,7 @@ class HomeController extends GetxController {
   void clearDraft() {
     serviceController.clear();
     selectedImages.clear();
+    clearBudgetRange();
     hasUnsavedChanges.value = false;
   }
 

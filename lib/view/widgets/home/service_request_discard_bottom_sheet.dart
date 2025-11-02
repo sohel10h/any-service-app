@@ -51,6 +51,7 @@ class ServiceRequestDiscardBottomSheet extends GetWidget<HomeController> {
                   controller.clearDraft();
                   Get.back();
                   Get.back();
+                  controller.landingController.changeIndex(0, context);
                 },
                 child: Row(
                   children: [

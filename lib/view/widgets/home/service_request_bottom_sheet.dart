@@ -1,4 +1,3 @@
-import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
@@ -77,13 +76,12 @@ class ServiceRequestBottomSheet extends GetWidget<HomeController> {
                       "assets/svgs/dollar.svg",
                       "Budget range",
                       onTap: () async {
+                        final currentContext = Get.context ?? context;
                         Get.back();
-                        await Future.delayed(const Duration(milliseconds: 200));
-                        SchedulerBinding.instance.addPostFrameCallback((_) {
-                          if (Get.context?.mounted ?? false) {
-                            DialogHelper.showBudgetRangeSheet(Get.context!);
-                          }
-                        });
+                        await Future.delayed(const Duration(milliseconds: 300));
+                        if (currentContext.mounted) {
+                          DialogHelper.showBudgetRangeSheet(currentContext);
+                        }
                       },
                     ),
                     SizedBox(height: 24.h),

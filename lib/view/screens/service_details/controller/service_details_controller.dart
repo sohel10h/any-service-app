@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/local/provider_bid_model.dart';
+import 'package:service_la/view/widgets/service_details/service_details_provider_bids_section.dart';
 
 class ServiceDetailsController extends GetxController {
   RxList<String> imageUrls = <String>[].obs;
@@ -8,6 +10,7 @@ class ServiceDetailsController extends GetxController {
   RxInt selectedTabIndex = 0.obs;
   RxInt selectedFilterIndex = 0.obs;
   final List<String> tabs = ["All Bids", "Shortlisted", "Rejected", "Final Bid"];
+  List<CustomScrollView> tabViews = [];
   final List<int> tabsCounts = [5, 1, 2, 0];
   final List<String> filters = ["Lowest Price", "Top Rated"];
   final RxList<ProviderBidModel> bids = [
@@ -49,6 +52,32 @@ class ServiceDetailsController extends GetxController {
   void onInit() {
     super.onInit();
     _addImagesUrls();
+    _addViews();
+  }
+
+  void _addViews() {
+    tabViews = [
+      CustomScrollView(
+        slivers: [
+          ServiceDetailsProviderBidsSection(),
+        ],
+      ),
+      CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: Text("Tab 2")),
+        ],
+      ),
+      CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: Text("Tab 3")),
+        ],
+      ),
+      CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: Text("Tab 4")),
+        ],
+      ),
+    ];
   }
 
   void _addImagesUrls() {

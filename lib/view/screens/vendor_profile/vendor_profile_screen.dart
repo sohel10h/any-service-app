@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
+import 'package:service_la/view/widgets/common/tab_bar_delegate.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_tab.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_header.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
@@ -84,7 +85,7 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
                 ),
                 SliverPersistentHeader(
                   pinned: true,
-                  delegate: _TabBarDelegate(
+                  delegate: TabBarDelegate(
                     child: VendorProfileTab(isFromNestedScroll: true),
                   ),
                 ),
@@ -101,39 +102,5 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
         ),
       ),
     );
-  }
-}
-
-/// Delegate that guarantees the painted child height equals reported extents.
-class _TabBarDelegate extends SliverPersistentHeaderDelegate {
-  final Widget child;
-
-  // Set desired extents here:
-  static final double _kExtent = 52.h;
-
-  _TabBarDelegate({required this.child});
-
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    // Constrain child to the expected height so SliverGeometry stays valid.
-    return SizedBox(
-      height: maxExtent,
-      child: Container(
-        color: Colors.white,
-        child: child,
-      ),
-    );
-  }
-
-  @override
-  double get maxExtent => _kExtent;
-
-  @override
-  double get minExtent => _kExtent;
-
-  @override
-  bool shouldRebuild(covariant _TabBarDelegate oldDelegate) {
-    // If the child instance changes or extents change, return true.
-    return oldDelegate.child != child;
   }
 }

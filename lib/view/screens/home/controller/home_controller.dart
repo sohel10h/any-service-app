@@ -5,6 +5,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/src/media_type.dart';
+import 'package:service_la/data/model/network/upload_service_request_model.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
@@ -45,6 +46,10 @@ class HomeController extends GetxController {
   RxString minBudget = "".obs;
   RxString maxBudget = "".obs;
   final ServiceRequestRepo _serviceRequestRepo = ServiceRequestRepo();
+  RxString serviceDescription = "".obs;
+  RxString companyName = "".obs;
+  RxList<String> attachmentIds = <String>[].obs;
+  RxBool isLoadingServiceRequests = false.obs;
   final List<Map<String, dynamic>> bestSellingServices = [
     {
       "label": "BEST",
@@ -107,6 +112,51 @@ class HomeController extends GetxController {
     _initFileOptions();
   }
 
+  void onTapPostButton(BuildContext context) async => await _serviceRequests(context);
+
+  Future<void> _serviceRequests(BuildContext context) async {
+    HelperFunction.hideKeyboard();
+    isLoadingServiceRequests.value = true;
+    try {
+      dynamic params = {
+        ApiParams.description: serviceController.text.trim(),
+        ApiParams.budgetMin: double.tryParse(minBudget.value),
+        ApiParams.budgetMax: double.tryParse(maxBudget.value),
+        ApiParams.isCorporate: !isIndividualSelected.value,
+        ApiParams.companyName: companyNameController.text.trim(),
+        ApiParams.contactPerson: "",
+        ApiParams.attachmentIds: attachmentIds,
+      };
+      log("ServiceRequests POST Params: $params");
+      var response = await _serviceRequestRepo.serviceRequests(params);
+
+      if (response is String) {
+        log("ServiceRequests failed from controller response: $response");
+      } else {
+        UploadServiceRequestModel serviceRequest = response as UploadServiceRequestModel;
+        if (serviceRequest.status == 200 || serviceRequest.status == 201) {
+          clearDraft();
+          Get.back();
+          if (context.mounted) landingController.changeIndex(0, context);
+          HelperFunction.snackbar(
+            "Service requests uploaded successfully!",
+            title: "Success",
+            icon: Icons.check,
+            backgroundColor: AppColors.green,
+          );
+        } else {
+          HelperFunction.snackbar("ServiceRequests failed");
+          log("ServiceRequests failed from controller: ${serviceRequest.status}");
+        }
+      }
+    } catch (e) {
+      HelperFunction.snackbar("ServiceRequests failed");
+      log("ServiceRequests catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingServiceRequests.value = false;
+    }
+  }
+
   void goToServiceDetailsScreen() => Get.toNamed(AppRoutes.serviceDetailsScreen);
 
   void clearBudgetRange() {
@@ -139,12 +189,22 @@ class HomeController extends GetxController {
     hasUnsavedChanges.value = true;
   }
 
-  void onTextChanged(String value) {
-    hasUnsavedChanges.value = value.trim().isNotEmpty || selectedImages.isNotEmpty;
+  void onCompanyNameTextChanged(String companyNameValue) {
+    companyName.value = companyNameValue.trim();
+    hasUnsavedChanges.value = companyNameValue.trim().isNotEmpty || selectedImages.isNotEmpty;
+  }
+
+  void onServiceTextChanged(String serviceValue) {
+    serviceDescription.value = serviceValue.trim();
+    hasUnsavedChanges.value = serviceValue.trim().isNotEmpty || selectedImages.isNotEmpty;
   }
 
   void clearDraft() {
+    isIndividualSelected.value = true;
+    isIndividualSelected.refresh();
     serviceController.clear();
+    serviceDescription.value = "";
+    companyNameController.clear();
     selectedImages.clear();
     clearBudgetRange();
     hasUnsavedChanges.value = false;
@@ -183,7 +243,7 @@ class HomeController extends GetxController {
   Future<void> pickImages() async {
     final List<XFile> pickedImages = await _picker.pickMultiImage(limit: 4);
     if (pickedImages.isEmpty) {
-      log("🚫 No image selected.");
+      log("No image selected.");
       return;
     }
     if (pickedImages.length >= 4) {
@@ -248,6 +308,7 @@ class HomeController extends GetxController {
         UploadAdminPictureModel pictureModel = response as UploadAdminPictureModel;
         if (pictureModel.status == 200 || pictureModel.status == 201) {
           log("Image uploaded successfully: ${pictureModel.status}");
+          attachmentIds.add(pictureModel.data?.id ?? "");
           return true;
         } else {
           if (pictureModel.status == 401 ||

@@ -14,4 +14,15 @@ class ApiConstant {
 
   // END POINTS - Service requests
   static const String adminPicturesPath = "/api/admin/pictures";
+  static const String serviceRequestsPath = "/api/service-requests";
+
+  // Functions
+  static String dynamicQueryParams(String endpoint, {Map<String, dynamic>? queryParams}) {
+    final uri = Uri.parse(endpoint).replace(
+      queryParameters: queryParams?.map(
+        (key, value) => MapEntry(key, value.toString()),
+      ),
+    );
+    return uri.toString();
+  }
 }

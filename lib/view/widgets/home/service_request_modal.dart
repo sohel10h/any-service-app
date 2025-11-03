@@ -8,9 +8,9 @@ import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
-import 'package:service_la/view/widgets/home/service_request_budget_item.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/home/controller/home_controller.dart';
+import 'package:service_la/view/widgets/home/service_request_budget_item.dart';
 import 'package:service_la/view/widgets/home/service_request_toggle_button.dart';
 
 class ServiceRequestModal extends GetWidget<HomeController> {
@@ -40,6 +40,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
               if (controller.hasUnsavedChanges.value) {
                 DialogHelper.showDiscardWarning(context);
               } else {
+                controller.isIndividualSelected.value = true;
                 Get.back();
                 controller.landingController.changeIndex(0, context);
               }
@@ -119,56 +120,87 @@ class ServiceRequestModal extends GetWidget<HomeController> {
   }
 
   Widget _header(BuildContext context) {
+    const double rightWidgetWidth = 70;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          IconButton(
-            onPressed: () {
-              if (controller.hasUnsavedChanges.value) {
-                DialogHelper.showDiscardWarning(context);
-              } else {
-                Get.back();
-                controller.landingController.changeIndex(0, context);
-              }
-            },
-            icon: SvgPicture.asset(
-              "assets/svgs/close.svg",
-              width: 21.w,
-              height: 21.h,
-            ),
-          ),
-          Expanded(
-            child: Text(
-              "Create request",
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: AppColors.text101828,
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-          ),
-          Flexible(
-            child: TextButton(
-              onPressed: () {},
+      child: SizedBox(
+        height: 40.h,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            SizedBox(
+              width: Get.width / 1.9,
               child: Text(
-                "Post",
+                "Create request",
                 style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppColors.text9AA0B8,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 16.sp,
+                  color: AppColors.text101828,
+                  fontWeight: FontWeight.w700,
                 ),
+                textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
             ),
-          ),
-        ],
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                onPressed: () {
+                  if (controller.hasUnsavedChanges.value) {
+                    DialogHelper.showDiscardWarning(context);
+                  } else {
+                    controller.isIndividualSelected.value = true;
+                    Get.back();
+                    controller.landingController.changeIndex(0, context);
+                  }
+                },
+                icon: SvgPicture.asset(
+                  "assets/svgs/close.svg",
+                  width: 21.w,
+                  height: 21.h,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Obx(() {
+                final isLoading = controller.isLoadingServiceRequests.value;
+                final isIndividual = controller.isIndividualSelected.value;
+                final desc = controller.serviceDescription.value;
+                final company = controller.companyName.value;
+                final isDisabled = isIndividual ? desc.isEmpty : desc.isEmpty || company.isEmpty;
+                return SizedBox(
+                  width: rightWidgetWidth.w,
+                  child: isLoading
+                      ? const CustomProgressBar(size: 24, strokeWidth: 2)
+                      : Padding(
+                          padding: EdgeInsets.only(right: 8.w),
+                          child: ElevatedButton(
+                            onPressed: isDisabled ? null : () => controller.onTapPostButton(context),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.r),
+                              ),
+                            ),
+                            child: Text(
+                              "Post",
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: AppColors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                        ),
+                );
+              }),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -227,7 +259,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                         controller: controller.companyNameController,
                         focusNode: controller.companyNameFocusNode,
                         hintText: "Enter your company name",
-                        onChanged: (companyName) {},
+                        onChanged: (companyName) => controller.onCompanyNameTextChanged(companyName),
                       ),
                     ],
                   ),
@@ -250,7 +282,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
           ),
           maxLines: 5,
           textInputType: TextInputType.multiline,
-          onChanged: (service) => controller.onTextChanged(service),
+          onChanged: (service) => controller.onServiceTextChanged(service),
           enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
         ),
         SizedBox(height: 16.h),

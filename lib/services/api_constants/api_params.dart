@@ -14,4 +14,11 @@ class ApiParams {
   static const String altAttribute = "alt_attribute";
   static const String titleAttribute = "title_attribute";
   static const String refreshToken = "refresh_token";
+  static const String description = "description";
+  static const String budgetMin = "budget_min";
+  static const String budgetMax = "budget_max";
+  static const String isCorporate = "is_corporate";
+  static const String companyName = "company_name";
+  static const String contactPerson = "contact_person";
+  static const String attachmentIds = "attachment_ids";
 }

@@ -3,24 +3,27 @@ import 'package:service_la/common/utils/app_colors.dart';
 
 class CustomProgressBar extends StatelessWidget {
   final Color? color;
-  final bool? isPositioned;
+  final double? size;
+  final double? strokeWidth;
 
-  const CustomProgressBar({super.key, this.color, this.isPositioned});
+  const CustomProgressBar({
+    super.key,
+    this.color,
+    this.size,
+    this.strokeWidth,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return isPositioned != null
-        ? Positioned(
-            left: 0.0,
-            top: 0.0,
-            right: 0.0,
-            bottom: 0.0,
-            child: Center(
-              child: CircularProgressIndicator(color: color ?? AppColors.primary),
-            ),
-          )
-        : Center(
-            child: CircularProgressIndicator(color: color ?? AppColors.primary),
-          );
+    final indicator = CircularProgressIndicator(
+      color: color ?? AppColors.primary,
+      strokeWidth: strokeWidth ?? 4.0,
+    );
+
+    final progressBar = Center(
+      child: size != null ? SizedBox(width: size, height: size, child: indicator) : indicator,
+    );
+
+    return progressBar;
   }
 }

@@ -8,4 +8,10 @@ class ServiceRequestInformation extends ServiceRequestApiService {
     dynamic response = await ApiService().post(ApiConstant.adminPicturesPath, params, isItFile: true);
     return response;
   }
+
+  @override
+  Future serviceRequests(params) async {
+    dynamic response = await ApiService().post(ApiConstant.serviceRequestsPath, params);
+    return response;
+  }
 }

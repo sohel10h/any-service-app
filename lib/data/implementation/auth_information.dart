@@ -26,4 +26,10 @@ class AuthInformation extends AuthApiService {
     dynamic response = await ApiService().post(ApiConstant.signInPath, params);
     return response;
   }
+
+  @override
+  Future refreshToken(params) async {
+    dynamic response = await ApiService().post(ApiConstant.refreshTokenPath, params);
+    return response;
+  }
 }

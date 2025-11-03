@@ -1,12 +1,19 @@
+import 'dart:io';
 import 'dart:developer';
 import 'package:get/get.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http_parser/src/media_type.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/local/file_option_model.dart';
+import 'package:service_la/data/repository/service_request_repo.dart';
+import 'package:service_la/data/model/network/upload_admin_picture_model.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 
 class HomeController extends GetxController {
@@ -37,6 +44,7 @@ class HomeController extends GetxController {
   LandingController landingController = Get.find<LandingController>();
   RxString minBudget = "".obs;
   RxString maxBudget = "".obs;
+  final ServiceRequestRepo _serviceRequestRepo = ServiceRequestRepo();
   final List<Map<String, dynamic>> bestSellingServices = [
     {
       "label": "BEST",
@@ -173,40 +181,103 @@ class HomeController extends GetxController {
   }
 
   Future<void> pickImages() async {
-    final List<XFile> pickedImages = await _picker.pickMultiImage(limit: 3);
-    if (pickedImages.isNotEmpty) {
-      for (XFile image in pickedImages) {
-        if (selectedImages.length >= 4) {
-          HelperFunction.snackbar(
-            "You can only add up to 4 images.",
-            title: "Limit Reached",
-            icon: Icons.warning,
-            backgroundColor: AppColors.yellow,
-          );
-          break;
+    final List<XFile> pickedImages = await _picker.pickMultiImage(limit: 4);
+    if (pickedImages.isEmpty) {
+      log("🚫 No image selected.");
+      return;
+    }
+    if (pickedImages.length >= 4) {
+      HelperFunction.snackbar(
+        "You can only add up to 4 images at a time",
+        title: "Limit Reached",
+        icon: Icons.warning,
+        backgroundColor: AppColors.yellow,
+      );
+      return;
+    }
+    for (XFile image in pickedImages) {
+      try {
+        final imageFile = await HelperFunction.getImageXFile(image);
+        _addImage(imageFile);
+        final index = selectedImages.length - 1;
+        imageLoadingFlags.insert(index, true);
+        imageLoadingFlags.refresh();
+        final success = await _uploadAdminPictures(imageFile, index);
+        if (!success) {
+          selectedImages.removeAt(index);
+          imageLoadingFlags.removeAt(index);
+        } else {
+          imageLoadingFlags[index] = false;
         }
-        _addImage(image);
-        imageLoadingFlags.add(true);
-        final currentIndex = selectedImages.length - 1;
-        try {
-          final imageFile = await HelperFunction.getImageXFile(image);
-          selectedImages[currentIndex] = imageFile;
-          imageLoadingFlags[currentIndex] = false;
-          selectedImages.refresh();
-          imageLoadingFlags.refresh();
-        } catch (e) {
-          imageLoadingFlags[currentIndex] = false;
-          imageLoadingFlags.refresh();
-          log("Error loading image: $e");
+        selectedImages.refresh();
+        imageLoadingFlags.refresh();
+      } catch (e) {
+        log("Error loading or uploading image: $e");
+        HelperFunction.snackbar("Failed to process image.");
+      }
+    }
+  }
+
+  Future<bool> _uploadAdminPictures(XFile imageXFile, int index) async {
+    try {
+      final file = File(imageXFile.path);
+      if (!await file.exists()) {
+        log("File does not exist: ${imageXFile.path}");
+        return false;
+      }
+      final fileName = file.path.split('/').last;
+      final extension = fileName.split('.').last.toLowerCase();
+      final formData = dio.FormData.fromMap({
+        ApiParams.file: await dio.MultipartFile.fromFile(
+          file.path,
+          contentType: MediaType("image", "image/$extension"),
+          filename: fileName,
+        ),
+        ApiParams.mimeType: extension,
+        ApiParams.seoFilename: fileName,
+        ApiParams.altAttribute: "Uploaded Image",
+        ApiParams.titleAttribute: "Admin Picture",
+      });
+      log("Upload Params: ${formData.fields}");
+      final response = await _serviceRequestRepo.uploadAdminPictures(formData);
+      if (response is String) {
+        HelperFunction.snackbar("Image upload failed");
+        log("Image upload failed controller response: $response");
+        return false;
+      } else {
+        UploadAdminPictureModel pictureModel = response as UploadAdminPictureModel;
+        if (pictureModel.status == 200 || pictureModel.status == 201) {
+          log("Image uploaded successfully: ${pictureModel.status}");
+          return true;
+        } else {
+          if (pictureModel.status == 401 ||
+              (pictureModel.errors != null &&
+                  pictureModel.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected in controller, refreshing...");
+            await ApiService().refreshTokenAndRetry(
+              () => _serviceRequestRepo.uploadAdminPictures(formData),
+            );
+            return false;
+          }
+          HelperFunction.snackbar("Image upload failed");
+          log("Image upload failed from controller: ${pictureModel.status}");
+          return false;
         }
       }
-    } else {
-      log("🚫 No image selected.");
+    } catch (e) {
+      HelperFunction.snackbar("Image upload failed");
+      log("Image upload catch error from controller: ${e.toString()}");
+      return false;
+    } finally {
+      imageLoadingFlags[index] = false;
+      imageLoadingFlags.refresh();
     }
   }
 
   void _addImage(XFile image) {
     selectedImages.add(image);
+    selectedImages.refresh();
     hasUnsavedChanges.value = true;
   }
 

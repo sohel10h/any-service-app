@@ -6,6 +6,7 @@ import 'package:service_la/data/model/network/sign_in_model.dart';
 import 'package:service_la/data/model/network/send_otp_model.dart';
 import 'package:service_la/data/implementation/auth_information.dart';
 import 'package:service_la/data/model/network/validate_otp_model.dart';
+import 'package:service_la/data/model/network/refresh_token_model.dart';
 
 class AuthRepo {
   AuthApiService authApiService = AuthInformation();
@@ -45,6 +46,16 @@ class AuthRepo {
       dynamic response = await authApiService.signIn(params);
       log("SignIn details from auth repo: $response");
       return SignInModel.fromJson(jsonDecode(response.toString()));
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future<dynamic> refreshToken(dynamic params) async {
+    try {
+      dynamic response = await authApiService.refreshToken(params);
+      log("RefreshToken details from auth repo: $response");
+      return RefreshTokenModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
       return e;
     }

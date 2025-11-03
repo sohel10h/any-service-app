@@ -1,10 +1,14 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:service_la/data/repository/auth_repo.dart';
 import 'package:service_la/services/api_constants/api_const.dart';
+import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
+import 'package:service_la/data/model/network/refresh_token_model.dart';
 
 class ApiService {
   late Dio _dio;
+  final AuthRepo _authRepo = AuthRepo();
 
   ApiService() {
     BaseOptions options = BaseOptions(
@@ -29,7 +33,7 @@ class ApiService {
     Response response;
     try {
       String authToken = StorageHelper.getValue(StorageHelper.authToken);
-      log("AuthToken = $authToken");
+      log("AuthToken GET = $authToken");
       if (authToken.isNotEmpty) {
         _dio.options.headers["Authorization"] = "Bearer $authToken";
       }
@@ -45,6 +49,7 @@ class ApiService {
     Response response;
     try {
       String authToken = StorageHelper.getValue(StorageHelper.authToken);
+      log("AuthToken DELETE = $authToken");
       if (authToken.isNotEmpty) {
         _dio.options.headers["Authorization"] = "Bearer $authToken";
       }
@@ -60,6 +65,7 @@ class ApiService {
     Response response;
     try {
       String authToken = StorageHelper.getValue(StorageHelper.authToken);
+      log("AuthToken PUT = $authToken");
       if (authToken.isNotEmpty) {
         _dio.options.headers["Authorization"] = "Bearer $authToken";
       }
@@ -75,6 +81,7 @@ class ApiService {
     Response response;
     try {
       String authToken = StorageHelper.getValue(StorageHelper.authToken);
+      log("AuthToken POST = $authToken");
       if (authToken.isNotEmpty) {
         _dio.options.headers["Authorization"] = "Bearer $authToken";
         if (isItFile) _dio.options.headers["Content-Type"] = "multipart/form-data";
@@ -84,6 +91,50 @@ class ApiService {
       return response;
     } on DioException catch (e) {
       return e.message;
+    }
+  }
+
+  Future<dynamic> refreshTokenAndRetry(Future<dynamic> Function() retryCallback) async {
+    bool refreshed = await _refreshToken();
+    if (refreshed) {
+      log("Retrying the previous request after token refresh...");
+      return await retryCallback();
+    } else {
+      log("Failed to refresh token, user should re-login.");
+      return null;
+    }
+  }
+
+  Future<bool> _refreshToken() async {
+    try {
+      final refreshToken = StorageHelper.getValue(StorageHelper.refreshToken);
+      if (refreshToken.isEmpty) {
+        log("No refresh token found — user must log in again.");
+        return false;
+      }
+      final params = {
+        ApiParams.refreshToken: refreshToken,
+      };
+      log("RefreshToken POST Params: $params");
+      final response = await _authRepo.refreshToken(params);
+      if (response is String) {
+        log("RefreshToken failed from api service response: $response");
+        return false;
+      } else {
+        final model = response as RefreshTokenModel;
+        if (model.status == 200 || model.status == 201) {
+          StorageHelper.setValue(StorageHelper.authToken, model.data?.accessToken ?? "");
+          StorageHelper.setValue(StorageHelper.refreshToken, model.data?.refreshToken ?? "");
+          log("Token refreshed successfully.");
+          return true;
+        } else {
+          log("RefreshToken failed with status: ${model.status}");
+          return false;
+        }
+      }
+    } catch (e) {
+      log("RefreshToken catch error: ${e.toString()}");
+      return false;
     }
   }
 }

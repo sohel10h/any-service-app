@@ -82,6 +82,7 @@ class SignInController extends GetxController {
         SignInModel signIn = response as SignInModel;
         if (signIn.status == 200 || signIn.status == 201) {
           StorageHelper.setValue(StorageHelper.authToken, signIn.data?.accessToken ?? "");
+          StorageHelper.setValue(StorageHelper.refreshToken, signIn.data?.refreshToken ?? "");
           HelperFunction.snackbar(
             "Signed in successfully. Redirecting to your dashboard...",
             title: "Success",

@@ -34,8 +34,8 @@ class SignInModel {
 
 class Data {
   final String? accessToken;
-  final DateTime? expiresAt;
-  final DateTime? refreshExpiresAt;
+  final String? expiresAt;
+  final String? refreshExpiresAt;
   final String? refreshToken;
 
   Data({
@@ -47,15 +47,15 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         accessToken: json["access_token"],
-        expiresAt: json["expires_at"] == null ? null : DateTime.parse(json["expires_at"]),
-        refreshExpiresAt: json["refresh_expires_at"] == null ? null : DateTime.parse(json["refresh_expires_at"]),
+        expiresAt: json["expires_at"],
+        refreshExpiresAt: json["refresh_expires_at"],
         refreshToken: json["refresh_token"],
       );
 
   Map<String, dynamic> toJson() => {
         "access_token": accessToken,
-        "expires_at": expiresAt?.toIso8601String(),
-        "refresh_expires_at": refreshExpiresAt?.toIso8601String(),
+        "expires_at": expiresAt,
+        "refresh_expires_at": refreshExpiresAt,
         "refresh_token": refreshToken,
       };
 }

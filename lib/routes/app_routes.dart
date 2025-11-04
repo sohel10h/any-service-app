@@ -8,4 +8,5 @@ abstract class AppRoutes {
   static const String otpVerificationScreen = '/otpVerificationScreen';
   static const String signUpCompleteScreen = '/signUpCompleteScreen';
   static const String serviceDetailsScreen = '/serviceDetailsScreen';
+  static const String createServiceScreen = '/createServiceScreen';
 }

@@ -134,7 +134,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
               child: Text(
                 "Create request",
                 style: TextStyle(
-                  fontSize: 16.sp,
+                  fontSize: 17.sp,
                   color: AppColors.text101828,
                   fontWeight: FontWeight.w700,
                 ),

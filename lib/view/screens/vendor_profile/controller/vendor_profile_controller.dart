@@ -4,6 +4,7 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/local/vendor_profile_bid_model.dart';
 import 'package:service_la/data/model/local/vendor_profile_service_model.dart';
+import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bids.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_services.dart';
@@ -102,6 +103,8 @@ class VendorProfileController extends GetxController {
     super.onInit();
     _addViews();
   }
+
+  void goToCreateServiceScreen() => Get.toNamed(AppRoutes.createServiceScreen);
 
   void _addViews() {
     tabViews = [

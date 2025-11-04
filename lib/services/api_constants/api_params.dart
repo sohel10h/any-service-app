@@ -21,4 +21,9 @@ class ApiParams {
   static const String companyName = "company_name";
   static const String contactPerson = "contact_person";
   static const String attachmentIds = "attachment_ids";
+  static const String price = "price";
+  static const String priceRange = "price_range";
+  static const String priceStart = "price_start";
+  static const String priceEnd = "price_end";
+  static const String pictures = "pictures";
 }

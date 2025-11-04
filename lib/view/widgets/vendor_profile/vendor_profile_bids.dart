@@ -21,7 +21,7 @@ class VendorProfileBids extends GetWidget<VendorProfileController> {
               children: [
                 Expanded(
                   child: Text(
-                    "Your Bids",
+                    "Bids",
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: AppColors.text101828,

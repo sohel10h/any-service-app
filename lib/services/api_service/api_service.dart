@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart' as get_package;
+import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/data/repository/auth_repo.dart';
 import 'package:service_la/services/api_constants/api_const.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
@@ -101,9 +103,17 @@ class ApiService {
       return await retryCallback();
     } else {
       log("Failed to refresh token, user should re-login.");
+      _logOut();
       return null;
     }
   }
+
+  void _logOut() {
+    StorageHelper.removeAllLocalData();
+    _goToSignInScreen();
+  }
+
+  void _goToSignInScreen() => get_package.Get.offAllNamed(AppRoutes.signInScreen);
 
   Future<bool> _refreshToken() async {
     try {

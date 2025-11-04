@@ -21,7 +21,7 @@ class VendorProfileServices extends GetWidget<VendorProfileController> {
               children: [
                 Expanded(
                   child: Text(
-                    "Your Bids",
+                    "Services",
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: AppColors.text101828,
@@ -31,7 +31,7 @@ class VendorProfileServices extends GetWidget<VendorProfileController> {
                 ),
                 SizedBox(width: 8.w),
                 ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: controller.goToCreateServiceScreen,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.container155DFC,
                     padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),

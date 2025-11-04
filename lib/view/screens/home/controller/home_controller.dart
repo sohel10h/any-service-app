@@ -5,7 +5,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/src/media_type.dart';
-import 'package:service_la/data/model/network/upload_service_request_model.dart';
+import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
@@ -15,6 +15,7 @@ import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/local/file_option_model.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
 import 'package:service_la/data/model/network/upload_admin_picture_model.dart';
+import 'package:service_la/data/model/network/upload_service_request_model.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 
 class HomeController extends GetxController {
@@ -46,6 +47,7 @@ class HomeController extends GetxController {
   RxString minBudget = "".obs;
   RxString maxBudget = "".obs;
   final ServiceRequestRepo _serviceRequestRepo = ServiceRequestRepo();
+  final AdminRepo _adminRepo = AdminRepo();
   RxString serviceDescription = "".obs;
   RxString companyName = "".obs;
   RxList<String> attachmentIds = <String>[].obs;
@@ -299,7 +301,7 @@ class HomeController extends GetxController {
         ApiParams.titleAttribute: "Admin Picture",
       });
       log("Upload Params: ${formData.fields}");
-      final response = await _serviceRequestRepo.uploadAdminPictures(formData);
+      final response = await _adminRepo.uploadAdminPictures(formData);
       if (response is String) {
         HelperFunction.snackbar("Image upload failed");
         log("Image upload failed controller response: $response");
@@ -317,7 +319,7 @@ class HomeController extends GetxController {
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected in controller, refreshing...");
             await ApiService().refreshTokenAndRetry(
-              () => _serviceRequestRepo.uploadAdminPictures(formData),
+              () => _adminRepo.uploadAdminPictures(formData),
             );
             return false;
           }

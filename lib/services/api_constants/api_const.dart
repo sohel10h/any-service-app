@@ -13,8 +13,11 @@ class ApiConstant {
   static const String userDeviceTokensPath = "/api/user-device-tokens";
 
   // END POINTS - Service requests
-  static const String adminPicturesPath = "/api/admin/pictures";
   static const String serviceRequestsPath = "/api/service-requests";
+
+  // END POINTS - Admin
+  static const String adminPicturesPath = "/api/admin/pictures";
+  static const String adminServicesPath = "/api/admin/services";
 
   // Functions
   static String dynamicQueryParams(String endpoint, {Map<String, dynamic>? queryParams}) {

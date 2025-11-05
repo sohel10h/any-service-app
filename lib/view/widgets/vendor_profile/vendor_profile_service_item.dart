@@ -52,7 +52,7 @@ class VendorProfileServiceItem extends StatelessWidget {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    service.categories?.first.name ?? "",
+                    (service.categories?.isEmpty ?? true) ? "" : service.categories?.first.name ?? "",
                     style: TextStyle(
                       fontSize: 10.sp,
                       color: AppColors.text4A5565,

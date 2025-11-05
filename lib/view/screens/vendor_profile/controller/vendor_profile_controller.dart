@@ -111,7 +111,13 @@ class VendorProfileController extends GetxController {
     }
   }
 
-  void goToCreateServiceScreen() => Get.toNamed(AppRoutes.createServiceScreen);
+  void goToCreateServiceScreen() async {
+    final status = await Get.toNamed(AppRoutes.createServiceScreen);
+    if (status == true) {
+      await Future.delayed(Duration(milliseconds: 2000));
+      await _getAdminServices();
+    }
+  }
 
   void _addViews() {
     tabViews = [

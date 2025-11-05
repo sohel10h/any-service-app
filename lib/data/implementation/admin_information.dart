@@ -10,8 +10,14 @@ class AdminInformation extends AdminApiService {
   }
 
   @override
-  Future adminServices(params) async {
+  Future createAdminServices(params) async {
     dynamic response = await ApiService().post(ApiConstant.adminServicesPath, params);
+    return response;
+  }
+
+  @override
+  Future getAdminServices() async {
+    dynamic response = await ApiService().get(ApiConstant.adminServicesPath);
     return response;
   }
 }

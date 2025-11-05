@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/data/model/network/service_model.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
-import 'package:service_la/data/model/local/vendor_profile_service_model.dart';
 
 class VendorProfileServiceItem extends StatelessWidget {
-  final VendorProfileServiceModel service;
+  final ServiceData service;
 
   const VendorProfileServiceItem({required this.service, super.key});
 
@@ -25,7 +25,7 @@ class VendorProfileServiceItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             NetworkImageLoader(
-              service.image,
+              "service.image", //TODO: need to get this data from API
               width: 70.w,
               height: 70.w,
               borderRadius: BorderRadius.circular(12.r),
@@ -39,7 +39,7 @@ class VendorProfileServiceItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        service.title,
+                        service.name ?? "",
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: AppColors.text101828,
@@ -52,7 +52,7 @@ class VendorProfileServiceItem extends StatelessWidget {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    service.category,
+                    service.categories?.first.name ?? "",
                     style: TextStyle(
                       fontSize: 10.sp,
                       color: AppColors.text4A5565,
@@ -63,7 +63,7 @@ class VendorProfileServiceItem extends StatelessWidget {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    service.price,
+                    service.price == null ? "${service.priceStart ?? 0}-${service.priceEnd ?? 0}" : "${service.price ?? 0}",
                     style: TextStyle(
                       fontSize: 10.sp,
                       color: AppColors.container155DFC,
@@ -76,14 +76,14 @@ class VendorProfileServiceItem extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                     decoration: BoxDecoration(
-                      color: service.statusColor,
+                      color: AppColors.containerDCFCE7, //TODO: need to get this data from API
                       borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Text(
-                      service.status,
+                      "Active", //TODO: need to get this data from API
                       style: TextStyle(
                         fontSize: 10.sp,
-                        color: service.statusTextColor,
+                        color: AppColors.text008236, //TODO: need to get this data from API
                         fontWeight: FontWeight.w600,
                       ),
                       maxLines: 1,

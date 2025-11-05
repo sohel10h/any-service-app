@@ -1,10 +1,12 @@
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:service_la/common/utils/app_colors.dart';
-import 'package:service_la/common/utils/helper_function.dart';
-import 'package:service_la/data/model/local/vendor_profile_bid_model.dart';
-import 'package:service_la/data/model/local/vendor_profile_service_model.dart';
 import 'package:service_la/routes/app_routes.dart';
+import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/data/repository/admin_repo.dart';
+import 'package:service_la/data/model/network/service_model.dart';
+import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/data/model/local/vendor_profile_bid_model.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bids.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_services.dart';
@@ -15,7 +17,10 @@ class VendorProfileController extends GetxController {
   RxInt selectedTabIndex = 0.obs;
   final List<String> tabs = ["All Bids", "Services", "Completed", "Reviews"];
   final List<int> tabsCounts = [5, 1, 2, 0];
-  List<CustomScrollView> tabViews = [];
+  List<Widget> tabViews = [];
+  final AdminRepo _adminRepo = AdminRepo();
+  RxBool isLoadingServices = false.obs;
+  RxList<ServiceData> services = <ServiceData>[].obs;
   final bids = [
     VendorProfileBidModel(
       title: 'Deep Home Cleaning Service',
@@ -59,74 +64,96 @@ class VendorProfileController extends GetxController {
     ),
   ];
 
-  final services = [
-    VendorProfileServiceModel(
-      title: 'Deep Home Cleaning',
-      category: 'Residential',
-      price: '\$80–120/service',
-      status: 'Active',
-      statusColor: AppColors.containerDCFCE7,
-      statusTextColor: AppColors.text008236,
-      image: HelperFunction.placeholderImageUrl70,
-    ),
-    VendorProfileServiceModel(
-      title: 'Office Cleaning',
-      category: 'Commercial',
-      price: '\$150–250/service',
-      status: 'Active',
-      statusColor: AppColors.containerDCFCE7,
-      statusTextColor: AppColors.text008236,
-      image: HelperFunction.placeholderImageUrl70,
-    ),
-    VendorProfileServiceModel(
-      title: 'Move-in/Move-out Cleaning',
-      category: 'Specialized',
-      price: '\$100–180/service',
-      status: 'Active',
-      statusColor: AppColors.containerDCFCE7,
-      statusTextColor: AppColors.text008236,
-      image: HelperFunction.placeholderImageUrl70,
-    ),
-    VendorProfileServiceModel(
-      title: 'Window Cleaning',
-      category: 'Additional Services',
-      price: '\$50–90/service',
-      status: 'Inactive',
-      statusColor: AppColors.containerF3F4F6,
-      statusTextColor: AppColors.text364153,
-      image: HelperFunction.placeholderImageUrl70,
-    ),
-  ];
-
   @override
   void onInit() {
     super.onInit();
     _addViews();
+    _getAdminServices();
+  }
+
+  Future<void> refreshAdminServices() async {
+    await _getAdminServices();
+  }
+
+  Future<void> _getAdminServices() async {
+    isLoadingServices.value = true;
+    try {
+      var response = await _adminRepo.getAdminServices();
+
+      if (response is String) {
+        log("AdminServices get failed from controller response: $response");
+      } else {
+        ServiceModel service = response as ServiceModel;
+        if (service.status == 200 || service.status == 201) {
+          services.value = service.data?.services ?? [];
+        } else {
+          if (service.status == 401 ||
+              (service.errors != null &&
+                  service.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().refreshTokenAndRetry(() => _adminRepo.getAdminServices());
+            if (retryResponse is ServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              services.value = retryResponse.data?.services ?? [];
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("AdminServices get failed from controller: ${service.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("AdminServices get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingServices.value = false;
+    }
   }
 
   void goToCreateServiceScreen() => Get.toNamed(AppRoutes.createServiceScreen);
 
   void _addViews() {
     tabViews = [
-      CustomScrollView(
-        slivers: [
-          VendorProfileBids(),
-        ],
+      RefreshIndicator(
+        color: AppColors.primary,
+        backgroundColor: AppColors.white,
+        onRefresh: refreshAdminServices,
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            VendorProfileBids(),
+          ],
+        ),
       ),
-      CustomScrollView(
-        slivers: [
-          VendorProfileServices(),
-        ],
+      RefreshIndicator(
+        color: AppColors.primary,
+        backgroundColor: AppColors.white,
+        onRefresh: refreshAdminServices,
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            VendorProfileServices(),
+          ],
+        ),
       ),
-      CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(child: Text("Tab 3")),
-        ],
+      RefreshIndicator(
+        onRefresh: refreshAdminServices,
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(child: Text("Tab 3")),
+          ],
+        ),
       ),
-      CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(child: Text("Tab 4")),
-        ],
+      RefreshIndicator(
+        onRefresh: refreshAdminServices,
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(child: Text("Tab 4")),
+          ],
+        ),
       ),
     ];
   }

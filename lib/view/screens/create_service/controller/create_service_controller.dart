@@ -43,10 +43,10 @@ class CreateServiceController extends GetxController {
     if (!(formKey.currentState?.validate() ?? true)) {
       return;
     }
-    await _adminServices();
+    await _createAdminServices();
   }
 
-  Future<void> _adminServices() async {
+  Future<void> _createAdminServices() async {
     HelperFunction.hideKeyboard();
     isLoadingCrateService.value = true;
     try {
@@ -63,7 +63,7 @@ class CreateServiceController extends GetxController {
         params[ApiParams.price] = double.tryParse(priceController.text.trim());
       }
       log("CreateService POST Params: $params");
-      var response = await _adminRepo.adminServices(params);
+      var response = await _adminRepo.createAdminServices(params);
 
       if (response is String) {
         log("CreateService failed from controller response: $response");
@@ -78,6 +78,23 @@ class CreateServiceController extends GetxController {
             backgroundColor: AppColors.green,
           );
         } else {
+          if (createService.status == 401 ||
+              (createService.errors != null &&
+                  createService.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().refreshTokenAndRetry(() => _adminRepo.createAdminServices(params));
+            if (retryResponse is CreateServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              Get.back(result: true);
+              HelperFunction.snackbar(
+                "Service created successfully!",
+                title: "Success",
+                icon: Icons.check,
+                backgroundColor: AppColors.green,
+              );
+            }
+            return;
+          }
           HelperFunction.snackbar("CreateService failed");
           log("CreateService failed from controller: ${createService.status}");
         }
@@ -168,20 +185,32 @@ class CreateServiceController extends GetxController {
         }
         log("Image uploaded successfully: ${pictureModel.status} ${attachmentIds.toJson()}");
         return true;
-      }
-      if (pictureModel.status == 401 ||
-          (pictureModel.errors != null &&
-              pictureModel.errors.any(
-                  (error) => error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
-        log("Token expired detected, refreshing...");
-        await ApiService().refreshTokenAndRetry(
-          () => _adminRepo.uploadAdminPictures(formData),
-        );
+      } else {
+        if (pictureModel.status == 401 ||
+            (pictureModel.errors != null &&
+                pictureModel.errors.any(
+                    (error) => error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+          log("Token expired detected, refreshing...");
+          final retryResponse = await ApiService().refreshTokenAndRetry(() => _adminRepo.uploadAdminPictures(formData));
+          if (retryResponse is UploadAdminPictureModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+            final id = pictureModel.data?.id ?? "";
+            if (id.isNotEmpty) {
+              attachmentIds.add({
+                "picture_id": id,
+                "display_order": attachmentIds.length,
+              });
+              attachmentIds.refresh();
+              return true;
+            }
+          } else {
+            log("Retry request failed after token refresh");
+            return false;
+          }
+        }
+        HelperFunction.snackbar("Image upload failed");
+        log("Image upload failed from controller: ${pictureModel.status}");
         return false;
       }
-      HelperFunction.snackbar("Image upload failed");
-      log("Image upload failed from controller: ${pictureModel.status}");
-      return false;
     } catch (e) {
       HelperFunction.snackbar("Image upload failed");
       log("Image upload catch error from controller: ${e.toString()}");

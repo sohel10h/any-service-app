@@ -147,6 +147,27 @@ class HomeController extends GetxController {
             backgroundColor: AppColors.green,
           );
         } else {
+          if (serviceRequest.status == 401 ||
+              (serviceRequest.errors != null &&
+                  serviceRequest.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().refreshTokenAndRetry(() => _serviceRequestRepo.serviceRequests(params));
+            if (retryResponse is UploadServiceRequestModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              clearDraft();
+              Get.back();
+              if (context.mounted) landingController.changeIndex(0, context);
+              HelperFunction.snackbar(
+                "Service requests uploaded successfully!",
+                title: "Success",
+                icon: Icons.check,
+                backgroundColor: AppColors.green,
+              );
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
           HelperFunction.snackbar("ServiceRequests failed");
           log("ServiceRequests failed from controller: ${serviceRequest.status}");
         }
@@ -309,7 +330,6 @@ class HomeController extends GetxController {
       } else {
         UploadAdminPictureModel pictureModel = response as UploadAdminPictureModel;
         if (pictureModel.status == 200 || pictureModel.status == 201) {
-          log("Image uploaded successfully: ${pictureModel.status}");
           attachmentIds.add(pictureModel.data?.id ?? "");
           return true;
         } else {
@@ -318,10 +338,14 @@ class HomeController extends GetxController {
                   pictureModel.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected in controller, refreshing...");
-            await ApiService().refreshTokenAndRetry(
-              () => _adminRepo.uploadAdminPictures(formData),
-            );
-            return false;
+            final retryResponse = await ApiService().refreshTokenAndRetry(() => _adminRepo.uploadAdminPictures(formData));
+            if (retryResponse is UploadAdminPictureModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              attachmentIds.add(pictureModel.data?.id ?? "");
+              return true;
+            } else {
+              log("Retry request failed after token refresh");
+              return false;
+            }
           }
           HelperFunction.snackbar("Image upload failed");
           log("Image upload failed from controller: ${pictureModel.status}");

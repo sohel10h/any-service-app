@@ -85,7 +85,7 @@ class VendorProfileServices extends GetWidget<VendorProfileController> {
               }
 
               return Column(
-                children: services.map((service) => VendorProfileServiceItem(service: service)).toList(),
+                children: services.map((service) => VendorProfileServiceItem(service: service, controller: controller)).toList(),
               );
             }),
           ],

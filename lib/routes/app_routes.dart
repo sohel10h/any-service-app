@@ -9,4 +9,5 @@ abstract class AppRoutes {
   static const String signUpCompleteScreen = '/signUpCompleteScreen';
   static const String serviceDetailsScreen = '/serviceDetailsScreen';
   static const String createServiceScreen = '/createServiceScreen';
+  static const String createServiceDetailsScreen = '/createServiceDetailsScreen';
 }

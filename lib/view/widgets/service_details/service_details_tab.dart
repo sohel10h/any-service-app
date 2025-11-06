@@ -16,7 +16,7 @@ class ServiceDetailsTab extends GetWidget<ServiceDetailsController> {
         isScrollable: false,
         padding: EdgeInsets.zero,
         labelPadding: EdgeInsets.zero,
-        indicatorColor: AppColors.containerEE4E2E,
+        indicatorColor: AppColors.primary,
         dividerColor: Colors.transparent,
         onTap: (index) => controller.selectedTabIndex.value = index,
         tabs: List.generate(controller.tabViews.length, (index) {
@@ -35,7 +35,7 @@ class ServiceDetailsTab extends GetWidget<ServiceDetailsController> {
                       tabText,
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: isSelected ? AppColors.containerEE4E2E : AppColors.text6A7282,
+                        color: isSelected ? AppColors.primary : AppColors.text6A7282,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -43,7 +43,7 @@ class ServiceDetailsTab extends GetWidget<ServiceDetailsController> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppColors.containerEE4E2E : AppColors.containerF3F4F6,
+                        color: isSelected ? AppColors.primary : AppColors.containerF3F4F6,
                         borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: Text(

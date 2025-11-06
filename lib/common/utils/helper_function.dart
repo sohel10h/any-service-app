@@ -19,7 +19,8 @@ class HelperFunction {
   static String imageUrl1 = "https://i.imgur.com/mqtYQc6.png";
   static String imageUrl2 = "https://i.imgur.com/uCa4vK8.png";
   static String userImage1 = "https://i.pravatar.cc/150?img=2";
-  static String userImage2 = "https://i.pravatar.cc/150?img=8";
+  static String userImage2 = "https://i.pravatar.cc/150?img=4";
+  static String userImage3 = "https://i.pravatar.cc/150?img=60";
 
   static void changeStatusBarColor() => SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(

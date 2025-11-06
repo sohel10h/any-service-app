@@ -9,6 +9,7 @@ import 'package:service_la/view/screens/create_service/controller/create_service
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
 import 'package:service_la/view/screens/auth/verification/controller/otp_verification_controller.dart';
+import 'package:service_la/view/screens/create_service/controller/create_service_details_controller.dart';
 import 'package:service_la/view/screens/auth/sign_up_complete/controller/sign_up_complete_controller.dart';
 
 class ViewModelBindings extends Bindings {
@@ -25,5 +26,6 @@ class ViewModelBindings extends Bindings {
     Get.lazyPut<ServiceDetailsController>(() => ServiceDetailsController(), fenix: true);
     Get.lazyPut<VendorProfileController>(() => VendorProfileController(), fenix: true);
     Get.lazyPut<CreateServiceController>(() => CreateServiceController(), fenix: true);
+    Get.lazyPut<CreateServiceDetailsController>(() => CreateServiceDetailsController(), fenix: true);
   }
 }

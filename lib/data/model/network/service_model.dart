@@ -89,8 +89,8 @@ class ServiceData {
   final String? createdBy;
   final String? updatedBy;
   final bool? priceRange;
-  final double? priceStart;
-  final double? priceEnd;
+  final int? priceStart;
+  final int? priceEnd;
 
   ServiceData({
     this.id,

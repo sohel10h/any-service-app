@@ -6,17 +6,21 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomDropdownChip<T> extends StatelessWidget {
+  final double? width;
+  final double? height;
   final RxList<T> options;
   final Rx<T?> selectedValue;
-  final String iconPath;
+  final String? iconPath;
   final String Function(T) labelBuilder;
   final void Function(T)? onChanged;
 
   const CustomDropdownChip({
     super.key,
+    this.width,
+    this.height,
     required this.options,
     required this.selectedValue,
-    required this.iconPath,
+    this.iconPath,
     required this.labelBuilder,
     this.onChanged,
   });
@@ -26,11 +30,12 @@ class CustomDropdownChip<T> extends StatelessWidget {
     final isDropdownOpenRx = false.obs;
 
     return Container(
-      height: 30.h,
-      width: Get.width / 3,
+      width: width ?? Get.width / 3,
+      height: height ?? 30.h,
       decoration: BoxDecoration(
-        color: AppColors.containerF3F4F6,
-        borderRadius: BorderRadius.circular(6.r),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(color: AppColors.containerD1D5DC),
       ),
       child: DropdownButtonHideUnderline(
         child: LayoutBuilder(builder: (context, constraints) {
@@ -42,8 +47,14 @@ class CustomDropdownChip<T> extends StatelessWidget {
               value: selectedValue.value,
               hint: Row(
                 children: [
-                  SvgPicture.asset(iconPath, width: 16.w, height: 16.h),
-                  SizedBox(width: 6.w),
+                  if (iconPath != null) ...[
+                    SvgPicture.asset(
+                      iconPath ?? "",
+                      width: 16.w,
+                      height: 16.h,
+                    ),
+                    SizedBox(width: 6.w),
+                  ],
                   Flexible(
                     child: Text(
                       hasOptions ? "Select" : "No options",
@@ -64,8 +75,14 @@ class CustomDropdownChip<T> extends StatelessWidget {
                         value: option,
                         child: Row(
                           children: [
-                            SvgPicture.asset(iconPath, width: 16.w, height: 16.h),
-                            SizedBox(width: 6.w),
+                            if (iconPath != null) ...[
+                              SvgPicture.asset(
+                                iconPath ?? "",
+                                width: 16.w,
+                                height: 16.h,
+                              ),
+                              SizedBox(width: 6.w),
+                            ],
                             Expanded(
                               child: Text(
                                 labelBuilder(option),
@@ -96,11 +113,10 @@ class CustomDropdownChip<T> extends StatelessWidget {
                 maxHeight: 200.h,
                 width: constraints.maxWidth,
                 decoration: BoxDecoration(
-                  color: AppColors.containerF3F4F6,
-                  borderRadius: BorderRadius.circular(6.r),
-                  border: Border.all(color: AppColors.borderE3E7EC),
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
-                offset: Offset(0, -2.h),
+                offset: Offset(0, -4.h),
               ),
               iconStyleData: IconStyleData(
                 icon: AnimatedRotation(

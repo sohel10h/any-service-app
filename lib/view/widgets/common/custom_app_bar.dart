@@ -3,7 +3,7 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
+  final String? title;
   final TextStyle? textStyle;
   final bool isBackButton;
   final Widget? backButton;
@@ -18,7 +18,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.onBackButtonPressed,
     this.iconPath,
     this.isOnlyIcon,
-    required this.title,
+    this.title,
     this.backButton,
     this.textStyle,
     this.isBackButton = true,
@@ -38,15 +38,17 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
               padding: EdgeInsets.only(left: 16.w),
               child: Icon(Icons.arrow_back_ios, color: AppColors.black),
             ),
-      title: Text(
-        title,
-        style: textStyle ??
-            TextStyle(
-              fontSize: 18.sp,
-              color: AppColors.black,
-              fontWeight: FontWeight.w600,
+      title: title == null
+          ? const SizedBox.shrink()
+          : Text(
+              title ?? "",
+              style: textStyle ??
+                  TextStyle(
+                    fontSize: 18.sp,
+                    color: AppColors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
-      ),
       actions: actions,
     );
   }

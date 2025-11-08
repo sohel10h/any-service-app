@@ -75,7 +75,7 @@ class CreateServiceDetailsImageSlider extends GetWidget<CreateServiceDetailsCont
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: Text(
-                  "25% OFF",
+                  "25% OFF", //TODO: need to get this data from API
                   style: TextStyle(
                     fontSize: 10.sp,
                     color: AppColors.white,

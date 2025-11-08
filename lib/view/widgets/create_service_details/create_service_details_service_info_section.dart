@@ -16,7 +16,7 @@ class CreateServiceDetailsServiceInfoSection extends StatelessWidget {
               child: _infoBox(
                 iconPath: "assets/svgs/verified_outline.svg",
                 title: "Licensed & Insured",
-                subtitle: "Verified",
+                subtitle: "Verified", //TODO: need to get this data from API
               ),
             ),
             SizedBox(width: 8.w),
@@ -24,7 +24,7 @@ class CreateServiceDetailsServiceInfoSection extends StatelessWidget {
               child: _infoBox(
                 iconPath: "assets/svgs/clock_outline.svg",
                 title: "Response Time",
-                subtitle: "< 2 hours",
+                subtitle: "< 2 hours", //TODO: need to get this data from API
               ),
             ),
           ],
@@ -36,7 +36,7 @@ class CreateServiceDetailsServiceInfoSection extends StatelessWidget {
               child: _infoBox(
                 iconPath: "assets/svgs/rating_outline.svg",
                 title: "Satisfaction Rate",
-                subtitle: "99%",
+                subtitle: "99%", //TODO: need to get this data from API
               ),
             ),
             SizedBox(width: 8.w),
@@ -44,7 +44,7 @@ class CreateServiceDetailsServiceInfoSection extends StatelessWidget {
               child: _infoBox(
                 iconPath: "assets/svgs/location_outline.svg",
                 title: "Service Area",
-                subtitle: "San Francisco, CA",
+                subtitle: "San Francisco, CA", //TODO: need to get this data from API
               ),
             ),
           ],

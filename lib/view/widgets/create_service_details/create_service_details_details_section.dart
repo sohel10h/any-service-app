@@ -161,7 +161,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                   ),
                   SizedBox(width: 12.w),
                   Text(
-                    "\$${controller.serviceDetailsData.value.price?.toPrecision(2) ?? "0"}",
+                    "\$${controller.serviceDetailsData.value.price?.toPrecision(2) ?? "0"}", //TODO: need to get this data from API
                     style: TextStyle(
                       fontSize: 15.sp,
                       color: AppColors.text99A1AF,

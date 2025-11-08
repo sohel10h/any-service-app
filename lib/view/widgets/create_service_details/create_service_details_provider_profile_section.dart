@@ -51,7 +51,7 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                       clipBehavior: Clip.none,
                       children: [
                         NetworkImageLoader(
-                          HelperFunction.userImage2,
+                          HelperFunction.userImage2, //TODO: need to get this data from API
                           width: 49.w,
                           height: 49.w,
                           borderRadius: BorderRadius.circular(60.r),
@@ -87,7 +87,7 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "CoolAir Experts",
+                            "CoolAir Experts", //TODO: need to get this data from API
                             style: TextStyle(
                               fontSize: 14.sp,
                               color: AppColors.text101828,
@@ -146,7 +146,7 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                               Expanded(
                                 flex: 2,
                                 child: Text(
-                                  "Member since 2019",
+                                  "Member since 2019", //TODO: need to get this data from API
                                   style: TextStyle(
                                     fontSize: 10.sp,
                                     color: AppColors.text6A7282,
@@ -160,7 +160,7 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            "Licensed and insured AC specialists with 15+ years of experience.",
+                            "Licensed and insured AC specialists with 15+ years of experience.", //TODO: need to get this data from API
                             style: TextStyle(
                               fontSize: 10.sp,
                               color: AppColors.text4A5565,
@@ -178,11 +178,11 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                 Row(
                   children: [
                     Expanded(
-                      child: _infoBox("Response Rate", "98%"),
+                      child: _infoBox("Response Rate", "98%"), //TODO: need to get this data from API
                     ),
                     SizedBox(width: 10.w),
                     Expanded(
-                      child: _infoBox("Response Time", "< 2 hours"),
+                      child: _infoBox("Response Time", "< 2 hours"), //TODO: need to get this data from API
                     ),
                   ],
                 ),

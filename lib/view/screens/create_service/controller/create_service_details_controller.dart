@@ -1,53 +1,17 @@
+import 'dart:developer';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
+import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/helper_function.dart';
-import 'package:service_la/data/model/local/provider_bid_model.dart';
-import 'package:service_la/view/widgets/service_details/service_details_provider_bids_section.dart';
+import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/data/model/network/service_model.dart';
+import 'package:service_la/data/model/network/create_service_details_model.dart';
 
 class CreateServiceDetailsController extends GetxController {
-  RxList<String> imageUrls = <String>[].obs;
+  String serviceId = "";
   RxInt currentIndex = 0.obs;
-  RxInt selectedTabIndex = 0.obs;
-  RxInt selectedFilterIndex = 0.obs;
-  final List<String> tabs = ["All Bids", "Shortlisted", "Rejected", "Final Bid"];
-  List<CustomScrollView> tabViews = [];
-  final List<int> tabsCounts = [5, 1, 2, 0];
-  final List<String> filters = ["Lowest Price", "Top Rated"];
-  final RxList<ProviderBidModel> bids = [
-    ProviderBidModel(
-      name: "David Martinez",
-      title: "General Cleaning",
-      price: 75,
-      rating: 4.7,
-      jobsCount: 189,
-      timeAgo: "1 hour ago",
-      description: "Affordable and reliable cleaning service. I have 3 years "
-          "of experience and great references. Can work around your schedule.",
-      availability: "Available next week",
-      duration: "4–5 hours",
-      isBest: true,
-      belowBudget: true,
-      shortlisted: false,
-      imageUrl: HelperFunction.userImage1,
-    ),
-    ProviderBidModel(
-      name: "Sarah Johnson",
-      title: "Deep Cleaning Expert",
-      price: 89,
-      rating: 4.9,
-      jobsCount: 456,
-      timeAgo: "5 mins ago",
-      description: "I specialize in deep cleaning and have over 5 years of experience. "
-          "I use eco-friendly products and guarantee excellent results.",
-      availability: "Available tomorrow",
-      duration: "3–4 hours",
-      isBest: false,
-      belowBudget: true,
-      shortlisted: true,
-      imageUrl: HelperFunction.userImage2,
-    ),
-  ].obs;
-
+  final AdminRepo _adminRepo = AdminRepo();
+  RxBool isLoadingServicesDetails = false.obs;
+  Rx<CreateServiceDetailsData> serviceDetailsData = CreateServiceDetailsData().obs;
   final List<Map<String, dynamic>> reviews = [
     {
       "image": HelperFunction.userImage1,
@@ -89,41 +53,49 @@ class CreateServiceDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _addImagesUrls();
-    _addViews();
+    _getArguments();
+    _getAdminServicesDetails();
   }
 
-  void _addViews() {
-    tabViews = [
-      CustomScrollView(
-        slivers: [
-          ServiceDetailsProviderBidsSection(),
-        ],
-      ),
-      CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(child: Text("Tab 2")),
-        ],
-      ),
-      CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(child: Text("Tab 3")),
-        ],
-      ),
-      CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(child: Text("Tab 4")),
-        ],
-      ),
-    ];
+  Future<void> _getAdminServicesDetails() async {
+    isLoadingServicesDetails.value = true;
+    try {
+      var response = await _adminRepo.getAdminServicesDetails(serviceId);
+
+      if (response is String) {
+        log("AdminServicesDetails get failed from controller response: $response");
+      } else {
+        CreateServiceDetailsModel service = response as CreateServiceDetailsModel;
+        if (service.status == 200 || service.status == 201) {
+          serviceDetailsData.value = service.createServiceDetailsData ?? CreateServiceDetailsData();
+        } else {
+          if (service.status == 401 ||
+              (service.errors != null &&
+                  service.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().refreshTokenAndRetry(() => _adminRepo.getAdminServices());
+            if (retryResponse is ServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              serviceDetailsData.value = service.createServiceDetailsData ?? CreateServiceDetailsData();
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("AdminServicesDetails get failed from controller: ${service.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("AdminServicesDetails get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingServicesDetails.value = false;
+    }
   }
 
-  void _addImagesUrls() {
-    imageUrls.clear();
-    imageUrls.value = [
-      HelperFunction.imageUrl1,
-      HelperFunction.imageUrl2,
-      HelperFunction.placeholderImageUrl412_320,
-    ];
+  void _getArguments() {
+    if (Get.arguments != null) {
+      serviceId = Get.arguments["serviceId"];
+    }
   }
 }

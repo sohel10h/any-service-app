@@ -20,4 +20,10 @@ class AdminInformation extends AdminApiService {
     dynamic response = await ApiService().get(ApiConstant.adminServicesPath);
     return response;
   }
+
+  @override
+  Future getAdminServicesDetails(String serviceId) async {
+    dynamic response = await ApiService().get(ApiConstant.adminServicesDetailsPath.replaceAll("#serviceId#", serviceId));
+    return response;
+  }
 }

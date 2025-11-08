@@ -1,11 +1,13 @@
+import 'package:get/get.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
+import 'package:service_la/view/screens/create_service/controller/create_service_details_controller.dart';
 
-class CreateServiceDetailsProviderProfileSection extends StatelessWidget {
+class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateServiceDetailsController> {
   const CreateServiceDetailsProviderProfileSection({super.key});
 
   @override
@@ -111,7 +113,7 @@ class CreateServiceDetailsProviderProfileSection extends StatelessWidget {
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
-                                        text: "4.9",
+                                        text: "${controller.serviceDetailsData.value.user?.rating ?? "0"}",
                                         style: TextStyle(
                                           fontSize: 12.sp,
                                           color: AppColors.text101828,
@@ -120,7 +122,7 @@ class CreateServiceDetailsProviderProfileSection extends StatelessWidget {
                                       ),
                                       TextSpan(text: " "),
                                       TextSpan(
-                                        text: "(342)",
+                                        text: "(${controller.serviceDetailsData.value.user?.totalReview ?? "0"})",
                                         style: TextStyle(
                                           fontSize: 10.sp,
                                           color: AppColors.text6A7282,

@@ -17,7 +17,8 @@ class ApiConstant {
 
   // END POINTS - Admin
   static const String adminPicturesPath = "/api/admin/pictures";
-  static const String adminServicesPath = "/api/admin/services";
+  static const String adminServicesPath = "/api/admin/services?page=2";
+  static const String adminServicesDetailsPath = "/api/admin/services/#serviceId#";
 
   // Functions
   static String dynamicQueryParams(String endpoint, {Map<String, dynamic>? queryParams}) {

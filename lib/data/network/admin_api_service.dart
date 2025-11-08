@@ -4,4 +4,6 @@ abstract class AdminApiService {
   Future<dynamic> createAdminServices(dynamic params);
 
   Future<dynamic> getAdminServices();
+
+  Future<dynamic> getAdminServicesDetails(String serviceId);
 }

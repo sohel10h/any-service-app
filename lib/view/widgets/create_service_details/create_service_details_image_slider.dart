@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
+import 'package:service_la/data/model/network/create_service_details_model.dart';
 import 'package:service_la/view/screens/create_service/controller/create_service_details_controller.dart';
 
 class CreateServiceDetailsImageSlider extends GetWidget<CreateServiceDetailsController> {
@@ -18,19 +19,22 @@ class CreateServiceDetailsImageSlider extends GetWidget<CreateServiceDetailsCont
         children: [
           SizedBox(
             height: 320.h,
-            child: PageView.builder(
-              itemCount: controller.imageUrls.length,
-              onPageChanged: (index) => controller.currentIndex.value = index,
-              itemBuilder: (context, index) {
-                return NetworkImageLoader(
-                  controller.imageUrls[index],
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                  borderRadius: BorderRadius.circular(0.r),
-                );
-              },
-            ),
+            child: (controller.serviceDetailsData.value.pictures?.isEmpty ?? true)
+                ? Image.asset("assets/images/no_image_available.jpg")
+                : PageView.builder(
+                    itemCount: controller.serviceDetailsData.value.pictures?.length ?? 0,
+                    onPageChanged: (index) => controller.currentIndex.value = index,
+                    itemBuilder: (context, index) {
+                      final picture = controller.serviceDetailsData.value.pictures?[index] ?? CreateServiceDetailsPicture();
+                      return NetworkImageLoader(
+                        picture.virtualPath ?? "",
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        borderRadius: BorderRadius.circular(0.r),
+                      );
+                    },
+                  ),
           ),
           Positioned(
             top: 36.h,
@@ -120,25 +124,27 @@ class CreateServiceDetailsImageSlider extends GetWidget<CreateServiceDetailsCont
               ),
             ),
           ),
-          Positioned(
-            right: 16.w,
-            bottom: 16.h,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-              decoration: BoxDecoration(
-                color: AppColors.black.withValues(alpha: .6),
-                borderRadius: BorderRadius.circular(30.r),
-              ),
-              child: Text(
-                "${controller.currentIndex + 1}/${controller.imageUrls.length}",
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  color: AppColors.white,
-                  fontWeight: FontWeight.w500,
+          (controller.serviceDetailsData.value.pictures?.isEmpty ?? true)
+              ? const SizedBox.shrink()
+              : Positioned(
+                  right: 16.w,
+                  bottom: 16.h,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.black.withValues(alpha: .6),
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
+                    child: Text(
+                      "${controller.currentIndex.value + 1}/${controller.serviceDetailsData.value.pictures?.length ?? 0}",
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: AppColors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
         ],
       ),
     );

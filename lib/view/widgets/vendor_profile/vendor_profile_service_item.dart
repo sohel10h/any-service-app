@@ -19,7 +19,7 @@ class VendorProfileServiceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: controller.goToCreateServiceDetailsScreen,
+      onTap: () => controller.goToCreateServiceDetailsScreen(service.id ?? ""),
       child: Card(
         margin: EdgeInsets.only(bottom: 12.h),
         color: AppColors.white,

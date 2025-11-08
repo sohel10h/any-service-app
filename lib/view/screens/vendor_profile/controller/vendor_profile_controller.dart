@@ -71,7 +71,10 @@ class VendorProfileController extends GetxController {
     _getAdminServices();
   }
 
-  void goToCreateServiceDetailsScreen() => Get.toNamed(AppRoutes.createServiceDetailsScreen);
+  void goToCreateServiceDetailsScreen(String serviceId) => Get.toNamed(
+        AppRoutes.createServiceDetailsScreen,
+        arguments: {"serviceId": serviceId},
+      );
 
   Future<void> refreshAdminServices() async {
     await _getAdminServices();

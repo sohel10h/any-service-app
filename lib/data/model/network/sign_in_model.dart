@@ -37,12 +37,24 @@ class Data {
   final String? expiresAt;
   final String? refreshExpiresAt;
   final String? refreshToken;
+  final dynamic roles;
+  final String? userEmail;
+  final String? userId;
+  final String? userName;
+  final int? userType;
+  final dynamic vendors;
 
   Data({
     this.accessToken,
     this.expiresAt,
     this.refreshExpiresAt,
     this.refreshToken,
+    this.roles,
+    this.userEmail,
+    this.userId,
+    this.userName,
+    this.userType,
+    this.vendors,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -50,6 +62,12 @@ class Data {
         expiresAt: json["expires_at"],
         refreshExpiresAt: json["refresh_expires_at"],
         refreshToken: json["refresh_token"],
+        roles: json["roles"],
+        userEmail: json["user_email"],
+        userId: json["user_id"],
+        userName: json["user_name"],
+        userType: json["user_type"],
+        vendors: json["vendors"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -57,5 +75,11 @@ class Data {
         "expires_at": expiresAt,
         "refresh_expires_at": refreshExpiresAt,
         "refresh_token": refreshToken,
+        "roles": roles,
+        "user_email": userEmail,
+        "user_id": userId,
+        "user_name": userName,
+        "user_type": userType,
+        "vendors": vendors,
       };
 }

@@ -97,18 +97,24 @@ class HelperFunction {
     return await tempFile.writeAsBytes(bytes);
   }
 
-  static Future<void> initWebSockets(String accessToken) async {
-    final ws = WebSocketService(
-      baseUrl: ApiConstant.websocketBaseUrl,
-      reconnectInterval: Duration(seconds: 5),
-      autoReconnect: true,
-      queryParamsBuilder: () => {
-        ApiParams.token: accessToken,
-        ApiParams.clientPlatform: ClientPlatform.app.name,
-      },
-    );
-    await Get.putAsync(() => ws.init());
-    await ws.connect();
+  static Future<WebSocketService?> initWebSockets(String accessToken) async {
+    try {
+      final ws = WebSocketService(
+        baseUrl: ApiConstant.websocketBaseUrl,
+        reconnectInterval: const Duration(seconds: 5),
+        autoReconnect: true,
+        queryParamsBuilder: () => {
+          ApiParams.token: accessToken,
+          ApiParams.clientPlatform: ClientPlatform.app.name,
+        },
+      );
+      final initializedWs = await Get.putAsync(() => ws.init());
+      await ws.connect();
+      return initializedWs;
+    } catch (e) {
+      log('[WebSocket] init failed: $e');
+      return null;
+    }
   }
 
   static Future<void> logOut() async {

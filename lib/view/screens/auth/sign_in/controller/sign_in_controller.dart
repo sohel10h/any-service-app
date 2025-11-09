@@ -83,6 +83,8 @@ class SignInController extends GetxController {
         if (signIn.status == 200 || signIn.status == 201) {
           StorageHelper.setValue(StorageHelper.authToken, signIn.data?.accessToken ?? "");
           StorageHelper.setValue(StorageHelper.refreshToken, signIn.data?.refreshToken ?? "");
+          StorageHelper.setValue(StorageHelper.userId, signIn.data?.userId ?? "");
+          StorageHelper.setObject(StorageHelper.userResponse, signIn.toJson());
           HelperFunction.snackbar(
             "Signed in successfully. Redirecting to your dashboard...",
             title: "Success",

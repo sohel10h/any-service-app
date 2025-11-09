@@ -4,6 +4,8 @@ import 'package:get_storage/get_storage.dart';
 class StorageHelper {
   static const String authToken = "authToken";
   static const String refreshToken = "refreshToken";
+  static const String userId = "userId";
+  static const String userResponse = "userResponse";
 
   static String getValue(String keyWord) {
     final box = GetStorage();

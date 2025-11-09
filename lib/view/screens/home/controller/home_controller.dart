@@ -7,21 +7,23 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/src/media_type.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
-import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/local/file_option_model.dart';
+import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
 import 'package:service_la/services/websocket/websocket_service.dart';
+import 'package:service_la/common/utils/notification_bottom_sheet_queue.dart';
 import 'package:service_la/data/model/network/upload_admin_picture_model.dart';
 import 'package:service_la/data/model/network/websocket_notification_model.dart';
 import 'package:service_la/data/model/network/upload_service_request_model.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 
 class HomeController extends GetxController {
+  String userId = "";
   final formKey = GlobalKey<FormState>();
   final budgetFormKey = GlobalKey<FormState>();
   final TextEditingController searchController = TextEditingController();
@@ -113,6 +115,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _getStorageValue();
     _addListenerFocusNodes();
     _initFileOptions();
     _checkWebsocketsData();
@@ -122,26 +125,7 @@ class HomeController extends GetxController {
     WebSocketService.to.on('notification', (payload) async {
       final WebsocketNotificationModel notification = payload['parsed'];
       await Future.delayed(const Duration(milliseconds: 200));
-      if (Get.context != null) {
-        if (notification.type == NotificationType.vendorFound.typeValue) {
-          DialogHelper.showNotificationBottomSheet(
-            Get.context!,
-            title: notification.title,
-            message: notification.message ?? "",
-          );
-        } else if (notification.type == NotificationType.serviceRequest.typeValue) {
-          DialogHelper.showNotificationBottomSheet(
-            Get.context!,
-            title: notification.title,
-            message: notification.message ?? "",
-            onPressed: () {
-              Get.back();
-              goToServiceDetailsScreen(notification.id ?? "");
-            },
-            actionTitle: "Details",
-          );
-        }
-      }
+      NotificationBottomSheetQueue.add(notification);
     });
   }
 
@@ -414,6 +398,10 @@ class HomeController extends GetxController {
     budgetFromFocusNode.addListener(update);
     budgetToFocusNode.addListener(update);
     companyNameFocusNode.addListener(update);
+  }
+
+  void _getStorageValue() {
+    userId = StorageHelper.getValue(StorageHelper.userId);
   }
 
   @override

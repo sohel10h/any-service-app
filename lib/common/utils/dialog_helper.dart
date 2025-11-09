@@ -60,12 +60,15 @@ class DialogHelper {
     required String message,
     VoidCallback? onPressed,
     String? actionTitle,
+    VoidCallback? onClosed,
   }) async {
     await Future.delayed(const Duration(milliseconds: 50));
     Get.bottomSheet(
       NotificationBottomSheet(title: title, message: message, onPressed: onPressed, actionTitle: actionTitle),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-    );
+    ).whenComplete(() {
+      if (onClosed != null) onClosed();
+    });
   }
 }

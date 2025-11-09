@@ -5,6 +5,7 @@ import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/view/screens/home/home_screen.dart';
 import 'package:service_la/view/screens/settings/settings_screen.dart';
 import 'package:service_la/view/widgets/home/service_request_modal.dart';
+import 'package:service_la/view/screens/ride_sharing/ride_sharing_screen.dart';
 import 'package:service_la/view/screens/vendor_profile/vendor_profile_screen.dart';
 
 class LandingController extends GetxController {
@@ -30,9 +31,9 @@ class LandingController extends GetxController {
 
   List<Widget> screens = [
     const HomeScreen(),
-    const SizedBox(),
-    const ServiceRequestModal(),
     const SettingsScreen(),
+    const ServiceRequestModal(),
+    const RideSharingScreen(),
     const VendorProfileScreen(),
   ];
 }

@@ -2,7 +2,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/view/widgets/landing/bottom_nav_bar_notch_painter.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -20,7 +19,7 @@ class CustomBottomNavBar extends StatelessWidget {
       _NavItem("Home", "assets/svgs/home.svg"),
       _NavItem("Bidding", "assets/svgs/charity.svg"),
       _NavItem("Request", "assets/svgs/add.svg"),
-      _NavItem("Services", "assets/svgs/configuration.svg"),
+      _NavItem("Ride", "assets/svgs/configuration.svg"),
       _NavItem("Profile", "assets/svgs/user.svg"),
     ];
 

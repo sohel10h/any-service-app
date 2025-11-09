@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/view/screens/home/controller/home_controller.dart';
 import 'package:service_la/view/screens/init/controller/splash_controller.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
@@ -19,6 +20,7 @@ class ViewModelBindings extends Bindings {
     Get.lazyPut<SplashController>(() => SplashController(), fenix: true);
     Get.lazyPut<LandingController>(() => LandingController(), fenix: true);
     Get.lazyPut<SignInController>(() => SignInController(), fenix: true);
+    Get.put(AppDIController());
     Get.lazyPut<SignUpController>(() => SignUpController(), fenix: true);
     Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
     Get.lazyPut<SettingsController>(() => SettingsController(), fenix: true);

@@ -13,6 +13,7 @@ import 'package:service_la/data/model/network/sign_in_model.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/model/network/user_device_token_model.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 
 class SignInController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -84,7 +85,8 @@ class SignInController extends GetxController {
           StorageHelper.setValue(StorageHelper.authToken, signIn.data?.accessToken ?? "");
           StorageHelper.setValue(StorageHelper.refreshToken, signIn.data?.refreshToken ?? "");
           StorageHelper.setValue(StorageHelper.userId, signIn.data?.userId ?? "");
-          StorageHelper.setObject(StorageHelper.userResponse, signIn.toJson());
+          StorageHelper.setObject(StorageHelper.signInResponse, signIn);
+          AppDIController.setSignInDetails(signIn);
           HelperFunction.snackbar(
             "Signed in successfully. Redirecting to your dashboard...",
             title: "Success",

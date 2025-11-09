@@ -6,6 +6,7 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
@@ -227,7 +228,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                 ),
                 SizedBox(width: 8.w),
                 Text(
-                  "Individual Request",
+                  AppDIController.signInDetails.value.data?.userName ?? "",
                   style: TextStyle(
                     fontSize: 15.sp,
                     color: AppColors.text101828,

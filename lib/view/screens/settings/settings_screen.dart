@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
 import 'package:service_la/view/screens/settings/controller/settings_controller.dart';
 
@@ -17,7 +18,7 @@ class SettingsScreen extends GetWidget<SettingsController> {
         child: Column(
           children: [
             InkWell(
-              onTap: controller.logOut,
+              onTap: () => HelperFunction.logOut(),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Container(

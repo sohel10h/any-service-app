@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/view/widgets/home/service_request_modal.dart';
+import 'package:service_la/view/widgets/common/notification_bottom_sheet.dart';
 import 'package:service_la/view/widgets/home/service_request_bottom_sheet.dart';
 import 'package:service_la/view/widgets/home/service_request_discard_bottom_sheet.dart';
 import 'package:service_la/view/widgets/home/service_request_budget_range_bottom_sheet.dart';
@@ -48,6 +49,21 @@ class DialogHelper {
     await Future.delayed(const Duration(milliseconds: 50));
     Get.bottomSheet(
       const ServiceRequestBudgetRangeBottomSheet(),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    );
+  }
+
+  static void showNotificationBottomSheet(
+    BuildContext context, {
+    required String title,
+    required String message,
+    VoidCallback? onPressed,
+    String? actionTitle,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 50));
+    Get.bottomSheet(
+      NotificationBottomSheet(title: title, message: message, onPressed: onPressed, actionTitle: actionTitle),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );

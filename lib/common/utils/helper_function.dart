@@ -3,9 +3,15 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/services/api_constants/api_const.dart';
+import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:service_la/common/utils/storage/storage_helper.dart';
+import 'package:service_la/services/websocket/websocket_service.dart';
 
 class HelperFunction {
   static String placeholderImageUrl42 = "https://placehold.co/42x42.png";
@@ -90,4 +96,27 @@ class HelperFunction {
     final tempFile = File('${tempDir.path}/compressed_${DateTime.now().millisecondsSinceEpoch}.jpg');
     return await tempFile.writeAsBytes(bytes);
   }
+
+  static Future<void> initWebSockets(String accessToken) async {
+    final ws = WebSocketService(
+      baseUrl: ApiConstant.websocketBaseUrl,
+      reconnectInterval: Duration(seconds: 5),
+      autoReconnect: true,
+      queryParamsBuilder: () => {
+        ApiParams.token: accessToken,
+        ApiParams.clientPlatform: ClientPlatform.app.name,
+      },
+    );
+    await Get.putAsync(() => ws.init());
+    await ws.connect();
+  }
+
+  static Future<void> logOut() async {
+    StorageHelper.removeAllLocalData();
+    await Get.find<WebSocketService>().disconnect();
+    Get.delete<WebSocketService>();
+    _goToSignInScreen();
+  }
+
+  static void _goToSignInScreen() => Get.offAllNamed(AppRoutes.signInScreen);
 }

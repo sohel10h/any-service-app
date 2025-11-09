@@ -46,7 +46,7 @@ class ServiceDetailsImageSlider extends GetWidget<ServiceDetailsController> {
                 height: 31.w,
                 padding: EdgeInsets.all(4.sp),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: (controller.serviceDetailsData.value.pictures?.isEmpty ?? true) ? AppColors.containerF4F4F4 : AppColors.white,
                   shape: BoxShape.circle,
                 ),
                 child: SvgPicture.asset(
@@ -65,7 +65,7 @@ class ServiceDetailsImageSlider extends GetWidget<ServiceDetailsController> {
               height: 31.w,
               padding: EdgeInsets.all(8.sp),
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: (controller.serviceDetailsData.value.pictures?.isEmpty ?? true) ? AppColors.containerF4F4F4 : AppColors.white,
                 shape: BoxShape.circle,
               ),
               child: SvgPicture.asset(
@@ -83,7 +83,7 @@ class ServiceDetailsImageSlider extends GetWidget<ServiceDetailsController> {
               height: 31.w,
               padding: EdgeInsets.all(8.sp),
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: (controller.serviceDetailsData.value.pictures?.isEmpty ?? true) ? AppColors.containerF4F4F4 : AppColors.white,
                 shape: BoxShape.circle,
               ),
               child: SvgPicture.asset(

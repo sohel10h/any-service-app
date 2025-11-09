@@ -1,6 +1,7 @@
 class ApiConstant {
   // BASE URL
   static const String baseUrl = "http://54.151.254.172:8080";
+  static const String websocketBaseUrl = "ws://54.151.254.172:8080/api/chats/ws";
 
   // END POINTS - Auth
   static const String sendOtpPath = "/sendOtp";

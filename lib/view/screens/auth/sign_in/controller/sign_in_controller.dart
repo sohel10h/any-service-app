@@ -90,6 +90,7 @@ class SignInController extends GetxController {
             backgroundColor: AppColors.green,
           );
           await _sendUserDeviceTokens();
+          await HelperFunction.initWebSockets(signIn.data?.accessToken ?? "");
           _goToLandingScreen();
         } else {
           HelperFunction.snackbar("Sign in failed. Please check your email and password.");

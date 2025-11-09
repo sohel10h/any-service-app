@@ -6,3 +6,26 @@ enum AppDeviceType {
 
   const AppDeviceType(this.typeValue);
 }
+
+enum ClientPlatform { app }
+
+enum NotificationType {
+  email(0),
+  sms(1),
+  serviceRequest(2),
+  bid(3),
+  vendorFound(4),
+  vendorNotFound(5);
+
+  final int typeValue;
+
+  const NotificationType(this.typeValue);
+}
+
+enum PayLoadType {
+  joined,
+  left,
+  message,
+  notification,
+  error,
+}

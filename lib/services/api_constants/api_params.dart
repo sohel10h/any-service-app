@@ -26,4 +26,6 @@ class ApiParams {
   static const String priceStart = "price_start";
   static const String priceEnd = "price_end";
   static const String pictures = "pictures";
+  static const String token = "token";
+  static const String clientPlatform = "client_platform";
 }

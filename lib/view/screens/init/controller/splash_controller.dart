@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:service_la/routes/app_routes.dart';
+import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 
 class SplashController extends GetxController {
@@ -14,7 +15,12 @@ class SplashController extends GetxController {
 
   void _checkLoggedIn() async {
     await Future.delayed(const Duration(seconds: 3));
-    authToken.isEmpty ? Get.offAllNamed(AppRoutes.signUpScreen) : Get.offAllNamed(AppRoutes.landingScreen);
+    if (authToken.isEmpty) {
+      Get.offAllNamed(AppRoutes.signUpScreen);
+    } else {
+      await HelperFunction.initWebSockets(authToken);
+      Get.offAllNamed(AppRoutes.landingScreen);
+    }
   }
 
   void _getStorageValue() {

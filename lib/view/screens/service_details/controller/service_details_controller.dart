@@ -1,11 +1,15 @@
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/data/model/local/provider_bid_model.dart';
+import 'package:service_la/data/repository/service_request_repo.dart';
+import 'package:service_la/data/model/network/service_details_model.dart';
 import 'package:service_la/view/widgets/service_details/service_details_provider_bids_section.dart';
 
 class ServiceDetailsController extends GetxController {
-  RxList<String> imageUrls = <String>[].obs;
+  String serviceId = "";
   RxInt currentIndex = 0.obs;
   RxInt selectedTabIndex = 0.obs;
   RxInt selectedFilterIndex = 0.obs;
@@ -13,6 +17,9 @@ class ServiceDetailsController extends GetxController {
   List<CustomScrollView> tabViews = [];
   final List<int> tabsCounts = [5, 1, 2, 0];
   final List<String> filters = ["Lowest Price", "Top Rated"];
+  final ServiceRequestRepo _serviceRequestRepo = ServiceRequestRepo();
+  RxBool isLoadingServiceRequestsDetails = false.obs;
+  Rx<ServiceDetailsData> serviceDetailsData = ServiceDetailsData().obs;
   final RxList<ProviderBidModel> bids = [
     ProviderBidModel(
       name: "David Martinez",
@@ -51,8 +58,45 @@ class ServiceDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _addImagesUrls();
+    _getArguments();
     _addViews();
+    _getServiceRequestsDetails();
+  }
+
+  Future<void> _getServiceRequestsDetails() async {
+    isLoadingServiceRequestsDetails.value = true;
+    try {
+      var response = await _serviceRequestRepo.getServiceRequestsDetails(serviceId);
+
+      if (response is String) {
+        log("ServiceRequestsDetails get failed from controller response: $response");
+      } else {
+        ServiceDetailsModel serviceDetails = response as ServiceDetailsModel;
+        if (serviceDetails.status == 200 || serviceDetails.status == 201) {
+          serviceDetailsData.value = serviceDetails.serviceDetailsData ?? ServiceDetailsData();
+        } else {
+          if (serviceDetails.status == 401 ||
+              (serviceDetails.errors != null &&
+                  serviceDetails.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().refreshTokenAndRetry(() => _serviceRequestRepo.getServiceRequestsDetails(serviceId));
+            if (retryResponse is ServiceDetailsModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              serviceDetailsData.value = serviceDetails.serviceDetailsData ?? ServiceDetailsData();
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("ServiceRequestsDetails get failed from controller: ${serviceDetails.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("ServiceRequestsDetails get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingServiceRequestsDetails.value = false;
+    }
   }
 
   void _addViews() {
@@ -80,12 +124,9 @@ class ServiceDetailsController extends GetxController {
     ];
   }
 
-  void _addImagesUrls() {
-    imageUrls.clear();
-    imageUrls.value = [
-      HelperFunction.imageUrl1,
-      HelperFunction.imageUrl2,
-      HelperFunction.placeholderImageUrl412_320,
-    ];
+  void _getArguments() {
+    if (Get.arguments != null) {
+      serviceId = Get.arguments["serviceId"];
+    }
   }
 }

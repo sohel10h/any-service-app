@@ -180,7 +180,10 @@ class HomeController extends GetxController {
     }
   }
 
-  void goToServiceDetailsScreen() => Get.toNamed(AppRoutes.serviceDetailsScreen);
+  void goToServiceDetailsScreen(String serviceId) => Get.toNamed(
+        AppRoutes.serviceDetailsScreen,
+        arguments: {"serviceId": serviceId},
+      );
 
   void clearBudgetRange() {
     hasUnsavedChanges.value = false;

@@ -26,9 +26,9 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
-                itemCount: controller.serviceDetailsData.value.categories?.length ?? 0,
+                itemCount: controller.createServiceDetailsData.value.categories?.length ?? 0,
                 itemBuilder: (context, index) {
-                  final category = controller.serviceDetailsData.value.categories?[index] ?? CreateServiceDetailsCategory();
+                  final category = controller.createServiceDetailsData.value.categories?[index] ?? CreateServiceDetailsCategory();
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.w),
                     child: Container(
@@ -68,7 +68,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
-                controller.serviceDetailsData.value.name?.capitalizeFirst ?? "",
+                controller.createServiceDetailsData.value.name?.capitalizeFirst ?? "",
                 style: TextStyle(
                   fontSize: 14.sp,
                   color: AppColors.text101828,
@@ -95,7 +95,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: "${controller.serviceDetailsData.value.rating ?? "0"}",
+                            text: "${controller.createServiceDetailsData.value.rating ?? "0"}",
                             style: TextStyle(
                               fontSize: 14.sp,
                               color: AppColors.text101828,
@@ -104,7 +104,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                           ),
                           TextSpan(text: " "),
                           TextSpan(
-                            text: "(${controller.serviceDetailsData.value.totalReview ?? "0"} reviews)",
+                            text: "(${controller.createServiceDetailsData.value.totalReview ?? "0"} reviews)",
                             style: TextStyle(
                               fontSize: 12.sp,
                               color: AppColors.text6A7282,
@@ -128,7 +128,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                   Expanded(
                     flex: 1,
                     child: Text(
-                      "${controller.serviceDetailsData.value.serviceCompletedCount ?? "0"} jobs completed",
+                      "${controller.createServiceDetailsData.value.serviceCompletedCount ?? "0"} jobs completed",
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: AppColors.text4A5565,
@@ -150,7 +150,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(
-                    "\$${controller.serviceDetailsData.value.price?.toPrecision(2) ?? "0"}",
+                    "\$${controller.createServiceDetailsData.value.price?.toPrecision(2) ?? "0"}",
                     style: TextStyle(
                       fontSize: 26.sp,
                       color: AppColors.primary,
@@ -161,7 +161,8 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                   ),
                   SizedBox(width: 12.w),
                   Text(
-                    "\$${controller.serviceDetailsData.value.price?.toPrecision(2) ?? "0"}", //TODO: need to get this data from API
+                    "\$${controller.createServiceDetailsData.value.price?.toPrecision(2) ?? "0"}",
+                    //TODO: need to get this data from API
                     style: TextStyle(
                       fontSize: 15.sp,
                       color: AppColors.text99A1AF,
@@ -189,8 +190,8 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
-                "Price range: \$${controller.serviceDetailsData.value.priceStart ?? "0"}"
-                " - \$${controller.serviceDetailsData.value.priceEnd ?? "0"}",
+                "Price range: \$${controller.createServiceDetailsData.value.priceStart ?? "0"}"
+                " - \$${controller.createServiceDetailsData.value.priceEnd ?? "0"}",
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: AppColors.text6A7282,
@@ -223,7 +224,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
-                controller.serviceDetailsData.value.description ?? "",
+                controller.createServiceDetailsData.value.description ?? "",
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: AppColors.text4A5565,

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/api_service/api_service.dart';
-import 'package:service_la/data/model/network/service_model.dart';
 import 'package:service_la/data/model/network/create_service_details_model.dart';
 
 class CreateServiceDetailsController extends GetxController {
@@ -11,7 +10,7 @@ class CreateServiceDetailsController extends GetxController {
   RxInt currentIndex = 0.obs;
   final AdminRepo _adminRepo = AdminRepo();
   RxBool isLoadingServicesDetails = false.obs;
-  Rx<CreateServiceDetailsData> serviceDetailsData = CreateServiceDetailsData().obs;
+  Rx<CreateServiceDetailsData> createServiceDetailsData = CreateServiceDetailsData().obs;
   final List<Map<String, dynamic>> reviews = [
     {
       "image": HelperFunction.userImage1,
@@ -65,24 +64,24 @@ class CreateServiceDetailsController extends GetxController {
       if (response is String) {
         log("AdminServicesDetails get failed from controller response: $response");
       } else {
-        CreateServiceDetailsModel service = response as CreateServiceDetailsModel;
-        if (service.status == 200 || service.status == 201) {
-          serviceDetailsData.value = service.createServiceDetailsData ?? CreateServiceDetailsData();
+        CreateServiceDetailsModel createServiceDetails = response as CreateServiceDetailsModel;
+        if (createServiceDetails.status == 200 || createServiceDetails.status == 201) {
+          createServiceDetailsData.value = createServiceDetails.createServiceDetailsData ?? CreateServiceDetailsData();
         } else {
-          if (service.status == 401 ||
-              (service.errors != null &&
-                  service.errors.any((error) =>
+          if (createServiceDetails.status == 401 ||
+              (createServiceDetails.errors != null &&
+                  createServiceDetails.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().refreshTokenAndRetry(() => _adminRepo.getAdminServices());
-            if (retryResponse is ServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              serviceDetailsData.value = service.createServiceDetailsData ?? CreateServiceDetailsData();
+            final retryResponse = await ApiService().refreshTokenAndRetry(() => _adminRepo.getAdminServicesDetails(serviceId));
+            if (retryResponse is CreateServiceDetailsModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              createServiceDetailsData.value = createServiceDetails.createServiceDetailsData ?? CreateServiceDetailsData();
             } else {
               log("Retry request failed after token refresh");
             }
             return;
           }
-          log("AdminServicesDetails get failed from controller: ${service.status}");
+          log("AdminServicesDetails get failed from controller: ${createServiceDetails.status}");
           return;
         }
       }

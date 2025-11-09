@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/data/model/network/service_details_model.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
 
@@ -18,19 +19,22 @@ class ServiceDetailsImageSlider extends GetWidget<ServiceDetailsController> {
         children: [
           SizedBox(
             height: 320.h,
-            child: PageView.builder(
-              itemCount: controller.imageUrls.length,
-              onPageChanged: (index) => controller.currentIndex.value = index,
-              itemBuilder: (context, index) {
-                return NetworkImageLoader(
-                  controller.imageUrls[index],
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                  borderRadius: BorderRadius.circular(0.r),
-                );
-              },
-            ),
+            child: (controller.serviceDetailsData.value.pictures?.isEmpty ?? true)
+                ? Image.asset("assets/images/no_image_available.jpg")
+                : PageView.builder(
+                    itemCount: controller.serviceDetailsData.value.pictures?.length ?? 0,
+                    onPageChanged: (index) => controller.currentIndex.value = index,
+                    itemBuilder: (context, index) {
+                      final picture = controller.serviceDetailsData.value.pictures?[index] ?? ServiceDetailsPicture();
+                      return NetworkImageLoader(
+                        picture.virtualPath ?? "",
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        borderRadius: BorderRadius.circular(0.r),
+                      );
+                    },
+                  ),
           ),
           Positioned(
             top: 36.h,
@@ -98,25 +102,27 @@ class ServiceDetailsImageSlider extends GetWidget<ServiceDetailsController> {
               height: 67.h,
             ),
           ),
-          Positioned(
-            right: 16.w,
-            bottom: 16.h,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 10.h),
-              decoration: BoxDecoration(
-                color: AppColors.black.withValues(alpha: .6),
-                borderRadius: BorderRadius.circular(4.r),
-              ),
-              child: Text(
-                "${controller.currentIndex + 1}/${controller.imageUrls.length}",
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  color: AppColors.white,
-                  fontWeight: FontWeight.w500,
+          (controller.serviceDetailsData.value.pictures?.isEmpty ?? true)
+              ? const SizedBox.shrink()
+              : Positioned(
+                  right: 16.w,
+                  bottom: 16.h,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 10.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.black.withValues(alpha: .6),
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: Text(
+                      "${controller.currentIndex + 1}/${controller.serviceDetailsData.value.pictures?.length ?? 0}",
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: AppColors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
         ],
       ),
     );

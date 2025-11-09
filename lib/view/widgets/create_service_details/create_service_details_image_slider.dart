@@ -19,13 +19,13 @@ class CreateServiceDetailsImageSlider extends GetWidget<CreateServiceDetailsCont
         children: [
           SizedBox(
             height: 320.h,
-            child: (controller.serviceDetailsData.value.pictures?.isEmpty ?? true)
+            child: (controller.createServiceDetailsData.value.pictures?.isEmpty ?? true)
                 ? Image.asset("assets/images/no_image_available.jpg")
                 : PageView.builder(
-                    itemCount: controller.serviceDetailsData.value.pictures?.length ?? 0,
+                    itemCount: controller.createServiceDetailsData.value.pictures?.length ?? 0,
                     onPageChanged: (index) => controller.currentIndex.value = index,
                     itemBuilder: (context, index) {
-                      final picture = controller.serviceDetailsData.value.pictures?[index] ?? CreateServiceDetailsPicture();
+                      final picture = controller.createServiceDetailsData.value.pictures?[index] ?? CreateServiceDetailsPicture();
                       return NetworkImageLoader(
                         picture.virtualPath ?? "",
                         width: double.infinity,
@@ -124,7 +124,7 @@ class CreateServiceDetailsImageSlider extends GetWidget<CreateServiceDetailsCont
               ),
             ),
           ),
-          (controller.serviceDetailsData.value.pictures?.isEmpty ?? true)
+          (controller.createServiceDetailsData.value.pictures?.isEmpty ?? true)
               ? const SizedBox.shrink()
               : Positioned(
                   right: 16.w,
@@ -136,7 +136,7 @@ class CreateServiceDetailsImageSlider extends GetWidget<CreateServiceDetailsCont
                       borderRadius: BorderRadius.circular(30.r),
                     ),
                     child: Text(
-                      "${controller.currentIndex.value + 1}/${controller.serviceDetailsData.value.pictures?.length ?? 0}",
+                      "${controller.currentIndex.value + 1}/${controller.createServiceDetailsData.value.pictures?.length ?? 0}",
                       style: TextStyle(
                         fontSize: 10.sp,
                         color: AppColors.white,

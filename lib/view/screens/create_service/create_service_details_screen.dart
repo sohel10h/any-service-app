@@ -15,7 +15,7 @@ class CreateServiceDetailsScreen extends GetWidget<CreateServiceDetailsControlle
     return Scaffold(
       body: Obx(
         () => controller.isLoadingServicesDetails.value
-            ? CustomProgressBar()
+            ? const CustomProgressBar()
             : ListView(
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,

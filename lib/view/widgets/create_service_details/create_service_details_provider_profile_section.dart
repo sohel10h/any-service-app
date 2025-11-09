@@ -113,7 +113,7 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
-                                        text: "${controller.serviceDetailsData.value.user?.rating ?? "0"}",
+                                        text: "${controller.createServiceDetailsData.value.user?.rating ?? "0"}",
                                         style: TextStyle(
                                           fontSize: 12.sp,
                                           color: AppColors.text101828,
@@ -122,7 +122,7 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                                       ),
                                       TextSpan(text: " "),
                                       TextSpan(
-                                        text: "(${controller.serviceDetailsData.value.user?.totalReview ?? "0"})",
+                                        text: "(${controller.createServiceDetailsData.value.user?.totalReview ?? "0"})",
                                         style: TextStyle(
                                           fontSize: 10.sp,
                                           color: AppColors.text6A7282,

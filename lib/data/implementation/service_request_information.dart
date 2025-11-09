@@ -8,4 +8,10 @@ class ServiceRequestInformation extends ServiceRequestApiService {
     dynamic response = await ApiService().post(ApiConstant.serviceRequestsPath, params);
     return response;
   }
+
+  @override
+  Future getServiceRequestsDetails(String serviceId) async {
+    dynamic response = await ApiService().get(ApiConstant.serviceRequestsDetailsPath.replaceAll("#serviceId#", serviceId));
+    return response;
+  }
 }

@@ -1,71 +1,75 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
 
-class ServiceDetailsDetailsSection extends StatelessWidget {
+class ServiceDetailsDetailsSection extends GetWidget<ServiceDetailsController> {
   const ServiceDetailsDetailsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(16.sp),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Service Details",
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: AppColors.text0A0A0A,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            SizedBox(height: 4.h),
-            _buildDetailTile(
-              imagesPath: "assets/images/checkmark_small.png",
-              title: "Description",
-              subtitle: "Need a thorough deep cleaning for a 3-bedroom apartment. Including kitchen, "
-                  "bathrooms, living areas, and all windows. The apartment is approximately 1,200",
-              imageContainerColor: AppColors.containerDCFCE7,
-            ),
-            _buildDetailTile(
-              imagesPath: "assets/images/location_pin.png",
-              title: "Location",
-              subtitle: "123 Main Street, Downtown",
-              imageContainerColor: AppColors.containerDBEAFE,
-            ),
-            _buildDetailTile(
-              imagesPath: "assets/images/dollar_bag.png",
-              title: "Budget Range",
-              subtitle: "\$80 – \$120",
-              imageContainerColor: AppColors.containerFFEDD4,
-            ),
-            _buildDetailTile(
-              imagesPath: "assets/images/timer_clock.png",
-              title: "Urgency Level",
-              subtitleWidget: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  color: AppColors.containerFEF9C2,
-                  borderRadius: BorderRadius.circular(4.r),
-                  border: Border.all(color: AppColors.borderFFF085),
+    return Obx(
+      () => Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(16.sp),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Service Details",
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: AppColors.text0A0A0A,
+                  fontWeight: FontWeight.w700,
                 ),
-                child: Text(
-                  "Medium",
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    color: AppColors.text894B00,
-                    fontWeight: FontWeight.w500,
+              ),
+              SizedBox(height: 4.h),
+              _buildDetailTile(
+                imagesPath: "assets/images/checkmark_small.png",
+                title: "Description",
+                subtitle: controller.serviceDetailsData.value.description ?? "",
+                imageContainerColor: AppColors.containerDCFCE7,
+              ),
+              _buildDetailTile(
+                imagesPath: "assets/images/location_pin.png",
+                title: "Location",
+                subtitle: "123 Main Street, Downtown", //TODO: need to get this data from API
+                imageContainerColor: AppColors.containerDBEAFE,
+              ),
+              _buildDetailTile(
+                imagesPath: "assets/images/dollar_bag.png",
+                title: "Budget Range",
+                subtitle: "\$${controller.serviceDetailsData.value.budgetMin ?? "0"}"
+                    " – \$${controller.serviceDetailsData.value.budgetMax ?? "0"}",
+                imageContainerColor: AppColors.containerFFEDD4,
+              ),
+              _buildDetailTile(
+                imagesPath: "assets/images/timer_clock.png",
+                title: "Urgency Level",
+                subtitleWidget: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.containerFEF9C2,
+                    borderRadius: BorderRadius.circular(4.r),
+                    border: Border.all(color: AppColors.borderFFF085),
+                  ),
+                  child: Text(
+                    "Medium",
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: AppColors.text894B00,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
+                imageContainerColor: AppColors.containerFEF9C2,
               ),
-              imageContainerColor: AppColors.containerFEF9C2,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

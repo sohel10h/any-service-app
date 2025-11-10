@@ -12,55 +12,59 @@ class ServiceDetailsTab extends GetWidget<ServiceDetailsController> {
   @override
   Widget build(BuildContext context) {
     final tabBar = Obx(
-      () => TabBar(
-        isScrollable: false,
-        padding: EdgeInsets.zero,
-        labelPadding: EdgeInsets.zero,
-        indicatorColor: AppColors.primary,
-        dividerColor: Colors.transparent,
-        onTap: (index) => controller.selectedTabIndex.value = index,
-        tabs: List.generate(controller.tabViews.length, (index) {
-          final isSelected = index == controller.selectedTabIndex.value;
-          final tabText = controller.tabs[index];
+      () => SafeArea(
+        child: Padding(
+          padding: EdgeInsets.zero,
+          child: TabBar(
+            isScrollable: false,
+            padding: EdgeInsets.zero,
+            labelPadding: EdgeInsets.zero,
+            indicatorColor: AppColors.primary,
+            dividerColor: Colors.transparent,
+            onTap: (index) => controller.selectedTabIndex.value = index,
+            tabs: List.generate(controller.tabViews.length, (index) {
+              final isSelected = index == controller.selectedTabIndex.value;
+              final tabText = controller.tabs[index];
 
-          return Tab(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: 16.h),
-                Row(
+              return Tab(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      tabText,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: isSelected ? AppColors.primary : AppColors.text6A7282,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(width: 2.w),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                      decoration: BoxDecoration(
-                        color: isSelected ? AppColors.primary : AppColors.containerF3F4F6,
-                        borderRadius: BorderRadius.circular(16.r),
-                      ),
-                      child: Text(
-                        "${controller.tabsCounts[index]}",
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          color: isSelected ? AppColors.white : AppColors.text4A5565,
-                          fontWeight: FontWeight.w700,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          tabText,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: isSelected ? AppColors.primary : AppColors.text6A7282,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
+                        SizedBox(width: 2.w),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                          decoration: BoxDecoration(
+                            color: isSelected ? AppColors.primary : AppColors.containerF3F4F6,
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                          child: Text(
+                            "${controller.tabsCounts[index]}",
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: isSelected ? AppColors.white : AppColors.text4A5565,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          );
-        }),
+              );
+            }),
+          ),
+        ),
       ),
     );
 

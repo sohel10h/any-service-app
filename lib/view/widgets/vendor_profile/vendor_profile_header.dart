@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
@@ -110,7 +111,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Sarah Johnson",
+                AppDIController.signInDetails.value.data?.userName ?? "",
                 style: TextStyle(
                   fontSize: 17.sp,
                   color: AppColors.text101828,
@@ -236,7 +237,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
               ),
               SizedBox(width: 8.w),
               Text(
-                "sarah.johnson@email.com",
+                AppDIController.signInDetails.value.data?.userEmail ?? "",
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: AppColors.text364153,

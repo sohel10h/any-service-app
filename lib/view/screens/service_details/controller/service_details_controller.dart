@@ -112,7 +112,8 @@ class ServiceDetailsController extends GetxController {
                   createService.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().refreshTokenAndRetry(() => _serviceRequestRepo.getServiceRequestsDetails("serviceId"));
+            final retryResponse =
+                await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.getServiceRequestsDetails("serviceId"));
             if (retryResponse is CreateServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               Get.back(result: true);
               HelperFunction.snackbar(
@@ -153,7 +154,8 @@ class ServiceDetailsController extends GetxController {
                   serviceDetails.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().refreshTokenAndRetry(() => _serviceRequestRepo.getServiceRequestsDetails(serviceId));
+            final retryResponse =
+                await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.getServiceRequestsDetails(serviceId));
             if (retryResponse is ServiceDetailsModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceDetailsData.value = serviceDetails.serviceDetailsData ?? ServiceDetailsData();
             } else {

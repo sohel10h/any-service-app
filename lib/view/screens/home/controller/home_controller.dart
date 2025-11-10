@@ -124,14 +124,15 @@ class HomeController extends GetxController {
   void _checkWebsocketsData() async {
     WebSocketService.to.on('notification', (payload) async {
       final WebsocketNotificationModel notification = payload['parsed'];
+      log("WebsocketsResponse from HomeController: ${notification.title}");
       await Future.delayed(const Duration(milliseconds: 200));
       NotificationBottomSheetQueue.add(notification);
     });
   }
 
-  void onTapPostButton(BuildContext context) async => await _serviceRequests(context);
+  void onTapPostButton(BuildContext context) async => await _postServiceRequests(context);
 
-  Future<void> _serviceRequests(BuildContext context) async {
+  Future<void> _postServiceRequests(BuildContext context) async {
     HelperFunction.hideKeyboard();
     isLoadingServiceRequests.value = true;
     try {
@@ -145,7 +146,7 @@ class HomeController extends GetxController {
         ApiParams.attachmentIds: attachmentIds,
       };
       log("ServiceRequests POST Params: $params");
-      var response = await _serviceRequestRepo.serviceRequests(params);
+      var response = await _serviceRequestRepo.postServiceRequests(params);
 
       if (response is String) {
         log("ServiceRequests failed from controller response: $response");
@@ -167,7 +168,7 @@ class HomeController extends GetxController {
                   serviceRequest.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().refreshTokenAndRetry(() => _serviceRequestRepo.serviceRequests(params));
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.postServiceRequests(params));
             if (retryResponse is UploadServiceRequestModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               clearDraft();
               Get.back();
@@ -303,7 +304,7 @@ class HomeController extends GetxController {
         final index = selectedImages.length - 1;
         imageLoadingFlags.insert(index, true);
         imageLoadingFlags.refresh();
-        final success = await _uploadAdminPictures(imageFile, index);
+        final success = await _postAdminPictures(imageFile, index);
         if (!success) {
           selectedImages.removeAt(index);
           imageLoadingFlags.removeAt(index);
@@ -319,7 +320,7 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<bool> _uploadAdminPictures(XFile imageXFile, int index) async {
+  Future<bool> _postAdminPictures(XFile imageXFile, int index) async {
     try {
       final file = File(imageXFile.path);
       if (!await file.exists()) {
@@ -340,7 +341,7 @@ class HomeController extends GetxController {
         ApiParams.titleAttribute: "Admin Picture",
       });
       log("Upload Params: ${formData.fields}");
-      final response = await _adminRepo.uploadAdminPictures(formData);
+      final response = await _adminRepo.postAdminPictures(formData);
       if (response is String) {
         HelperFunction.snackbar("Image upload failed");
         log("Image upload failed controller response: $response");
@@ -356,7 +357,7 @@ class HomeController extends GetxController {
                   pictureModel.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected in controller, refreshing...");
-            final retryResponse = await ApiService().refreshTokenAndRetry(() => _adminRepo.uploadAdminPictures(formData));
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _adminRepo.postAdminPictures(formData));
             if (retryResponse is UploadAdminPictureModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               attachmentIds.add(pictureModel.data?.id ?? "");
               return true;

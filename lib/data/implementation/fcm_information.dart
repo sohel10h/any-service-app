@@ -4,8 +4,8 @@ import 'package:service_la/services/api_service/api_service.dart';
 
 class FcmInformation extends FcmApiService {
   @override
-  Future userDeviceTokens(params) async {
-    dynamic response = await ApiService().post(ApiConstant.userDeviceTokensPath, params);
+  Future postUserDeviceTokens(params) async {
+    dynamic response = await ApiService().post(ApiConstant.postUserDeviceTokensPath, params);
     return response;
   }
 }

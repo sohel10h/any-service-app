@@ -9,11 +9,11 @@ import 'package:service_la/data/repository/fcm_repo.dart';
 import 'package:service_la/data/repository/auth_repo.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/data/model/network/sign_in_model.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/model/network/user_device_token_model.dart';
-import 'package:service_la/services/di/app_di_controller.dart';
 
 class SignInController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -33,14 +33,14 @@ class SignInController extends GetxController {
     _addListenerFocusNodes();
   }
 
-  Future<void> _sendUserDeviceTokens() async {
+  Future<void> _postUserDeviceTokens() async {
     try {
       dynamic params = {
         ApiParams.deviceToken: await FirebaseMessaging.instance.getToken() ?? "",
         ApiParams.deviceType: Platform.isAndroid ? AppDeviceType.android.typeValue : AppDeviceType.ios.typeValue,
       };
       log("UserDeviceTokens POST Params: $params");
-      var response = await _fcmRepo.userDeviceTokens(params);
+      var response = await _fcmRepo.postUserDeviceTokens(params);
 
       if (response is String) {
         log("UserDeviceTokens failed from controller response: $response");
@@ -62,10 +62,10 @@ class SignInController extends GetxController {
     if (!(formKey.currentState?.validate() ?? true)) {
       return;
     }
-    _signIn();
+    await _postSignIn();
   }
 
-  Future<void> _signIn() async {
+  Future<void> _postSignIn() async {
     HelperFunction.hideKeyboard();
     isLoadingSignIn.value = true;
     try {
@@ -74,7 +74,7 @@ class SignInController extends GetxController {
         ApiParams.password: passwordController.text,
       };
       log("SignIn POST Params: $params");
-      var response = await _authRepo.signIn(params);
+      var response = await _authRepo.postSignIn(params);
 
       if (response is String) {
         HelperFunction.snackbar("Sign in failed. Please check your email and password.");
@@ -93,7 +93,7 @@ class SignInController extends GetxController {
             icon: Icons.check,
             backgroundColor: AppColors.green,
           );
-          await _sendUserDeviceTokens();
+          await _postUserDeviceTokens();
           await HelperFunction.initWebSockets(signIn.data?.accessToken ?? "");
           _goToLandingScreen();
         } else {

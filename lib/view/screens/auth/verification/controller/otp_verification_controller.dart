@@ -24,14 +24,14 @@ class OtpVerificationController extends GetxController {
     _addListenerFocusNodes();
   }
 
-  void verifyEmailButtonOnTap() {
+  void verifyEmailButtonOnTap() async {
     if (!(formKey.currentState?.validate() ?? true)) {
       return;
     }
-    _validateOtp();
+    await _postValidateOtp();
   }
 
-  Future<void> _validateOtp() async {
+  Future<void> _postValidateOtp() async {
     HelperFunction.hideKeyboard();
     isLoadingValidateOtp.value = true;
     try {
@@ -41,7 +41,7 @@ class OtpVerificationController extends GetxController {
         ApiParams.identifierType: ApiParams.email,
       };
       log("ValidateOtp POST Params: $params");
-      var response = await _authRepo.validateOtp(params);
+      var response = await _authRepo.postValidateOtp(params);
 
       if (response is String) {
         HelperFunction.snackbar("Verification failed. The code you entered is incorrect.");

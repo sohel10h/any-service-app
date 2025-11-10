@@ -35,10 +35,10 @@ class SignUpCompleteController extends GetxController {
     if (!(formKey.currentState?.validate() ?? true)) {
       return;
     }
-    _signUp();
+    await _postSignUp();
   }
 
-  Future<void> _signUp() async {
+  Future<void> _postSignUp() async {
     HelperFunction.hideKeyboard();
     isLoadingSignUp.value = true;
     try {
@@ -48,7 +48,7 @@ class SignUpCompleteController extends GetxController {
         ApiParams.sessionToken: sessionToken,
       };
       log("SignUp POST Params: $params");
-      var response = await _authRepo.signUp(params);
+      var response = await _authRepo.postSignUp(params);
 
       if (response is String) {
         HelperFunction.snackbar("Sign up failed. Please check your details and try again.");

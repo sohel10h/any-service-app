@@ -73,7 +73,7 @@ class CreateServiceDetailsController extends GetxController {
                   createServiceDetails.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().refreshTokenAndRetry(() => _adminRepo.getAdminServicesDetails(serviceId));
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _adminRepo.getAdminServicesDetails(serviceId));
             if (retryResponse is CreateServiceDetailsModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               createServiceDetailsData.value = createServiceDetails.createServiceDetailsData ?? CreateServiceDetailsData();
             } else {

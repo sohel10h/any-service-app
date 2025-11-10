@@ -144,7 +144,7 @@ class WebSocketService extends GetxService with WidgetsBindingObserver {
     if (error.toString().contains('401') || error.toString().contains('jwt')) {
       _log('Token expired detected on websocket. Refreshing token...');
       // Use refreshTokenAndRetry with connect as the retry callback
-      final result = await ApiService().refreshTokenAndRetry(
+      final result = await ApiService().postRefreshTokenAndRetry(
         () async => await HelperFunction.initWebSockets(
           StorageHelper.getValue(StorageHelper.authToken),
         ),

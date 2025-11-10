@@ -10,9 +10,9 @@ import 'package:service_la/data/model/network/create_service_details_model.dart'
 class AdminRepo {
   final AdminApiService _adminApiService = AdminInformation();
 
-  Future<dynamic> uploadAdminPictures(dynamic params) async {
+  Future<dynamic> postAdminPictures(dynamic params) async {
     try {
-      dynamic response = await _adminApiService.uploadAdminPictures(params);
+      dynamic response = await _adminApiService.postAdminPictures(params);
       log("UploadAdminPictures details from admin repo: $response");
       return UploadAdminPictureModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
@@ -20,9 +20,9 @@ class AdminRepo {
     }
   }
 
-  Future<dynamic> createAdminServices(dynamic params) async {
+  Future<dynamic> postAdminServices(dynamic params) async {
     try {
-      dynamic response = await _adminApiService.createAdminServices(params);
+      dynamic response = await _adminApiService.postAdminServices(params);
       log("AdminServices create details from admin repo: $response");
       return CreateServiceModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {

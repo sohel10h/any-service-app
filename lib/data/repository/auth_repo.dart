@@ -11,9 +11,9 @@ import 'package:service_la/data/model/network/refresh_token_model.dart';
 class AuthRepo {
   AuthApiService authApiService = AuthInformation();
 
-  Future<dynamic> sendOtp(dynamic params) async {
+  Future<dynamic> postOtp(dynamic params) async {
     try {
-      dynamic response = await authApiService.sendOtp(params);
+      dynamic response = await authApiService.postOtp(params);
       log("SendOtp details from auth repo: $response");
       return SendOtpModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
@@ -21,9 +21,9 @@ class AuthRepo {
     }
   }
 
-  Future<dynamic> validateOtp(dynamic params) async {
+  Future<dynamic> postValidateOtp(dynamic params) async {
     try {
-      dynamic response = await authApiService.validateOtp(params);
+      dynamic response = await authApiService.postValidateOtp(params);
       log("ValidateOtp details from auth repo: $response");
       return ValidateOtpModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
@@ -31,9 +31,9 @@ class AuthRepo {
     }
   }
 
-  Future<dynamic> signUp(dynamic params) async {
+  Future<dynamic> postSignUp(dynamic params) async {
     try {
-      dynamic response = await authApiService.signUp(params);
+      dynamic response = await authApiService.postSignUp(params);
       log("SignUp details from auth repo: $response");
       return SignUpModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
@@ -41,9 +41,9 @@ class AuthRepo {
     }
   }
 
-  Future<dynamic> signIn(dynamic params) async {
+  Future<dynamic> postSignIn(dynamic params) async {
     try {
-      dynamic response = await authApiService.signIn(params);
+      dynamic response = await authApiService.postSignIn(params);
       log("SignIn details from auth repo: $response");
       return SignInModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
@@ -51,9 +51,9 @@ class AuthRepo {
     }
   }
 
-  Future<dynamic> refreshToken(dynamic params) async {
+  Future<dynamic> postRefreshToken(dynamic params) async {
     try {
-      dynamic response = await authApiService.refreshToken(params);
+      dynamic response = await authApiService.postRefreshToken(params);
       log("RefreshToken details from auth repo: $response");
       return RefreshTokenModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {

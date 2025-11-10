@@ -4,32 +4,32 @@ import 'package:service_la/services/api_service/api_service.dart';
 
 class AuthInformation extends AuthApiService {
   @override
-  Future sendOtp(params) async {
-    dynamic response = await ApiService().post(ApiConstant.sendOtpPath, params);
+  Future postOtp(params) async {
+    dynamic response = await ApiService().post(ApiConstant.postOtpPath, params);
     return response;
   }
 
   @override
-  Future validateOtp(params) async {
-    dynamic response = await ApiService().post(ApiConstant.validateOtpPath, params);
+  Future postValidateOtp(params) async {
+    dynamic response = await ApiService().post(ApiConstant.postValidateOtpPath, params);
     return response;
   }
 
   @override
-  Future signUp(params) async {
-    dynamic response = await ApiService().post(ApiConstant.signUpPath, params);
+  Future postSignUp(params) async {
+    dynamic response = await ApiService().post(ApiConstant.postSignUpPath, params);
     return response;
   }
 
   @override
-  Future signIn(params) async {
-    dynamic response = await ApiService().post(ApiConstant.signInPath, params);
+  Future postSignIn(params) async {
+    dynamic response = await ApiService().post(ApiConstant.postSignInPath, params);
     return response;
   }
 
   @override
-  Future refreshToken(params) async {
-    dynamic response = await ApiService().post(ApiConstant.refreshTokenPath, params);
+  Future postRefreshToken(params) async {
+    dynamic response = await ApiService().post(ApiConstant.postRefreshTokenPath, params);
     return response;
   }
 }

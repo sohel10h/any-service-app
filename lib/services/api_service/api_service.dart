@@ -97,8 +97,8 @@ class ApiService {
     }
   }
 
-  Future<dynamic> refreshTokenAndRetry(Future<dynamic> Function() retryCallback) async {
-    bool refreshed = await _refreshToken();
+  Future<dynamic> postRefreshTokenAndRetry(Future<dynamic> Function() retryCallback) async {
+    bool refreshed = await _postRefreshToken();
     if (refreshed) {
       log("Retrying the previous request after token refresh...");
       return await retryCallback();
@@ -109,7 +109,7 @@ class ApiService {
     }
   }
 
-  Future<bool> _refreshToken() async {
+  Future<bool> _postRefreshToken() async {
     try {
       final refreshToken = StorageHelper.getValue(StorageHelper.refreshToken);
       if (refreshToken.isEmpty) {
@@ -120,7 +120,7 @@ class ApiService {
         ApiParams.refreshToken: refreshToken,
       };
       log("RefreshToken POST Params: $params");
-      final response = await _authRepo.refreshToken(params);
+      final response = await _authRepo.postRefreshToken(params);
       if (response is String) {
         log("RefreshToken failed from api service response: $response");
         return false;

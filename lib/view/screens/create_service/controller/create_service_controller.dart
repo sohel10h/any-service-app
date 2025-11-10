@@ -43,10 +43,10 @@ class CreateServiceController extends GetxController {
     if (!(formKey.currentState?.validate() ?? true)) {
       return;
     }
-    await _createAdminServices();
+    await _postAdminServices();
   }
 
-  Future<void> _createAdminServices() async {
+  Future<void> _postAdminServices() async {
     HelperFunction.hideKeyboard();
     isLoadingCrateService.value = true;
     try {
@@ -63,7 +63,7 @@ class CreateServiceController extends GetxController {
         params[ApiParams.price] = double.tryParse(priceController.text.trim());
       }
       log("CreateService POST Params: $params");
-      var response = await _adminRepo.createAdminServices(params);
+      var response = await _adminRepo.postAdminServices(params);
 
       if (response is String) {
         log("CreateService failed from controller response: $response");
@@ -83,7 +83,7 @@ class CreateServiceController extends GetxController {
                   createService.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().refreshTokenAndRetry(() => _adminRepo.createAdminServices(params));
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _adminRepo.postAdminServices(params));
             if (retryResponse is CreateServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               Get.back(result: true);
               HelperFunction.snackbar(
@@ -130,7 +130,7 @@ class CreateServiceController extends GetxController {
         final index = selectedImages.length - 1;
         imageLoadingFlags.insert(index, true);
         imageLoadingFlags.refresh();
-        final success = await _uploadAdminPicture(imageFile, index);
+        final success = await _postAdminPictures(imageFile, index);
 
         if (!success) {
           selectedImages.removeAt(index);
@@ -147,7 +147,7 @@ class CreateServiceController extends GetxController {
     }
   }
 
-  Future<bool> _uploadAdminPicture(XFile imageXFile, int index) async {
+  Future<bool> _postAdminPictures(XFile imageXFile, int index) async {
     try {
       final file = File(imageXFile.path);
       if (!await file.exists()) {
@@ -167,7 +167,7 @@ class CreateServiceController extends GetxController {
         ApiParams.altAttribute: "Uploaded Image",
         ApiParams.titleAttribute: "Admin Picture",
       });
-      final response = await _adminRepo.uploadAdminPictures(formData);
+      final response = await _adminRepo.postAdminPictures(formData);
       if (response is String) {
         HelperFunction.snackbar("Image upload failed");
         log("Image upload failed controller response: $response");
@@ -191,7 +191,7 @@ class CreateServiceController extends GetxController {
                 pictureModel.errors.any(
                     (error) => error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
           log("Token expired detected, refreshing...");
-          final retryResponse = await ApiService().refreshTokenAndRetry(() => _adminRepo.uploadAdminPictures(formData));
+          final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _adminRepo.postAdminPictures(formData));
           if (retryResponse is UploadAdminPictureModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
             final id = pictureModel.data?.id ?? "";
             if (id.isNotEmpty) {

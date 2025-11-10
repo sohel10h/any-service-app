@@ -35,14 +35,14 @@ class SignUpController extends GetxController {
     _addListenerFocusNodes();
   }
 
-  void registerButtonOnTap() {
+  void registerButtonOnTap() async {
     if (!(formKey.currentState?.validate() ?? true)) {
       return;
     }
-    _sendOtp();
+    await _postOtp();
   }
 
-  Future<void> _sendOtp() async {
+  Future<void> _postOtp() async {
     HelperFunction.hideKeyboard();
     isLoadingSendOtp.value = true;
     try {
@@ -51,7 +51,7 @@ class SignUpController extends GetxController {
         ApiParams.identifierType: ApiParams.email,
       };
       log("SendOtp POST Params: $params");
-      var response = await _authRepo.sendOtp(params);
+      var response = await _authRepo.postOtp(params);
 
       if (response is String) {
         HelperFunction.snackbar("Failed to send OTP. Please try again.");

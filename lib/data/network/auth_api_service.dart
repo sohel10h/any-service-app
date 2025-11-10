@@ -1,11 +1,11 @@
 abstract class AuthApiService {
-  Future<dynamic> sendOtp(dynamic params);
+  Future<dynamic> postOtp(dynamic params);
 
-  Future<dynamic> validateOtp(dynamic params);
+  Future<dynamic> postValidateOtp(dynamic params);
 
-  Future<dynamic> signUp(dynamic params);
+  Future<dynamic> postSignUp(dynamic params);
 
-  Future<dynamic> signIn(dynamic params);
+  Future<dynamic> postSignIn(dynamic params);
 
-  Future<dynamic> refreshToken(dynamic params);
+  Future<dynamic> postRefreshToken(dynamic params);
 }

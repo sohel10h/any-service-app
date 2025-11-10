@@ -97,7 +97,7 @@ class VendorProfileController extends GetxController {
                   service.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().refreshTokenAndRetry(() => _adminRepo.getAdminServices());
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _adminRepo.getAdminServices());
             if (retryResponse is ServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               services.value = retryResponse.data?.services ?? [];
             } else {

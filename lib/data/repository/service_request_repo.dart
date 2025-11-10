@@ -8,9 +8,9 @@ import 'package:service_la/data/implementation/service_request_information.dart'
 class ServiceRequestRepo {
   final ServiceRequestApiService _serviceRequestApiService = ServiceRequestInformation();
 
-  Future<dynamic> serviceRequests(dynamic params) async {
+  Future<dynamic> postServiceRequests(dynamic params) async {
     try {
-      dynamic response = await _serviceRequestApiService.serviceRequests(params);
+      dynamic response = await _serviceRequestApiService.postServiceRequests(params);
       log("ServiceRequests details from service request repo: $response");
       return UploadServiceRequestModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {

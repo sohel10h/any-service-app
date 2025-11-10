@@ -1,0 +1,11 @@
+import 'package:service_la/data/network/service_api_service.dart';
+import 'package:service_la/services/api_constants/api_const.dart';
+import 'package:service_la/services/api_service/api_service.dart';
+
+class ServiceInformation extends ServiceApiService {
+  @override
+  Future getServicesMe() async {
+    dynamic response = await ApiService().get(ApiConstant.getServicesMePath);
+    return response;
+  }
+}

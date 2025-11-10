@@ -4,6 +4,7 @@ import 'package:service_la/data/model/network/service_details_model.dart';
 import 'package:service_la/data/network/service_request_api_service.dart';
 import 'package:service_la/data/model/network/upload_service_request_model.dart';
 import 'package:service_la/data/implementation/service_request_information.dart';
+import 'package:service_la/data/model/network/create_service_request_bid_model.dart';
 
 class ServiceRequestRepo {
   final ServiceRequestApiService _serviceRequestApiService = ServiceRequestInformation();
@@ -23,6 +24,16 @@ class ServiceRequestRepo {
       dynamic response = await _serviceRequestApiService.getServiceRequestsDetails(serviceId);
       log("ServiceRequestsDetails get details from service request repo: $response");
       return ServiceDetailsModel.fromJson(jsonDecode(response.toString()));
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future<dynamic> postServiceRequestBids(dynamic params) async {
+    try {
+      dynamic response = await _serviceRequestApiService.postServiceRequestBids(params);
+      log("ServiceRequestBids details from service request repo: $response");
+      return CreateServiceRequestBidModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
       return e;
     }

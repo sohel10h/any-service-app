@@ -43,11 +43,11 @@ class NotificationBottomSheetQueue {
     }
   }
 
-  static void goToServiceDetailsScreen(String serviceId) {
+  static void goToServiceDetailsScreen(String serviceRequestId) {
     _allowedRoute = AppRoutes.landingScreen;
     Get.toNamed(
       AppRoutes.serviceDetailsScreen,
-      arguments: {"serviceId": serviceId},
+      arguments: {"serviceRequestId": serviceRequestId},
     )?.then((_) {
       _allowedRoute = null;
       _tryShowNext();

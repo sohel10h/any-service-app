@@ -28,4 +28,8 @@ class ApiParams {
   static const String pictures = "pictures";
   static const String token = "token";
   static const String clientPlatform = "client_platform";
+  static const String serviceRequestId = "service_request_id";
+  static const String serviceId = "service_id";
+  static const String message = "message";
+  static const String proposedPrice = "proposed_price";
 }

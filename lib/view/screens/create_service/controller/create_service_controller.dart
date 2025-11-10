@@ -95,12 +95,12 @@ class CreateServiceController extends GetxController {
             }
             return;
           }
-          HelperFunction.snackbar("CreateService failed");
+          HelperFunction.snackbar("Failed to create your service. Please try again.");
           log("CreateService failed from controller: ${createService.status}");
         }
       }
     } catch (e) {
-      HelperFunction.snackbar("CreateService failed");
+      HelperFunction.snackbar("Failed to create your service. Please try again.");
       log("CreateService catch error from controller: ${e.toString()}");
     } finally {
       isLoadingCrateService.value = false;

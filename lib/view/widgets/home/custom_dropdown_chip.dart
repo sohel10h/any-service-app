@@ -11,6 +11,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
   final RxList<T> options;
   final Rx<T?> selectedValue;
   final String? iconPath;
+  final String? hint;
   final String Function(T) labelBuilder;
   final void Function(T)? onChanged;
 
@@ -21,6 +22,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
     required this.options,
     required this.selectedValue,
     this.iconPath,
+    this.hint,
     required this.labelBuilder,
     this.onChanged,
   });
@@ -57,7 +59,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
                   ],
                   Flexible(
                     child: Text(
-                      hasOptions ? "Select" : "No options",
+                      hasOptions ? hint ?? "Select" : "No options",
                       style: TextStyle(
                         fontSize: 13.sp,
                         color: AppColors.text364153,

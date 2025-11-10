@@ -184,21 +184,21 @@ class HomeController extends GetxController {
             }
             return;
           }
-          HelperFunction.snackbar("ServiceRequests failed");
+          HelperFunction.snackbar("Failed to submit your requests. Please try again.");
           log("ServiceRequests failed from controller: ${serviceRequest.status}");
         }
       }
     } catch (e) {
-      HelperFunction.snackbar("ServiceRequests failed");
+      HelperFunction.snackbar("Failed to submit your requests. Please try again.");
       log("ServiceRequests catch error from controller: ${e.toString()}");
     } finally {
       isLoadingServiceRequests.value = false;
     }
   }
 
-  void goToServiceDetailsScreen(String serviceId) => Get.toNamed(
+  void goToServiceDetailsScreen(String serviceRequestId) => Get.toNamed(
         AppRoutes.serviceDetailsScreen,
-        arguments: {"serviceId": serviceId},
+        arguments: {"serviceRequestId": serviceRequestId},
       );
 
   void clearBudgetRange() {

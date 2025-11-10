@@ -25,6 +25,9 @@ class ApiConstant {
   // END POINTS - Service requests bids
   static const String postServiceRequestBidsPath = "/api/service-request-bids";
 
+  // END POINTS - Services
+  static const String getServicesMePath = "/api/services/me";
+
   // Functions
   static String dynamicQueryParams(String endpoint, {Map<String, dynamic>? queryParams}) {
     final uri = Uri.parse(endpoint).replace(

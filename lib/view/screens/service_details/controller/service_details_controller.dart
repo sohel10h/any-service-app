@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
+import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/data/model/local/provider_bid_model.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
-import 'package:service_la/data/model/network/create_service_model.dart';
 import 'package:service_la/data/model/network/service_details_model.dart';
+import 'package:service_la/data/model/network/create_service_request_bid_model.dart';
 import 'package:service_la/view/widgets/service_details/service_details_provider_bids_section.dart';
 
 class ServiceDetailsController extends GetxController {
@@ -17,7 +19,7 @@ class ServiceDetailsController extends GetxController {
   final TextEditingController priceController = TextEditingController();
   final FocusNode descriptionFocusNode = FocusNode();
   final FocusNode priceFocusNode = FocusNode();
-  String serviceId = "";
+  String serviceRequestId = "";
   RxInt currentIndex = 0.obs;
   RxInt selectedTabIndex = 0.obs;
   RxInt selectedFilterIndex = 0.obs;
@@ -29,8 +31,9 @@ class ServiceDetailsController extends GetxController {
   RxBool isLoadingServiceRequestsDetails = false.obs;
   Rx<ServiceDetailsData> serviceDetailsData = ServiceDetailsData().obs;
   RxBool isLoadingCrateBids = false.obs;
-  final RxList<String> requestServices = ["Home Cleaning", "Car Washing", "House keeping"].obs;
-  final Rx<String?> selectedRequestService = Rx<String?>(null);
+  final ServiceRepo _serviceRepo = ServiceRepo();
+  RxList<ServiceMeData> serviceMeDataList = <ServiceMeData>[].obs;
+  final Rx<ServiceMeData?> selectedServiceMeData = Rx<ServiceMeData?>(null);
   final RxList<ProviderBidModel> bids = [
     ProviderBidModel(
       name: "David Martinez",
@@ -73,51 +76,60 @@ class ServiceDetailsController extends GetxController {
     _addListenerFocusNodes();
     _addViews();
     _getServiceRequestsDetails();
+    _getServicesMe();
   }
 
-  void onTapSubmitBids() async {
+  void onTapServiceRequestBids() async {
     if (!(formKey.currentState?.validate() ?? true)) {
       return;
     }
-    await _createBids();
+    await _postServiceRequestBids();
   }
 
-  Future<void> _createBids() async {
+  Future<void> _postServiceRequestBids() async {
+    if ((selectedServiceMeData.value?.id?.isEmpty ?? true)) {
+      HelperFunction.snackbar(
+        "Please select a service",
+        title: "Warning",
+        icon: Icons.warning,
+        backgroundColor: AppColors.yellow,
+      );
+      return;
+    }
     HelperFunction.hideKeyboard();
     isLoadingCrateBids.value = true;
     try {
       Map<String, dynamic> params = {
-        ApiParams.description: descriptionController.text.trim(),
-        ApiParams.price: double.tryParse(priceController.text.trim()),
+        ApiParams.serviceRequestId: serviceRequestId,
+        ApiParams.serviceId: selectedServiceMeData.value?.id ?? "",
+        ApiParams.message: descriptionController.text.trim(),
+        ApiParams.proposedPrice: double.tryParse(priceController.text.trim()),
       };
 
-      log("CreateService POST Params: $params");
-      var response = await _serviceRequestRepo.getServiceRequestsDetails("serviceId");
+      log("CreateServiceRequestBids POST Params: $params");
+      var response = await _serviceRequestRepo.postServiceRequestBids(params);
 
       if (response is String) {
-        log("CreateService failed from controller response: $response");
+        log("CreateServiceRequestBids failed from controller response: $response");
       } else {
-        CreateServiceModel createService = response as CreateServiceModel;
-        if (createService.status == 200 || createService.status == 201) {
-          Get.back(result: true);
+        CreateServiceRequestBidModel createBid = response as CreateServiceRequestBidModel;
+        if (createBid.status == 200 || createBid.status == 201) {
           HelperFunction.snackbar(
-            "Service created successfully!",
+            "Service request bids created successfully!",
             title: "Success",
             icon: Icons.check,
             backgroundColor: AppColors.green,
           );
         } else {
-          if (createService.status == 401 ||
-              (createService.errors != null &&
-                  createService.errors.any((error) =>
+          if (createBid.status == 401 ||
+              (createBid.errors != null &&
+                  createBid.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse =
-                await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.getServiceRequestsDetails("serviceId"));
-            if (retryResponse is CreateServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              Get.back(result: true);
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.postServiceRequestBids(params));
+            if (retryResponse is CreateServiceRequestBidModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               HelperFunction.snackbar(
-                "Service created successfully!",
+                "Service request bids created successfully!",
                 title: "Success",
                 icon: Icons.check,
                 backgroundColor: AppColors.green,
@@ -125,22 +137,54 @@ class ServiceDetailsController extends GetxController {
             }
             return;
           }
-          HelperFunction.snackbar("CreateService failed");
-          log("CreateService failed from controller: ${createService.status}");
+          HelperFunction.snackbar("Failed to submit your bid. Please try again.");
+          log("CreateServiceRequestBids failed from controller: ${createBid.status}");
         }
       }
     } catch (e) {
-      HelperFunction.snackbar("CreateService failed");
-      log("CreateService catch error from controller: ${e.toString()}");
+      HelperFunction.snackbar("Failed to submit your bid. Please try again.");
+      log("CreateServiceRequestBids catch error from controller: ${e.toString()}");
     } finally {
       isLoadingCrateBids.value = false;
     }
   }
 
+  Future<void> _getServicesMe() async {
+    try {
+      var response = await _serviceRepo.getServicesMe();
+      if (response is String) {
+        log("ServicesMe get failed from controller response: $response");
+      } else {
+        ServiceMeModel serviceMe = response as ServiceMeModel;
+        if (serviceMe.status == 200 || serviceMe.status == 201) {
+          serviceMeDataList.value = serviceMe.serviceMeData ?? [];
+        } else {
+          if (serviceMe.status == 401 ||
+              (serviceMe.errors != null &&
+                  serviceMe.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRepo.getServicesMe());
+            if (retryResponse is ServiceMeModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              serviceMeDataList.value = serviceMe.serviceMeData ?? [];
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("ServicesMe get failed from controller: ${serviceMe.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("ServicesMe get catch error from controller: ${e.toString()}");
+    } finally {}
+  }
+
   Future<void> _getServiceRequestsDetails() async {
     isLoadingServiceRequestsDetails.value = true;
     try {
-      var response = await _serviceRequestRepo.getServiceRequestsDetails(serviceId);
+      var response = await _serviceRequestRepo.getServiceRequestsDetails(serviceRequestId);
 
       if (response is String) {
         log("ServiceRequestsDetails get failed from controller response: $response");
@@ -155,7 +199,7 @@ class ServiceDetailsController extends GetxController {
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
             final retryResponse =
-                await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.getServiceRequestsDetails(serviceId));
+                await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.getServiceRequestsDetails(serviceRequestId));
             if (retryResponse is ServiceDetailsModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceDetailsData.value = serviceDetails.serviceDetailsData ?? ServiceDetailsData();
             } else {
@@ -206,7 +250,7 @@ class ServiceDetailsController extends GetxController {
 
   void _getArguments() {
     if (Get.arguments != null) {
-      serviceId = Get.arguments["serviceId"];
+      serviceRequestId = Get.arguments["serviceRequestId"];
     }
   }
 

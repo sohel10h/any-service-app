@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/validators.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/view/widgets/home/custom_dropdown_chip.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
@@ -33,14 +36,15 @@ class ServiceDetailsCreateBids extends GetWidget<ServiceDetailsController> {
           SizedBox(height: 10.h),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: CustomDropdownChip<String>(
+            child: CustomDropdownChip<ServiceMeData>(
               width: double.infinity,
               height: 48.h,
-              options: controller.requestServices,
-              selectedValue: controller.selectedRequestService,
-              labelBuilder: (v) => v,
-              onChanged: (val) {
-                // handle change
+              options: controller.serviceMeDataList,
+              selectedValue: controller.selectedServiceMeData,
+              hint: "Select services",
+              labelBuilder: (serviceMeData) => serviceMeData.name ?? "",
+              onChanged: (serviceMeData) {
+                log("SelectedServiceMeData: ${serviceMeData.toJson()}");
               },
             ),
           ),
@@ -79,7 +83,7 @@ class ServiceDetailsCreateBids extends GetWidget<ServiceDetailsController> {
                   : SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: controller.onTapSubmitBids,
+                        onPressed: controller.onTapServiceRequestBids,
                         child: const Text("Submit"),
                       ),
                     ),

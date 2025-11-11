@@ -150,7 +150,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Text(
-                    "\$${controller.createServiceDetailsData.value.price?.toPrecision(2) ?? "0"}",
+                    "\$${(controller.createServiceDetailsData.value.price as double?)?.toStringAsFixed(2) ?? "0"}",
                     style: TextStyle(
                       fontSize: 26.sp,
                       color: AppColors.primary,
@@ -161,7 +161,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                   ),
                   SizedBox(width: 12.w),
                   Text(
-                    "\$${controller.createServiceDetailsData.value.price?.toPrecision(2) ?? "0"}",
+                    "\$${(controller.createServiceDetailsData.value.price as double?)?.toStringAsFixed(2) ?? "0"}",
                     //TODO: need to get this data from API
                     style: TextStyle(
                       fontSize: 15.sp,

@@ -83,14 +83,14 @@ class Meta {
 class ServiceData {
   final String? id;
   final String? name;
-  final double? price;
+  final num? price;
   final List<Category>? categories;
   final String? description;
   final String? createdBy;
   final String? updatedBy;
   final bool? priceRange;
-  final int? priceStart;
-  final int? priceEnd;
+  final num? priceStart;
+  final num? priceEnd;
 
   ServiceData({
     this.id,

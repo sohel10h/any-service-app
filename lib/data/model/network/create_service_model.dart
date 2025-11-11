@@ -35,16 +35,16 @@ class CreateServiceModel {
 class Data {
   final String? id;
   final String? name;
-  final int? price;
+  final num? price;
   final List<dynamic>? categories;
   final String? description;
   final String? createdBy;
   final String? updatedBy;
   final bool? priceRange;
-  final dynamic priceStart;
-  final dynamic priceEnd;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final num? priceStart;
+  final num? priceEnd;
+  final String? createdAt;
+  final String? updatedAt;
   final List<Picture>? pictures;
 
   Data({
@@ -74,8 +74,8 @@ class Data {
         priceRange: json["price_range"],
         priceStart: json["price_start"],
         priceEnd: json["price_end"],
-        createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+        createdAt: json["created_at"],
+        updatedAt: json["updated_at"],
         pictures: json["pictures"] == null ? [] : List<Picture>.from(json["pictures"]!.map((x) => Picture.fromJson(x))),
       );
 
@@ -90,8 +90,8 @@ class Data {
         "price_range": priceRange,
         "price_start": priceStart,
         "price_end": priceEnd,
-        "created_at": createdAt?.toIso8601String(),
-        "updated_at": updatedAt?.toIso8601String(),
+        "created_at": createdAt,
+        "updated_at": updatedAt,
         "pictures": pictures == null ? [] : List<dynamic>.from(pictures!.map((x) => x.toJson())),
       };
 }

@@ -36,10 +36,10 @@ class ServiceMeData {
   final String? id;
   final String? name;
   final String? description;
-  final double? price;
+  final num? price;
   final bool? priceRange;
-  final int? priceStart;
-  final int? priceEnd;
+  final num? priceStart;
+  final num? priceEnd;
   final int? rating;
   final int? serviceCompletedCount;
   final int? totalReview;

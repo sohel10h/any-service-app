@@ -36,8 +36,8 @@ class Data {
   final String? id;
   final String? userId;
   final String? description;
-  final int? budgetMin;
-  final int? budgetMax;
+  final num? budgetMin;
+  final num? budgetMax;
   final int? status;
   final bool? isCorporate;
   final String? companyName;

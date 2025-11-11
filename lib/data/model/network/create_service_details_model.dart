@@ -35,7 +35,7 @@ class CreateServiceDetailsModel {
 class CreateServiceDetailsData {
   final String? id;
   final String? name;
-  final double? price;
+  final num? price;
   final int? serviceCompletedCount;
   final int? rating;
   final int? totalReview;
@@ -44,8 +44,8 @@ class CreateServiceDetailsData {
   final String? createdBy;
   final String? updatedBy;
   final bool? priceRange;
-  final int? priceStart;
-  final int? priceEnd;
+  final num? priceStart;
+  final num? priceEnd;
   final String? createdAt;
   final String? updatedAt;
   final List<CreateServiceDetailsPicture>? pictures;

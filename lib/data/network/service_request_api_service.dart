@@ -3,5 +3,5 @@ abstract class ServiceRequestApiService {
 
   Future<dynamic> getServiceRequestsDetails(String serviceId);
 
-  Future<dynamic> postServiceRequestBids(String serviceId);
+  Future<dynamic> postServiceRequestBids(dynamic params);
 }

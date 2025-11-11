@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:service_la/routes/app_routes.dart';
 
 class RideSharingController extends GetxController {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -11,4 +12,6 @@ class RideSharingController extends GetxController {
     // statement
     super.onInit();
   }
+
+  void goToRideSharingMapScreen() => Get.toNamed(AppRoutes.rideSharingMapScreen);
 }

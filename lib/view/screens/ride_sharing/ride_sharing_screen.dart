@@ -193,7 +193,7 @@ class RideSharingScreen extends GetWidget<RideSharingController> {
                 SizedBox(height: 20.h),
                 Center(
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: controller.goToRideSharingMapScreen,
                     child: Text(
                       "See More",
                       style: TextStyle(

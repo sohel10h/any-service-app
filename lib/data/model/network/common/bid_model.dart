@@ -1,47 +1,13 @@
-import 'dart:convert';
+import 'package:service_la/data/model/network/common/vendor_model.dart';
 
-import 'package:service_la/data/model/network/common/bid_model.dart';
-
-CreateServiceRequestBidModel createServiceRequestBidModelFromJson(String str) => CreateServiceRequestBidModel.fromJson(json.decode(str));
-
-String createServiceRequestBidModelToJson(CreateServiceRequestBidModel data) => json.encode(data.toJson());
-
-class CreateServiceRequestBidModel {
-  final bool? isSuccess;
-  final int? status;
-  final dynamic errors;
-  final BidModel? bid;
-
-  CreateServiceRequestBidModel({
-    this.isSuccess,
-    this.status,
-    this.errors,
-    this.bid,
-  });
-
-  factory CreateServiceRequestBidModel.fromJson(Map<String, dynamic> json) => CreateServiceRequestBidModel(
-        isSuccess: json["isSuccess"],
-        status: json["status"],
-        errors: json["errors"],
-        bid: json["data"] == null ? null : BidModel.fromJson(json["data"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "isSuccess": isSuccess,
-        "status": status,
-        "errors": errors,
-        "data": bid?.toJson(),
-      };
-}
-/*
-class CreateServiceRequestBidData {
+class BidModel {
   final String? id;
   final String? serviceRequestId;
   final String? serviceId;
   final String? providerId;
   final String? vendorId;
   final String? message;
-  final int? proposedPrice;
+  final num? proposedPrice;
   final int? status;
   final String? createdBy;
   final String? updatedBy;
@@ -51,9 +17,9 @@ class CreateServiceRequestBidData {
   final bool? userApproved;
   final bool? vendorApproved;
   final String? lastStatusUpdatedBy;
-  final dynamic vendor;
+  final VendorModel? vendor;
 
-  CreateServiceRequestBidData({
+  BidModel({
     this.id,
     this.serviceRequestId,
     this.serviceId,
@@ -73,7 +39,7 @@ class CreateServiceRequestBidData {
     this.vendor,
   });
 
-  factory CreateServiceRequestBidData.fromJson(Map<String, dynamic> json) => CreateServiceRequestBidData(
+  factory BidModel.fromJson(Map<String, dynamic> json) => BidModel(
         id: json["id"],
         serviceRequestId: json["service_request_id"],
         serviceId: json["service_id"],
@@ -90,7 +56,7 @@ class CreateServiceRequestBidData {
         userApproved: json["user_approved"],
         vendorApproved: json["vendor_approved"],
         lastStatusUpdatedBy: json["last_status_updated_by"],
-        vendor: json["vendor"],
+        vendor: json["vendor"] == null ? null : VendorModel.fromJson(json["vendor"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -110,6 +76,6 @@ class CreateServiceRequestBidData {
         "user_approved": userApproved,
         "vendor_approved": vendorApproved,
         "last_status_updated_by": lastStatusUpdatedBy,
-        "vendor": vendor,
+        "vendor": vendor?.toJson(),
       };
-}*/
+}

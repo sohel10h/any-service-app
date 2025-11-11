@@ -6,6 +6,8 @@ import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
+import 'package:service_la/data/model/network/common/bid_model.dart';
+import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/data/model/local/provider_bid_model.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
@@ -14,6 +16,7 @@ import 'package:service_la/data/model/network/create_service_request_bid_model.d
 import 'package:service_la/view/widgets/service_details/service_details_provider_bids_section.dart';
 
 class ServiceDetailsController extends GetxController {
+  String userId = "";
   final formKey = GlobalKey<FormState>();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
@@ -34,6 +37,8 @@ class ServiceDetailsController extends GetxController {
   final ServiceRepo _serviceRepo = ServiceRepo();
   RxList<ServiceMeData> serviceMeDataList = <ServiceMeData>[].obs;
   final Rx<ServiceMeData?> selectedServiceMeData = Rx<ServiceMeData?>(null);
+  Rx<BidModel?> bidData = Rx<BidModel?>(null);
+  RxBool isProvider = false.obs;
   final RxList<ProviderBidModel> bids = [
     ProviderBidModel(
       name: "David Martinez",
@@ -72,6 +77,7 @@ class ServiceDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _getStorageValue();
     _getArguments();
     _addListenerFocusNodes();
     _addViews();
@@ -114,6 +120,7 @@ class ServiceDetailsController extends GetxController {
       } else {
         CreateServiceRequestBidModel createBid = response as CreateServiceRequestBidModel;
         if (createBid.status == 200 || createBid.status == 201) {
+          bidData.value = createBid.bid ?? BidModel();
           HelperFunction.snackbar(
             "Service request bids created successfully!",
             title: "Success",
@@ -128,6 +135,7 @@ class ServiceDetailsController extends GetxController {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.postServiceRequestBids(params));
             if (retryResponse is CreateServiceRequestBidModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              bidData.value = retryResponse.bid ?? BidModel();
               HelperFunction.snackbar(
                 "Service request bids created successfully!",
                 title: "Success",
@@ -166,7 +174,7 @@ class ServiceDetailsController extends GetxController {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRepo.getServicesMe());
             if (retryResponse is ServiceMeModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              serviceMeDataList.value = serviceMe.serviceMeData ?? [];
+              serviceMeDataList.value = retryResponse.serviceMeData ?? [];
             } else {
               log("Retry request failed after token refresh");
             }
@@ -192,6 +200,7 @@ class ServiceDetailsController extends GetxController {
         ServiceDetailsModel serviceDetails = response as ServiceDetailsModel;
         if (serviceDetails.status == 200 || serviceDetails.status == 201) {
           serviceDetailsData.value = serviceDetails.serviceDetailsData ?? ServiceDetailsData();
+          isProvider.value = serviceDetailsData.value.createdBy == userId;
         } else {
           if (serviceDetails.status == 401 ||
               (serviceDetails.errors != null &&
@@ -252,6 +261,11 @@ class ServiceDetailsController extends GetxController {
     if (Get.arguments != null) {
       serviceRequestId = Get.arguments["serviceRequestId"];
     }
+  }
+
+  void _getStorageValue() {
+    userId = StorageHelper.getValue(StorageHelper.userId);
+    log("UserId: $userId");
   }
 
   @override

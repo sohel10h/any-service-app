@@ -12,7 +12,6 @@ class ServiceDetailsBidComparisonSection extends StatelessWidget {
       padding: EdgeInsets.all(16.sp),
       decoration: BoxDecoration(
         color: AppColors.containerFAF5FF,
-        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

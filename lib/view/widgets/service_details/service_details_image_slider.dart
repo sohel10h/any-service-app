@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/data/model/network/service_details_model.dart';
+import 'package:service_la/data/model/network/common/picture_model.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
 
@@ -25,7 +25,7 @@ class ServiceDetailsImageSlider extends GetWidget<ServiceDetailsController> {
                     itemCount: controller.serviceDetailsData.value.pictures?.length ?? 0,
                     onPageChanged: (index) => controller.currentIndex.value = index,
                     itemBuilder: (context, index) {
-                      final picture = controller.serviceDetailsData.value.pictures?[index] ?? ServiceDetailsPicture();
+                      final picture = controller.serviceDetailsData.value.pictures?[index] ?? PictureModel();
                       return NetworkImageLoader(
                         picture.virtualPath ?? "",
                         width: double.infinity,

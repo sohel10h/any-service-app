@@ -30,12 +30,14 @@ class ServiceDetailsProviderBidsSection extends GetWidget<ServiceDetailsControll
           SizedBox(height: 8.h),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Text(
-              "5 received",
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: AppColors.text6A7282,
-                fontWeight: FontWeight.w400,
+            child: Obx(
+              () => Text(
+                "${controller.serviceDetailsData.value.bids?.length ?? 0} received",
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: AppColors.text6A7282,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ),
@@ -44,17 +46,18 @@ class ServiceDetailsProviderBidsSection extends GetWidget<ServiceDetailsControll
           SizedBox(height: 20.h),
           Obx(
             () => Column(
-              children: controller.bids
-                  .map(
-                    (bid) => ServiceDetailsProviderBidsItem(
-                      bid: bid,
-                      onAccept: () {},
-                      onShortlist: () {},
-                      onReject: () {},
-                      onMessage: () {},
-                    ),
-                  )
-                  .toList(),
+              children: controller.serviceDetailsData.value.bids
+                      ?.map(
+                        (bid) => ServiceDetailsProviderBidsItem(
+                          bid: bid,
+                          onAccept: () {},
+                          onShortlist: () {},
+                          onReject: () {},
+                          onMessage: () {},
+                        ),
+                      )
+                      .toList() ??
+                  [],
             ),
           ),
         ],

@@ -36,7 +36,7 @@ class ServiceDetailsTab extends GetWidget<ServiceDetailsController> {
                         Text(
                           tabText,
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: 11.sp,
                             color: isSelected ? AppColors.primary : AppColors.text6A7282,
                             fontWeight: FontWeight.w500,
                           ),
@@ -51,7 +51,7 @@ class ServiceDetailsTab extends GetWidget<ServiceDetailsController> {
                           child: Text(
                             "${controller.tabsCounts[index]}",
                             style: TextStyle(
-                              fontSize: 10.sp,
+                              fontSize: 8.sp,
                               color: isSelected ? AppColors.white : AppColors.text4A5565,
                               fontWeight: FontWeight.w700,
                             ),

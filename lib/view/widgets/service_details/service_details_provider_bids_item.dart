@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/data/model/local/provider_bid_model.dart';
+import 'package:service_la/data/model/network/common/bid_model.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 
 class ServiceDetailsProviderBidsItem extends StatelessWidget {
-  final ProviderBidModel bid;
+  final BidModel bid;
   final VoidCallback onAccept;
   final VoidCallback onShortlist;
   final VoidCallback onReject;
@@ -46,7 +46,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 NetworkImageLoader(
-                  bid.imageUrl,
+                  bid.vendor?.virtualPath ?? "",
                   width: 42.w,
                   height: 42.w,
                   borderRadius: BorderRadius.circular(30.r),
@@ -57,7 +57,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        bid.name,
+                        bid.vendor?.name ?? "",
                         style: TextStyle(
                           fontSize: 16.sp,
                           color: AppColors.text101828,
@@ -67,7 +67,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        bid.title,
+                        bid.vendor?.name ?? "", //TODO: need user title value from API
                         style: TextStyle(
                           fontSize: 13.sp,
                           color: AppColors.text6A7282,
@@ -89,7 +89,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
                           Expanded(
                             flex: 2,
                             child: Text(
-                              "\$${bid.price}",
+                              "\$${bid.proposedPrice ?? 0}",
                               style: TextStyle(
                                 fontSize: 24.sp,
                                 color: AppColors.container155DFC,
@@ -100,7 +100,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
                               textAlign: TextAlign.end,
                             ),
                           ),
-                          if (bid.isBest)
+                          if (true) //TODO: need isBest value from API
                             Expanded(
                               child: Wrap(
                                 alignment: WrapAlignment.end,
@@ -128,7 +128,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
                             ),
                         ],
                       ),
-                      if (bid.belowBudget)
+                      if (true) //TODO: need belowBudget value from API
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -161,7 +161,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
                 ),
                 SizedBox(width: 4.w),
                 Text(
-                  "${bid.rating}",
+                  "${bid.vendor?.rating ?? 0}",
                   style: TextStyle(
                     fontSize: 13.sp,
                     color: AppColors.text364153,
@@ -169,7 +169,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  " (${bid.jobsCount})",
+                  " (${bid.vendor?.rating ?? 0})", //TODO: need reviewsCount value from API
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: AppColors.text6A7282,
@@ -184,7 +184,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
                 ),
                 SizedBox(width: 4.w),
                 Text(
-                  "${bid.jobsCount} jobs",
+                  "${bid.vendor?.serviceCompletedCount ?? 0} jobs",
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: AppColors.text4A5565,
@@ -200,7 +200,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
                 ),
                 SizedBox(width: 4.w),
                 Text(
-                  bid.timeAgo,
+                  "1 hour ago", //TODO need responseTime value from API
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: AppColors.text6A7282,
@@ -211,7 +211,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
             Text(
-              bid.description,
+              bid.message ?? "",
               style: TextStyle(
                 fontSize: 13.sp,
                 color: AppColors.text364153,
@@ -225,13 +225,13 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
               children: [
                 _buildTagItem(
                   iconPath: "assets/svgs/calendar_outline.svg",
-                  text: bid.availability,
+                  text: "Available next week", //TODO: need availability value from API
                   iconColor: AppColors.text1447E6,
                   textColor: AppColors.text1447E6,
                 ),
                 _buildTagItem(
                   iconPath: "assets/svgs/clock_outline.svg",
-                  text: bid.duration,
+                  text: "4-5 hours", //TODO: need duration value from API
                   iconColor: AppColors.text364153,
                   textColor: AppColors.text364153,
                 ),
@@ -324,7 +324,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
               child: _iconButton(
                 containerColor: AppColors.containerFAF5FF,
                 borderColor: AppColors.borderE9D4FF,
-                iconPath: bid.shortlisted ? "assets/svgs/heart_fill.svg" : "assets/svgs/heart_outline.svg",
+                iconPath: (bid.isShortlisted ?? false) ? "assets/svgs/heart_fill.svg" : "assets/svgs/heart_outline.svg",
                 label: "Shortlist",
                 color: AppColors.text8200DB,
                 onTap: onShortlist,

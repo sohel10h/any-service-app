@@ -34,11 +34,13 @@ class ServiceDetailsController extends GetxController {
   RxBool isLoadingServiceRequestsDetails = false.obs;
   Rx<ServiceDetailsData> serviceDetailsData = ServiceDetailsData().obs;
   RxBool isLoadingCrateBids = false.obs;
+  RxBool isLoadingUpdateBids = false.obs;
   final ServiceRepo _serviceRepo = ServiceRepo();
   RxList<ServiceMeData> serviceMeDataList = <ServiceMeData>[].obs;
   final Rx<ServiceMeData?> selectedServiceMeData = Rx<ServiceMeData?>(null);
   Rx<BidModel?> bidData = Rx<BidModel?>(null);
   RxBool isProvider = false.obs;
+  RxBool isBidEdit = false.obs;
   final RxList<ProviderBidModel> bids = [
     ProviderBidModel(
       name: "David Martinez",
@@ -85,11 +87,87 @@ class ServiceDetailsController extends GetxController {
     _getServicesMe();
   }
 
+  void onTapEditBidItem() {
+    isBidEdit.value = true;
+    final serviceId = bidData.value?.serviceId;
+    if (serviceId != null) {
+      final match = serviceMeDataList.firstWhereOrNull(
+        (item) => item.id == serviceId,
+      );
+      if (match != null) {
+        selectedServiceMeData.value = match;
+      }
+    }
+    descriptionController.text = bidData.value?.message ?? "";
+    priceController.text = "${bidData.value?.proposedPrice ?? "0"}";
+  }
+
   void onTapServiceRequestBids() async {
     if (!(formKey.currentState?.validate() ?? true)) {
       return;
     }
-    await _postServiceRequestBids();
+    if (isBidEdit.value) {
+      await _putServiceRequestBids();
+    } else {
+      await _postServiceRequestBids();
+    }
+  }
+
+  Future<void> _putServiceRequestBids() async {
+    HelperFunction.hideKeyboard();
+    isLoadingUpdateBids.value = true;
+    try {
+      Map<String, dynamic> params = {
+        ApiParams.message: descriptionController.text.trim(),
+        ApiParams.proposedPrice: double.tryParse(priceController.text.trim()),
+      };
+
+      log("UpdateServiceRequestBids PUT Params: $params");
+      var response = await _serviceRequestRepo.putServiceRequestBids(bidData.value?.id ?? "", params);
+
+      if (response is String) {
+        log("UpdateServiceRequestBids failed from controller response: $response");
+      } else {
+        CreateServiceRequestBidModel createBid = response as CreateServiceRequestBidModel;
+        if (createBid.status == 200 || createBid.status == 201) {
+          bidData.value = createBid.bid ?? BidModel();
+          isBidEdit.value = false;
+          HelperFunction.snackbar(
+            "Service request bids updated successfully!",
+            title: "Success",
+            icon: Icons.check,
+            backgroundColor: AppColors.green,
+          );
+        } else {
+          if (createBid.status == 401 ||
+              (createBid.errors != null &&
+                  createBid.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _serviceRequestRepo.putServiceRequestBids(bidData.value?.id ?? "", params),
+            );
+            if (retryResponse is CreateServiceRequestBidModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              bidData.value = retryResponse.bid ?? BidModel();
+              HelperFunction.snackbar(
+                "Service request bids updated successfully!",
+                title: "Success",
+                icon: Icons.check,
+                backgroundColor: AppColors.green,
+              );
+            }
+            return;
+          }
+          HelperFunction.snackbar("Failed to update your bid. Please try again.");
+          log("UpdateServiceRequestBids failed from controller: ${createBid.status}");
+        }
+      }
+    } catch (e) {
+      HelperFunction.snackbar("Failed to update your bid. Please try again.");
+      log("UpdateServiceRequestBids catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingUpdateBids.value = false;
+    }
   }
 
   Future<void> _postServiceRequestBids() async {

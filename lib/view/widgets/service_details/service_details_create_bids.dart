@@ -35,16 +35,19 @@ class ServiceDetailsCreateBids extends GetWidget<ServiceDetailsController> {
           SizedBox(height: 10.h),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: CustomDropdownChip<ServiceMeData>(
-              width: double.infinity,
-              height: 48.h,
-              options: controller.serviceMeDataList,
-              selectedValue: controller.selectedServiceMeData,
-              hint: "Select services",
-              labelBuilder: (serviceMeData) => serviceMeData.name ?? "",
-              onChanged: (serviceMeData) {
-                log("SelectedServiceMeData: ${serviceMeData.toJson()}");
-              },
+            child: Obx(
+              () => CustomDropdownChip<ServiceMeData>(
+                width: double.infinity,
+                height: 48.h,
+                options: controller.serviceMeDataList,
+                selectedValue: controller.selectedServiceMeData,
+                hint: "Select services",
+                labelBuilder: (serviceMeData) => serviceMeData.name ?? "",
+                onChanged: (serviceMeData) {
+                  log("SelectedServiceMeData: ${serviceMeData.toJson()}");
+                },
+                isDisabled: controller.isBidEdit.value,
+              ),
             ),
           ),
           SizedBox(height: 16.h),
@@ -77,13 +80,28 @@ class ServiceDetailsCreateBids extends GetWidget<ServiceDetailsController> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Obx(
-              () => controller.isLoadingCrateBids.value
+              () => (!controller.isLoadingUpdateBids.value && controller.isBidEdit.value)
+                  ? SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: () => controller.isBidEdit.value = false,
+                        child: const Text("Cancel"),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Obx(
+              () => controller.isLoadingCrateBids.value || controller.isLoadingUpdateBids.value
                   ? CustomProgressBar()
                   : SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: controller.onTapServiceRequestBids,
-                        child: const Text("Submit"),
+                        child: Text(controller.isBidEdit.value ? "Edit" : "Submit"),
                       ),
                     ),
             ),

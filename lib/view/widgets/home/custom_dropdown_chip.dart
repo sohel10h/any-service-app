@@ -14,6 +14,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
   final String? hint;
   final String Function(T) labelBuilder;
   final void Function(T)? onChanged;
+  final bool? isDisabled;
 
   const CustomDropdownChip({
     super.key,
@@ -25,6 +26,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
     this.hint,
     required this.labelBuilder,
     this.onChanged,
+    this.isDisabled,
   });
 
   @override
@@ -35,7 +37,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
       width: width ?? Get.width / 3,
       height: height ?? 30.h,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: (isDisabled ?? false) ? AppColors.containerD1D5DC.withValues(alpha: .3) : AppColors.white,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: AppColors.containerD1D5DC),
       ),
@@ -43,98 +45,104 @@ class CustomDropdownChip<T> extends StatelessWidget {
         child: LayoutBuilder(builder: (context, constraints) {
           return Obx(() {
             final hasOptions = options.isNotEmpty;
-
-            return DropdownButton2<T>(
-              isExpanded: true,
-              value: selectedValue.value,
-              hint: Row(
-                children: [
-                  if (iconPath != null) ...[
-                    SvgPicture.asset(
-                      iconPath ?? "",
-                      width: 16.w,
-                      height: 16.h,
-                    ),
-                    SizedBox(width: 6.w),
-                  ],
-                  Flexible(
-                    child: Text(
-                      hasOptions ? hint ?? "Select" : "No options",
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: AppColors.text364153,
-                        fontWeight: FontWeight.w500,
+            return IgnorePointer(
+              ignoring: (isDisabled ?? false),
+              child: DropdownButton2<T>(
+                isExpanded: true,
+                value: selectedValue.value,
+                hint: Row(
+                  children: [
+                    if (iconPath != null) ...[
+                      SvgPicture.asset(
+                        iconPath ?? "",
+                        width: 16.w,
+                        height: 16.h,
                       ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
+                      SizedBox(width: 6.w),
+                    ],
+                    Flexible(
+                      child: Text(
+                        hasOptions ? hint ?? "Select" : "No options",
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: AppColors.text364153,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                items: hasOptions
+                    ? options.map((option) {
+                        return DropdownMenuItem<T>(
+                          value: option,
+                          child: Row(
+                            children: [
+                              if (iconPath != null) ...[
+                                SvgPicture.asset(
+                                  iconPath ?? "",
+                                  width: 16.w,
+                                  height: 16.h,
+                                ),
+                                SizedBox(width: 6.w),
+                              ],
+                              Expanded(
+                                child: Text(
+                                  labelBuilder(option),
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: (isDisabled ?? false) ? AppColors.text364153.withValues(alpha: 0.5) : AppColors.text364153,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList()
+                    : [],
+                onChanged: (hasOptions && (!(isDisabled ?? true)))
+                    ? (value) {
+                        selectedValue.value = value;
+                        onChanged?.call(value as T);
+                      }
+                    : null,
+                onMenuStateChange: (isOpen) {
+                  isDropdownOpenRx.value = isOpen;
+                },
+                dropdownStyleData: DropdownStyleData(
+                  elevation: 1,
+                  maxHeight: 200.h,
+                  width: constraints.maxWidth,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  offset: Offset(0, -4.h),
+                ),
+                iconStyleData: IconStyleData(
+                  icon: AnimatedRotation(
+                    turns: isDropdownOpenRx.value ? 0.5 : 0.0,
+                    duration: const Duration(milliseconds: 200),
+                    child: SvgPicture.asset(
+                      "assets/svgs/arrow_below_small.svg",
+                      width: 12.w,
+                      height: 12.h,
+                      colorFilter: ColorFilter.mode(
+                        (isDisabled ?? false) ? AppColors.text364153.withValues(alpha: .5) : AppColors.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
-                ],
-              ),
-              items: hasOptions
-                  ? options.map((option) {
-                      return DropdownMenuItem<T>(
-                        value: option,
-                        child: Row(
-                          children: [
-                            if (iconPath != null) ...[
-                              SvgPicture.asset(
-                                iconPath ?? "",
-                                width: 16.w,
-                                height: 16.h,
-                              ),
-                              SizedBox(width: 6.w),
-                            ],
-                            Expanded(
-                              child: Text(
-                                labelBuilder(option),
-                                style: TextStyle(
-                                  fontSize: 13.sp,
-                                  color: AppColors.text364153,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList()
-                  : [],
-              onChanged: hasOptions
-                  ? (value) {
-                      selectedValue.value = value;
-                      onChanged?.call(value as T);
-                    }
-                  : null,
-              onMenuStateChange: (isOpen) {
-                isDropdownOpenRx.value = isOpen;
-              },
-              dropdownStyleData: DropdownStyleData(
-                elevation: 1,
-                maxHeight: 200.h,
-                width: constraints.maxWidth,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(8.r),
                 ),
-                offset: Offset(0, -4.h),
-              ),
-              iconStyleData: IconStyleData(
-                icon: AnimatedRotation(
-                  turns: isDropdownOpenRx.value ? 0.5 : 0.0,
-                  duration: const Duration(milliseconds: 200),
-                  child: SvgPicture.asset(
-                    "assets/svgs/arrow_below_small.svg",
-                    width: 12.w,
-                    height: 12.h,
-                  ),
+                buttonStyleData: ButtonStyleData(
+                  height: 40.h,
+                  width: constraints.maxWidth,
+                  padding: EdgeInsets.symmetric(horizontal: 8.w),
                 ),
-              ),
-              buttonStyleData: ButtonStyleData(
-                height: 40.h,
-                width: constraints.maxWidth,
-                padding: EdgeInsets.symmetric(horizontal: 8.w),
               ),
             );
           });

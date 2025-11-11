@@ -24,6 +24,7 @@ class ApiConstant {
 
   // END POINTS - Service requests bids
   static const String postServiceRequestBidsPath = "/api/service-request-bids";
+  static const String putServiceRequestBidsPath = "/api/service-request-bids/#bidId#";
 
   // END POINTS - Services
   static const String getServicesMePath = "/api/services/me";

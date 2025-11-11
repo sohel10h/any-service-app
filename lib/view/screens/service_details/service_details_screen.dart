@@ -33,6 +33,7 @@ class ServiceDetailsScreen extends GetWidget<ServiceDetailsController> {
     return Obx(() {
       final bids = controller.serviceDetailsData.value.bids;
       final bidData = controller.bidData.value;
+      final isBidEdit = controller.isBidEdit.value;
 
       List<Widget> commonChildren = const [
         ServiceDetailsImageSlider(),
@@ -40,7 +41,7 @@ class ServiceDetailsScreen extends GetWidget<ServiceDetailsController> {
         ServiceDetailsBidComparisonSection(),
       ];
 
-      if ((bids?.isEmpty ?? true) && bidData == null) {
+      if (isBidEdit || ((bids?.isEmpty ?? true) && bidData == null)) {
         return SingleChildScrollView(
           child: Column(
             children: [
@@ -56,7 +57,7 @@ class ServiceDetailsScreen extends GetWidget<ServiceDetailsController> {
           child: Column(
             children: [
               ...commonChildren,
-              SizedBox(height: 16.h),
+              SizedBox(height: 24.h),
               const ServiceDetailsVendorBidItem(),
             ],
           ),

@@ -13,222 +13,271 @@ class ServiceDetailsVendorBidItem extends GetWidget<ServiceDetailsController> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 16.h),
-      child: Container(
-        padding: EdgeInsets.all(12.w),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: AppColors.containerE5E7EB),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            )
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            padding: EdgeInsets.all(12.w),
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(14.r),
+              border: Border.all(color: AppColors.containerE5E7EB),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.black.withValues(alpha: 0.05),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                )
+              ],
+            ),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                NetworkImageLoader(
-                  controller.bidData.value?.vendor?.virtualPath ?? "",
-                  width: 42.w,
-                  height: 42.w,
-                  borderRadius: BorderRadius.circular(30.r),
-                ),
-                SizedBox(width: 6.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        controller.bidData.value?.vendor?.name ?? "",
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: AppColors.text101828,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        controller.bidData.value?.vendor?.name ?? "", //TODO: need user title value from API
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          color: AppColors.text6A7282,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 4.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Row(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    NetworkImageLoader(
+                      controller.bidData.value?.vendor?.virtualPath ?? "",
+                      width: 42.w,
+                      height: 42.w,
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
+                    SizedBox(width: 6.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              "\$${controller.bidData.value?.proposedPrice ?? 0}",
-                              style: TextStyle(
-                                fontSize: 24.sp,
-                                color: AppColors.container155DFC,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.end,
+                          Text(
+                            controller.bidData.value?.vendor?.name ?? "",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: AppColors.text101828,
+                              fontWeight: FontWeight.w700,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          if (true) //TODO: need isBest value from API
-                            Expanded(
-                              child: Wrap(
-                                alignment: WrapAlignment.end,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(left: 4.w),
-                                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.containerDCFCE7,
-                                      borderRadius: BorderRadius.circular(8.r),
-                                    ),
-                                    child: Text(
-                                      "Best",
-                                      style: TextStyle(
-                                        fontSize: 9.sp,
-                                        color: AppColors.text008236,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                          Text(
+                            controller.bidData.value?.vendor?.name ?? "", //TODO: need user title value from API
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              color: AppColors.text6A7282,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  "\$${controller.bidData.value?.proposedPrice ?? 0}",
+                                  style: TextStyle(
+                                    fontSize: 24.sp,
+                                    color: AppColors.container155DFC,
+                                    fontWeight: FontWeight.w700,
                                   ),
-                                ],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.end,
+                                ),
                               ),
+                              if (true) //TODO: need isBest value from API
+                                Expanded(
+                                  child: Wrap(
+                                    alignment: WrapAlignment.end,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(left: 4.w),
+                                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.containerDCFCE7,
+                                          borderRadius: BorderRadius.circular(8.r),
+                                        ),
+                                        child: Text(
+                                          "Best",
+                                          style: TextStyle(
+                                            fontSize: 9.sp,
+                                            color: AppColors.text008236,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
+                          if (true) //TODO: need belowBudget value from API
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.check_circle, color: AppColors.green, size: 12.sp),
+                                SizedBox(width: 4.w),
+                                Text(
+                                  "Below budget",
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    color: AppColors.text6A7282,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
                             ),
                         ],
                       ),
-                      if (true) //TODO: need belowBudget value from API
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.check_circle, color: AppColors.green, size: 12.sp),
-                            SizedBox(width: 4.w),
-                            Text(
-                              "Below budget",
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                                color: AppColors.text6A7282,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(height: 16.h),
-            Wrap(
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  "assets/svgs/rating.svg",
-                  width: 14.w,
-                  height: 14.h,
+                SizedBox(height: 16.h),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      "assets/svgs/rating.svg",
+                      width: 14.w,
+                      height: 14.h,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      "${controller.bidData.value?.vendor?.rating ?? 0}",
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: AppColors.text364153,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      " (${controller.bidData.value?.vendor?.rating ?? 0})", //TODO: need reviewsCount value from API
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.text6A7282,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    SvgPicture.asset(
+                      "assets/svgs/check_circle.svg",
+                      width: 14.w,
+                      height: 14.h,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      "${controller.bidData.value?.vendor?.serviceCompletedCount ?? 0} jobs",
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.text4A5565,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    SvgPicture.asset(
+                      "assets/svgs/clock_outline.svg",
+                      width: 14.w,
+                      height: 14.h,
+                      colorFilter: ColorFilter.mode(AppColors.text6A7282, BlendMode.srcIn),
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      "1 hour ago", //TODO need responseTime value from API
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.text6A7282,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 4.w),
+                SizedBox(height: 16.h),
                 Text(
-                  "${controller.bidData.value?.vendor?.rating ?? 0}",
+                  controller.bidData.value?.message ?? "",
                   style: TextStyle(
                     fontSize: 13.sp,
                     color: AppColors.text364153,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  " (${controller.bidData.value?.vendor?.rating ?? 0})", //TODO: need reviewsCount value from API
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: AppColors.text6A7282,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                SizedBox(width: 8.w),
-                SvgPicture.asset(
-                  "assets/svgs/check_circle.svg",
-                  width: 14.w,
-                  height: 14.h,
+                SizedBox(height: 16.h),
+                Wrap(
+                  spacing: 8.w,
+                  runSpacing: 8.h,
+                  children: [
+                    _buildTagItem(
+                      iconPath: "assets/svgs/calendar_outline.svg",
+                      text: "Available next week", //TODO: need availability value from API
+                      iconColor: AppColors.text1447E6,
+                      textColor: AppColors.text1447E6,
+                    ),
+                    _buildTagItem(
+                      iconPath: "assets/svgs/clock_outline.svg",
+                      text: "4-5 hours", //TODO: need duration value from API
+                      iconColor: AppColors.text364153,
+                      textColor: AppColors.text364153,
+                    ),
+                  ],
                 ),
-                SizedBox(width: 4.w),
-                Text(
-                  "${controller.bidData.value?.vendor?.serviceCompletedCount ?? 0} jobs",
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: AppColors.text4A5565,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                SizedBox(width: 8.w),
-                SvgPicture.asset(
-                  "assets/svgs/clock_outline.svg",
-                  width: 14.w,
-                  height: 14.h,
-                  colorFilter: ColorFilter.mode(AppColors.text6A7282, BlendMode.srcIn),
-                ),
-                SizedBox(width: 4.w),
-                Text(
-                  "1 hour ago", //TODO need responseTime value from API
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: AppColors.text6A7282,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
+                SizedBox(height: 8.h),
+                _buildActions(),
               ],
             ),
-            SizedBox(height: 16.h),
-            Text(
-              controller.bidData.value?.message ?? "",
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: AppColors.text364153,
-                fontWeight: FontWeight.w400,
+          ),
+          Positioned(
+            top: -14.h,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: InkWell(
+                onTap: controller.onTapEditBidItem,
+                borderRadius: BorderRadius.circular(8.r),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.container155DFC,
+                    borderRadius: BorderRadius.circular(8.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.black.withValues(alpha: 0.1),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/svgs/edit.svg",
+                        width: 10.w,
+                        height: 10.h,
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        "Edit Bid",
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            SizedBox(height: 16.h),
-            Wrap(
-              spacing: 8.w,
-              runSpacing: 8.h,
-              children: [
-                _buildTagItem(
-                  iconPath: "assets/svgs/calendar_outline.svg",
-                  text: "Available next week", //TODO: need availability value from API
-                  iconColor: AppColors.text1447E6,
-                  textColor: AppColors.text1447E6,
-                ),
-                _buildTagItem(
-                  iconPath: "assets/svgs/clock_outline.svg",
-                  text: "4-5 hours", //TODO: need duration value from API
-                  iconColor: AppColors.text364153,
-                  textColor: AppColors.text364153,
-                ),
-              ],
-            ),
-            SizedBox(height: 8.h),
-            _buildActions(),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

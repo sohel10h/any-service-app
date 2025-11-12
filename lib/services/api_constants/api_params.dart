@@ -32,4 +32,5 @@ class ApiParams {
   static const String serviceId = "service_id";
   static const String message = "message";
   static const String proposedPrice = "proposed_price";
+  static const String isShortlisted = "is_shortlisted";
 }

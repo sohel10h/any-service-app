@@ -1,8 +1,10 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/data/model/network/common/bid_model.dart';
+import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 
 class ServiceDetailsProviderBidsItem extends StatelessWidget {
@@ -11,6 +13,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
   final VoidCallback onShortlist;
   final VoidCallback onReject;
   final VoidCallback onMessage;
+  final RxBool? isShortlistedLoading;
 
   const ServiceDetailsProviderBidsItem({
     super.key,
@@ -19,6 +22,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
     required this.onShortlist,
     required this.onReject,
     required this.onMessage,
+    this.isShortlistedLoading,
   });
 
   @override
@@ -328,6 +332,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
                 label: "Shortlist",
                 color: AppColors.text8200DB,
                 onTap: onShortlist,
+                isShortlistedLoading: isShortlistedLoading,
               ),
             ),
             SizedBox(width: 8.w),
@@ -368,6 +373,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
     required Color color,
     required Color containerColor,
     required Color borderColor,
+    RxBool? isShortlistedLoading,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -384,12 +390,14 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset(
-                iconPath,
-                width: 14.w,
-                height: 14.h,
-                colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-              ),
+              (isShortlistedLoading?.value ?? false)
+                  ? CustomProgressBar(size: 14.sp, strokeWidth: 2, color: AppColors.text8200DB)
+                  : SvgPicture.asset(
+                      iconPath,
+                      width: 14.w,
+                      height: 14.h,
+                      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                    ),
               if (label != null) ...[
                 SizedBox(width: 6.w),
                 Flexible(

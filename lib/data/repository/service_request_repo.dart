@@ -48,4 +48,14 @@ class ServiceRequestRepo {
       return e;
     }
   }
+
+  Future<dynamic> putServiceRequestBidsShortlist(String bidId, dynamic params) async {
+    try {
+      dynamic response = await _serviceRequestApiService.putServiceRequestBidsShortlist(bidId, params);
+      log("ServiceRequestBidsShortlist update details from service request repo: $response");
+      return CreateServiceRequestBidModel.fromJson(jsonDecode(response.toString()));
+    } catch (e) {
+      return e;
+    }
+  }
 }

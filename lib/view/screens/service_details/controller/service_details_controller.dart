@@ -13,6 +13,7 @@ import 'package:service_la/data/repository/service_request_repo.dart';
 import 'package:service_la/data/model/network/service_details_model.dart';
 import 'package:service_la/data/model/network/create_service_request_bid_model.dart';
 import 'package:service_la/view/widgets/service_details/service_details_provider_bids_section.dart';
+import 'package:service_la/view/widgets/service_details/service_details_provider_shortlisted_bids_section.dart';
 
 class ServiceDetailsController extends GetxController {
   String userId = "";
@@ -38,8 +39,10 @@ class ServiceDetailsController extends GetxController {
   RxList<ServiceMeData> serviceMeDataList = <ServiceMeData>[].obs;
   final Rx<ServiceMeData?> selectedServiceMeData = Rx<ServiceMeData?>(null);
   Rx<BidModel?> bidData = Rx<BidModel?>(null);
+  RxList<BidModel> shortlistedBids = <BidModel>[].obs;
   RxBool isProvider = false.obs;
   RxBool isBidEdit = false.obs;
+  final RxMap<String, RxBool> isShortlistLoadingMap = <String, RxBool>{}.obs;
 
   @override
   void onInit() {
@@ -132,6 +135,90 @@ class ServiceDetailsController extends GetxController {
       log("UpdateServiceRequestBids catch error from controller: ${e.toString()}");
     } finally {
       isLoadingUpdateBids.value = false;
+    }
+  }
+
+  void onTapShortlistButton(String bidId, bool isShortlisted) => _putServiceRequestBidsShortlist(bidId, isShortlisted);
+
+  Future<void> _putServiceRequestBidsShortlist(String bidId, bool isShortlisted) async {
+    isShortlistLoadingMap[bidId] ??= false.obs;
+    isShortlistLoadingMap[bidId]?.value = true;
+    try {
+      Map<String, dynamic> params = {
+        ApiParams.isShortlisted: isShortlisted,
+      };
+
+      log("ServiceRequestBidsShortlist PUT Params: $params");
+      var response = await _serviceRequestRepo.putServiceRequestBidsShortlist(bidId, params);
+
+      if (response is String) {
+        log("ServiceRequestBidsShortlist failed from controller response: $response");
+      } else {
+        CreateServiceRequestBidModel createBid = response as CreateServiceRequestBidModel;
+        if (createBid.status == 200 || createBid.status == 201) {
+          serviceDetailsData.value.bids?.singleWhere((bid) => bid.id == createBid.bid?.id).isShortlisted = createBid.bid?.isShortlisted;
+          serviceDetailsData.refresh();
+          final bid = createBid.bid;
+          final bidId = bid?.id;
+          if (bid != null && bidId != null) {
+            final existingBid = shortlistedBids.firstWhereOrNull((b) => b.id == bidId);
+            if (existingBid != null) {
+              shortlistedBids.remove(existingBid);
+            }
+            if (bid.isShortlisted == true) {
+              shortlistedBids.add(bid);
+            }
+            shortlistedBids.refresh();
+          }
+          tabsCounts.value = [
+            serviceDetailsData.value.bids?.length ?? 0,
+            shortlistedBids.length,
+            1,
+            0,
+          ];
+        } else {
+          if (createBid.status == 401 ||
+              (createBid.errors != null &&
+                  createBid.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _serviceRequestRepo.putServiceRequestBidsShortlist(bidData.value?.id ?? "", params),
+            );
+            if (retryResponse is CreateServiceRequestBidModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              serviceDetailsData.value.bids?.singleWhere((bid) => bid.id == retryResponse.bid?.id).isShortlisted =
+                  retryResponse.bid?.isShortlisted;
+              serviceDetailsData.refresh();
+              final bid = retryResponse.bid;
+              final bidId = bid?.id;
+              if (bid != null && bidId != null) {
+                final existingBid = shortlistedBids.firstWhereOrNull((b) => b.id == bidId);
+                if (existingBid != null) {
+                  shortlistedBids.remove(existingBid);
+                }
+                if (bid.isShortlisted == true) {
+                  shortlistedBids.add(bid);
+                }
+                shortlistedBids.refresh();
+              }
+              tabsCounts.value = [
+                serviceDetailsData.value.bids?.length ?? 0,
+                shortlistedBids.length,
+                1,
+                0,
+              ];
+            }
+            return;
+          }
+          HelperFunction.snackbar("Failed to update shortlisted bid. Please try again.");
+          log("ServiceRequestBidsShortlist failed from controller: ${createBid.status}");
+        }
+      }
+    } catch (e) {
+      HelperFunction.snackbar("Failed to update shortlisted bid. Please try again.");
+      log("ServiceRequestBidsShortlist catch error from controller: ${e.toString()}");
+    } finally {
+      isShortlistLoadingMap[bidId]?.value = false;
     }
   }
 
@@ -244,11 +331,15 @@ class ServiceDetailsController extends GetxController {
         if (serviceDetails.status == 200 || serviceDetails.status == 201) {
           serviceDetailsData.value = serviceDetails.serviceDetailsData ?? ServiceDetailsData();
           isProvider.value = serviceDetailsData.value.createdBy == userId;
+          if (!isProvider.value) {
+            bidData.value = serviceDetailsData.value.bids?.first;
+          }
+          shortlistedBids.addAll(serviceDetailsData.value.bids?.where((bid) => bid.isShortlisted == true) ?? []);
           tabsCounts.value = [
             serviceDetailsData.value.bids?.length ?? 0,
-            serviceDetailsData.value.bids?.where((bid) => bid.isShortlisted == true).length ?? 0,
-            1, // placeholder for future logic
-            0, // placeholder for future logic
+            shortlistedBids.length,
+            1,
+            0,
           ];
         } else {
           if (serviceDetails.status == 401 ||
@@ -259,7 +350,18 @@ class ServiceDetailsController extends GetxController {
             final retryResponse =
                 await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.getServiceRequestsDetails(serviceRequestId));
             if (retryResponse is ServiceDetailsModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              serviceDetailsData.value = serviceDetails.serviceDetailsData ?? ServiceDetailsData();
+              serviceDetailsData.value = retryResponse.serviceDetailsData ?? ServiceDetailsData();
+              isProvider.value = serviceDetailsData.value.createdBy == userId;
+              if (!isProvider.value) {
+                bidData.value = serviceDetailsData.value.bids?.first;
+              }
+              shortlistedBids.addAll(serviceDetailsData.value.bids?.where((bid) => bid.isShortlisted == true) ?? []);
+              tabsCounts.value = [
+                serviceDetailsData.value.bids?.length ?? 0,
+                shortlistedBids.length,
+                1,
+                0,
+              ];
             } else {
               log("Retry request failed after token refresh");
             }
@@ -285,7 +387,7 @@ class ServiceDetailsController extends GetxController {
       ),
       CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: Text("Tab 2")),
+          ServiceDetailsProviderShortlistedBidsSection(),
         ],
       ),
       CustomScrollView(

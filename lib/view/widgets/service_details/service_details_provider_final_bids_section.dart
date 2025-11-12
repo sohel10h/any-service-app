@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/service_details/service_details_provider_bids_item.dart';
 import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
 
-class ServiceDetailsProviderBidsSection extends GetWidget<ServiceDetailsController> {
-  const ServiceDetailsProviderBidsSection({super.key});
+class ServiceDetailsProviderFinalBidsSection extends GetWidget<ServiceDetailsController> {
+  const ServiceDetailsProviderFinalBidsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class ServiceDetailsProviderBidsSection extends GetWidget<ServiceDetailsControll
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Text(
-              "Provider Bids",
+              "Final Bids",
               style: TextStyle(
                 fontSize: 18.sp,
                 color: AppColors.text101828,
@@ -32,7 +32,7 @@ class ServiceDetailsProviderBidsSection extends GetWidget<ServiceDetailsControll
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Obx(
               () => Text(
-                "${controller.serviceDetailsData.value.bids?.length ?? 0} received",
+                "${controller.finalBids.length} received",
                 style: TextStyle(
                   fontSize: 13.sp,
                   color: AppColors.text6A7282,
@@ -46,8 +46,8 @@ class ServiceDetailsProviderBidsSection extends GetWidget<ServiceDetailsControll
           SizedBox(height: 20.h),
           Obx(
             () {
-              final allBids = controller.serviceDetailsData.value.bids;
-              if ((allBids?.isEmpty ?? true)) {
+              final finalBids = controller.finalBids;
+              if (finalBids.isEmpty) {
                 return SizedBox(
                   height: Get.height / 3,
                   child: Center(
@@ -63,20 +63,19 @@ class ServiceDetailsProviderBidsSection extends GetWidget<ServiceDetailsControll
                 );
               }
               return Column(
-                children: allBids
-                        ?.map(
-                          (bid) => ServiceDetailsProviderBidsItem(
-                            bid: bid,
-                            onAccept: () => controller.onTapAcceptBidButton(bid.id ?? "", !(bid.userApproved ?? false)),
-                            onShortlist: () => controller.onTapShortlistButton(bid.id ?? "", !(bid.isShortlisted ?? false)),
-                            onReject: () {},
-                            onMessage: () {},
-                            isApprovedLoading: controller.isApprovedLoadingMap[bid.id] ?? false.obs,
-                            isShortlistedLoading: controller.isShortlistedLoadingMap[bid.id] ?? false.obs,
-                          ),
-                        )
-                        .toList() ??
-                    [],
+                children: finalBids
+                    .map(
+                      (bid) => ServiceDetailsProviderBidsItem(
+                        bid: bid,
+                        onAccept: () {},
+                        onShortlist: () {},
+                        onReject: () {},
+                        onMessage: () {},
+                        isApprovedLoading: controller.isApprovedLoadingMap[bid.id] ?? false.obs,
+                        isShortlistedLoading: controller.isShortlistedLoadingMap[bid.id] ?? false.obs,
+                      ),
+                    )
+                    .toList(),
               );
             },
           ),

@@ -13,7 +13,8 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
   final VoidCallback onShortlist;
   final VoidCallback onReject;
   final VoidCallback onMessage;
-  final RxBool? isShortlistedLoading;
+  final RxBool isApprovedLoading;
+  final RxBool isShortlistedLoading;
 
   const ServiceDetailsProviderBidsItem({
     super.key,
@@ -22,7 +23,8 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
     required this.onShortlist,
     required this.onReject,
     required this.onMessage,
-    this.isShortlistedLoading,
+    required this.isApprovedLoading,
+    required this.isShortlistedLoading,
   });
 
   @override
@@ -302,65 +304,126 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 8.h),
-        ElevatedButton(
-          onPressed: onAccept,
-          style: ElevatedButton.styleFrom(
-            minimumSize: Size(double.infinity, 42.h),
-            backgroundColor: AppColors.container155DFC,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-          ),
-          child: Text(
-            "Accept Bid",
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        SizedBox(height: 10.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              flex: 2,
-              child: _iconButton(
-                containerColor: AppColors.containerFAF5FF,
-                borderColor: AppColors.borderE9D4FF,
-                iconPath: (bid.isShortlisted ?? false) ? "assets/svgs/heart_fill.svg" : "assets/svgs/heart_outline.svg",
-                label: "Shortlist",
-                color: AppColors.text8200DB,
-                onTap: onShortlist,
-                isShortlistedLoading: isShortlistedLoading,
+        ...!((bid.userApproved ?? false) && (bid.vendorApproved ?? false))
+            ? []
+            : [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.green,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.white, size: 18.sp),
+                      SizedBox(width: 8.w),
+                      Flexible(
+                        child: Text(
+                          "This bid has been approved and is ready for further action",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+        Obx(() {
+          final loading = isApprovedLoading.value;
+          final isApproved = bid.userApproved ?? false;
+          final buttonLabel = isApproved ? "Unapprove Bid" : "Accept Bid";
+          final isBothApproved = (bid.userApproved ?? false) && (bid.vendorApproved ?? false);
+          if (isBothApproved) return const SizedBox.shrink();
+
+          return Column(
+            children: [
+              if (loading)
+                CustomProgressBar(color: AppColors.container155DFC)
+              else
+                (isApproved
+                    ? ElevatedButton(
+                        onPressed: onAccept,
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(double.infinity, 42.h),
+                          backgroundColor: AppColors.container155DFC,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                        child: Text(
+                          buttonLabel,
+                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+                        ),
+                      )
+                    : OutlinedButton(
+                        onPressed: onAccept,
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: Size(double.infinity, 42.h),
+                          side: BorderSide(color: AppColors.container155DFC),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                        child: Text(
+                          buttonLabel,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.container155DFC,
+                          ),
+                        ),
+                      )),
+              SizedBox(height: 10.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Obx(
+                      () => _iconButton(
+                        containerColor: AppColors.containerFAF5FF,
+                        borderColor: AppColors.borderE9D4FF,
+                        iconPath: (bid.isShortlisted ?? false) ? "assets/svgs/heart_fill.svg" : "assets/svgs/heart_outline.svg",
+                        label: "Shortlist",
+                        color: AppColors.text8200DB,
+                        onTap: onShortlist,
+                        isShortlistedLoading: isShortlistedLoading,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    flex: 1,
+                    child: _iconButton(
+                      containerColor: AppColors.white,
+                      borderColor: AppColors.containerE5E7EB,
+                      iconPath: "assets/svgs/message_bubble.svg",
+                      label: "",
+                      color: AppColors.black,
+                      onTap: onMessage,
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    flex: 1,
+                    child: _iconButton(
+                      containerColor: AppColors.white,
+                      borderColor: AppColors.borderFFC9C9,
+                      iconPath: "assets/svgs/close.svg",
+                      label: "",
+                      onTap: onReject,
+                      color: AppColors.red,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(width: 8.w),
-            Expanded(
-              flex: 1,
-              child: _iconButton(
-                containerColor: AppColors.white,
-                borderColor: AppColors.containerE5E7EB,
-                iconPath: "assets/svgs/message_bubble.svg",
-                label: "",
-                color: AppColors.black,
-                onTap: onMessage,
-              ),
-            ),
-            SizedBox(width: 8.w),
-            Expanded(
-              flex: 1,
-              child: _iconButton(
-                containerColor: AppColors.white,
-                borderColor: AppColors.borderFFC9C9,
-                iconPath: "assets/svgs/close.svg",
-                label: "",
-                onTap: onReject,
-                color: AppColors.red,
-              ),
-            ),
-          ],
-        ),
+            ],
+          );
+        }),
         SizedBox(height: 4.h),
       ],
     );

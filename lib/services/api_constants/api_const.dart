@@ -26,6 +26,7 @@ class ApiConstant {
   static const String postServiceRequestBidsPath = "/api/service-request-bids";
   static const String putServiceRequestBidsPath = "/api/service-request-bids/#bidId#";
   static const String putServiceRequestBidsShortlistPath = "/api/service-request-bids/shortlist/#bidId#";
+  static const String putServiceRequestBidsApprovalPath = "/api/service-request-bids/approval/#bidId#";
 
   // END POINTS - Services
   static const String getServicesMePath = "/api/services/me";

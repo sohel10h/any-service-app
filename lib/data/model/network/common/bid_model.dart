@@ -14,8 +14,8 @@ class BidModel {
   final String? createdOnUtc;
   final String? updatedOnUtc;
   bool? isShortlisted;
-  final bool? userApproved;
-  final bool? vendorApproved;
+  bool? userApproved;
+  bool? vendorApproved;
   final String? lastStatusUpdatedBy;
   final VendorModel? vendor;
 

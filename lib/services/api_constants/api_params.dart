@@ -33,4 +33,5 @@ class ApiParams {
   static const String message = "message";
   static const String proposedPrice = "proposed_price";
   static const String isShortlisted = "is_shortlisted";
+  static const String isApproved = "is_approved";
 }

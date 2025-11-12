@@ -8,4 +8,6 @@ abstract class ServiceRequestApiService {
   Future<dynamic> putServiceRequestBids(String bidId, dynamic params);
 
   Future<dynamic> putServiceRequestBidsShortlist(String bidId, dynamic params);
+
+  Future<dynamic> putServiceRequestBidsApproval(String bidId, dynamic params);
 }

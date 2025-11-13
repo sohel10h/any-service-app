@@ -69,10 +69,11 @@ class ServiceDetailsProviderBidsSection extends GetWidget<ServiceDetailsControll
                             bid: bid,
                             onAccept: () => controller.onTapAcceptBidButton(bid.id ?? "", !(bid.userApproved ?? false)),
                             onShortlist: () => controller.onTapShortlistButton(bid.id ?? "", !(bid.isShortlisted ?? false)),
-                            onReject: () {},
+                            onReject: () => controller.onTapRejectBidButton(bid.id ?? "", bid.status ?? 0),
                             onMessage: () {},
                             isApprovedLoading: controller.isApprovedLoadingMap[bid.id] ?? false.obs,
                             isShortlistedLoading: controller.isShortlistedLoadingMap[bid.id] ?? false.obs,
+                            isRejectedLoading: controller.isRejectedLoadingMap[bid.id] ?? false.obs,
                           ),
                         )
                         .toList() ??

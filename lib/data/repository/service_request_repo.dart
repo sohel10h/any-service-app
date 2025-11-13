@@ -68,4 +68,14 @@ class ServiceRequestRepo {
       return e;
     }
   }
+
+  Future<dynamic> putServiceRequestBidsStatus(String bidId, dynamic params) async {
+    try {
+      dynamic response = await _serviceRequestApiService.putServiceRequestBidsStatus(bidId, params);
+      log("ServiceRequestBidsStatus update details from service request repo: $response");
+      return CreateServiceRequestBidModel.fromJson(jsonDecode(response.toString()));
+    } catch (e) {
+      return e;
+    }
+  }
 }

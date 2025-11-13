@@ -38,4 +38,10 @@ class ServiceRequestInformation extends ServiceRequestApiService {
     dynamic response = await ApiService().put(ApiConstant.putServiceRequestBidsApprovalPath.replaceAll("#bidId#", bidId), params);
     return response;
   }
+
+  @override
+  Future putServiceRequestBidsStatus(bidId, params) async {
+    dynamic response = await ApiService().put(ApiConstant.putServiceRequestBidsStatusPath.replaceAll("#bidId#", bidId), params);
+    return response;
+  }
 }

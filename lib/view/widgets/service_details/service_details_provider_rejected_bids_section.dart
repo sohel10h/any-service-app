@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/service_details/service_details_provider_bids_item.dart';
 import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
 
-class ServiceDetailsProviderShortlistedBidsSection extends GetWidget<ServiceDetailsController> {
-  const ServiceDetailsProviderShortlistedBidsSection({super.key});
+class ServiceDetailsProviderRejectedBidsSection extends GetWidget<ServiceDetailsController> {
+  const ServiceDetailsProviderRejectedBidsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class ServiceDetailsProviderShortlistedBidsSection extends GetWidget<ServiceDeta
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Text(
-              "Shortlisted Bids",
+              "Rejected Bids",
               style: TextStyle(
                 fontSize: 18.sp,
                 color: AppColors.text101828,
@@ -32,7 +32,7 @@ class ServiceDetailsProviderShortlistedBidsSection extends GetWidget<ServiceDeta
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Obx(
               () => Text(
-                "${controller.shortlistedBids.length} received",
+                "${controller.rejectBids.length} received",
                 style: TextStyle(
                   fontSize: 13.sp,
                   color: AppColors.text6A7282,
@@ -46,8 +46,8 @@ class ServiceDetailsProviderShortlistedBidsSection extends GetWidget<ServiceDeta
           SizedBox(height: 20.h),
           Obx(
             () {
-              final shortlistedBids = controller.shortlistedBids;
-              if (shortlistedBids.isEmpty) {
+              final rejectBids = controller.rejectBids;
+              if (rejectBids.isEmpty) {
                 return SizedBox(
                   height: Get.height / 3,
                   child: Center(
@@ -63,7 +63,7 @@ class ServiceDetailsProviderShortlistedBidsSection extends GetWidget<ServiceDeta
                 );
               }
               return Column(
-                children: shortlistedBids
+                children: rejectBids
                     .map(
                       (bid) => ServiceDetailsProviderBidsItem(
                         bid: bid,

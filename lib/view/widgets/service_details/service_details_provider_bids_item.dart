@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/data/model/network/common/bid_model.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
@@ -15,6 +16,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
   final VoidCallback onMessage;
   final RxBool isApprovedLoading;
   final RxBool isShortlistedLoading;
+  final RxBool isRejectedLoading;
 
   const ServiceDetailsProviderBidsItem({
     super.key,
@@ -25,6 +27,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
     required this.onMessage,
     required this.isApprovedLoading,
     required this.isShortlistedLoading,
+    required this.isRejectedLoading,
   });
 
   @override
@@ -320,7 +323,35 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
                       SizedBox(width: 8.w),
                       Flexible(
                         child: Text(
-                          "This bid has been approved and is ready for further action",
+                          "This bid has been approved and is ready for further action.",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+        ...!((bid.status == ServiceRequestBidStatus.rejected.typeValue))
+            ? []
+            : [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.red,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.cancel, color: Colors.white, size: 18.sp),
+                      SizedBox(width: 8.w),
+                      Flexible(
+                        child: Text(
+                          "This bid has been rejected and will not proceed further.",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 13.sp,
@@ -338,6 +369,8 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
           final buttonLabel = isApproved ? "Unapprove Bid" : "Accept Bid";
           final isBothApproved = (bid.userApproved ?? false) && (bid.vendorApproved ?? false);
           if (isBothApproved) return const SizedBox.shrink();
+          final isRejected = bid.status == ServiceRequestBidStatus.rejected.typeValue;
+          if (isRejected) return const SizedBox.shrink();
 
           return Column(
             children: [
@@ -410,13 +443,16 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
                   SizedBox(width: 8.w),
                   Expanded(
                     flex: 1,
-                    child: _iconButton(
-                      containerColor: AppColors.white,
-                      borderColor: AppColors.borderFFC9C9,
-                      iconPath: "assets/svgs/close.svg",
-                      label: "",
-                      onTap: onReject,
-                      color: AppColors.red,
+                    child: Obx(
+                      () => _iconButton(
+                        containerColor: AppColors.white,
+                        borderColor: AppColors.borderFFC9C9,
+                        iconPath: "assets/svgs/close.svg",
+                        label: "",
+                        onTap: onReject,
+                        color: AppColors.red,
+                        isRejectedLoading: isRejectedLoading,
+                      ),
                     ),
                   ),
                 ],
@@ -437,6 +473,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
     required Color containerColor,
     required Color borderColor,
     RxBool? isShortlistedLoading,
+    RxBool? isRejectedLoading,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -453,8 +490,12 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              (isShortlistedLoading?.value ?? false)
-                  ? CustomProgressBar(size: 14.sp, strokeWidth: 2, color: AppColors.text8200DB)
+              (isShortlistedLoading?.value ?? false) || (isRejectedLoading?.value ?? false)
+                  ? CustomProgressBar(
+                      size: 14.sp,
+                      strokeWidth: 2,
+                      color: (isShortlistedLoading?.value ?? false) ? AppColors.text8200DB : AppColors.red,
+                    )
                   : SvgPicture.asset(
                       iconPath,
                       width: 14.w,

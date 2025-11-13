@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
@@ -14,6 +15,7 @@ import 'package:service_la/data/model/network/service_details_model.dart';
 import 'package:service_la/data/model/network/create_service_request_bid_model.dart';
 import 'package:service_la/view/widgets/service_details/service_details_provider_bids_section.dart';
 import 'package:service_la/view/widgets/service_details/service_details_provider_final_bids_section.dart';
+import 'package:service_la/view/widgets/service_details/service_details_provider_rejected_bids_section.dart';
 import 'package:service_la/view/widgets/service_details/service_details_provider_shortlisted_bids_section.dart';
 
 class ServiceDetailsController extends GetxController {
@@ -42,10 +44,12 @@ class ServiceDetailsController extends GetxController {
   Rx<BidModel?> bidData = Rx<BidModel?>(null);
   RxList<BidModel> shortlistedBids = <BidModel>[].obs;
   RxList<BidModel> finalBids = <BidModel>[].obs;
+  RxList<BidModel> rejectBids = <BidModel>[].obs;
   RxBool isProvider = false.obs;
   RxBool isBidEdit = false.obs;
   final RxMap<String, RxBool> isApprovedLoadingMap = <String, RxBool>{}.obs;
   final RxMap<String, RxBool> isShortlistedLoadingMap = <String, RxBool>{}.obs;
+  final RxMap<String, RxBool> isRejectedLoadingMap = <String, RxBool>{}.obs;
 
   @override
   void onInit() {
@@ -320,6 +324,89 @@ class ServiceDetailsController extends GetxController {
     }
   }
 
+  void onTapRejectBidButton(String bidId, int status) => _putServiceRequestBidsStatus(bidId, status);
+
+  Future<void> _putServiceRequestBidsStatus(String bidId, int status) async {
+    isRejectedLoadingMap[bidId] ??= false.obs;
+    isRejectedLoadingMap[bidId]?.value = true;
+    try {
+      Map<String, dynamic> params = {
+        ApiParams.status: status,
+      };
+
+      log("ServiceRequestBidsStatus PUT Params: $params");
+      var response = await _serviceRequestRepo.putServiceRequestBidsStatus(bidId, params);
+
+      if (response is String) {
+        log("ServiceRequestBidsStatus failed from controller response: $response");
+      } else {
+        CreateServiceRequestBidModel statusBid = response as CreateServiceRequestBidModel;
+        if (statusBid.status == 200 || statusBid.status == 201) {
+          serviceDetailsData.value.bids?.singleWhere((bid) => bid.id == statusBid.bid?.id).status = statusBid.bid?.status;
+          serviceDetailsData.refresh();
+          final bid = statusBid.bid;
+          final bidId = bid?.id;
+          if (bid != null && bidId != null) {
+            final existingBid = rejectBids.firstWhereOrNull((b) => b.id == bidId);
+            if (existingBid != null) {
+              rejectBids.remove(existingBid);
+            }
+            if (bid.status == ServiceRequestBidStatus.rejected.typeValue) {
+              rejectBids.add(bid);
+            }
+            rejectBids.refresh();
+          }
+          tabsCounts.value = [
+            serviceDetailsData.value.bids?.length ?? 0,
+            shortlistedBids.length,
+            rejectBids.length,
+            finalBids.length,
+          ];
+        } else {
+          if (statusBid.status == 401 ||
+              (statusBid.errors != null &&
+                  statusBid.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _serviceRequestRepo.putServiceRequestBidsStatus(bidData.value?.id ?? "", params),
+            );
+            if (retryResponse is CreateServiceRequestBidModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              serviceDetailsData.value.bids?.singleWhere((bid) => bid.id == retryResponse.bid?.id).status = retryResponse.bid?.status;
+              serviceDetailsData.refresh();
+              final bid = retryResponse.bid;
+              final bidId = bid?.id;
+              if (bid != null && bidId != null) {
+                final existingBid = rejectBids.firstWhereOrNull((b) => b.id == bidId);
+                if (existingBid != null) {
+                  rejectBids.remove(existingBid);
+                }
+                if (bid.status == ServiceRequestBidStatus.rejected.typeValue) {
+                  rejectBids.add(bid);
+                }
+                rejectBids.refresh();
+              }
+              tabsCounts.value = [
+                serviceDetailsData.value.bids?.length ?? 0,
+                shortlistedBids.length,
+                rejectBids.length,
+                finalBids.length,
+              ];
+            }
+            return;
+          }
+          HelperFunction.snackbar("Failed to update status bid. Please try again.");
+          log("ServiceRequestBidsStatus failed from controller: ${statusBid.status}");
+        }
+      }
+    } catch (e) {
+      HelperFunction.snackbar("Failed to update status bid. Please try again.");
+      log("ServiceRequestBidsStatus catch error from controller: ${e.toString()}");
+    } finally {
+      isRejectedLoadingMap[bidId]?.value = false;
+    }
+  }
+
   Future<void> _postServiceRequestBids() async {
     if ((selectedServiceMeData.value?.id?.isEmpty ?? true)) {
       HelperFunction.snackbar(
@@ -435,14 +522,17 @@ class ServiceDetailsController extends GetxController {
           if (isProvider.value) {
             shortlistedBids.addAll(serviceDetailsData.value.bids?.where((bid) => bid.isShortlisted == true) ?? []);
             finalBids.addAll(serviceDetailsData.value.bids?.where((bid) => bid.userApproved == true && bid.vendorApproved == true) ?? []);
+            rejectBids
+                .addAll(serviceDetailsData.value.bids?.where((bid) => bid.status == ServiceRequestBidStatus.rejected.typeValue) ?? []);
             tabsCounts.value = [
               serviceDetailsData.value.bids?.length ?? 0,
               shortlistedBids.length,
-              1,
+              rejectBids.length,
               finalBids.length,
             ];
             _initializeApprovalLoadingMap(serviceDetailsData.value.bids ?? []);
             _initializeShortlistedLoadingMap(serviceDetailsData.value.bids ?? []);
+            _initializeRejectedLoadingMap(serviceDetailsData.value.bids ?? []);
           }
           if (!isProvider.value) {
             isApprovedLoadingMap[bidData.value?.id ?? ""] = false.obs;
@@ -456,7 +546,7 @@ class ServiceDetailsController extends GetxController {
             final retryResponse =
                 await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.getServiceRequestsDetails(serviceRequestId));
             if (retryResponse is ServiceDetailsModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              serviceDetailsData.value = serviceDetails.serviceDetailsData ?? ServiceDetailsData();
+              serviceDetailsData.value = retryResponse.serviceDetailsData ?? ServiceDetailsData();
               isProvider.value = serviceDetailsData.value.createdBy == userId;
               if (!isProvider.value) {
                 bidData.value = serviceDetailsData.value.bids?.first;
@@ -465,14 +555,17 @@ class ServiceDetailsController extends GetxController {
                 shortlistedBids.addAll(serviceDetailsData.value.bids?.where((bid) => bid.isShortlisted == true) ?? []);
                 finalBids
                     .addAll(serviceDetailsData.value.bids?.where((bid) => bid.userApproved == true && bid.vendorApproved == true) ?? []);
+                rejectBids
+                    .addAll(serviceDetailsData.value.bids?.where((bid) => bid.status == ServiceRequestBidStatus.rejected.typeValue) ?? []);
                 tabsCounts.value = [
                   serviceDetailsData.value.bids?.length ?? 0,
                   shortlistedBids.length,
-                  1,
+                  rejectBids.length,
                   finalBids.length,
                 ];
                 _initializeApprovalLoadingMap(serviceDetailsData.value.bids ?? []);
                 _initializeShortlistedLoadingMap(serviceDetailsData.value.bids ?? []);
+                _initializeRejectedLoadingMap(serviceDetailsData.value.bids ?? []);
               }
               if (!isProvider.value) {
                 isApprovedLoadingMap[bidData.value?.id ?? ""] = false.obs;
@@ -490,6 +583,15 @@ class ServiceDetailsController extends GetxController {
       log("ServiceRequestsDetails get catch error from controller: ${e.toString()}");
     } finally {
       isLoadingServiceRequestsDetails.value = false;
+    }
+  }
+
+  void _initializeRejectedLoadingMap(List<BidModel> bids) {
+    for (final bid in bids) {
+      final bidId = bid.id;
+      if (bidId != null) {
+        isRejectedLoadingMap[bidId] = false.obs;
+      }
     }
   }
 
@@ -525,7 +627,7 @@ class ServiceDetailsController extends GetxController {
       ),
       CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: Text("Tab 3")),
+          ServiceDetailsProviderRejectedBidsSection(),
         ],
       ),
       CustomScrollView(

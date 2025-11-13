@@ -8,7 +8,7 @@ class BidModel {
   final String? vendorId;
   final String? message;
   final num? proposedPrice;
-  final int? status;
+  int? status;
   final String? createdBy;
   final String? updatedBy;
   final String? createdOnUtc;

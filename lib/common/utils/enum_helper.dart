@@ -29,3 +29,14 @@ enum PayLoadType {
   notification,
   error,
 }
+
+enum ServiceRequestBidStatus {
+  pending(0),
+  shortlisted(1),
+  selected(2),
+  rejected(3);
+
+  final int typeValue;
+
+  const ServiceRequestBidStatus(this.typeValue);
+}

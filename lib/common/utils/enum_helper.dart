@@ -32,9 +32,8 @@ enum PayLoadType {
 
 enum ServiceRequestBidStatus {
   pending(0),
-  shortlisted(1),
-  selected(2),
-  rejected(3);
+  approved(1),
+  rejected(2);
 
   final int typeValue;
 

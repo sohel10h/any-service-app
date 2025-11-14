@@ -180,7 +180,7 @@ class ServiceDetailsController extends GetxController {
           tabsCounts.value = [
             serviceDetailsData.value.bids?.length ?? 0,
             shortlistedBids.length,
-            1,
+            rejectBids.length,
             finalBids.length,
           ];
         } else {
@@ -211,7 +211,7 @@ class ServiceDetailsController extends GetxController {
               tabsCounts.value = [
                 serviceDetailsData.value.bids?.length ?? 0,
                 shortlistedBids.length,
-                1,
+                rejectBids.length,
                 finalBids.length,
               ];
             }

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
@@ -17,6 +18,8 @@ class ServiceDetailsVendorBidItem extends GetWidget<ServiceDetailsController> {
       child: Obx(() {
         final bid = controller.bidData.value;
         final isBothApproved = (bid?.userApproved ?? false) && (bid?.vendorApproved ?? false);
+        final isUserApproved = bid?.userApproved ?? false;
+        final isBidRejected = bid?.status == ServiceRequestBidStatus.rejected.typeValue;
         return Stack(
           clipBehavior: Clip.none,
           children: [
@@ -237,7 +240,7 @@ class ServiceDetailsVendorBidItem extends GetWidget<ServiceDetailsController> {
                 ],
               ),
             ),
-            (controller.bidData.value?.userApproved ?? false)
+            isUserApproved || isBidRejected
                 ? const SizedBox.shrink()
                 : Positioned(
                     top: -14.h,

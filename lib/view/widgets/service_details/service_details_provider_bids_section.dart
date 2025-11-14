@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/service_details/service_details_provider_bids_item.dart';
 import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
@@ -69,7 +70,7 @@ class ServiceDetailsProviderBidsSection extends GetWidget<ServiceDetailsControll
                             bid: bid,
                             onAccept: () => controller.onTapAcceptBidButton(bid.id ?? "", !(bid.userApproved ?? false)),
                             onShortlist: () => controller.onTapShortlistButton(bid.id ?? "", !(bid.isShortlisted ?? false)),
-                            onReject: () => controller.onTapRejectBidButton(bid.id ?? "", bid.status ?? 0),
+                            onReject: () => controller.onTapRejectBidButton(bid.id ?? "", ServiceRequestBidStatus.rejected.typeValue),
                             onMessage: () {},
                             isApprovedLoading: controller.isApprovedLoadingMap[bid.id] ?? false.obs,
                             isShortlistedLoading: controller.isShortlistedLoadingMap[bid.id] ?? false.obs,

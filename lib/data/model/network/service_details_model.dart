@@ -43,7 +43,7 @@ class ServiceDetailsData {
   final String? description;
   final num? budgetMin;
   final num? budgetMax;
-  final int? status;
+  int? status;
   final bool? isCorporate;
   final String? companyName;
   final String? contactPerson;

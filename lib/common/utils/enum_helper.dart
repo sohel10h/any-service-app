@@ -39,3 +39,14 @@ enum ServiceRequestBidStatus {
 
   const ServiceRequestBidStatus(this.typeValue);
 }
+
+enum ServiceRequestStatus {
+  active(1),
+  inProgress(2),
+  completed(3),
+  canceled(4);
+
+  final int typeValue;
+
+  const ServiceRequestStatus(this.typeValue);
+}

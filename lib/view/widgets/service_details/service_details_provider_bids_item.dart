@@ -7,6 +7,7 @@ import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/data/model/network/common/bid_model.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
+import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
 
 class ServiceDetailsProviderBidsItem extends StatelessWidget {
   final BidModel bid;
@@ -17,6 +18,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
   final RxBool isApprovedLoading;
   final RxBool isShortlistedLoading;
   final RxBool isRejectedLoading;
+  final ServiceDetailsController controller;
 
   const ServiceDetailsProviderBidsItem({
     super.key,
@@ -28,6 +30,7 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
     required this.isApprovedLoading,
     required this.isShortlistedLoading,
     required this.isRejectedLoading,
+    required this.controller,
   });
 
   @override
@@ -367,6 +370,8 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
           final loading = isApprovedLoading.value;
           final isApproved = bid.userApproved ?? false;
           final buttonLabel = isApproved ? "Unapprove Bid" : "Accept Bid";
+          final isServiceRequestCompleted = controller.serviceDetailsData.value.status == ServiceRequestStatus.completed.typeValue;
+          if (isServiceRequestCompleted) return const SizedBox.shrink();
           final isBothApproved = (bid.userApproved ?? false) && (bid.vendorApproved ?? false);
           if (isBothApproved) return const SizedBox.shrink();
           final isRejected = bid.status == ServiceRequestBidStatus.rejected.typeValue;

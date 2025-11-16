@@ -6,6 +6,7 @@ import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/service_details/service_details_tab.dart';
 import 'package:service_la/view/widgets/service_details/service_details_create_bids.dart';
 import 'package:service_la/view/widgets/service_details/service_details_image_slider.dart';
+import 'package:service_la/view/widgets/service_details/service_details_status_section.dart';
 import 'package:service_la/view/widgets/service_details/service_details_details_section.dart';
 import 'package:service_la/view/widgets/service_details/service_details_vendor_bid_item.dart';
 import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
@@ -67,6 +68,7 @@ class ServiceDetailsScreen extends GetWidget<ServiceDetailsController> {
       return NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverToBoxAdapter(child: const ServiceDetailsImageSlider()),
+          SliverToBoxAdapter(child: const ServiceDetailsStatusSection()),
           SliverToBoxAdapter(child: const ServiceDetailsDetailsSection()),
           SliverToBoxAdapter(child: const ServiceDetailsBidComparisonSection()),
           SliverPersistentHeader(

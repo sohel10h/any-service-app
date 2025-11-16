@@ -16,6 +16,7 @@ class ApiConstant {
   // END POINTS - Service requests
   static const String postServiceRequestsPath = "/api/service-requests";
   static const String getServiceRequestsDetailsPath = "/api/service-requests/#serviceId#";
+  static const String putServiceRequestsStatusPath = "/api/service-requests/status/#serviceId#";
 
   // END POINTS - Admin
   static const String postAdminPicturesPath = "/api/admin/pictures";

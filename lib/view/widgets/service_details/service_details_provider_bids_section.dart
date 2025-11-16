@@ -75,6 +75,7 @@ class ServiceDetailsProviderBidsSection extends GetWidget<ServiceDetailsControll
                             isApprovedLoading: controller.isApprovedLoadingMap[bid.id] ?? false.obs,
                             isShortlistedLoading: controller.isShortlistedLoadingMap[bid.id] ?? false.obs,
                             isRejectedLoading: controller.isRejectedLoadingMap[bid.id] ?? false.obs,
+                            controller: controller,
                           ),
                         )
                         .toList() ??

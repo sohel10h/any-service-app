@@ -50,6 +50,7 @@ class ServiceDetailsController extends GetxController {
   final RxMap<String, RxBool> isApprovedLoadingMap = <String, RxBool>{}.obs;
   final RxMap<String, RxBool> isShortlistedLoadingMap = <String, RxBool>{}.obs;
   final RxMap<String, RxBool> isRejectedLoadingMap = <String, RxBool>{}.obs;
+  RxBool isLoadingServiceRequestStatus = false.obs;
 
   @override
   void onInit() {
@@ -60,6 +61,64 @@ class ServiceDetailsController extends GetxController {
     _addViews();
     _getServiceRequestsDetails();
     _getServicesMe();
+  }
+
+  void onTapFinalizeButton(String serviceId, int status) => _putServiceRequestsStatus(serviceId, status);
+
+  Future<void> _putServiceRequestsStatus(String serviceId, int status) async {
+    isLoadingServiceRequestStatus.value = true;
+    try {
+      Map<String, dynamic> params = {
+        ApiParams.status: status,
+      };
+
+      log("ServiceRequestsStatus PUT Params: $params");
+      var response = await _serviceRequestRepo.putServiceRequestsStatus(serviceId, params);
+
+      if (response is String) {
+        log("ServiceRequestsStatus failed from controller response: $response");
+      } else {
+        ServiceDetailsModel serviceDetails = response as ServiceDetailsModel;
+        if (serviceDetails.status == 200 || serviceDetails.status == 201) {
+          serviceDetailsData.value.status = ServiceRequestStatus.completed.typeValue;
+          serviceDetailsData.refresh();
+          HelperFunction.snackbar(
+            "Service request completed successfully!",
+            title: "Success",
+            icon: Icons.check,
+            backgroundColor: AppColors.green,
+          );
+        } else {
+          if (serviceDetails.status == 401 ||
+              (serviceDetails.errors != null &&
+                  serviceDetails.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _serviceRequestRepo.putServiceRequestsStatus(serviceId, params),
+            );
+            if (retryResponse is ServiceDetailsModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              serviceDetailsData.value.status = ServiceRequestStatus.completed.typeValue;
+              serviceDetailsData.refresh();
+              HelperFunction.snackbar(
+                "Service request completed successfully!",
+                title: "Success",
+                icon: Icons.check,
+                backgroundColor: AppColors.green,
+              );
+            }
+            return;
+          }
+          HelperFunction.snackbar("Failed to update service request status. Please try again.");
+          log("ServiceRequestsStatus failed from controller: ${serviceDetails.status}");
+        }
+      }
+    } catch (e) {
+      HelperFunction.snackbar("Failed to update service request status. Please try again.");
+      log("ServiceRequestsStatus catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingServiceRequestStatus.value = false;
+    }
   }
 
   void onTapEditBidItem() {
@@ -270,7 +329,7 @@ class ServiceDetailsController extends GetxController {
           tabsCounts.value = [
             serviceDetailsData.value.bids?.length ?? 0,
             shortlistedBids.length,
-            1,
+            rejectBids.length,
             finalBids.length,
           ];
         } else {
@@ -291,7 +350,7 @@ class ServiceDetailsController extends GetxController {
                     retryResponse.bid?.vendorApproved;
               }
               serviceDetailsData.refresh();
-              final bid = approvedBid.bid;
+              final bid = retryResponse.bid;
               final bidId = bid?.id;
               if (bid != null && bidId != null) {
                 final existingBid = finalBids.firstWhereOrNull((b) => b.id == bidId);
@@ -306,7 +365,7 @@ class ServiceDetailsController extends GetxController {
               tabsCounts.value = [
                 serviceDetailsData.value.bids?.length ?? 0,
                 shortlistedBids.length,
-                1,
+                rejectBids.length,
                 finalBids.length,
               ];
             }
@@ -369,7 +428,7 @@ class ServiceDetailsController extends GetxController {
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(
-              () => _serviceRequestRepo.putServiceRequestBidsStatus(bidData.value?.id ?? "", params),
+              () => _serviceRequestRepo.putServiceRequestBidsStatus(bidId, params),
             );
             if (retryResponse is CreateServiceRequestBidModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceDetailsData.value.bids?.singleWhere((bid) => bid.id == retryResponse.bid?.id).status = retryResponse.bid?.status;

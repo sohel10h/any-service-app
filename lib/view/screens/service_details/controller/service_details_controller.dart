@@ -310,9 +310,9 @@ class ServiceDetailsController extends GetxController {
           if (!isVendor) {
             serviceDetailsData.value.bids?.singleWhere((bid) => bid.id == approvedBid.bid?.id).userApproved = approvedBid.bid?.userApproved;
           } else {
-            serviceDetailsData.value.bids?.singleWhere((bid) => bid.id == approvedBid.bid?.id).vendorApproved =
-                approvedBid.bid?.vendorApproved;
+            bidData.value?.vendorApproved = approvedBid.bid?.vendorApproved;
           }
+          bidData.refresh();
           serviceDetailsData.refresh();
           final bid = approvedBid.bid;
           final bidId = bid?.id;
@@ -339,16 +339,16 @@ class ServiceDetailsController extends GetxController {
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(
-              () => _serviceRequestRepo.putServiceRequestBidsApproval(bidData.value?.id ?? "", params),
+              () => _serviceRequestRepo.putServiceRequestBidsApproval(bidId, params),
             );
             if (retryResponse is CreateServiceRequestBidModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               if (!isVendor) {
                 serviceDetailsData.value.bids?.singleWhere((bid) => bid.id == retryResponse.bid?.id).userApproved =
                     retryResponse.bid?.userApproved;
               } else {
-                serviceDetailsData.value.bids?.singleWhere((bid) => bid.id == retryResponse.bid?.id).vendorApproved =
-                    retryResponse.bid?.vendorApproved;
+                bidData.value?.vendorApproved = retryResponse.bid?.vendorApproved;
               }
+              bidData.refresh();
               serviceDetailsData.refresh();
               final bid = retryResponse.bid;
               final bidId = bid?.id;

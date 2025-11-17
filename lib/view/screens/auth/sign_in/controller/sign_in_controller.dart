@@ -82,9 +82,9 @@ class SignInController extends GetxController {
       } else {
         SignInModel signIn = response as SignInModel;
         if (signIn.status == 200 || signIn.status == 201) {
-          StorageHelper.setValue(StorageHelper.authToken, signIn.data?.accessToken ?? "");
-          StorageHelper.setValue(StorageHelper.refreshToken, signIn.data?.refreshToken ?? "");
-          StorageHelper.setValue(StorageHelper.userId, signIn.data?.userId ?? "");
+          StorageHelper.setValue(StorageHelper.authToken, signIn.data?.accessToken);
+          StorageHelper.setValue(StorageHelper.refreshToken, signIn.data?.refreshToken);
+          StorageHelper.setValue(StorageHelper.userId, signIn.data?.userId);
           StorageHelper.setObject(StorageHelper.signInResponse, signIn);
           AppDIController.setSignInDetails(signIn);
           HelperFunction.snackbar(
@@ -94,7 +94,9 @@ class SignInController extends GetxController {
             backgroundColor: AppColors.green,
           );
           await _postUserDeviceTokens();
-          await HelperFunction.initWebSockets(signIn.data?.accessToken ?? "");
+          if ((signIn.data?.accessToken ?? "").isNotEmpty) {
+            await HelperFunction.initWebSockets(signIn.data?.accessToken ?? "");
+          }
           _goToLandingScreen();
         } else {
           HelperFunction.snackbar("Sign in failed. Please check your email and password.");

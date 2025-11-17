@@ -389,7 +389,7 @@ class HomeController extends GetxController {
   }
 
   void _getStorageValue() {
-    userId = StorageHelper.getValue(StorageHelper.userId);
+    userId = StorageHelper.getValue(StorageHelper.userId) ?? "";
   }
 
   @override

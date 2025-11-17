@@ -24,7 +24,7 @@ class SplashController extends GetxController {
   }
 
   void _getStorageValue() {
-    authToken = StorageHelper.getValue(StorageHelper.authToken);
+    authToken = StorageHelper.getValue(StorageHelper.authToken) ?? "";
     dynamic signInResponse = StorageHelper.getObject(StorageHelper.signInResponse);
     if (signInResponse != null) {
       SignInModel signIn = SignInModel.fromJson(signInResponse);

@@ -146,7 +146,7 @@ class WebSocketService extends GetxService with WidgetsBindingObserver {
       // Use refreshTokenAndRetry with connect as the retry callback
       final result = await ApiService().postRefreshTokenAndRetry(
         () async => await HelperFunction.initWebSockets(
-          StorageHelper.getValue(StorageHelper.authToken),
+          StorageHelper.getValue(StorageHelper.authToken) ?? "",
         ),
       );
       _log('After refreshing token websocket status: $result');

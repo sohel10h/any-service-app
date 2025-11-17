@@ -1,7 +1,5 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
-import 'package:get/get.dart' as get_package;
-import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/data/repository/auth_repo.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/api_constants/api_const.dart';
@@ -35,7 +33,7 @@ class ApiService {
   Future<dynamic> get(String endpoint, {String fcmToken = ""}) async {
     Response response;
     try {
-      String authToken = StorageHelper.getValue(StorageHelper.authToken);
+      String authToken = StorageHelper.getValue(StorageHelper.authToken) ?? "";
       log("AuthToken GET = $authToken");
       if (authToken.isNotEmpty) {
         _dio.options.headers["Authorization"] = "Bearer $authToken";
@@ -51,7 +49,7 @@ class ApiService {
   Future<dynamic> del(String endpoint) async {
     Response response;
     try {
-      String authToken = StorageHelper.getValue(StorageHelper.authToken);
+      String authToken = StorageHelper.getValue(StorageHelper.authToken) ?? "";
       log("AuthToken DELETE = $authToken");
       if (authToken.isNotEmpty) {
         _dio.options.headers["Authorization"] = "Bearer $authToken";
@@ -67,7 +65,7 @@ class ApiService {
   Future<dynamic> put(String endpoint, var params) async {
     Response response;
     try {
-      String authToken = StorageHelper.getValue(StorageHelper.authToken);
+      String authToken = StorageHelper.getValue(StorageHelper.authToken) ?? "";
       log("AuthToken PUT = $authToken");
       if (authToken.isNotEmpty) {
         _dio.options.headers["Authorization"] = "Bearer $authToken";
@@ -83,7 +81,7 @@ class ApiService {
   Future<dynamic> post(String endpoint, var params, {bool isItFile = false}) async {
     Response response;
     try {
-      String authToken = StorageHelper.getValue(StorageHelper.authToken);
+      String authToken = StorageHelper.getValue(StorageHelper.authToken) ?? "";
       log("AuthToken POST = $authToken");
       if (authToken.isNotEmpty) {
         _dio.options.headers["Authorization"] = "Bearer $authToken";
@@ -111,7 +109,7 @@ class ApiService {
 
   Future<bool> _postRefreshToken() async {
     try {
-      final refreshToken = StorageHelper.getValue(StorageHelper.refreshToken);
+      final refreshToken = StorageHelper.getValue(StorageHelper.refreshToken) ?? "";
       if (refreshToken.isEmpty) {
         log("No refresh token found — user must log in again.");
         return false;
@@ -127,8 +125,8 @@ class ApiService {
       } else {
         final model = response as RefreshTokenModel;
         if (model.status == 200 || model.status == 201) {
-          StorageHelper.setValue(StorageHelper.authToken, model.data?.accessToken ?? "");
-          StorageHelper.setValue(StorageHelper.refreshToken, model.data?.refreshToken ?? "");
+          StorageHelper.setValue(StorageHelper.authToken, model.data?.accessToken);
+          StorageHelper.setValue(StorageHelper.refreshToken, model.data?.refreshToken);
           log("Token refreshed successfully.");
           return true;
         } else {

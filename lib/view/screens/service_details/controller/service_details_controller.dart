@@ -721,7 +721,7 @@ class ServiceDetailsController extends GetxController {
   }
 
   void _getStorageValue() {
-    userId = StorageHelper.getValue(StorageHelper.userId);
+    userId = StorageHelper.getValue(StorageHelper.userId) ?? "";
     log("UserId: $userId");
   }
 

@@ -7,29 +7,30 @@ class StorageHelper {
   static const String userId = "userId";
   static const String signInResponse = "signInResponse";
   static const String websocketVendorFoundResponse = "websocketVendorFoundResponse";
+  static const String notificationPermissionAsked = "notificationPermissionAsked";
 
-  static String getValue(String keyWord) {
+  static dynamic getValue(String key) {
     final box = GetStorage();
-    return box.read(keyWord) ?? "";
+    return box.read(key);
   }
 
-  static Future<dynamic> setValue(String keyWord, String value) {
+  static Future<dynamic> setValue(String key, dynamic value) {
     final box = GetStorage();
-    return box.write(keyWord, value);
+    return box.write(key, value);
   }
 
-  static Future<dynamic> removeValue(String keyWord) {
+  static Future<dynamic> removeValue(String key) {
     final box = GetStorage();
-    return box.remove(keyWord);
+    return box.remove(key);
   }
 
-  static Future<dynamic> setObject(String keyWord, dynamic object) {
-    return GetStorage().write(keyWord, json.encode(object));
+  static Future<dynamic> setObject(String key, dynamic object) {
+    return GetStorage().write(key, json.encode(object));
   }
 
-  static dynamic getObject(String keyWord) {
+  static dynamic getObject(String key) {
     try {
-      return json.decode(GetStorage().read(keyWord));
+      return json.decode(GetStorage().read(key));
     } catch (e) {
       return null;
     }

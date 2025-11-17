@@ -34,8 +34,10 @@ class AppDIController extends GetxController {
   }
 
   void _initWebsockets() async {
-    await HelperFunction.initWebSockets(authToken);
-    _checkWebsocketsData();
+    if (authToken.isNotEmpty) {
+      await HelperFunction.initWebSockets(authToken);
+      _checkWebsocketsData();
+    }
   }
 
   void _checkWebsocketsData() async {
@@ -144,7 +146,7 @@ class AppDIController extends GetxController {
   }
 
   void _getStorageValue() {
-    authToken = StorageHelper.getValue(StorageHelper.authToken);
+    authToken = StorageHelper.getValue(StorageHelper.authToken) ?? "";
     dynamic websocketVendorFoundResponse = StorageHelper.getObject(StorageHelper.websocketVendorFoundResponse);
     log("WebsocketVendorFoundResponse: $websocketVendorFoundResponse");
   }

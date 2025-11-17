@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
-import 'package:service_la/data/model/network/websocket_notification_model.dart';
+import 'package:service_la/data/model/network/websocket/websocket_notification_model.dart';
 
 class WebSocketService extends GetxService with WidgetsBindingObserver {
   static WebSocketService get to => Get.find<WebSocketService>();

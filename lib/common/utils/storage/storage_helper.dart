@@ -6,6 +6,7 @@ class StorageHelper {
   static const String refreshToken = "refreshToken";
   static const String userId = "userId";
   static const String signInResponse = "signInResponse";
+  static const String websocketVendorFoundResponse = "websocketVendorFoundResponse";
 
   static String getValue(String keyWord) {
     final box = GetStorage();

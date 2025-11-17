@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:developer';
 import 'package:get/get.dart';
@@ -125,4 +126,16 @@ class HelperFunction {
   }
 
   static void _goToSignInScreen() => Get.offAllNamed(AppRoutes.signInScreen);
+
+  static int? getWebsocketNotificationType(Map<String, dynamic> response) {
+    try {
+      final dataString = response["notification"]?["data"];
+      if (dataString == null) return null;
+      final dataJson = jsonDecode(dataString);
+      return dataJson["Type"] as int?;
+    } catch (e) {
+      log("Error parsing notification type: $e");
+      return null;
+    }
+  }
 }

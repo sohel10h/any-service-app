@@ -63,6 +63,14 @@ class ServiceDetailsController extends GetxController {
     _getServicesMe();
   }
 
+  Future<void> onRefresh({String? serviceRequestIdValue}) async {
+    if (serviceRequestIdValue != null) {
+      serviceRequestId = serviceRequestIdValue;
+    }
+    await _getServiceRequestsDetails();
+    await _getServicesMe();
+  }
+
   void onTapFinalizeButton(String serviceId, int status) => _putServiceRequestsStatus(serviceId, status);
 
   Future<void> _putServiceRequestsStatus(String serviceId, int status) async {
@@ -576,7 +584,9 @@ class ServiceDetailsController extends GetxController {
           serviceDetailsData.value = serviceDetails.serviceDetailsData ?? ServiceDetailsData();
           isProvider.value = serviceDetailsData.value.createdBy == userId;
           if (!isProvider.value) {
-            bidData.value = serviceDetailsData.value.bids?.first;
+            if ((serviceDetailsData.value.bids?.isNotEmpty ?? false)) {
+              bidData.value = serviceDetailsData.value.bids?.first;
+            }
           }
           if (isProvider.value) {
             shortlistedBids.addAll(serviceDetailsData.value.bids?.where((bid) => bid.isShortlisted == true) ?? []);
@@ -608,7 +618,9 @@ class ServiceDetailsController extends GetxController {
               serviceDetailsData.value = retryResponse.serviceDetailsData ?? ServiceDetailsData();
               isProvider.value = serviceDetailsData.value.createdBy == userId;
               if (!isProvider.value) {
-                bidData.value = serviceDetailsData.value.bids?.first;
+                if ((serviceDetailsData.value.bids?.isNotEmpty ?? false)) {
+                  bidData.value = serviceDetailsData.value.bids?.first;
+                }
               }
               if (isProvider.value) {
                 shortlistedBids.addAll(serviceDetailsData.value.bids?.where((bid) => bid.isShortlisted == true) ?? []);

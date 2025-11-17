@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:service_la/routes/app_routes.dart';
-import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/data/model/network/sign_in_model.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
@@ -20,7 +19,6 @@ class SplashController extends GetxController {
     if (authToken.isEmpty) {
       Get.offAllNamed(AppRoutes.signUpScreen);
     } else {
-      await HelperFunction.initWebSockets(authToken);
       Get.offAllNamed(AppRoutes.landingScreen);
     }
   }

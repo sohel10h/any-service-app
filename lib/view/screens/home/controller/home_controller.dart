@@ -15,10 +15,7 @@ import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/local/file_option_model.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
-import 'package:service_la/services/websocket/websocket_service.dart';
-import 'package:service_la/common/utils/notification_bottom_sheet_queue.dart';
 import 'package:service_la/data/model/network/upload_admin_picture_model.dart';
-import 'package:service_la/data/model/network/websocket_notification_model.dart';
 import 'package:service_la/data/model/network/upload_service_request_model.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 
@@ -118,16 +115,6 @@ class HomeController extends GetxController {
     _getStorageValue();
     _addListenerFocusNodes();
     _initFileOptions();
-    _checkWebsocketsData();
-  }
-
-  void _checkWebsocketsData() async {
-    WebSocketService.to.on('notification', (payload) async {
-      final WebsocketNotificationModel notification = payload['parsed'];
-      log("WebsocketsResponse from HomeController: ${notification.title}");
-      await Future.delayed(const Duration(milliseconds: 200));
-      NotificationBottomSheetQueue.add(notification);
-    });
   }
 
   void onTapPostButton(BuildContext context) async => await _postServiceRequests(context);

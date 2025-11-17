@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/tab_bar_delegate.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
@@ -18,14 +19,19 @@ class ServiceDetailsScreen extends GetWidget<ServiceDetailsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(
-        () => controller.isLoadingServiceRequestsDetails.value
-            ? const CustomProgressBar()
-            : DefaultTabController(
-                length: controller.tabs.length,
-                initialIndex: controller.selectedTabIndex.value,
-                child: _buildServiceDetailsContent(),
-              ),
+      body: RefreshIndicator(
+        color: AppColors.primary,
+        backgroundColor: AppColors.white,
+        onRefresh: controller.onRefresh,
+        child: Obx(
+          () => controller.isLoadingServiceRequestsDetails.value
+              ? const CustomProgressBar()
+              : DefaultTabController(
+                  length: controller.tabs.length,
+                  initialIndex: controller.selectedTabIndex.value,
+                  child: _buildServiceDetailsContent(),
+                ),
+        ),
       ),
     );
   }
@@ -38,6 +44,7 @@ class ServiceDetailsScreen extends GetWidget<ServiceDetailsController> {
 
       List<Widget> commonChildren = const [
         ServiceDetailsImageSlider(),
+        ServiceDetailsStatusSection(),
         ServiceDetailsDetailsSection(),
         ServiceDetailsBidComparisonSection(),
       ];

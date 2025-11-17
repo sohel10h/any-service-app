@@ -1,56 +1,68 @@
 import 'package:get/get.dart';
-import 'package:service_la/routes/app_routes.dart';
-import 'package:service_la/common/utils/enum_helper.dart';
-import 'package:service_la/common/utils/dialog_helper.dart';
-import 'package:service_la/data/model/network/websocket_notification_model.dart';
 
-class NotificationBottomSheetQueue {
-  static final List<WebsocketNotificationModel> _queue = [];
+class NotificationQueue<T> {
+  static final List<_QueueItem> _globalQueue = [];
   static bool _isShowing = false;
-  static String? _allowedRoute;
 
-  static void add(WebsocketNotificationModel notification) {
-    _queue.add(notification);
+  String? allowedRoute;
+
+  late void Function(T item, void Function() onClosed) bottomSheetBuilder;
+
+  NotificationQueue._();
+
+  static final Map<Type, NotificationQueue> _instances = {};
+
+  static NotificationQueue<T> of<T>() {
+    if (!_instances.containsKey(T)) {
+      _instances[T] = NotificationQueue<T>._();
+    }
+    return _instances[T] as NotificationQueue<T>;
+  }
+
+  void configure({
+    required void Function(T item, void Function() onClosed) builder,
+  }) {
+    bottomSheetBuilder = builder;
+  }
+
+  void add(T item) {
+    _globalQueue.add(_QueueItem<T>(item, bottomSheetBuilder));
     _tryShowNext();
   }
 
-  static void _tryShowNext() {
-    if (_isShowing || _queue.isEmpty) return;
+  void resume() {
+    _isShowing = false;
+    _tryShowNext();
+  }
+
+  void _tryShowNext() {
+    if (_isShowing || _globalQueue.isEmpty) return;
+
     final currentRoute = Get.currentRoute;
-    if (_allowedRoute != null && _allowedRoute != currentRoute) return;
-    final notification = _queue.removeAt(0);
+    if (allowedRoute != null && allowedRoute != currentRoute) return;
+
+    final next = _globalQueue.removeAt(0);
     _isShowing = true;
+
     if (Get.context != null) {
-      DialogHelper.showNotificationBottomSheet(
-        Get.context!,
-        title: notification.title,
-        message: notification.message ?? "",
-        onClosed: () {
-          _isShowing = false;
-          _tryShowNext();
-        },
-        onPressed: notification.type == NotificationType.serviceRequest.typeValue
-            ? () {
-                Get.back();
-                goToServiceDetailsScreen(notification.id ?? "");
-              }
-            : null,
-        actionTitle: notification.type == NotificationType.serviceRequest.typeValue ? "Details" : null,
-      );
+      next.callBuilder(() {
+        _isShowing = false;
+        _tryShowNext();
+      });
     } else {
       _isShowing = false;
       _tryShowNext();
     }
   }
+}
 
-  static void goToServiceDetailsScreen(String serviceRequestId) {
-    _allowedRoute = AppRoutes.landingScreen;
-    Get.toNamed(
-      AppRoutes.serviceDetailsScreen,
-      arguments: {"serviceRequestId": serviceRequestId},
-    )?.then((_) {
-      _allowedRoute = null;
-      _tryShowNext();
-    });
+class _QueueItem<T> {
+  final T item;
+  final void Function(T, void Function()) builder;
+
+  _QueueItem(this.item, this.builder);
+
+  void callBuilder(void Function() onClosed) {
+    builder(item, onClosed);
   }
 }

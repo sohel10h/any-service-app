@@ -716,7 +716,7 @@ class ServiceDetailsController extends GetxController {
 
   void _getArguments() {
     if (Get.arguments != null) {
-      serviceRequestId = Get.arguments["serviceRequestId"];
+      serviceRequestId = Get.arguments["serviceRequestId"] ?? "";
     }
   }
 

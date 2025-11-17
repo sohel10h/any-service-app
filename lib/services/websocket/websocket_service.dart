@@ -14,7 +14,7 @@ class WebSocketService extends GetxService with WidgetsBindingObserver {
 
   WebSocketService({
     required this.baseUrl,
-    this.reconnectInterval = const Duration(seconds: 5),
+    this.reconnectInterval = const Duration(seconds: 10),
     this.autoReconnect = true,
     this.queryParamsBuilder,
   });
@@ -31,6 +31,11 @@ class WebSocketService extends GetxService with WidgetsBindingObserver {
 
   Stream<Map<String, dynamic>> get onRawMessage => _rawMessageController.stream;
   final Map<String, List<Function(Map<String, dynamic>)>> _handlers = {};
+  AppLifecycleState? _currentLifecycleState = WidgetsBinding.instance.lifecycleState;
+
+  AppLifecycleState? get currentLifecycleState => _currentLifecycleState;
+
+  bool get isForeground => _currentLifecycleState == AppLifecycleState.resumed;
 
   Future<WebSocketService> init() async {
     WidgetsBinding.instance.addObserver(this);
@@ -219,18 +224,21 @@ class WebSocketService extends GetxService with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
+    _currentLifecycleState = state;
     _log('AppLifecycleState -> $state');
     if (state == AppLifecycleState.resumed) {
       // app foreground
       if (autoReconnect) connect();
     } else if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive || state == AppLifecycleState.detached) {
       // app background: close connection and stop trying to reconnect
-      _stopReconnectTimer();
+      ///Commenting for future implement
+      /*_stopReconnectTimer();
       try {
         _socket?.close();
       } catch (_) {}
       _socket = null;
-      isConnected.value = false;
+      isConnected.value = false;*/
+      if (autoReconnect) connect();
     }
   }
 

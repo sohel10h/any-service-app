@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:get/get.dart';
+import 'package:service_la/routes/app_routes.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -12,6 +14,18 @@ const String channelDescription = "servicela app push notification";
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   log("Handling a background message: ${message.messageId}");
+}
+
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse response) {
+  final payload = response.payload;
+  if (payload != null && payload.isNotEmpty) {
+    log("Background notification payload: $payload");
+    Get.toNamed(
+      AppRoutes.serviceDetailsScreen,
+      arguments: {"serviceRequestId": payload},
+    );
+  }
 }
 
 class NotificationService {
@@ -38,12 +52,26 @@ class NotificationService {
       description: channelDescription,
       importance: Importance.max,
       playSound: true,
-      sound: RawResourceAndroidNotificationSound('default'),
+      enableVibration: true,
     );
     final androidPlugin = _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     await androidPlugin?.createNotificationChannel(channel);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     await _requestNotificationPermissionFirstTime();
+    await _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        final payload = response.payload;
+        if (payload != null && payload.isNotEmpty) {
+          log("Notification payload: $payload");
+          Get.toNamed(
+            AppRoutes.serviceDetailsScreen,
+            arguments: {"serviceRequestId": payload},
+          );
+        }
+      },
+      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+    );
     //await subscribeToTopic("all_users");
   }
 
@@ -59,37 +87,37 @@ class NotificationService {
       StorageHelper.setValue(StorageHelper.notificationPermissionAsked, true);
     }
   }
-}
 
-Future<void> subscribeToTopic(String topic) async {
-  try {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    await messaging.subscribeToTopic(topic);
-    log("Subscribed to topic: $topic");
-  } catch (e) {
-    log("Error subscribing to topic $topic: $e");
+  static Future<void> subscribeToTopic(String topic) async {
+    try {
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      await messaging.subscribeToTopic(topic);
+      log("Subscribed to topic: $topic");
+    } catch (e) {
+      log("Error subscribing to topic $topic: $e");
+    }
   }
-}
 
-Future showSimpleNotification({required String title, required String body, required String payload}) async {
-  const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-    channelId,
-    channelName,
-    channelDescription: channelDescription,
-    importance: Importance.max,
-    priority: Priority.high,
-    ticker: "ticker",
-    playSound: true,
-    styleInformation: BigTextStyleInformation(""),
-  );
-  DarwinNotificationDetails iOSNotificationDetails = DarwinNotificationDetails(
-    presentAlert: true,
-    presentBadge: true,
-    presentSound: true,
-    subtitle: body,
-    sound: "default",
-  );
+  static Future showSimpleNotification({required String title, required String body, required String payload}) async {
+    const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+      channelId,
+      channelName,
+      channelDescription: channelDescription,
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: "ticker",
+      playSound: true,
+      enableVibration: true,
+      styleInformation: BigTextStyleInformation(""),
+    );
+    DarwinNotificationDetails iOSNotificationDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+      subtitle: body,
+    );
 
-  NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails, iOS: iOSNotificationDetails);
-  await _flutterLocalNotificationsPlugin.show(0, title, body, notificationDetails, payload: payload);
+    NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails, iOS: iOSNotificationDetails);
+    await _flutterLocalNotificationsPlugin.show(0, title, body, notificationDetails, payload: payload);
+  }
 }

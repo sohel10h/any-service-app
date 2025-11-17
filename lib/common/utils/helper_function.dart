@@ -102,7 +102,7 @@ class HelperFunction {
     try {
       final ws = WebSocketService(
         baseUrl: ApiConstant.websocketBaseUrl,
-        reconnectInterval: const Duration(seconds: 5),
+        reconnectInterval: const Duration(seconds: 10),
         autoReconnect: true,
         queryParamsBuilder: () => {
           ApiParams.token: accessToken,

@@ -10,11 +10,13 @@ import 'package:service_la/common/theme/app_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/bindings/view_model_bindings.dart';
 import 'package:service_la/common/translations/text_languages.dart';
+import 'package:service_la/common/notification/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await GetStorage.init();
+  await NotificationService.init();
   runApp(
     DevicePreview(
       enabled: false,

@@ -6,10 +6,10 @@ import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
-import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
+import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
-class ServiceDetailsVendorBidItem extends GetWidget<ServiceDetailsController> {
-  const ServiceDetailsVendorBidItem({super.key});
+class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetailsController> {
+  const ServiceRequestDetailsVendorBidItem({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -4,17 +4,17 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/tab_bar_delegate.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
-import 'package:service_la/view/widgets/service_details/service_details_tab.dart';
-import 'package:service_la/view/widgets/service_details/service_details_create_bids.dart';
-import 'package:service_la/view/widgets/service_details/service_details_image_slider.dart';
-import 'package:service_la/view/widgets/service_details/service_details_status_section.dart';
-import 'package:service_la/view/widgets/service_details/service_details_details_section.dart';
-import 'package:service_la/view/widgets/service_details/service_details_vendor_bid_item.dart';
-import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
-import 'package:service_la/view/widgets/service_details/service_details_bid_comparison_section.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_tab.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_create_bids.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_image_slider.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_status_section.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_details_section.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_vendor_bid_item.dart';
+import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_bid_comparison_section.dart';
 
-class ServiceDetailsScreen extends GetWidget<ServiceDetailsController> {
-  const ServiceDetailsScreen({super.key});
+class ServiceRequestDetailsScreen extends GetWidget<ServiceRequestDetailsController> {
+  const ServiceRequestDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +43,10 @@ class ServiceDetailsScreen extends GetWidget<ServiceDetailsController> {
       final isBidEdit = controller.isBidEdit.value;
 
       List<Widget> commonChildren = const [
-        ServiceDetailsImageSlider(),
-        ServiceDetailsStatusSection(),
-        ServiceDetailsDetailsSection(),
-        ServiceDetailsBidComparisonSection(),
+        ServiceRequestDetailsImageSlider(),
+        ServiceRequestDetailsStatusSection(),
+        ServiceRequestDetailsDetailsSection(),
+        ServiceRequestDetailsBidComparisonSection(),
       ];
 
       if (isBidEdit || ((bids?.isEmpty ?? true) && bidData == null)) {
@@ -54,7 +54,7 @@ class ServiceDetailsScreen extends GetWidget<ServiceDetailsController> {
           child: Column(
             children: [
               ...commonChildren,
-              ...controller.isProvider.value ? [SizedBox(height: 24.h)] : [const ServiceDetailsCreateBids()],
+              ...controller.isProvider.value ? [SizedBox(height: 24.h)] : [const ServiceRequestDetailsCreateBids()],
             ],
           ),
         );
@@ -66,7 +66,7 @@ class ServiceDetailsScreen extends GetWidget<ServiceDetailsController> {
             children: [
               ...commonChildren,
               SizedBox(height: 24.h),
-              const ServiceDetailsVendorBidItem(),
+              const ServiceRequestDetailsVendorBidItem(),
             ],
           ),
         );
@@ -74,14 +74,14 @@ class ServiceDetailsScreen extends GetWidget<ServiceDetailsController> {
 
       return NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverToBoxAdapter(child: const ServiceDetailsImageSlider()),
-          SliverToBoxAdapter(child: const ServiceDetailsStatusSection()),
-          SliverToBoxAdapter(child: const ServiceDetailsDetailsSection()),
-          SliverToBoxAdapter(child: const ServiceDetailsBidComparisonSection()),
+          SliverToBoxAdapter(child: const ServiceRequestDetailsImageSlider()),
+          SliverToBoxAdapter(child: const ServiceRequestDetailsStatusSection()),
+          SliverToBoxAdapter(child: const ServiceRequestDetailsDetailsSection()),
+          SliverToBoxAdapter(child: const ServiceRequestDetailsBidComparisonSection()),
           SliverPersistentHeader(
             pinned: true,
             delegate: TabBarDelegate(
-              child: const ServiceDetailsTab(isFromNestedScroll: true),
+              child: const ServiceRequestDetailsTab(isFromNestedScroll: true),
             ),
           ),
         ],

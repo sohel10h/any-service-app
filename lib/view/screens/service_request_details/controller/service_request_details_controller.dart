@@ -13,12 +13,12 @@ import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
 import 'package:service_la/data/model/network/service_details_model.dart';
 import 'package:service_la/data/model/network/create_service_request_bid_model.dart';
-import 'package:service_la/view/widgets/service_details/service_details_provider_bids_section.dart';
-import 'package:service_la/view/widgets/service_details/service_details_provider_final_bids_section.dart';
-import 'package:service_la/view/widgets/service_details/service_details_provider_rejected_bids_section.dart';
-import 'package:service_la/view/widgets/service_details/service_details_provider_shortlisted_bids_section.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_bids_section.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_final_bids_section.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_rejected_bids_section.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_shortlisted_bids_section.dart';
 
-class ServiceDetailsController extends GetxController {
+class ServiceRequestDetailsController extends GetxController {
   String userId = "";
   final formKey = GlobalKey<FormState>();
   final TextEditingController descriptionController = TextEditingController();
@@ -688,17 +688,17 @@ class ServiceDetailsController extends GetxController {
     tabViews = [
       CustomScrollView(
         slivers: [
-          ServiceDetailsProviderBidsSection(),
+          ServiceRequestDetailsProviderBidsSection(),
         ],
       ),
       CustomScrollView(
         slivers: [
-          ServiceDetailsProviderShortlistedBidsSection(),
+          ServiceRequestDetailsProviderShortlistedBidsSection(),
         ],
       ),
       CustomScrollView(
         slivers: [
-          ServiceDetailsProviderRejectedBidsSection(),
+          ServiceRequestDetailsProviderRejectedBidsSection(),
         ],
       ),
       CustomScrollView(

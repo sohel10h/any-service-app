@@ -7,9 +7,9 @@ import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/data/model/network/common/bid_model.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
-import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
+import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
-class ServiceDetailsProviderBidsItem extends StatelessWidget {
+class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
   final BidModel bid;
   final VoidCallback onAccept;
   final VoidCallback onShortlist;
@@ -18,9 +18,9 @@ class ServiceDetailsProviderBidsItem extends StatelessWidget {
   final RxBool isApprovedLoading;
   final RxBool isShortlistedLoading;
   final RxBool isRejectedLoading;
-  final ServiceDetailsController controller;
+  final ServiceRequestDetailsController controller;
 
-  const ServiceDetailsProviderBidsItem({
+  const ServiceRequestDetailsProviderBidsItem({
     super.key,
     required this.bid,
     required this.onAccept,

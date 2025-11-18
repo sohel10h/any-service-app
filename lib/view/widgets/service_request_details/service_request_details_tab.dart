@@ -2,12 +2,12 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
+import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
-class ServiceDetailsTab extends GetWidget<ServiceDetailsController> {
+class ServiceRequestDetailsTab extends GetWidget<ServiceRequestDetailsController> {
   final bool isFromNestedScroll;
 
-  const ServiceDetailsTab({super.key, this.isFromNestedScroll = false});
+  const ServiceRequestDetailsTab({super.key, this.isFromNestedScroll = false});
 
   @override
   Widget build(BuildContext context) {

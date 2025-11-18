@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/view/widgets/service_details/service_details_provider_bids_item.dart';
-import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_bids_item.dart';
+import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
-class ServiceDetailsProviderRejectedBidsSection extends GetWidget<ServiceDetailsController> {
-  const ServiceDetailsProviderRejectedBidsSection({super.key});
+class ServiceDetailsProviderFinalBidsSection extends GetWidget<ServiceRequestDetailsController> {
+  const ServiceDetailsProviderFinalBidsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class ServiceDetailsProviderRejectedBidsSection extends GetWidget<ServiceDetails
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Text(
-              "Rejected Bids",
+              "Final Bids",
               style: TextStyle(
                 fontSize: 18.sp,
                 color: AppColors.text101828,
@@ -32,7 +32,7 @@ class ServiceDetailsProviderRejectedBidsSection extends GetWidget<ServiceDetails
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Obx(
               () => Text(
-                "${controller.rejectBids.length} received",
+                "${controller.finalBids.length} received",
                 style: TextStyle(
                   fontSize: 13.sp,
                   color: AppColors.text6A7282,
@@ -46,8 +46,8 @@ class ServiceDetailsProviderRejectedBidsSection extends GetWidget<ServiceDetails
           SizedBox(height: 20.h),
           Obx(
             () {
-              final rejectBids = controller.rejectBids;
-              if (rejectBids.isEmpty) {
+              final finalBids = controller.finalBids;
+              if (finalBids.isEmpty) {
                 return SizedBox(
                   height: Get.height / 3,
                   child: Center(
@@ -63,9 +63,9 @@ class ServiceDetailsProviderRejectedBidsSection extends GetWidget<ServiceDetails
                 );
               }
               return Column(
-                children: rejectBids
+                children: finalBids
                     .map(
-                      (bid) => ServiceDetailsProviderBidsItem(
+                      (bid) => ServiceRequestDetailsProviderBidsItem(
                         bid: bid,
                         onAccept: () {},
                         onShortlist: () {},

@@ -22,7 +22,7 @@ void notificationTapBackground(NotificationResponse response) {
   if (payload != null && payload.isNotEmpty) {
     log("Background notification payload: $payload");
     Get.toNamed(
-      AppRoutes.serviceDetailsScreen,
+      AppRoutes.serviceRequestDetailsScreen,
       arguments: {"serviceRequestId": payload},
     );
   }
@@ -65,7 +65,7 @@ class NotificationService {
         if (payload != null && payload.isNotEmpty) {
           log("Notification payload: $payload");
           Get.toNamed(
-            AppRoutes.serviceDetailsScreen,
+            AppRoutes.serviceRequestDetailsScreen,
             arguments: {"serviceRequestId": payload},
           );
         }

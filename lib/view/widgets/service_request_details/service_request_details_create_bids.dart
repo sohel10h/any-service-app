@@ -8,10 +8,10 @@ import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/view/widgets/home/custom_dropdown_chip.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
-import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
+import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
-class ServiceDetailsCreateBids extends GetWidget<ServiceDetailsController> {
-  const ServiceDetailsCreateBids({super.key});
+class ServiceRequestDetailsCreateBids extends GetWidget<ServiceRequestDetailsController> {
+  const ServiceRequestDetailsCreateBids({super.key});
 
   @override
   Widget build(BuildContext context) {

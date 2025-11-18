@@ -184,7 +184,7 @@ class HomeController extends GetxController {
   }
 
   void goToServiceDetailsScreen(String serviceRequestId) => Get.toNamed(
-        AppRoutes.serviceDetailsScreen,
+        AppRoutes.serviceRequestDetailsScreen,
         arguments: {"serviceRequestId": serviceRequestId},
       );
 

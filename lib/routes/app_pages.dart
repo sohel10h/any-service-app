@@ -9,10 +9,10 @@ import 'package:service_la/view/screens/auth/sign_up/sign_up_screen.dart';
 import 'package:service_la/view/screens/ride_sharing/ride_sharing_screen.dart';
 import 'package:service_la/view/screens/create_service/create_service_screen.dart';
 import 'package:service_la/view/screens/ride_sharing/ride_sharing_map_screen.dart';
-import 'package:service_la/view/screens/service_details/service_details_screen.dart';
 import 'package:service_la/view/screens/auth/verification/otp_verification_screen.dart';
 import 'package:service_la/view/screens/create_service/create_service_details_screen.dart';
 import 'package:service_la/view/screens/auth/sign_up_complete/sign_up_complete_screen.dart';
+import 'package:service_la/view/screens/service_request_details/service_request_details_screen.dart';
 
 abstract class AppPages {
   static const initial = AppRoutes.splashScreen;
@@ -51,8 +51,8 @@ abstract class AppPages {
       page: () => const SignUpCompleteScreen(),
     ),
     GetPage(
-      name: AppRoutes.serviceDetailsScreen,
-      page: () => const ServiceDetailsScreen(),
+      name: AppRoutes.serviceRequestDetailsScreen,
+      page: () => const ServiceRequestDetailsScreen(),
     ),
     GetPage(
       name: AppRoutes.createServiceScreen,

@@ -13,7 +13,7 @@ import 'package:service_la/data/model/network/websocket/websocket_bid_model.dart
 import 'package:service_la/data/model/network/websocket/websocket_vendor_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_response_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_service_request_model.dart';
-import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
+import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
 class AppDIController extends GetxController {
   String authToken = "";
@@ -114,8 +114,8 @@ class AppDIController extends GetxController {
           onPressed: () {
             Get.back();
             final currentRoute = Get.currentRoute;
-            if (currentRoute == AppRoutes.serviceDetailsScreen) {
-              ServiceDetailsController controller = Get.find<ServiceDetailsController>();
+            if (currentRoute == AppRoutes.serviceRequestDetailsScreen) {
+              ServiceRequestDetailsController controller = Get.find<ServiceRequestDetailsController>();
               controller.onRefresh(serviceRequestIdValue: model.parsedData?.id);
             } else {
               goToServiceRequestDetails(model.parsedData?.id ?? "");
@@ -132,7 +132,7 @@ class AppDIController extends GetxController {
     queue.allowedRoute = AppRoutes.landingScreen;
 
     Get.toNamed(
-      AppRoutes.serviceDetailsScreen,
+      AppRoutes.serviceRequestDetailsScreen,
       arguments: {"serviceRequestId": id},
     )?.then((_) {
       queue.allowedRoute = null;
@@ -151,8 +151,8 @@ class AppDIController extends GetxController {
           onPressed: () {
             Get.back();
             final currentRoute = Get.currentRoute;
-            if (currentRoute == AppRoutes.serviceDetailsScreen) {
-              ServiceDetailsController controller = Get.find<ServiceDetailsController>();
+            if (currentRoute == AppRoutes.serviceRequestDetailsScreen) {
+              ServiceRequestDetailsController controller = Get.find<ServiceRequestDetailsController>();
               controller.onRefresh(serviceRequestIdValue: model.parsedData?.serviceRequestId);
             } else {
               goToBidDetails(model.parsedData?.serviceRequestId ?? "");
@@ -169,7 +169,7 @@ class AppDIController extends GetxController {
     queue.allowedRoute = AppRoutes.landingScreen;
 
     Get.toNamed(
-      AppRoutes.serviceDetailsScreen,
+      AppRoutes.serviceRequestDetailsScreen,
       arguments: {"serviceRequestId": id},
     )?.then((_) {
       queue.allowedRoute = null;

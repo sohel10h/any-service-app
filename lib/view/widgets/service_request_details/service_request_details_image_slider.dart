@@ -5,10 +5,10 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/data/model/network/common/picture_model.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
-import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
+import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
-class ServiceDetailsImageSlider extends GetWidget<ServiceDetailsController> {
-  const ServiceDetailsImageSlider({super.key});
+class ServiceRequestDetailsImageSlider extends GetWidget<ServiceRequestDetailsController> {
+  const ServiceRequestDetailsImageSlider({super.key});
 
   @override
   Widget build(BuildContext context) {

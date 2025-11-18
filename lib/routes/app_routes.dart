@@ -7,7 +7,7 @@ abstract class AppRoutes {
   static const String settingsScreen = '/settingsScreen';
   static const String otpVerificationScreen = '/otpVerificationScreen';
   static const String signUpCompleteScreen = '/signUpCompleteScreen';
-  static const String serviceDetailsScreen = '/serviceDetailsScreen';
+  static const String serviceRequestDetailsScreen = '/serviceRequestDetailsScreen';
   static const String createServiceScreen = '/createServiceScreen';
   static const String createServiceDetailsScreen = '/createServiceDetailsScreen';
   static const String rideSharingScreen = '/rideSharingScreen';

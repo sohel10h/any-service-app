@@ -4,10 +4,10 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
-import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
+import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
-class ServiceDetailsStatusSection extends GetWidget<ServiceDetailsController> {
-  const ServiceDetailsStatusSection({super.key});
+class ServiceRequestDetailsStatusSection extends GetWidget<ServiceRequestDetailsController> {
+  const ServiceRequestDetailsStatusSection({super.key});
 
   @override
   Widget build(BuildContext context) {

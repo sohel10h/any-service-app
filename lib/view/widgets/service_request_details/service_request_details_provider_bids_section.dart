@@ -4,11 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/view/widgets/service_details/service_details_provider_bids_item.dart';
-import 'package:service_la/view/screens/service_details/controller/service_details_controller.dart';
+import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_bids_item.dart';
+import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
-class ServiceDetailsProviderBidsSection extends GetWidget<ServiceDetailsController> {
-  const ServiceDetailsProviderBidsSection({super.key});
+class ServiceRequestDetailsProviderBidsSection extends GetWidget<ServiceRequestDetailsController> {
+  const ServiceRequestDetailsProviderBidsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class ServiceDetailsProviderBidsSection extends GetWidget<ServiceDetailsControll
               return Column(
                 children: allBids
                         ?.map(
-                          (bid) => ServiceDetailsProviderBidsItem(
+                          (bid) => ServiceRequestDetailsProviderBidsItem(
                             bid: bid,
                             onAccept: () => controller.onTapAcceptBidButton(bid.id ?? "", !(bid.userApproved ?? false)),
                             onShortlist: () => controller.onTapShortlistButton(bid.id ?? "", !(bid.isShortlisted ?? false)),

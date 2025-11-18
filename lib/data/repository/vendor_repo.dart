@@ -18,9 +18,9 @@ class VendorRepo {
     }
   }
 
-  Future<dynamic> getServiceRequestsMe() async {
+  Future<dynamic> getServiceRequestsMe({Map<String, dynamic>? queryParams}) async {
     try {
-      dynamic response = await _vendorApiService.getServiceRequestsMe();
+      dynamic response = await _vendorApiService.getServiceRequestsMe(queryParams: queryParams);
       log("getServiceRequestsMe get details from vendor repo: $response");
       return ServiceRequestMeModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {

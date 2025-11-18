@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/data/repository/vendor_repo.dart';
 import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
@@ -29,6 +30,8 @@ class VendorProfileController extends GetxController {
   RxBool isLoadingServiceRequestBids = false.obs;
   RxList<ServiceRequestMe> serviceRequests = <ServiceRequestMe>[].obs;
   RxBool isLoadingServiceRequests = false.obs;
+  final Rxn<ServiceRequestStatus> selectedServiceRequestStatus = Rxn<ServiceRequestStatus>();
+  RxBool isDropdownDisabled = false.obs;
 
   @override
   void onInit() {
@@ -40,14 +43,22 @@ class VendorProfileController extends GetxController {
     _getServiceRequestsMe();
   }
 
-  Future<void> refreshServiceRequestsMe() async {
-    await _getServiceRequestsMe();
+  Future<void> refreshServiceRequestsMe({bool isRefresh = false}) async {
+    await _getServiceRequestsMe(isRefresh: isRefresh);
   }
 
-  Future<void> _getServiceRequestsMe() async {
+  Future<void> _getServiceRequestsMe({bool isRefresh = false}) async {
     isLoadingServiceRequests.value = true;
     try {
-      var response = await _vendorRepo.getServiceRequestsMe();
+      Map<String, dynamic> queryParams = {};
+      if (!isRefresh) {
+        if (selectedServiceRequestStatus.value != null) {
+          queryParams['status'] = selectedServiceRequestStatus.value?.typeValue ?? 1;
+        }
+      } else {
+        selectedServiceRequestStatus.value = null;
+      }
+      var response = await _vendorRepo.getServiceRequestsMe(queryParams: queryParams);
       if (response is String) {
         log("ServiceRequestsMe get failed from controller response: $response");
       } else {
@@ -66,7 +77,9 @@ class VendorProfileController extends GetxController {
                   serviceRequestMe.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _vendorRepo.getServiceRequestsMe());
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _vendorRepo.getServiceRequestsMe(queryParams: queryParams),
+            );
             if (retryResponse is ServiceRequestMeModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceRequests.value = retryResponse.serviceRequestMeData?.serviceRequests ?? [];
               tabsCounts.value = [
@@ -235,7 +248,7 @@ class VendorProfileController extends GetxController {
       RefreshIndicator(
         color: AppColors.primary,
         backgroundColor: AppColors.white,
-        onRefresh: refreshServiceRequestsMe,
+        onRefresh: () => refreshServiceRequestsMe(isRefresh: true),
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: const [

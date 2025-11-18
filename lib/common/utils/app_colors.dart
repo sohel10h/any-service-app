@@ -96,6 +96,7 @@ class AppColors {
   static Color borderFFC9C9 = colorFromHex('#FFC9C9');
   static Color borderB9F8CF = colorFromHex('#B9F8CF');
   static Color borderFFB86A = colorFromHex('#FFB86A');
+  static Color border008236 = colorFromHex('#008236');
   static Color dividerE9EAEB = colorFromHex('#E9EAEB');
   static Color backgroundD4F1F9 = colorFromHex('#D4F1F9');
 

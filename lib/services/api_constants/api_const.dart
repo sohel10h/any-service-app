@@ -33,11 +33,14 @@ class ApiConstant {
   // END POINTS - Services
   static const String getServicesMePath = "/api/services/me";
 
+  // END POINTS - Vendor details
+  static const String getServiceRequestBidsProviderPath = "/api/service-request-bids/provider";
+
   // Functions
   static String dynamicQueryParams(String endpoint, {Map<String, dynamic>? queryParams}) {
     final uri = Uri.parse(endpoint).replace(
       queryParameters: queryParams?.map(
-        (key, value) => MapEntry(key, value.toString()),
+            (key, value) => MapEntry(key, value.toString()),
       ),
     );
     return uri.toString();

@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/data/model/local/vendor_profile_bid_model.dart';
+import 'package:service_la/common/utils/date_time/format_date.dart';
+import 'package:service_la/data/model/network/service_request_bid_provider_model.dart';
+import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
 class VendorProfileBidItem extends StatelessWidget {
-  final VendorProfileBidModel bid;
+  final ServiceRequestBid bid;
+  final VendorProfileController controller;
 
-  const VendorProfileBidItem({required this.bid, super.key});
+  const VendorProfileBidItem({
+    super.key,
+    required this.bid,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +25,11 @@ class VendorProfileBidItem extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14.r),
         side: BorderSide(
-          color: bid.status == "Active" ? AppColors.borderFFB86A : AppColors.borderE5E7EB,
+          color: bid.bidStatus == ServiceRequestBidStatus.pending.typeValue
+              ? AppColors.borderFFB86A
+              : bid.bidStatus == ServiceRequestBidStatus.approved.typeValue
+                  ? AppColors.border008236
+                  : AppColors.borderE5E7EB,
           width: 2.w,
         ),
       ),
@@ -27,7 +39,7 @@ class VendorProfileBidItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (bid.status == "Active")
+            if (bid.bidStatus == ServiceRequestBidStatus.pending.typeValue)
               Row(
                 children: [
                   Container(
@@ -60,7 +72,7 @@ class VendorProfileBidItem extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    bid.title,
+                    bid.serviceRequestTitle ?? "",
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: AppColors.text101828,
@@ -74,7 +86,7 @@ class VendorProfileBidItem extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Text(
-                    bid.amount,
+                    "\$${bid.proposedPrice ?? 0}",
                     style: TextStyle(
                       fontSize: 17.sp,
                       color: AppColors.container155DFC,
@@ -89,7 +101,7 @@ class VendorProfileBidItem extends StatelessWidget {
             ),
             SizedBox(height: 4.h),
             Text(
-              "Customer: ${bid.customer}",
+              "Customer: ${bid.serviceRequestUser ?? ""}",
               style: TextStyle(
                 fontSize: 12.sp,
                 color: AppColors.text4A5565,
@@ -110,7 +122,7 @@ class VendorProfileBidItem extends StatelessWidget {
                 SizedBox(width: 4.w),
                 Expanded(
                   child: Text(
-                    bid.location,
+                    "Downtown", //TODO: this field value need to get from API
                     style: TextStyle(
                       fontSize: 10.sp,
                       color: AppColors.text4A5565,
@@ -133,7 +145,7 @@ class VendorProfileBidItem extends StatelessWidget {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        "assets/svgs/location_outline.svg",
+                        "assets/svgs/clock_outline.svg",
                         width: 10.w,
                         height: 10.h,
                         colorFilter: ColorFilter.mode(AppColors.text4A5565, BlendMode.srcIn),
@@ -141,7 +153,7 @@ class VendorProfileBidItem extends StatelessWidget {
                       SizedBox(width: 4.w),
                       Flexible(
                         child: Text(
-                          bid.time,
+                          formatTimeAgo(bid.bidCreatedOn ?? ""),
                           style: TextStyle(
                             fontSize: 10.sp,
                             color: AppColors.text4A5565,
@@ -163,14 +175,24 @@ class VendorProfileBidItem extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                         decoration: BoxDecoration(
-                          color: bid.statusColor,
+                          color: bid.serviceRequestStatus == ServiceRequestStatus.completed.typeValue
+                              ? AppColors.containerDCFCE7
+                              : bid.serviceRequestStatus == ServiceRequestStatus.inProgress.typeValue
+                                  ? AppColors.containerFFEDD4
+                                  : AppColors.containerF3F4F6, //TODO: this field value need to get from API
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Text(
-                          bid.status,
+                          bid.serviceRequestStatus == ServiceRequestStatus.completed.typeValue
+                              ? ServiceRequestStatus.completed.name.toUpperCase()
+                              : ServiceRequestStatus.inProgress.name.toUpperCase(),
                           style: TextStyle(
                             fontSize: 10.sp,
-                            color: bid.statusTextColor,
+                            color: bid.serviceRequestStatus == ServiceRequestStatus.completed.typeValue
+                                ? AppColors.text008236
+                                : bid.serviceRequestStatus == ServiceRequestStatus.inProgress.typeValue
+                                    ? AppColors.textCA3500
+                                    : AppColors.text364153, //TODO: this field value need to get from API
                             fontWeight: FontWeight.w600,
                           ),
                           maxLines: 1,

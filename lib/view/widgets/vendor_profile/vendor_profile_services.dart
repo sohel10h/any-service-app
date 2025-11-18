@@ -79,7 +79,7 @@ class VendorProfileServices extends GetWidget<VendorProfileController> {
                   child: NoDataFound(
                     message: "No services found!",
                     isRefresh: true,
-                    onPressed: controller.refreshAdminServices,
+                    onPressed: controller.refreshServicesMe,
                   ),
                 );
               }

@@ -3,72 +3,87 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/data/repository/vendor_repo.dart';
 import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/data/model/network/service_me_model.dart';
-import 'package:service_la/data/model/local/vendor_profile_bid_model.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bids.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_services.dart';
+import 'package:service_la/data/model/network/service_request_bid_provider_model.dart';
 
 class VendorProfileController extends GetxController {
   LandingController landingController = Get.find<LandingController>();
   RxInt currentIndex = 0.obs;
   RxInt selectedTabIndex = 0.obs;
   final List<String> tabs = ["All Bids", "Services", "Completed", "Reviews"];
-  final List<int> tabsCounts = [5, 1, 2, 0];
+  final RxList<int> tabsCounts = <int>[].obs;
   List<Widget> tabViews = [];
   final ServiceRepo _serviceRepo = ServiceRepo();
   RxList<ServiceMeData> serviceMeDataList = <ServiceMeData>[].obs;
   RxBool isLoadingServices = false.obs;
-  final bids = [
-    VendorProfileBidModel(
-      title: 'Deep Home Cleaning Service',
-      customer: 'John Davis',
-      location: 'Downtown',
-      time: '2 hours ago',
-      status: 'Active',
-      amount: '\$89',
-      statusColor: AppColors.containerFFEDD4,
-      statusTextColor: AppColors.textCA3500,
-    ),
-    VendorProfileBidModel(
-      title: 'Office Cleaning - Weekly',
-      customer: 'Tech Corp',
-      location: 'Financial District',
-      time: '5 hours ago',
-      status: 'Active',
-      amount: '\$150',
-      statusColor: AppColors.containerFFEDD4,
-      statusTextColor: AppColors.textCA3500,
-    ),
-    VendorProfileBidModel(
-      title: 'Move-in Cleaning',
-      customer: 'Emily Chen',
-      location: 'Mission Bay',
-      time: '1 day ago',
-      status: 'Pending',
-      amount: '\$120',
-      statusColor: AppColors.containerF3F4F6,
-      statusTextColor: AppColors.text364153,
-    ),
-    VendorProfileBidModel(
-      title: 'Post-Construction Cleaning',
-      customer: 'BuildRight LLC',
-      location: 'SOMA',
-      time: '2 days ago',
-      status: 'Accepted',
-      amount: '\$200',
-      statusColor: AppColors.containerDCFCE7,
-      statusTextColor: AppColors.text008236,
-    ),
-  ];
+  final VendorRepo _vendorRepo = VendorRepo();
+  RxList<ServiceRequestBid> serviceRequestBids = <ServiceRequestBid>[].obs;
+  RxBool isLoadingServiceRequestBids = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     _addViews();
+    _initTabCounts();
+    _getServiceRequestBids();
     _getServicesMe();
+  }
+
+  Future<void> refreshServiceRequestBids() async {
+    await _getServiceRequestBids();
+  }
+
+  Future<void> _getServiceRequestBids() async {
+    isLoadingServiceRequestBids.value = true;
+    try {
+      var response = await _vendorRepo.getServiceRequestBidsProvider();
+      if (response is String) {
+        log("ServiceRequestBids get failed from controller response: $response");
+      } else {
+        ServiceRequestBidProviderModel serviceRequestBid = response as ServiceRequestBidProviderModel;
+        if (serviceRequestBid.status == 200 || serviceRequestBid.status == 201) {
+          serviceRequestBids.value = serviceRequestBid.serviceRequestBidData?.serviceRequestBids ?? [];
+          tabsCounts.value = [
+            serviceRequestBids.length,
+            serviceMeDataList.length,
+            1,
+            0,
+          ];
+        } else {
+          if (serviceRequestBid.status == 401 ||
+              (serviceRequestBid.errors != null &&
+                  serviceRequestBid.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _vendorRepo.getServiceRequestBidsProvider());
+            if (retryResponse is ServiceRequestBidProviderModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              serviceRequestBids.value = retryResponse.serviceRequestBidData?.serviceRequestBids ?? [];
+              tabsCounts.value = [
+                serviceRequestBids.length,
+                serviceMeDataList.length,
+                1,
+                0,
+              ];
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("ServiceRequestBids get failed from controller: ${serviceRequestBid.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("ServiceRequestBids get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingServiceRequestBids.value = false;
+    }
   }
 
   Future<void> _getServicesMe() async {
@@ -81,6 +96,12 @@ class VendorProfileController extends GetxController {
         ServiceMeModel serviceMe = response as ServiceMeModel;
         if (serviceMe.status == 200 || serviceMe.status == 201) {
           serviceMeDataList.value = serviceMe.serviceMeData ?? [];
+          tabsCounts.value = [
+            serviceRequestBids.length,
+            serviceMeDataList.length,
+            1,
+            0,
+          ];
         } else {
           if (serviceMe.status == 401 ||
               (serviceMe.errors != null &&
@@ -90,6 +111,12 @@ class VendorProfileController extends GetxController {
             final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRepo.getServicesMe());
             if (retryResponse is ServiceMeModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceMeDataList.value = retryResponse.serviceMeData ?? [];
+              tabsCounts.value = [
+                serviceRequestBids.length,
+                serviceMeDataList.length,
+                1,
+                0,
+              ];
             } else {
               log("Retry request failed after token refresh");
             }
@@ -111,7 +138,7 @@ class VendorProfileController extends GetxController {
         arguments: {"serviceId": serviceId},
       );
 
-  Future<void> refreshAdminServices() async {
+  Future<void> refreshServicesMe() async {
     await _getServicesMe();
   }
 
@@ -123,12 +150,14 @@ class VendorProfileController extends GetxController {
     }
   }
 
+  void _initTabCounts() => tabsCounts.value = [0, 0, 0, 0];
+
   void _addViews() {
     tabViews = [
       RefreshIndicator(
         color: AppColors.primary,
         backgroundColor: AppColors.white,
-        onRefresh: refreshAdminServices,
+        onRefresh: refreshServiceRequestBids,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
@@ -139,7 +168,7 @@ class VendorProfileController extends GetxController {
       RefreshIndicator(
         color: AppColors.primary,
         backgroundColor: AppColors.white,
-        onRefresh: refreshAdminServices,
+        onRefresh: refreshServicesMe,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
@@ -148,7 +177,7 @@ class VendorProfileController extends GetxController {
         ),
       ),
       RefreshIndicator(
-        onRefresh: refreshAdminServices,
+        onRefresh: refreshServiceRequestBids,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
@@ -157,7 +186,7 @@ class VendorProfileController extends GetxController {
         ),
       ),
       RefreshIndicator(
-        onRefresh: refreshAdminServices,
+        onRefresh: refreshServiceRequestBids,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [

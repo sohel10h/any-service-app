@@ -66,7 +66,7 @@ class VendorProfileServices extends GetWidget<VendorProfileController> {
             ),
             SizedBox(height: 8.h),
             Obx(() {
-              final services = controller.services;
+              final services = controller.serviceMeDataList;
               if (controller.isLoadingServices.value) {
                 return SizedBox(
                   height: Get.height / 1.3,

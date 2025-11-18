@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
-import 'package:service_la/data/repository/admin_repo.dart';
-import 'package:service_la/data/model/network/service_model.dart';
+import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/data/model/local/vendor_profile_bid_model.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bids.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
@@ -18,9 +18,9 @@ class VendorProfileController extends GetxController {
   final List<String> tabs = ["All Bids", "Services", "Completed", "Reviews"];
   final List<int> tabsCounts = [5, 1, 2, 0];
   List<Widget> tabViews = [];
-  final AdminRepo _adminRepo = AdminRepo();
+  final ServiceRepo _serviceRepo = ServiceRepo();
+  RxList<ServiceMeData> serviceMeDataList = <ServiceMeData>[].obs;
   RxBool isLoadingServices = false.obs;
-  RxList<ServiceData> services = <ServiceData>[].obs;
   final bids = [
     VendorProfileBidModel(
       title: 'Deep Home Cleaning Service',
@@ -68,7 +68,42 @@ class VendorProfileController extends GetxController {
   void onInit() {
     super.onInit();
     _addViews();
-    _getAdminServices();
+    _getServicesMe();
+  }
+
+  Future<void> _getServicesMe() async {
+    isLoadingServices.value = true;
+    try {
+      var response = await _serviceRepo.getServicesMe();
+      if (response is String) {
+        log("ServicesMe get failed from controller response: $response");
+      } else {
+        ServiceMeModel serviceMe = response as ServiceMeModel;
+        if (serviceMe.status == 200 || serviceMe.status == 201) {
+          serviceMeDataList.value = serviceMe.serviceMeData ?? [];
+        } else {
+          if (serviceMe.status == 401 ||
+              (serviceMe.errors != null &&
+                  serviceMe.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRepo.getServicesMe());
+            if (retryResponse is ServiceMeModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              serviceMeDataList.value = retryResponse.serviceMeData ?? [];
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("ServicesMe get failed from controller: ${serviceMe.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("ServicesMe get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingServices.value = false;
+    }
   }
 
   void goToCreateServiceDetailsScreen(String serviceId) => Get.toNamed(
@@ -77,50 +112,14 @@ class VendorProfileController extends GetxController {
       );
 
   Future<void> refreshAdminServices() async {
-    await _getAdminServices();
-  }
-
-  Future<void> _getAdminServices() async {
-    isLoadingServices.value = true;
-    try {
-      var response = await _adminRepo.getAdminServices();
-
-      if (response is String) {
-        log("AdminServices get failed from controller response: $response");
-      } else {
-        ServiceModel service = response as ServiceModel;
-        if (service.status == 200 || service.status == 201) {
-          services.value = service.data?.services ?? [];
-        } else {
-          if (service.status == 401 ||
-              (service.errors != null &&
-                  service.errors.any((error) =>
-                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
-            log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _adminRepo.getAdminServices());
-            if (retryResponse is ServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              services.value = retryResponse.data?.services ?? [];
-            } else {
-              log("Retry request failed after token refresh");
-            }
-            return;
-          }
-          log("AdminServices get failed from controller: ${service.status}");
-          return;
-        }
-      }
-    } catch (e) {
-      log("AdminServices get catch error from controller: ${e.toString()}");
-    } finally {
-      isLoadingServices.value = false;
-    }
+    await _getServicesMe();
   }
 
   void goToCreateServiceScreen() async {
     final status = await Get.toNamed(AppRoutes.createServiceScreen);
     if (status == true) {
       await Future.delayed(Duration(milliseconds: 2000));
-      await _getAdminServices();
+      await _getServicesMe();
     }
   }
 

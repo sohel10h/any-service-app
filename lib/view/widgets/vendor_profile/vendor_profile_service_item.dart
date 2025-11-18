@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/common/utils/helper_function.dart';
-import 'package:service_la/data/model/network/service_model.dart';
+import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
 class VendorProfileServiceItem extends StatelessWidget {
-  final ServiceData service;
+  final ServiceMeData service;
   final VendorProfileController controller;
 
   const VendorProfileServiceItem({
@@ -34,7 +33,7 @@ class VendorProfileServiceItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               NetworkImageLoader(
-                HelperFunction.placeholderImageUrl70, //TODO: need to get this data from API
+                service.picture?.virtualPath ?? "",
                 width: 70.w,
                 height: 70.w,
                 borderRadius: BorderRadius.circular(12.r),
@@ -61,7 +60,7 @@ class VendorProfileServiceItem extends StatelessWidget {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      (service.categories?.isEmpty ?? true) ? "" : service.categories?.first.name ?? "",
+                      service.description ?? "",
                       style: TextStyle(
                         fontSize: 10.sp,
                         color: AppColors.text4A5565,

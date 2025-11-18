@@ -11,12 +11,14 @@ import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bids.dart'
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_services.dart';
 import 'package:service_la/data/model/network/service_request_bid_provider_model.dart';
+import 'package:service_la/data/model/network/websocket/service_request_me_model.dart';
+import 'package:service_la/view/widgets/vendor_profile/vendor_profile_service_requests.dart';
 
 class VendorProfileController extends GetxController {
   LandingController landingController = Get.find<LandingController>();
   RxInt currentIndex = 0.obs;
   RxInt selectedTabIndex = 0.obs;
-  final List<String> tabs = ["All Bids", "Services", "Completed", "Reviews"];
+  final List<String> tabs = ["All Bids", "Services", "Requests", "Reviews"];
   final RxList<int> tabsCounts = <int>[].obs;
   List<Widget> tabViews = [];
   final ServiceRepo _serviceRepo = ServiceRepo();
@@ -25,6 +27,8 @@ class VendorProfileController extends GetxController {
   final VendorRepo _vendorRepo = VendorRepo();
   RxList<ServiceRequestBid> serviceRequestBids = <ServiceRequestBid>[].obs;
   RxBool isLoadingServiceRequestBids = false.obs;
+  RxList<ServiceRequestMe> serviceRequests = <ServiceRequestMe>[].obs;
+  RxBool isLoadingServiceRequests = false.obs;
 
   @override
   void onInit() {
@@ -33,6 +37,58 @@ class VendorProfileController extends GetxController {
     _initTabCounts();
     _getServiceRequestBids();
     _getServicesMe();
+    _getServiceRequestsMe();
+  }
+
+  Future<void> refreshServiceRequestsMe() async {
+    await _getServiceRequestsMe();
+  }
+
+  Future<void> _getServiceRequestsMe() async {
+    isLoadingServiceRequests.value = true;
+    try {
+      var response = await _vendorRepo.getServiceRequestsMe();
+      if (response is String) {
+        log("ServiceRequestsMe get failed from controller response: $response");
+      } else {
+        ServiceRequestMeModel serviceRequestMe = response as ServiceRequestMeModel;
+        if (serviceRequestMe.status == 200 || serviceRequestMe.status == 201) {
+          serviceRequests.value = serviceRequestMe.serviceRequestMeData?.serviceRequests ?? [];
+          tabsCounts.value = [
+            serviceRequestBids.length,
+            serviceMeDataList.length,
+            serviceRequests.length,
+            0,
+          ];
+        } else {
+          if (serviceRequestMe.status == 401 ||
+              (serviceRequestMe.errors != null &&
+                  serviceRequestMe.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _vendorRepo.getServiceRequestsMe());
+            if (retryResponse is ServiceRequestMeModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              serviceRequests.value = retryResponse.serviceRequestMeData?.serviceRequests ?? [];
+              tabsCounts.value = [
+                serviceRequestBids.length,
+                serviceMeDataList.length,
+                serviceRequests.length,
+                0,
+              ];
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("ServiceRequestsMe get failed from controller: ${serviceRequestMe.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("ServiceRequestsMe get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingServiceRequests.value = false;
+    }
   }
 
   Future<void> refreshServiceRequestBids() async {
@@ -52,7 +108,7 @@ class VendorProfileController extends GetxController {
           tabsCounts.value = [
             serviceRequestBids.length,
             serviceMeDataList.length,
-            1,
+            serviceRequests.length,
             0,
           ];
         } else {
@@ -67,7 +123,7 @@ class VendorProfileController extends GetxController {
               tabsCounts.value = [
                 serviceRequestBids.length,
                 serviceMeDataList.length,
-                1,
+                serviceRequests.length,
                 0,
               ];
             } else {
@@ -99,7 +155,7 @@ class VendorProfileController extends GetxController {
           tabsCounts.value = [
             serviceRequestBids.length,
             serviceMeDataList.length,
-            1,
+            serviceRequests.length,
             0,
           ];
         } else {
@@ -114,7 +170,7 @@ class VendorProfileController extends GetxController {
               tabsCounts.value = [
                 serviceRequestBids.length,
                 serviceMeDataList.length,
-                1,
+                serviceRequests.length,
                 0,
               ];
             } else {
@@ -160,7 +216,7 @@ class VendorProfileController extends GetxController {
         onRefresh: refreshServiceRequestBids,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          slivers: [
+          slivers: const [
             VendorProfileBids(),
           ],
         ),
@@ -171,17 +227,19 @@ class VendorProfileController extends GetxController {
         onRefresh: refreshServicesMe,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          slivers: [
+          slivers: const [
             VendorProfileServices(),
           ],
         ),
       ),
       RefreshIndicator(
-        onRefresh: refreshServiceRequestBids,
+        color: AppColors.primary,
+        backgroundColor: AppColors.white,
+        onRefresh: refreshServiceRequestsMe,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          slivers: [
-            SliverToBoxAdapter(child: Text("Tab 3")),
+          slivers: const [
+            VendorProfileServiceRequests(),
           ],
         ),
       ),

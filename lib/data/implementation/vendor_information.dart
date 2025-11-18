@@ -8,4 +8,10 @@ class VendorInformation extends VendorApiService {
     dynamic response = await ApiService().get(ApiConstant.getServiceRequestBidsProviderPath);
     return response;
   }
+
+  @override
+  Future getServiceRequestsMe() async {
+    dynamic response = await ApiService().get(ApiConstant.getServiceRequestsMePath);
+    return response;
+  }
 }

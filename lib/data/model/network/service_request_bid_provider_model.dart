@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:service_la/data/model/network/common/meta_model.dart';
 
 ServiceRequestBidProviderModel serviceRequestBidProviderModelFromJson(String str) =>
     ServiceRequestBidProviderModel.fromJson(json.decode(str));
@@ -34,7 +35,7 @@ class ServiceRequestBidProviderModel {
 }
 
 class ServiceRequestBidData {
-  final Meta? meta;
+  final MetaModel? meta;
   final List<ServiceRequestBid>? serviceRequestBids;
 
   ServiceRequestBidData({
@@ -43,7 +44,7 @@ class ServiceRequestBidData {
   });
 
   factory ServiceRequestBidData.fromJson(Map<String, dynamic> json) => ServiceRequestBidData(
-        meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
+        meta: json["meta"] == null ? null : MetaModel.fromJson(json["meta"]),
         serviceRequestBids: json["bids"] == null
             ? []
             : List<ServiceRequestBid>.from(json["bids"]!.map(
@@ -110,33 +111,5 @@ class ServiceRequestBid {
         "user_approved": userApproved,
         "vendor_approved": vendorApproved,
         "service_request_status": serviceRequestStatus,
-      };
-}
-
-class Meta {
-  final int? page;
-  final int? pageSize;
-  final int? totalItems;
-  final int? totalPages;
-
-  Meta({
-    this.page,
-    this.pageSize,
-    this.totalItems,
-    this.totalPages,
-  });
-
-  factory Meta.fromJson(Map<String, dynamic> json) => Meta(
-        page: json["page"],
-        pageSize: json["page_size"],
-        totalItems: json["total_items"],
-        totalPages: json["total_pages"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "page": page,
-        "page_size": pageSize,
-        "total_items": totalItems,
-        "total_pages": totalPages,
       };
 }

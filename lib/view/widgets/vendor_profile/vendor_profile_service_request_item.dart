@@ -4,16 +4,16 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/date_time/format_date.dart';
-import 'package:service_la/data/model/network/service_request_bid_provider_model.dart';
+import 'package:service_la/data/model/network/websocket/service_request_me_model.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
-class VendorProfileBidItem extends StatelessWidget {
-  final ServiceRequestBid bid;
+class VendorProfileServiceRequestItem extends StatelessWidget {
+  final ServiceRequestMe serviceRequest;
   final VendorProfileController controller;
 
-  const VendorProfileBidItem({
+  const VendorProfileServiceRequestItem({
     super.key,
-    required this.bid,
+    required this.serviceRequest,
     required this.controller,
   });
 
@@ -25,11 +25,13 @@ class VendorProfileBidItem extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14.r),
         side: BorderSide(
-          color: bid.bidStatus == ServiceRequestBidStatus.pending.typeValue
+          color: serviceRequest.status == ServiceRequestStatus.active.typeValue
               ? AppColors.borderFFB86A
-              : bid.bidStatus == ServiceRequestBidStatus.approved.typeValue
+              : serviceRequest.status == ServiceRequestStatus.inProgress.typeValue
                   ? AppColors.border008236
-                  : AppColors.borderE5E7EB,
+                  : serviceRequest.status == ServiceRequestStatus.completed.typeValue
+                      ? AppColors.border008236
+                      : AppColors.border008236,
           width: 2.w,
         ),
       ),
@@ -39,7 +41,7 @@ class VendorProfileBidItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (bid.bidStatus == ServiceRequestBidStatus.pending.typeValue)
+            if (serviceRequest.status == ServiceRequestStatus.active.typeValue)
               Row(
                 children: [
                   Container(
@@ -53,7 +55,7 @@ class VendorProfileBidItem extends StatelessWidget {
                   SizedBox(width: 4.w),
                   Expanded(
                     child: Text(
-                      "ACTIVE BID",
+                      "ACTIVE REQUEST",
                       style: TextStyle(
                         fontSize: 10.sp,
                         color: AppColors.containerFF6900,
@@ -72,7 +74,7 @@ class VendorProfileBidItem extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    bid.serviceRequestTitle ?? "",
+                    serviceRequest.title ?? "",
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: AppColors.text101828,
@@ -86,9 +88,9 @@ class VendorProfileBidItem extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Text(
-                    "\$${bid.proposedPrice ?? 0}",
+                    "\$${serviceRequest.budgetMin?.toStringAsFixed(0) ?? 0} - \$${serviceRequest.budgetMax?.toStringAsFixed(0) ?? 0}",
                     style: TextStyle(
-                      fontSize: 17.sp,
+                      fontSize: 13.sp,
                       color: AppColors.container155DFC,
                       fontWeight: FontWeight.w700,
                     ),
@@ -101,7 +103,7 @@ class VendorProfileBidItem extends StatelessWidget {
             ),
             SizedBox(height: 4.h),
             Text(
-              "Customer: ${bid.serviceRequestUser ?? ""}",
+              "Customer: ${serviceRequest.createdBy?.name ?? ""}",
               style: TextStyle(
                 fontSize: 12.sp,
                 color: AppColors.text4A5565,
@@ -122,7 +124,7 @@ class VendorProfileBidItem extends StatelessWidget {
                 SizedBox(width: 4.w),
                 Expanded(
                   child: Text(
-                    "Downtown", //TODO: this field value need to get from API
+                    "Downtown", // TODO: replace with API field
                     style: TextStyle(
                       fontSize: 10.sp,
                       color: AppColors.text4A5565,
@@ -153,7 +155,7 @@ class VendorProfileBidItem extends StatelessWidget {
                       SizedBox(width: 4.w),
                       Flexible(
                         child: Text(
-                          formatTimeAgo(bid.bidCreatedOn ?? ""),
+                          formatTimeAgo(DateTime.now().toIso8601String()), //TODO: need to get this value from API
                           style: TextStyle(
                             fontSize: 10.sp,
                             color: AppColors.text4A5565,
@@ -175,28 +177,32 @@ class VendorProfileBidItem extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                         decoration: BoxDecoration(
-                          color: bid.serviceRequestStatus == ServiceRequestStatus.completed.typeValue
+                          color: serviceRequest.status == ServiceRequestStatus.active.typeValue
                               ? AppColors.containerDCFCE7
-                              : bid.serviceRequestStatus == ServiceRequestStatus.inProgress.typeValue
+                              : serviceRequest.status == ServiceRequestStatus.inProgress.typeValue
                                   ? AppColors.containerFFEDD4
-                                  : AppColors.containerF3F4F6, //TODO: this field value need to get from API
+                                  : serviceRequest.status == ServiceRequestStatus.completed.typeValue
+                                      ? AppColors.containerFFEDD4
+                                      : AppColors.containerF3F4F6,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Text(
-                          bid.serviceRequestStatus == ServiceRequestStatus.completed.typeValue
-                              ? ServiceRequestStatus.completed.name.toUpperCase()
-                              : bid.serviceRequestStatus == ServiceRequestStatus.active.typeValue
-                                  ? ServiceRequestStatus.active.name.toUpperCase()
-                                  : bid.serviceRequestStatus == ServiceRequestStatus.canceled.typeValue
-                                      ? ServiceRequestStatus.canceled.name.toUpperCase()
-                                      : ServiceRequestStatus.inProgress.name.toUpperCase(),
+                          serviceRequest.status == ServiceRequestStatus.active.typeValue
+                              ? ServiceRequestStatus.active.name.toUpperCase()
+                              : serviceRequest.status == ServiceRequestStatus.inProgress.typeValue
+                                  ? ServiceRequestStatus.inProgress.name.toUpperCase()
+                                  : serviceRequest.status == ServiceRequestStatus.completed.typeValue
+                                      ? ServiceRequestStatus.completed.name.toUpperCase()
+                                      : ServiceRequestStatus.canceled.name.toUpperCase(),
                           style: TextStyle(
                             fontSize: 10.sp,
-                            color: bid.serviceRequestStatus == ServiceRequestStatus.completed.typeValue
+                            color: serviceRequest.status == ServiceRequestStatus.active.typeValue
                                 ? AppColors.text008236
-                                : bid.serviceRequestStatus == ServiceRequestStatus.inProgress.typeValue
+                                : serviceRequest.status == ServiceRequestStatus.inProgress.typeValue
                                     ? AppColors.textCA3500
-                                    : AppColors.text364153, //TODO: this field value need to get from API
+                                    : serviceRequest.status == ServiceRequestStatus.completed.typeValue
+                                        ? AppColors.textCA3500
+                                        : AppColors.text364153,
                             fontWeight: FontWeight.w600,
                           ),
                           maxLines: 1,

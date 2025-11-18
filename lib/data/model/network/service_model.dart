@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:service_la/data/model/network/common/meta_model.dart';
 
 ServiceModel serviceModelFromJson(String str) => ServiceModel.fromJson(json.decode(str));
 
@@ -33,7 +34,7 @@ class ServiceModel {
 }
 
 class Data {
-  final Meta? meta;
+  final MetaModel? meta;
   final List<ServiceData>? services;
 
   Data({
@@ -42,41 +43,13 @@ class Data {
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
+        meta: json["meta"] == null ? null : MetaModel.fromJson(json["meta"]),
         services: json["services"] == null ? [] : List<ServiceData>.from(json["services"]!.map((x) => ServiceData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "meta": meta?.toJson(),
         "services": services == null ? [] : List<dynamic>.from(services!.map((x) => x.toJson())),
-      };
-}
-
-class Meta {
-  final int? page;
-  final int? pageSize;
-  final int? totalItems;
-  final int? totalPages;
-
-  Meta({
-    this.page,
-    this.pageSize,
-    this.totalItems,
-    this.totalPages,
-  });
-
-  factory Meta.fromJson(Map<String, dynamic> json) => Meta(
-        page: json["page"],
-        pageSize: json["page_size"],
-        totalItems: json["total_items"],
-        totalPages: json["total_pages"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "page": page,
-        "page_size": pageSize,
-        "total_items": totalItems,
-        "total_pages": totalPages,
       };
 }
 

@@ -20,27 +20,30 @@ class ServiceRequestDetailsStatusSection extends GetWidget<ServiceRequestDetails
       final serviceDetailsData = controller.serviceDetailsData.value;
       final status = serviceDetailsData.status ?? 0;
       final serviceRequestId = serviceDetailsData.id ?? "";
+      final vendor = !controller.isProvider.value;
 
       if (status == ServiceRequestStatus.inProgress.typeValue) {
         bgColor = AppColors.yellow;
         icon = Icons.hourglass_top;
         message = "This service request is currently in progress and awaiting further action.";
-        actionButton = ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.white,
-            foregroundColor: AppColors.yellow,
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            textStyle: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          onPressed: () => controller.onTapFinalizeButton(serviceRequestId, ServiceRequestStatus.completed.typeValue),
-          child: const Text("Finalize"),
-        );
+        actionButton = vendor
+            ? null
+            : ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.white,
+                  foregroundColor: AppColors.yellow,
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  textStyle: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onPressed: () => controller.onTapFinalizeButton(serviceRequestId, ServiceRequestStatus.completed.typeValue),
+                child: const Text("Finalize"),
+              );
       } else if (status == ServiceRequestStatus.completed.typeValue) {
         bgColor = AppColors.green;
         icon = Icons.check_circle;

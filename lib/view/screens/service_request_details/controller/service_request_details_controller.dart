@@ -79,10 +79,8 @@ class ServiceRequestDetailsController extends GetxController {
       Map<String, dynamic> params = {
         ApiParams.status: status,
       };
-
       log("ServiceRequestsStatus PUT Params: $params");
       var response = await _serviceRequestRepo.putServiceRequestsStatus(serviceId, params);
-
       if (response is String) {
         log("ServiceRequestsStatus failed from controller response: $response");
       } else {
@@ -163,10 +161,8 @@ class ServiceRequestDetailsController extends GetxController {
         ApiParams.message: descriptionController.text.trim(),
         ApiParams.proposedPrice: double.tryParse(priceController.text.trim()),
       };
-
       log("UpdateServiceRequestBids PUT Params: $params");
       var response = await _serviceRequestRepo.putServiceRequestBids(bidData.value?.id ?? "", params);
-
       if (response is String) {
         log("UpdateServiceRequestBids failed from controller response: $response");
       } else {
@@ -220,10 +216,8 @@ class ServiceRequestDetailsController extends GetxController {
       Map<String, dynamic> params = {
         ApiParams.isShortlisted: isShortlisted,
       };
-
       log("ServiceRequestBidsShortlist PUT Params: $params");
       var response = await _serviceRequestRepo.putServiceRequestBidsShortlist(bidId, params);
-
       if (response is String) {
         log("ServiceRequestBidsShortlist failed from controller response: $response");
       } else {
@@ -306,10 +300,8 @@ class ServiceRequestDetailsController extends GetxController {
       Map<String, dynamic> params = {
         ApiParams.isApproved: isApproved,
       };
-
       log("ServiceRequestBidsApproval PUT Params: $params");
       var response = await _serviceRequestRepo.putServiceRequestBidsApproval(bidId, params);
-
       if (response is String) {
         log("ServiceRequestBidsApproval failed from controller response: $response");
       } else {
@@ -321,6 +313,10 @@ class ServiceRequestDetailsController extends GetxController {
             bidData.value?.vendorApproved = approvedBid.bid?.vendorApproved;
           }
           bidData.refresh();
+          final isBothApproved = (bidData.value?.userApproved ?? false) && (bidData.value?.vendorApproved ?? false);
+          if (isBothApproved) {
+            serviceDetailsData.value.status = ServiceRequestStatus.inProgress.typeValue;
+          }
           serviceDetailsData.refresh();
           final bid = approvedBid.bid;
           final bidId = bid?.id;
@@ -400,10 +396,8 @@ class ServiceRequestDetailsController extends GetxController {
       Map<String, dynamic> params = {
         ApiParams.status: status,
       };
-
       log("ServiceRequestBidsStatus PUT Params: $params");
       var response = await _serviceRequestRepo.putServiceRequestBidsStatus(bidId, params);
-
       if (response is String) {
         log("ServiceRequestBidsStatus failed from controller response: $response");
       } else {
@@ -493,10 +487,8 @@ class ServiceRequestDetailsController extends GetxController {
         ApiParams.message: descriptionController.text.trim(),
         ApiParams.proposedPrice: double.tryParse(priceController.text.trim()),
       };
-
       log("CreateServiceRequestBids POST Params: $params");
       var response = await _serviceRequestRepo.postServiceRequestBids(params);
-
       if (response is String) {
         log("CreateServiceRequestBids failed from controller response: $response");
       } else {
@@ -575,7 +567,6 @@ class ServiceRequestDetailsController extends GetxController {
     isLoadingServiceRequestsDetails.value = true;
     try {
       var response = await _serviceRequestRepo.getServiceRequestsDetails(serviceRequestId);
-
       if (response is String) {
         log("ServiceRequestsDetails get failed from controller response: $response");
       } else {

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/tab_bar_delegate.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
@@ -38,6 +39,7 @@ class ServiceRequestDetailsScreen extends GetWidget<ServiceRequestDetailsControl
 
   Widget _buildServiceDetailsContent() {
     return Obx(() {
+      final serviceDetails = controller.serviceDetailsData.value;
       final bids = controller.serviceDetailsData.value.bids;
       final bidData = controller.bidData.value;
       final isBidEdit = controller.isBidEdit.value;
@@ -54,7 +56,9 @@ class ServiceRequestDetailsScreen extends GetWidget<ServiceRequestDetailsControl
           child: Column(
             children: [
               ...commonChildren,
-              ...controller.isProvider.value ? [SizedBox(height: 24.h)] : [const ServiceRequestDetailsCreateBids()],
+              ...controller.isProvider.value || serviceDetails.status == ServiceRequestStatus.completed.typeValue
+                  ? [SizedBox(height: 24.h)]
+                  : [const ServiceRequestDetailsCreateBids()],
             ],
           ),
         );

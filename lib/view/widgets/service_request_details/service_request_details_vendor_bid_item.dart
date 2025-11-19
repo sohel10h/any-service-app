@@ -17,7 +17,6 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
       padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 16.h),
       child: Obx(() {
         final bid = controller.bidData.value;
-        final isBothApproved = (bid?.userApproved ?? false) && (bid?.vendorApproved ?? false);
         final isUserApproved = bid?.userApproved ?? false;
         final isBidRejected = bid?.status == ServiceRequestBidStatus.rejected.typeValue;
         return Stack(
@@ -236,7 +235,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                     ],
                   ),
                   SizedBox(height: 8.h),
-                  isBothApproved ? const SizedBox.shrink() : _buildActions(),
+                  _buildActions(),
                 ],
               ),
             ),
@@ -343,115 +342,125 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
 
   Widget _buildActions() {
     return Obx(
-      () => Column(
-        children: [
-          ...!(controller.bidData.value?.userApproved ?? false)
-              ? []
-              : [
-                  SizedBox(height: 8.h),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                    decoration: BoxDecoration(
-                      color: AppColors.green,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.check_circle, color: Colors.white, size: 18.sp),
-                        SizedBox(width: 8.w),
-                        Flexible(
-                          child: Text(
-                            'Great news! Your bid was accepted. Tap "Accept Bid" to move forward with the next steps.',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w500,
+      () {
+        final bid = controller.bidData.value;
+        final userApprovedMessage = 'Great news! Your bid was accepted. Tap "Accept Bid" to move forward with the next steps.';
+        final userAndVendorApprovedMessage = "This bid has been approved and is ready for further action.";
+        final isBothApproved = (bid?.userApproved ?? false) && (bid?.vendorApproved ?? false);
+        return Column(
+          children: [
+            ...!(bid?.userApproved ?? false)
+                ? []
+                : [
+                    SizedBox(height: 8.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.green,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.check_circle, color: Colors.white, size: 18.sp),
+                          SizedBox(width: 8.w),
+                          Flexible(
+                            child: Text(
+                              isBothApproved ? userAndVendorApprovedMessage : userApprovedMessage,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                        ),
+                        ],
+                      ),
+                    ),
+                  ],
+            ...!(bid?.userApproved ?? false)
+                ? []
+                : isBothApproved
+                    ? []
+                    : [
+                        SizedBox(height: 8.h),
+                        (controller.isApprovedLoadingMap[bid?.id ?? ""]?.value ?? false)
+                            ? CustomProgressBar(color: AppColors.container155DFC)
+                            : ElevatedButton(
+                                onPressed: () => controller.onTapAcceptBidButton(
+                                  bid?.id ?? "",
+                                  !(bid?.vendorApproved ?? false),
+                                  isVendor: true,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(double.infinity, 42.h),
+                                  backgroundColor: AppColors.container155DFC,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Accept Bid",
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
                       ],
-                    ),
-                  ),
-                ],
-          ...!(controller.bidData.value?.userApproved ?? false)
-              ? []
-              : [
-                  SizedBox(height: 8.h),
-                  (controller.isApprovedLoadingMap[controller.bidData.value?.id ?? ""]?.value ?? false)
-                      ? CustomProgressBar(color: AppColors.container155DFC)
-                      : ElevatedButton(
-                          onPressed: () => controller.onTapAcceptBidButton(
-                            controller.bidData.value?.id ?? "",
-                            !(controller.bidData.value?.vendorApproved ?? false),
-                            isVendor: true,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(double.infinity, 42.h),
-                            backgroundColor: AppColors.container155DFC,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.r),
+            isBothApproved ? const SizedBox.shrink() : SizedBox(height: 10.h),
+            isBothApproved
+                ? const SizedBox.shrink()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      !controller.isProvider.value
+                          ? const SizedBox.shrink()
+                          : Expanded(
+                              flex: 2,
+                              child: _iconButton(
+                                containerColor: AppColors.containerFAF5FF,
+                                borderColor: AppColors.borderE9D4FF,
+                                iconPath: (controller.bidData.value?.isShortlisted ?? false)
+                                    ? "assets/svgs/heart_fill.svg"
+                                    : "assets/svgs/heart_outline.svg",
+                                label: "Shortlist",
+                                color: AppColors.text8200DB,
+                                onTap: () {}, // TODO: onShortlist
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            "Accept Bid",
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                      SizedBox(width: 8.w),
+                      Expanded(
+                        flex: 1,
+                        child: _iconButton(
+                          containerColor: AppColors.white,
+                          borderColor: AppColors.containerE5E7EB,
+                          iconPath: "assets/svgs/message_bubble.svg",
+                          label: "",
+                          color: AppColors.black,
+                          onTap: () {}, // TODO: onMessage
                         ),
-                ],
-          SizedBox(height: 10.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              !controller.isProvider.value
-                  ? const SizedBox.shrink()
-                  : Expanded(
-                      flex: 2,
-                      child: _iconButton(
-                        containerColor: AppColors.containerFAF5FF,
-                        borderColor: AppColors.borderE9D4FF,
-                        iconPath: (controller.bidData.value?.isShortlisted ?? false)
-                            ? "assets/svgs/heart_fill.svg"
-                            : "assets/svgs/heart_outline.svg",
-                        label: "Shortlist",
-                        color: AppColors.text8200DB,
-                        onTap: () {}, // TODO: onShortlist
                       ),
-                    ),
-              SizedBox(width: 8.w),
-              Expanded(
-                flex: 1,
-                child: _iconButton(
-                  containerColor: AppColors.white,
-                  borderColor: AppColors.containerE5E7EB,
-                  iconPath: "assets/svgs/message_bubble.svg",
-                  label: "",
-                  color: AppColors.black,
-                  onTap: () {}, // TODO: onMessage
-                ),
-              ),
-              SizedBox(width: 8.w),
-              !controller.isProvider.value
-                  ? const SizedBox.shrink()
-                  : Expanded(
-                      flex: 1,
-                      child: _iconButton(
-                        containerColor: AppColors.white,
-                        borderColor: AppColors.borderFFC9C9,
-                        iconPath: "assets/svgs/close.svg",
-                        label: "",
-                        color: AppColors.red,
-                        onTap: () {}, // TODO: onReject
-                      ),
-                    ),
-            ],
-          ),
-          SizedBox(height: 4.h),
-        ],
-      ),
+                      SizedBox(width: 8.w),
+                      !controller.isProvider.value
+                          ? const SizedBox.shrink()
+                          : Expanded(
+                              flex: 1,
+                              child: _iconButton(
+                                containerColor: AppColors.white,
+                                borderColor: AppColors.borderFFC9C9,
+                                iconPath: "assets/svgs/close.svg",
+                                label: "",
+                                color: AppColors.red,
+                                onTap: () {}, // TODO: onReject
+                              ),
+                            ),
+                    ],
+                  ),
+            isBothApproved ? const SizedBox.shrink() : SizedBox(height: 4.h),
+          ],
+        );
+      },
     );
   }
 

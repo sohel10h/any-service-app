@@ -28,12 +28,14 @@ class VendorProfileController extends GetxController {
   RxList<ServiceMeData> serviceMeDataList = <ServiceMeData>[].obs;
   RxBool isLoadingServices = false.obs;
   final VendorRepo _vendorRepo = VendorRepo();
+  Rx<ServiceRequestBidProviderModel> serviceRequestBidProvider = ServiceRequestBidProviderModel().obs;
   RxList<ServiceRequestBid> serviceRequestBids = <ServiceRequestBid>[].obs;
   RxBool isLoadingServiceRequestBids = false.obs;
   RxBool isLoadingMoreServiceRequestBids = false.obs;
   int currentPageServiceRequestBids = 1;
   int totalPagesServiceRequestBids = 1;
   final ScrollController scrollControllerServiceRequestBids = ScrollController();
+  Rxn<ServiceRequestMeModel> serviceRequestMeModel = Rxn<ServiceRequestMeModel>();
   RxList<ServiceRequestMe> serviceRequests = <ServiceRequestMe>[].obs;
   RxBool isLoadingServiceRequests = false.obs;
   RxBool isLoadingMoreServiceRequests = false.obs;
@@ -49,11 +51,16 @@ class VendorProfileController extends GetxController {
     _addViews();
     _initTabCounts();
     _addScrollListenerRequestBids();
-    _getServiceServiceRequestBids();
+    _getServiceServiceRequestBids(isRefresh: true);
     _getServicesMe();
     _addScrollListenerServiceRequests();
-    _getServiceRequestsMe();
+    _getServiceRequestsMe(isRefresh: true);
   }
+
+  void goToServiceDetailsScreen(String serviceRequestId) => Get.toNamed(
+        AppRoutes.serviceRequestDetailsScreen,
+        arguments: {"serviceRequestId": serviceRequestId},
+      );
 
   void _addScrollListenerServiceRequests() {
     scrollControllerServiceRequests.addListener(() {
@@ -103,6 +110,7 @@ class VendorProfileController extends GetxController {
       } else {
         ServiceRequestMeModel serviceRequestMe = response as ServiceRequestMeModel;
         if (serviceRequestMe.status == 200 || serviceRequestMe.status == 201) {
+          serviceRequestMeModel.value = serviceRequestMe;
           final data = serviceRequestMe.serviceRequestMeData?.serviceRequests ?? [];
           if (isRefresh || isLoadingStatus) {
             serviceRequests.assignAll(data);
@@ -112,9 +120,9 @@ class VendorProfileController extends GetxController {
           currentPageServiceRequests = serviceRequestMe.serviceRequestMeData?.meta?.page ?? currentPageServiceRequests;
           totalPagesServiceRequests = serviceRequestMe.serviceRequestMeData?.meta?.totalPages ?? totalPagesServiceRequests;
           tabsCounts.value = [
-            serviceRequestBids.length,
+            serviceRequestBidProvider.value.serviceRequestBidData?.meta?.totalItems ?? 0,
             serviceMeDataList.length,
-            serviceRequests.length,
+            serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
             0,
           ];
         } else {
@@ -136,9 +144,9 @@ class VendorProfileController extends GetxController {
               currentPageServiceRequests = retryResponse.serviceRequestMeData?.meta?.page ?? currentPageServiceRequests;
               totalPagesServiceRequests = retryResponse.serviceRequestMeData?.meta?.totalPages ?? totalPagesServiceRequests;
               tabsCounts.value = [
-                serviceRequestBids.length,
+                serviceRequestBidProvider.value.serviceRequestBidData?.meta?.totalItems ?? 0,
                 serviceMeDataList.length,
-                serviceRequests.length,
+                serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
                 0,
               ];
             } else {
@@ -199,6 +207,7 @@ class VendorProfileController extends GetxController {
       } else {
         ServiceRequestBidProviderModel serviceRequestBid = response as ServiceRequestBidProviderModel;
         if (serviceRequestBid.status == 200 || serviceRequestBid.status == 201) {
+          serviceRequestBidProvider.value = serviceRequestBid;
           final data = serviceRequestBid.serviceRequestBidData?.serviceRequestBids ?? [];
           if (isRefresh) {
             serviceRequestBids.assignAll(data);
@@ -208,9 +217,9 @@ class VendorProfileController extends GetxController {
           currentPageServiceRequestBids = serviceRequestBid.serviceRequestBidData?.meta?.page ?? currentPageServiceRequestBids;
           totalPagesServiceRequestBids = serviceRequestBid.serviceRequestBidData?.meta?.totalPages ?? totalPagesServiceRequestBids;
           tabsCounts.value = [
-            serviceRequestBids.length,
+            serviceRequestBidProvider.value.serviceRequestBidData?.meta?.totalItems ?? 0,
             serviceMeDataList.length,
-            serviceRequests.length,
+            serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
             0,
           ];
         } else {
@@ -232,9 +241,9 @@ class VendorProfileController extends GetxController {
               currentPageServiceRequestBids = retryResponse.serviceRequestBidData?.meta?.page ?? currentPageServiceRequestBids;
               totalPagesServiceRequestBids = retryResponse.serviceRequestBidData?.meta?.totalPages ?? totalPagesServiceRequestBids;
               tabsCounts.value = [
-                serviceRequestBids.length,
+                serviceRequestBidProvider.value.serviceRequestBidData?.meta?.totalItems ?? 0,
                 serviceMeDataList.length,
-                serviceRequests.length,
+                serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
                 0,
               ];
             } else {
@@ -265,9 +274,9 @@ class VendorProfileController extends GetxController {
         if (serviceMe.status == 200 || serviceMe.status == 201) {
           serviceMeDataList.value = serviceMe.serviceMeData ?? [];
           tabsCounts.value = [
-            serviceRequestBids.length,
+            serviceRequestBidProvider.value.serviceRequestBidData?.meta?.totalItems ?? 0,
             serviceMeDataList.length,
-            serviceRequests.length,
+            serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
             0,
           ];
         } else {
@@ -280,9 +289,9 @@ class VendorProfileController extends GetxController {
             if (retryResponse is ServiceMeModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceMeDataList.value = retryResponse.serviceMeData ?? [];
               tabsCounts.value = [
-                serviceRequestBids.length,
+                serviceRequestBidProvider.value.serviceRequestBidData?.meta?.totalItems ?? 0,
                 serviceMeDataList.length,
-                serviceRequests.length,
+                serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
                 0,
               ];
             } else {

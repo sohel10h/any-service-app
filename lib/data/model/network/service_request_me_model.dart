@@ -46,7 +46,9 @@ class ServiceRequestMeData {
         meta: json["meta"] == null ? null : MetaModel.fromJson(json["meta"]),
         serviceRequests: json["service_requests"] == null
             ? []
-            : List<ServiceRequestMe>.from(json["service_requests"]!.map((x) => ServiceRequestMe.fromJson(x))),
+            : List<ServiceRequestMe>.from(
+                json["service_requests"]!.map((x) => ServiceRequestMe.fromJson(x)),
+              ),
       );
 
   Map<String, dynamic> toJson() => {
@@ -59,35 +61,47 @@ class ServiceRequestMe {
   final String? id;
   final String? title;
   final int? status;
+  final String? serviceRequestCreatedOn;
   final CreatedBy? createdBy;
   final num? budgetMin;
   final num? budgetMax;
+  final CreatedBy? vendor;
+  final Picture? picture;
 
   ServiceRequestMe({
     this.id,
     this.title,
     this.status,
+    this.serviceRequestCreatedOn,
     this.createdBy,
     this.budgetMin,
     this.budgetMax,
+    this.vendor,
+    this.picture,
   });
 
   factory ServiceRequestMe.fromJson(Map<String, dynamic> json) => ServiceRequestMe(
         id: json["id"],
         title: json["title"],
         status: json["status"],
+        serviceRequestCreatedOn: json["service_request_created_on"],
         createdBy: json["created_by"] == null ? null : CreatedBy.fromJson(json["created_by"]),
         budgetMin: json["budget_min"]?.toDouble(),
         budgetMax: json["budget_max"]?.toDouble(),
+        vendor: json["vendor"] == null ? null : CreatedBy.fromJson(json["vendor"]),
+        picture: json["picture"] == null ? null : Picture.fromJson(json["picture"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
         "status": status,
+        "service_request_created_on": serviceRequestCreatedOn,
         "created_by": createdBy?.toJson(),
         "budget_min": budgetMin,
         "budget_max": budgetMax,
+        "vendor": vendor?.toJson(),
+        "picture": picture?.toJson(),
       };
 }
 
@@ -108,5 +122,21 @@ class CreatedBy {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+      };
+}
+
+class Picture {
+  final String? virtualPath;
+
+  Picture({
+    this.virtualPath,
+  });
+
+  factory Picture.fromJson(Map<String, dynamic> json) => Picture(
+        virtualPath: json["virtual_path"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "virtual_path": virtualPath,
       };
 }

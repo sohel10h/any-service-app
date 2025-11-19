@@ -4,7 +4,7 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/date_time/format_date.dart';
-import 'package:service_la/data/model/network/websocket/service_request_me_model.dart';
+import 'package:service_la/data/model/network/service_request_me_model.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
 class VendorProfileServiceRequestItem extends StatelessWidget {
@@ -155,7 +155,7 @@ class VendorProfileServiceRequestItem extends StatelessWidget {
                       SizedBox(width: 4.w),
                       Flexible(
                         child: Text(
-                          formatTimeAgo(DateTime.now().toIso8601String()), //TODO: need to get this value from API
+                          formatTimeAgo(serviceRequest.serviceRequestCreatedOn ?? ""),
                           style: TextStyle(
                             fontSize: 10.sp,
                             color: AppColors.text4A5565,

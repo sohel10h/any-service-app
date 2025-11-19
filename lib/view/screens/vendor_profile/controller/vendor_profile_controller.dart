@@ -8,12 +8,13 @@ import 'package:service_la/data/repository/vendor_repo.dart';
 import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/data/model/network/service_me_model.dart';
+import 'package:service_la/data/model/network/service_request_me_model.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bids.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_services.dart';
 import 'package:service_la/data/model/network/service_request_bid_provider_model.dart';
-import 'package:service_la/data/model/network/websocket/service_request_me_model.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_service_requests.dart';
+import 'package:service_la/view/widgets/vendor_profile/vendor_profile_service_request_list.dart';
 
 class VendorProfileController extends GetxController {
   LandingController landingController = Get.find<LandingController>();
@@ -30,6 +31,10 @@ class VendorProfileController extends GetxController {
   RxBool isLoadingServiceRequestBids = false.obs;
   RxList<ServiceRequestMe> serviceRequests = <ServiceRequestMe>[].obs;
   RxBool isLoadingServiceRequests = false.obs;
+  RxBool isLoadingMoreServiceRequests = false.obs;
+  int currentPageServiceRequests = 1;
+  int totalPagesServiceRequests = 1;
+  final ScrollController scrollControllerServiceRequests = ScrollController();
   final Rxn<ServiceRequestStatus> selectedServiceRequestStatus = Rxn<ServiceRequestStatus>();
   RxBool isDropdownDisabled = false.obs;
 
@@ -40,17 +45,45 @@ class VendorProfileController extends GetxController {
     _initTabCounts();
     _getServiceRequestBids();
     _getServicesMe();
+    _addScrollListener();
     _getServiceRequestsMe();
   }
 
-  Future<void> refreshServiceRequestsMe({bool isRefresh = false}) async {
-    await _getServiceRequestsMe(isRefresh: isRefresh);
+  void _addScrollListener() {
+    scrollControllerServiceRequests.addListener(() {
+      if (!scrollControllerServiceRequests.hasClients) return;
+      if (scrollControllerServiceRequests.position.pixels >= scrollControllerServiceRequests.position.maxScrollExtent - 100) {
+        _loadNextPage();
+      }
+    });
   }
 
-  Future<void> _getServiceRequestsMe({bool isRefresh = false}) async {
-    isLoadingServiceRequests.value = true;
+  Future<void> _loadNextPage() async {
+    if (currentPageServiceRequests < totalPagesServiceRequests && !isLoadingMoreServiceRequests.value) {
+      isLoadingMoreServiceRequests.value = true;
+      currentPageServiceRequests++;
+      await _getServiceRequestsMe();
+    }
+  }
+
+  Future<void> refreshServiceRequestsMe({bool isRefresh = false, bool isLoadingStatus = false, bool isLoadingEmpty = false}) async {
+    await _getServiceRequestsMe(isRefresh: isRefresh, isLoadingStatus: isLoadingStatus, isLoadingEmpty: isLoadingEmpty);
+  }
+
+  Future<void> _getServiceRequestsMe({bool isRefresh = false, bool isLoadingStatus = false, bool isLoadingEmpty = false}) async {
+    if (isLoadingEmpty) totalPagesServiceRequests = 1;
+    if (isRefresh || isLoadingStatus) {
+      currentPageServiceRequests = 1;
+      serviceRequests.clear();
+    }
+    if (currentPageServiceRequests > totalPagesServiceRequests) return;
+    if (isRefresh || isLoadingStatus || isLoadingEmpty) {
+      isLoadingServiceRequests.value = true;
+    }
     try {
-      Map<String, dynamic> queryParams = {};
+      Map<String, dynamic> queryParams = {
+        'page': currentPageServiceRequests,
+      };
       if (!isRefresh) {
         if (selectedServiceRequestStatus.value != null) {
           queryParams['status'] = selectedServiceRequestStatus.value?.typeValue ?? 1;
@@ -64,7 +97,14 @@ class VendorProfileController extends GetxController {
       } else {
         ServiceRequestMeModel serviceRequestMe = response as ServiceRequestMeModel;
         if (serviceRequestMe.status == 200 || serviceRequestMe.status == 201) {
-          serviceRequests.value = serviceRequestMe.serviceRequestMeData?.serviceRequests ?? [];
+          final data = serviceRequestMe.serviceRequestMeData?.serviceRequests ?? [];
+          if (isRefresh || isLoadingStatus) {
+            serviceRequests.assignAll(data);
+          } else {
+            serviceRequests.addAll(data);
+          }
+          currentPageServiceRequests = serviceRequestMe.serviceRequestMeData?.meta?.page ?? currentPageServiceRequests;
+          totalPagesServiceRequests = serviceRequestMe.serviceRequestMeData?.meta?.totalPages ?? totalPagesServiceRequests;
           tabsCounts.value = [
             serviceRequestBids.length,
             serviceMeDataList.length,
@@ -81,7 +121,14 @@ class VendorProfileController extends GetxController {
               () => _vendorRepo.getServiceRequestsMe(queryParams: queryParams),
             );
             if (retryResponse is ServiceRequestMeModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              serviceRequests.value = retryResponse.serviceRequestMeData?.serviceRequests ?? [];
+              final data = retryResponse.serviceRequestMeData?.serviceRequests ?? [];
+              if (isRefresh || isLoadingStatus) {
+                serviceRequests.assignAll(data);
+              } else {
+                serviceRequests.addAll(data);
+              }
+              currentPageServiceRequests = retryResponse.serviceRequestMeData?.meta?.page ?? currentPageServiceRequests;
+              totalPagesServiceRequests = retryResponse.serviceRequestMeData?.meta?.totalPages ?? totalPagesServiceRequests;
               tabsCounts.value = [
                 serviceRequestBids.length,
                 serviceMeDataList.length,
@@ -101,6 +148,7 @@ class VendorProfileController extends GetxController {
       log("ServiceRequestsMe get catch error from controller: ${e.toString()}");
     } finally {
       isLoadingServiceRequests.value = false;
+      isLoadingMoreServiceRequests.value = false;
     }
   }
 
@@ -250,9 +298,11 @@ class VendorProfileController extends GetxController {
         backgroundColor: AppColors.white,
         onRefresh: () => refreshServiceRequestsMe(isRefresh: true),
         child: CustomScrollView(
+          controller: scrollControllerServiceRequests,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: const [
             VendorProfileServiceRequests(),
+            VendorProfileServiceRequestList(),
           ],
         ),
       ),

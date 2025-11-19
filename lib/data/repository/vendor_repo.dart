@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:service_la/data/network/vendor_api_service.dart';
 import 'package:service_la/data/implementation/vendor_information.dart';
 import 'package:service_la/data/model/network/service_request_bid_provider_model.dart';
-import 'package:service_la/data/model/network/websocket/service_request_me_model.dart';
+import 'package:service_la/data/model/network/service_request_me_model.dart';
 
 class VendorRepo {
   final VendorApiService _vendorApiService = VendorInformation();
@@ -21,7 +21,7 @@ class VendorRepo {
   Future<dynamic> getServiceRequestsMe({Map<String, dynamic>? queryParams}) async {
     try {
       dynamic response = await _vendorApiService.getServiceRequestsMe(queryParams: queryParams);
-      log("getServiceRequestsMe get details from vendor repo: $response");
+      log("ServiceRequestsMe get details from vendor repo: $response");
       return ServiceRequestMeModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
       return e;

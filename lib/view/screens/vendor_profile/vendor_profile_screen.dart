@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
-import 'package:service_la/view/widgets/common/tab_bar_delegate.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_tab.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_header.dart';
+import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bids_tab.dart';
+import 'package:service_la/view/widgets/vendor_profile/vendor_profile_services_tab.dart';
+import 'package:service_la/view/widgets/vendor_profile/vendor_profile_service_requests_tab.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
+import 'package:service_la/view/widgets/vendor_profile/vendor_profile_tab_bar_header_delegate.dart';
 
 class VendorProfileScreen extends GetWidget<VendorProfileController> {
   const VendorProfileScreen({super.key});
@@ -76,26 +79,37 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
             length: controller.tabs.length,
             initialIndex: controller.selectedTabIndex.value,
             child: NestedScrollView(
-              headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                SliverToBoxAdapter(
-                  child: SizedBox(height: 16.h),
-                ),
-                SliverToBoxAdapter(
-                  child: VendorProfileHeader(),
-                ),
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: TabBarDelegate(
-                    child: VendorProfileTab(isFromNestedScroll: true),
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return [
+                  SliverOverlapAbsorber(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          SizedBox(height: 16.h),
+                          VendorProfileHeader(),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: VendorProfileTabBarHeaderDelegate(
+                      minHeight: 40.h,
+                      maxHeight: 40.h,
+                      child: VendorProfileTab(isFromNestedScroll: true),
+                    ),
+                  ),
+                ];
+              },
               body: TabBarView(
                 physics: const NeverScrollableScrollPhysics(),
-                children: List.generate(
-                  controller.tabs.length,
-                  (index) => controller.tabViews[index],
-                ),
+                children: [
+                  VendorProfileBidsTab(),
+                  VendorProfileServicesTab(),
+                  VendorProfileServiceRequestsTab(),
+                  VendorProfileServiceRequestsTab(),
+                ],
               ),
             ),
           ),

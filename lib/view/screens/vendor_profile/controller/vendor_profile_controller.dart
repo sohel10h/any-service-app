@@ -1,21 +1,14 @@
 import 'dart:developer';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
-import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/data/repository/vendor_repo.dart';
 import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/data/model/network/service_request_me_model.dart';
-import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bids.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
-import 'package:service_la/view/widgets/vendor_profile/vendor_profile_services.dart';
-import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bid_list.dart';
 import 'package:service_la/data/model/network/service_request_bid_provider_model.dart';
-import 'package:service_la/view/widgets/vendor_profile/vendor_profile_service_requests.dart';
-import 'package:service_la/view/widgets/vendor_profile/vendor_profile_service_request_list.dart';
 
 class VendorProfileController extends GetxController {
   LandingController landingController = Get.find<LandingController>();
@@ -23,7 +16,6 @@ class VendorProfileController extends GetxController {
   RxInt selectedTabIndex = 0.obs;
   final List<String> tabs = ["All Bids", "Services", "Requests", "Reviews"];
   final RxList<int> tabsCounts = <int>[].obs;
-  List<Widget> tabViews = [];
   final ServiceRepo _serviceRepo = ServiceRepo();
   RxList<ServiceMeData> serviceMeDataList = <ServiceMeData>[].obs;
   RxBool isLoadingServices = false.obs;
@@ -34,26 +26,21 @@ class VendorProfileController extends GetxController {
   RxBool isLoadingMoreServiceRequestBids = false.obs;
   int currentPageServiceRequestBids = 1;
   int totalPagesServiceRequestBids = 1;
-  final ScrollController scrollControllerServiceRequestBids = ScrollController();
   Rxn<ServiceRequestMeModel> serviceRequestMeModel = Rxn<ServiceRequestMeModel>();
   RxList<ServiceRequestMe> serviceRequests = <ServiceRequestMe>[].obs;
   RxBool isLoadingServiceRequests = false.obs;
   RxBool isLoadingMoreServiceRequests = false.obs;
   int currentPageServiceRequests = 1;
   int totalPagesServiceRequests = 1;
-  final ScrollController scrollControllerServiceRequests = ScrollController();
   final Rxn<ServiceRequestStatus> selectedServiceRequestStatus = Rxn<ServiceRequestStatus>();
   RxBool isDropdownDisabled = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    _addViews();
     _initTabCounts();
-    _addScrollListenerRequestBids();
     _getServiceServiceRequestBids(isRefresh: true);
     _getServicesMe();
-    _addScrollListenerServiceRequests();
     _getServiceRequestsMe(isRefresh: true);
   }
 
@@ -62,16 +49,7 @@ class VendorProfileController extends GetxController {
         arguments: {"serviceRequestId": serviceRequestId},
       );
 
-  void _addScrollListenerServiceRequests() {
-    scrollControllerServiceRequests.addListener(() {
-      if (!scrollControllerServiceRequests.hasClients) return;
-      if (scrollControllerServiceRequests.position.pixels >= scrollControllerServiceRequests.position.maxScrollExtent - 100) {
-        _loadNextPageServiceRequests();
-      }
-    });
-  }
-
-  Future<void> _loadNextPageServiceRequests() async {
+  Future<void> loadNextPageServiceRequests() async {
     if (currentPageServiceRequests < totalPagesServiceRequests && !isLoadingMoreServiceRequests.value) {
       isLoadingMoreServiceRequests.value = true;
       currentPageServiceRequests++;
@@ -166,16 +144,7 @@ class VendorProfileController extends GetxController {
     }
   }
 
-  void _addScrollListenerRequestBids() {
-    scrollControllerServiceRequestBids.addListener(() {
-      if (!scrollControllerServiceRequestBids.hasClients) return;
-      if (scrollControllerServiceRequestBids.position.pixels >= scrollControllerServiceRequestBids.position.maxScrollExtent - 100) {
-        _loadNextPageRequestBids();
-      }
-    });
-  }
-
-  Future<void> _loadNextPageRequestBids() async {
+  Future<void> loadNextPageRequestBids() async {
     if (currentPageServiceRequestBids < totalPagesServiceRequestBids && !isLoadingMoreServiceRequestBids.value) {
       isLoadingMoreServiceRequestBids.value = true;
       currentPageServiceRequestBids++;
@@ -328,55 +297,4 @@ class VendorProfileController extends GetxController {
   }
 
   void _initTabCounts() => tabsCounts.value = [0, 0, 0, 0];
-
-  void _addViews() {
-    tabViews = [
-      RefreshIndicator(
-        color: AppColors.primary,
-        backgroundColor: AppColors.white,
-        onRefresh: () => refreshServiceRequestBids(isRefresh: true, isLoadingEmpty: true),
-        child: CustomScrollView(
-          controller: scrollControllerServiceRequestBids,
-          physics: const AlwaysScrollableScrollPhysics(),
-          slivers: const [
-            VendorProfileBids(),
-            VendorProfileBidList(),
-          ],
-        ),
-      ),
-      RefreshIndicator(
-        color: AppColors.primary,
-        backgroundColor: AppColors.white,
-        onRefresh: refreshServicesMe,
-        child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          slivers: const [
-            VendorProfileServices(),
-          ],
-        ),
-      ),
-      RefreshIndicator(
-        color: AppColors.primary,
-        backgroundColor: AppColors.white,
-        onRefresh: () => refreshServiceRequestsMe(isRefresh: true, isLoadingEmpty: true),
-        child: CustomScrollView(
-          controller: scrollControllerServiceRequests,
-          physics: const AlwaysScrollableScrollPhysics(),
-          slivers: const [
-            VendorProfileServiceRequests(),
-            VendorProfileServiceRequestList(),
-          ],
-        ),
-      ),
-      RefreshIndicator(
-        onRefresh: refreshServiceRequestBids,
-        child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          slivers: [
-            SliverToBoxAdapter(child: Text("Tab 4")),
-          ],
-        ),
-      ),
-    ];
-  }
 }

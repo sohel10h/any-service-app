@@ -41,6 +41,7 @@ enum ServiceRequestBidStatus {
 }
 
 enum ServiceRequestStatus {
+  all(0),
   active(1),
   inProgress(2),
   completed(3),

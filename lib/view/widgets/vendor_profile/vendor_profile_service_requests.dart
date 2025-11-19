@@ -39,7 +39,10 @@ class VendorProfileServiceRequests extends GetWidget<VendorProfileController> {
                     selectedValue: controller.selectedServiceRequestStatus,
                     hint: "Select status",
                     labelBuilder: (status) => status.name.toUpperCase(),
-                    onChanged: (val) {
+                    onChanged: (status) {
+                      if (status == ServiceRequestStatus.all) {
+                        controller.selectedServiceRequestStatus.value = null;
+                      }
                       controller.refreshServiceRequestsMe(isLoadingStatus: true, isLoadingEmpty: true);
                     },
                     isDisabled: controller.isDropdownDisabled.value,

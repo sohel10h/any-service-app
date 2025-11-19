@@ -4,6 +4,7 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/date_time/format_date.dart';
+import 'package:service_la/view/widgets/common/network_image_loader.dart';
 import 'package:service_la/data/model/network/service_request_me_model.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
@@ -73,6 +74,13 @@ class VendorProfileServiceRequestItem extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  NetworkImageLoader(
+                    serviceRequest.picture?.virtualPath ?? "",
+                    width: 70.w,
+                    height: 70.w,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  SizedBox(width: 8.w),
                   Expanded(
                     flex: 3,
                     child: Text(

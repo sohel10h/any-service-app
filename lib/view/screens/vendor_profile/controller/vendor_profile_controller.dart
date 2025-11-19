@@ -12,6 +12,7 @@ import 'package:service_la/data/model/network/service_request_me_model.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bids.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_services.dart';
+import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bid_list.dart';
 import 'package:service_la/data/model/network/service_request_bid_provider_model.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_service_requests.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_service_request_list.dart';
@@ -29,6 +30,10 @@ class VendorProfileController extends GetxController {
   final VendorRepo _vendorRepo = VendorRepo();
   RxList<ServiceRequestBid> serviceRequestBids = <ServiceRequestBid>[].obs;
   RxBool isLoadingServiceRequestBids = false.obs;
+  RxBool isLoadingMoreServiceRequestBids = false.obs;
+  int currentPageServiceRequestBids = 1;
+  int totalPagesServiceRequestBids = 1;
+  final ScrollController scrollControllerServiceRequestBids = ScrollController();
   RxList<ServiceRequestMe> serviceRequests = <ServiceRequestMe>[].obs;
   RxBool isLoadingServiceRequests = false.obs;
   RxBool isLoadingMoreServiceRequests = false.obs;
@@ -43,22 +48,23 @@ class VendorProfileController extends GetxController {
     super.onInit();
     _addViews();
     _initTabCounts();
-    _getServiceRequestBids();
+    _addScrollListenerRequestBids();
+    _getServiceServiceRequestBids();
     _getServicesMe();
-    _addScrollListener();
+    _addScrollListenerServiceRequests();
     _getServiceRequestsMe();
   }
 
-  void _addScrollListener() {
+  void _addScrollListenerServiceRequests() {
     scrollControllerServiceRequests.addListener(() {
       if (!scrollControllerServiceRequests.hasClients) return;
       if (scrollControllerServiceRequests.position.pixels >= scrollControllerServiceRequests.position.maxScrollExtent - 100) {
-        _loadNextPage();
+        _loadNextPageServiceRequests();
       }
     });
   }
 
-  Future<void> _loadNextPage() async {
+  Future<void> _loadNextPageServiceRequests() async {
     if (currentPageServiceRequests < totalPagesServiceRequests && !isLoadingMoreServiceRequests.value) {
       isLoadingMoreServiceRequests.value = true;
       currentPageServiceRequests++;
@@ -152,20 +158,55 @@ class VendorProfileController extends GetxController {
     }
   }
 
-  Future<void> refreshServiceRequestBids() async {
-    await _getServiceRequestBids();
+  void _addScrollListenerRequestBids() {
+    scrollControllerServiceRequestBids.addListener(() {
+      if (!scrollControllerServiceRequestBids.hasClients) return;
+      if (scrollControllerServiceRequestBids.position.pixels >= scrollControllerServiceRequestBids.position.maxScrollExtent - 100) {
+        _loadNextPageRequestBids();
+      }
+    });
   }
 
-  Future<void> _getServiceRequestBids() async {
-    isLoadingServiceRequestBids.value = true;
+  Future<void> _loadNextPageRequestBids() async {
+    if (currentPageServiceRequestBids < totalPagesServiceRequestBids && !isLoadingMoreServiceRequestBids.value) {
+      isLoadingMoreServiceRequestBids.value = true;
+      currentPageServiceRequestBids++;
+      await _getServiceServiceRequestBids();
+    }
+  }
+
+  Future<void> refreshServiceRequestBids({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    await _getServiceServiceRequestBids(isRefresh: isRefresh, isLoadingEmpty: isLoadingEmpty);
+  }
+
+  Future<void> _getServiceServiceRequestBids({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    if (isLoadingEmpty) totalPagesServiceRequestBids = 1;
+    if (isRefresh) {
+      currentPageServiceRequestBids = 1;
+      serviceRequestBids.clear();
+    }
+    if (currentPageServiceRequestBids > totalPagesServiceRequestBids) return;
+    if (isRefresh || isLoadingEmpty) {
+      isLoadingServiceRequestBids.value = true;
+    }
     try {
-      var response = await _vendorRepo.getServiceRequestBidsProvider();
+      Map<String, dynamic> queryParams = {
+        'page': currentPageServiceRequestBids,
+      };
+      var response = await _vendorRepo.getServiceRequestBidsProvider(queryParams: queryParams);
       if (response is String) {
         log("ServiceRequestBids get failed from controller response: $response");
       } else {
         ServiceRequestBidProviderModel serviceRequestBid = response as ServiceRequestBidProviderModel;
         if (serviceRequestBid.status == 200 || serviceRequestBid.status == 201) {
-          serviceRequestBids.value = serviceRequestBid.serviceRequestBidData?.serviceRequestBids ?? [];
+          final data = serviceRequestBid.serviceRequestBidData?.serviceRequestBids ?? [];
+          if (isRefresh) {
+            serviceRequestBids.assignAll(data);
+          } else {
+            serviceRequestBids.addAll(data);
+          }
+          currentPageServiceRequestBids = serviceRequestBid.serviceRequestBidData?.meta?.page ?? currentPageServiceRequestBids;
+          totalPagesServiceRequestBids = serviceRequestBid.serviceRequestBidData?.meta?.totalPages ?? totalPagesServiceRequestBids;
           tabsCounts.value = [
             serviceRequestBids.length,
             serviceMeDataList.length,
@@ -178,9 +219,18 @@ class VendorProfileController extends GetxController {
                   serviceRequestBid.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _vendorRepo.getServiceRequestBidsProvider());
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _vendorRepo.getServiceRequestBidsProvider(queryParams: queryParams),
+            );
             if (retryResponse is ServiceRequestBidProviderModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              serviceRequestBids.value = retryResponse.serviceRequestBidData?.serviceRequestBids ?? [];
+              final data = retryResponse.serviceRequestBidData?.serviceRequestBids ?? [];
+              if (isRefresh) {
+                serviceRequestBids.assignAll(data);
+              } else {
+                serviceRequestBids.addAll(data);
+              }
+              currentPageServiceRequestBids = retryResponse.serviceRequestBidData?.meta?.page ?? currentPageServiceRequestBids;
+              totalPagesServiceRequestBids = retryResponse.serviceRequestBidData?.meta?.totalPages ?? totalPagesServiceRequestBids;
               tabsCounts.value = [
                 serviceRequestBids.length,
                 serviceMeDataList.length,
@@ -200,6 +250,7 @@ class VendorProfileController extends GetxController {
       log("ServiceRequestBids get catch error from controller: ${e.toString()}");
     } finally {
       isLoadingServiceRequestBids.value = false;
+      isLoadingMoreServiceRequestBids.value = false;
     }
   }
 
@@ -274,11 +325,13 @@ class VendorProfileController extends GetxController {
       RefreshIndicator(
         color: AppColors.primary,
         backgroundColor: AppColors.white,
-        onRefresh: refreshServiceRequestBids,
+        onRefresh: () => refreshServiceRequestBids(isRefresh: true, isLoadingEmpty: true),
         child: CustomScrollView(
+          controller: scrollControllerServiceRequestBids,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: const [
             VendorProfileBids(),
+            VendorProfileBidList(),
           ],
         ),
       ),

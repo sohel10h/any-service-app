@@ -4,8 +4,13 @@ import 'package:service_la/services/api_service/api_service.dart';
 
 class VendorInformation extends VendorApiService {
   @override
-  Future getServiceRequestBidsProvider() async {
-    dynamic response = await ApiService().get(ApiConstant.getServiceRequestBidsProviderPath);
+  Future getServiceRequestBidsProvider({Map<String, dynamic>? queryParams}) async {
+    dynamic response = await ApiService().get(
+      ApiConstant.dynamicQueryParams(
+        ApiConstant.getServiceRequestBidsProviderPath,
+        queryParams: queryParams,
+      ),
+    );
     return response;
   }
 

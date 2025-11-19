@@ -48,7 +48,6 @@ class VendorProfileServiceRequests extends GetWidget<VendorProfileController> {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
         ]),
       ),
     );

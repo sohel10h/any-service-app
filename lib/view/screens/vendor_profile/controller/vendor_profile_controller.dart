@@ -296,7 +296,7 @@ class VendorProfileController extends GetxController {
       RefreshIndicator(
         color: AppColors.primary,
         backgroundColor: AppColors.white,
-        onRefresh: () => refreshServiceRequestsMe(isRefresh: true),
+        onRefresh: () => refreshServiceRequestsMe(isRefresh: true, isLoadingEmpty: true),
         child: CustomScrollView(
           controller: scrollControllerServiceRequests,
           physics: const AlwaysScrollableScrollPhysics(),

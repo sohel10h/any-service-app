@@ -39,6 +39,7 @@ class AppColors {
   static Color text008236 = colorFromHex('#008236');
   static Color text1447E6 = colorFromHex('#1447E6');
   static Color textCA3500 = colorFromHex('#CA3500');
+  static Color textFF6F00 = colorFromHex('#FF6F00');
   static Color containerB63B1F = colorFromHex('#B63B1F');
   static Color container4485FD = colorFromHex('#4485FD');
   static Color containerA584FF = colorFromHex('#A584FF');
@@ -86,6 +87,7 @@ class AppColors {
   static Color containerF9FAFB = colorFromHex('#F9FAFB');
   static Color containerFF6D00 = colorFromHex('#FF6D00');
   static Color containerD56551 = colorFromHex('#D56551');
+  static Color containerFFECB3 = colorFromHex('#FFECB3');
   static Color borderE3E5E5 = colorFromHex('#E3E5E5');
   static Color borderE8E8E8 = colorFromHex('#E8E8E8');
   static Color borderD5D7DA = colorFromHex('#D5D7DA');
@@ -99,6 +101,21 @@ class AppColors {
   static Color border008236 = colorFromHex('#008236');
   static Color dividerE9EAEB = colorFromHex('#E9EAEB');
   static Color backgroundD4F1F9 = colorFromHex('#D4F1F9');
+  static Color activeBorderFFB86A = colorFromHex('#FFB86A');
+  static Color activeContainerFFEDD4 = colorFromHex('#FFEDD4');
+  static Color activeTextCA3500 = colorFromHex('#CA3500');
+  static Color completedBorder16A34A = colorFromHex('#16A34A');
+  static Color completedContainerDCFCE7 = colorFromHex('#DCFCE7');
+  static Color completedText166534 = colorFromHex('#166534');
+  static Color inProgressBorderF59E0B = colorFromHex('#F59E0B');
+  static Color inProgressContainerFEF3C7 = colorFromHex('#FEF3C7');
+  static Color inProgressText92400E = colorFromHex('#92400E');
+  static Color canceledBorderDC2626 = colorFromHex('#DC2626');
+  static Color canceledContainerFEE2E2 = colorFromHex('#FEE2E2 ');
+  static Color canceledText7F1D1D = colorFromHex('#7F1D1D');
+  static Color pendingBorder6B7280 = colorFromHex('#6B7280');
+  static Color approvedBorder0D9488 = colorFromHex('#0D9488');
+  static Color rejectedBorder9333EA = colorFromHex('#9333EA');
 
   static Color colorFromHex(String hexColor) {
     final hexCode = hexColor.replaceAll('#', '');

@@ -26,12 +26,12 @@ class VendorProfileServiceRequestItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(14.r),
         side: BorderSide(
           color: serviceRequest.status == ServiceRequestStatus.active.typeValue
-              ? AppColors.borderFFB86A
+              ? AppColors.activeBorderFFB86A
               : serviceRequest.status == ServiceRequestStatus.inProgress.typeValue
-                  ? AppColors.border008236
+                  ? AppColors.inProgressBorderF59E0B
                   : serviceRequest.status == ServiceRequestStatus.completed.typeValue
-                      ? AppColors.border008236
-                      : AppColors.border008236,
+                      ? AppColors.completedBorder16A34A
+                      : AppColors.canceledBorderDC2626,
           width: 2.w,
         ),
       ),
@@ -178,12 +178,12 @@ class VendorProfileServiceRequestItem extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                         decoration: BoxDecoration(
                           color: serviceRequest.status == ServiceRequestStatus.active.typeValue
-                              ? AppColors.containerDCFCE7
+                              ? AppColors.activeContainerFFEDD4
                               : serviceRequest.status == ServiceRequestStatus.inProgress.typeValue
-                                  ? AppColors.containerFFEDD4
+                                  ? AppColors.inProgressContainerFEF3C7
                                   : serviceRequest.status == ServiceRequestStatus.completed.typeValue
-                                      ? AppColors.containerFFEDD4
-                                      : AppColors.containerF3F4F6,
+                                      ? AppColors.completedContainerDCFCE7
+                                      : AppColors.canceledContainerFEE2E2,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Text(
@@ -197,12 +197,12 @@ class VendorProfileServiceRequestItem extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 10.sp,
                             color: serviceRequest.status == ServiceRequestStatus.active.typeValue
-                                ? AppColors.text008236
+                                ? AppColors.activeTextCA3500
                                 : serviceRequest.status == ServiceRequestStatus.inProgress.typeValue
-                                    ? AppColors.textCA3500
+                                    ? AppColors.inProgressText92400E
                                     : serviceRequest.status == ServiceRequestStatus.completed.typeValue
-                                        ? AppColors.textCA3500
-                                        : AppColors.text364153,
+                                        ? AppColors.completedText166534
+                                        : AppColors.canceledText7F1D1D,
                             fontWeight: FontWeight.w600,
                           ),
                           maxLines: 1,

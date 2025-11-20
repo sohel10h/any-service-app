@@ -4,15 +4,18 @@ import 'dart:math' as math;
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 
 class RideSharingMapController extends GetxController {
   String googleApiKey = 'AIzaSyDRjM3xxFgdn4_67tNnr_XY91Qw5HXw5AU';
   final googleMapController = Rxn<GoogleMapController>();
-  final Rxn<LatLng> initialCameraTarget = Rxn<LatLng>(const LatLng(34.052235, -118.243683));
-  final RxDouble initialCameraZoom = 13.0.obs;
+  final Rxn<Position> currentPosition = Rxn<Position>();
+  final Rxn<LatLng> initialCameraTarget = Rxn<LatLng>();
+  final RxDouble initialCameraZoom = 15.0.obs;
   final RxDouble mapBottomPadding = 200.0.obs;
   final RxBool isBottomCardVisible = true.obs;
   final Rxn<LatLng> from = Rxn<LatLng>();
@@ -38,14 +41,22 @@ class RideSharingMapController extends GetxController {
   final RxString driverImageUrl = 'https://i.pravatar.cc/150?img=12'.obs;
   final RxString carImageUrl = 'https://pngimg.com/uploads/audi/audi_PNG1764.png'.obs;
   final String mastercardLogoUrl = 'https://pngimg.com/uploads/mastercard/mastercard_PNG1.png';
-
-  // Dio client
   final dio.Dio _dio = dio.Dio();
+  final appDIController = Get.find<AppDIController>();
+  final RxDouble rotationValue = 0.0.obs;
 
   @override
   void onInit() {
-    //statement
     super.onInit();
+    _initLocation();
+  }
+
+  Future<void> _initLocation() async {
+    await appDIController.locationService.startListening();
+    final pos = await appDIController.locationService.waitForFirstPosition();
+    currentPosition.value = pos;
+    initialCameraTarget.value = LatLng(pos.latitude, pos.longitude);
+    log("Got first runtime location: ${pos.latitude}, ${pos.longitude}");
   }
 
   void openBottomSheet() {

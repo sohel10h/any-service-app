@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,6 +21,72 @@ class RideSharingMapScreen extends GetWidget<RideSharingMapController> {
             top: 40.h,
             child: TopSearchCard(),
           ),
+          Positioned(
+            bottom: 20.h,
+            right: 12.w,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FloatingActionButton(
+                  heroTag: "rotationBtn",
+                  mini: true,
+                  backgroundColor: AppColors.white,
+                  child: Icon(Icons.screen_rotation, color: AppColors.primary),
+                  onPressed: () async {
+                    controller.rotationValue.value += 90.0;
+                    if (controller.rotationValue.value > 360.0) {
+                      controller.rotationValue.value = 90.0;
+                    }
+                    final mapCtrl = controller.googleMapController.value;
+                    final pos = controller.currentPosition.value;
+                    if (mapCtrl != null) {
+                      if (pos != null) {
+                        mapCtrl.animateCamera(
+                          CameraUpdate.newCameraPosition(
+                            CameraPosition(
+                              target: LatLng(pos.latitude, pos.longitude),
+                              zoom: 17.0,
+                              tilt: 40,
+                              bearing: controller.rotationValue.value,
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                ),
+                SizedBox(height: 12.h),
+                AnimatedScale(
+                  scale: 1.0,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOut,
+                  child: FloatingActionButton(
+                    heroTag: "myLocationBtn",
+                    mini: true,
+                    backgroundColor: AppColors.white,
+                    child: Icon(Icons.my_location, color: AppColors.primary),
+                    onPressed: () async {
+                      final mapCtrl = controller.googleMapController.value;
+                      final pos = controller.currentPosition.value;
+                      if (mapCtrl != null) {
+                        if (pos != null) {
+                          mapCtrl.animateCamera(
+                            CameraUpdate.newCameraPosition(
+                              CameraPosition(
+                                target: LatLng(pos.latitude, pos.longitude),
+                                zoom: 17.0,
+                                tilt: 40,
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -27,18 +94,30 @@ class RideSharingMapScreen extends GetWidget<RideSharingMapController> {
 
   Widget _buildMap(BuildContext context) {
     return Obx(() {
+      if (controller.initialCameraTarget.value == null) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Container(
+            color: Colors.white,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        );
+      }
       final initialCamera = CameraPosition(
-        target: controller.initialCameraTarget.value ?? const LatLng(34.052235, -118.243683),
+        target: controller.initialCameraTarget.value!,
         zoom: controller.initialCameraZoom.value,
       );
       return GoogleMap(
         initialCameraPosition: initialCamera,
         onMapCreated: controller.onMapCreated,
         myLocationEnabled: true,
-        myLocationButtonEnabled: true,
+        myLocationButtonEnabled: false,
         polylines: controller.polylines.toSet(),
         markers: controller.markers.toSet(),
         mapType: MapType.normal,
+        compassEnabled: false,
         trafficEnabled: false,
         buildingsEnabled: false,
         indoorViewEnabled: false,

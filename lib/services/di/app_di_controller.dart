@@ -5,6 +5,7 @@ import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/network/sign_in_model.dart';
+import 'package:service_la/services/location/location_service.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/services/websocket/websocket_service.dart';
 import 'package:service_la/common/notification/notification_service.dart';
@@ -18,6 +19,7 @@ import 'package:service_la/view/screens/service_request_details/controller/servi
 class AppDIController extends GetxController {
   String authToken = "";
   static Rx<SignInModel> signInDetails = SignInModel().obs;
+  late final LocationService locationService;
 
   @override
   void onInit() {
@@ -27,6 +29,17 @@ class AppDIController extends GetxController {
     _initBidNotifications();
     _initVendorFoundNotifications();
     _initWebsockets();
+    _setupLocationServices();
+  }
+
+  Future<void> _setupLocationServices() async {
+    locationService = await LocationService.init();
+    bool granted = await locationService.ensureLocationPermission(
+      showDialogs: false,
+    );
+    if (!granted) {
+      log("LocationService: Location not granted at startup");
+    }
   }
 
   static SignInModel setSignInDetails(SignInModel signIn) {
@@ -181,5 +194,12 @@ class AppDIController extends GetxController {
     authToken = StorageHelper.getValue(StorageHelper.authToken) ?? "";
     dynamic websocketVendorFoundResponse = StorageHelper.getObject(StorageHelper.websocketVendorFoundResponse);
     log("WebsocketVendorFoundResponse: $websocketVendorFoundResponse");
+  }
+
+  @override
+  void onClose() {
+    // if you want to dispose service here remove permanent registration
+    Get.delete<LocationService>();
+    super.onClose();
   }
 }

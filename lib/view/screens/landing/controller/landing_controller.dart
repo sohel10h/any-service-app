@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/view/screens/home/home_screen.dart';
+import 'package:service_la/services/location/location_service.dart';
 import 'package:service_la/view/screens/settings/settings_screen.dart';
 import 'package:service_la/view/widgets/home/service_request_modal.dart';
 import 'package:service_la/view/screens/ride_sharing/ride_sharing_screen.dart';
@@ -14,19 +15,34 @@ class LandingController extends GetxController {
 
   void changeIndex(int index, BuildContext context) async {
     isHideBottomNav.value = false;
-    log("Changed tab index: $index");
-    currentIndex.value = index;
-    if (currentIndex.value == 2) {
+    log("Trying to change tab index: $index");
+    if (index == 2) {
       isHideBottomNav.value = true;
       DialogHelper.showServiceRequestModal(context);
-      await Future.delayed(Duration(microseconds: 100));
+      await Future.delayed(const Duration(microseconds: 100));
       if (context.mounted) {
         DialogHelper.showBottomSheet(context);
       }
+      return;
     }
-    if (currentIndex.value == 4) {
+    if (index == 3) {
+      final granted = await _checkIsLocationEnabled();
+      if (!granted) {
+        Get.snackbar("Permission Required", "Please allow location permission to continue.");
+        return;
+      }
+    }
+    if (index == 4) {
       isHideBottomNav.value = true;
     }
+    currentIndex.value = index;
+    log("Changed tab index: $index");
+  }
+
+  Future<bool> _checkIsLocationEnabled() async {
+    final svc = LocationService.to;
+    final granted = await svc.ensureLocationPermission();
+    return granted;
   }
 
   List<Widget> screens = [

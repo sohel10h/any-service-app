@@ -51,5 +51,9 @@
         <string>This app needs access to your camera to take photos.</string>
         <key>NSPhotoLibraryAddUsageDescription</key>
         <string>This app needs to add photos to your library.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+        <string>We need your location to show nearby rides and routes.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+        <string>We need your location to continue navigation and tracking.</string>
 </dict>
 </plist>

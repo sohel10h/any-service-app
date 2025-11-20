@@ -4,10 +4,12 @@ import 'dart:math' as math;
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
+import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RideSharingMapController extends GetxController {
-  String googleApiKey = 'YOUR_MAP_KEY';
+  String googleApiKey = 'AIzaSyDRjM3xxFgdn4_67tNnr_XY91Qw5HXw5AU';
   final googleMapController = Rxn<GoogleMapController>();
   final Rx<LatLng?> from = Rxn<LatLng>();
   final Rx<LatLng?> to = Rxn<LatLng>();
@@ -19,12 +21,27 @@ class RideSharingMapController extends GetxController {
   final RxList<LatLng> _routePoints = <LatLng>[].obs;
   Duration stepDuration = const Duration(milliseconds: 800);
   double vehicleSpeedMetersPerSecond = 10.0;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _openBottomSheet();
+  }
+
+  void _openBottomSheet() {
+    if (Get.context != null) {
+      DialogHelper.showRideSharingMapBottomSheet(Get.context!);
+    }
+  }
+
   void setGoogleApiKey(String key) {
     googleApiKey = key;
   }
+
   void onMapCreated(GoogleMapController controller) {
     googleMapController.value = controller;
   }
+
   void clearRoute() {
     _animationTimer?.cancel();
     _routePoints.clear();
@@ -66,20 +83,18 @@ class RideSharingMapController extends GetxController {
     if (encoded != null && encoded.isNotEmpty) {
       final points = decodeEncodedPolyline(encoded);
       _routePoints.assignAll(points);
-
       // Add polyline on map
       polylines.add(Polyline(
         polylineId: const PolylineId('route'),
+        color: AppColors.primary,
         points: _routePoints,
         width: 6,
       ));
-
       // Place vehicle initially at the 'from' point
       if (_routePoints.isNotEmpty) {
         vehiclePosition.value = _routePoints.first;
-        markers.add(_vehicleMarker(vehiclePosition.value!, vehicleRotation.value));
+        markers.add(await _vehicleMarker(vehiclePosition.value!, vehicleRotation.value));
       }
-
       if (startMove) startVehicleAnimation();
     }
   }
@@ -89,12 +104,9 @@ class RideSharingMapController extends GetxController {
       debugPrint('Google API key is not set.');
       return null;
     }
-
     final url = Uri.parse('https://routes.googleapis.com/directions/v2:computeRoutes');
-
     try {
       final dioObj = dio.Dio();
-
       final response = await dioObj.post(
         url.toString(), // Dio expects a String URL
         options: dio.Options(
@@ -127,7 +139,6 @@ class RideSharingMapController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = response.data;
-
         final encoded = data["routes"]?[0]?["polyline"]?["encodedPolyline"];
         return encoded ?? "";
       } else {
@@ -142,28 +153,20 @@ class RideSharingMapController extends GetxController {
   void startVehicleAnimation({bool loop = false}) {
     if (_routePoints.isEmpty) return;
     _animationTimer?.cancel();
-
     int index = 0;
-
-    _animationTimer = Timer.periodic(stepDuration, (timer) {
+    _animationTimer = Timer.periodic(stepDuration, (timer) async {
       if (_routePoints.length <= 1) return;
-
       final nextIndex = (index + 1) % _routePoints.length;
       final current = _routePoints[index];
       final next = _routePoints[nextIndex];
-
       // update rotation
       vehicleRotation.value = bearingBetweenLatLng(current, next);
-
       // move vehicle to the next point (for smoother movement you can interpolate)
       vehiclePosition.value = next;
-
       // update marker set with new vehicle marker
       markers.removeWhere((m) => m.markerId.value == 'vehicle');
-      markers.add(_vehicleMarker(vehiclePosition.value!, vehicleRotation.value));
-
+      markers.add(await _vehicleMarker(vehiclePosition.value!, vehicleRotation.value));
       index = nextIndex;
-
       if (!loop && index == _routePoints.length - 1) {
         timer.cancel();
       }
@@ -174,7 +177,11 @@ class RideSharingMapController extends GetxController {
     _animationTimer?.cancel();
   }
 
-  Marker _vehicleMarker(LatLng pos, double rotation) {
+  Future<Marker> _vehicleMarker(LatLng pos, double rotation) async {
+    final BitmapDescriptor carIcon = await BitmapDescriptor.asset(
+      const ImageConfiguration(size: Size(48, 48)),
+      'assets/images/car_bentley.png',
+    );
     return Marker(
       markerId: const MarkerId('vehicle'),
       position: pos,
@@ -182,7 +189,7 @@ class RideSharingMapController extends GetxController {
       anchor: const Offset(0.5, 0.5),
       flat: true,
       infoWindow: const InfoWindow(title: 'Vehicle'),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+      icon: carIcon,
     );
   }
 
@@ -190,7 +197,6 @@ class RideSharingMapController extends GetxController {
     List<LatLng> poly = <LatLng>[];
     int index = 0, len = encoded.length;
     int lat = 0, lng = 0;
-
     while (index < len) {
       int shift = 0, result = 0;
       while (true) {
@@ -201,7 +207,6 @@ class RideSharingMapController extends GetxController {
       }
       final int dlat = ((result & 1) != 0) ? ~(result >> 1) : (result >> 1);
       lat += dlat;
-
       shift = 0;
       result = 0;
       while (true) {
@@ -212,7 +217,6 @@ class RideSharingMapController extends GetxController {
       }
       final int dlng = ((result & 1) != 0) ? ~(result >> 1) : (result >> 1);
       lng += dlng;
-
       final point = LatLng(lat / 1e5, lng / 1e5);
       poly.add(point);
     }
@@ -224,7 +228,6 @@ class RideSharingMapController extends GetxController {
     final lon1 = _toRadians(a.longitude);
     final lat2 = _toRadians(b.latitude);
     final lon2 = _toRadians(b.longitude);
-
     final dLon = lon2 - lon1;
     final y = math.sin(dLon) * math.cos(lat2);
     final x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dLon);

@@ -19,45 +19,116 @@ class VendorProfileBidItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(bottom: 12.h),
-      color: AppColors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14.r),
-        side: BorderSide(
-          color: bid.bidStatus == ServiceRequestBidStatus.pending.typeValue
-              ? AppColors.activeBorderFFB86A
-              : bid.bidStatus == ServiceRequestBidStatus.approved.typeValue
-                  ? AppColors.approvedBorder0D9488
-                  : AppColors.rejectedBorder9333EA,
-          width: 2.w,
+    return GestureDetector(
+      onTap: () => controller.goToServiceDetailsScreen(bid.serviceRequestId ?? ""),
+      child: Card(
+        margin: EdgeInsets.only(bottom: 12.h),
+        color: AppColors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14.r),
+          side: BorderSide(
+            color: bid.bidStatus == ServiceRequestBidStatus.pending.typeValue
+                ? AppColors.activeBorderFFB86A
+                : bid.bidStatus == ServiceRequestBidStatus.approved.typeValue
+                    ? AppColors.approvedBorder0D9488
+                    : AppColors.rejectedBorder9333EA,
+            width: 2.w,
+          ),
         ),
-      ),
-      elevation: 1,
-      child: Padding(
-        padding: EdgeInsets.all(12.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (bid.bidStatus == ServiceRequestBidStatus.pending.typeValue)
+        elevation: 1,
+        child: Padding(
+          padding: EdgeInsets.all(12.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (bid.bidStatus == ServiceRequestBidStatus.pending.typeValue)
+                Row(
+                  children: [
+                    Container(
+                      width: 7.w,
+                      height: 7.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.containerFF6900,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+                    Expanded(
+                      child: Text(
+                        "ACTIVE BID",
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: AppColors.containerFF6900,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              SizedBox(height: 4.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      bid.serviceRequestTitle ?? "",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppColors.text101828,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      "\$${bid.proposedPrice ?? 0}",
+                      style: TextStyle(
+                        fontSize: 17.sp,
+                        color: AppColors.container155DFC,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                "Customer: ${bid.serviceRequestUser ?? ""}",
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: AppColors.text4A5565,
+                  fontWeight: FontWeight.w400,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 4.h),
               Row(
                 children: [
-                  Container(
-                    width: 7.w,
-                    height: 7.w,
-                    decoration: BoxDecoration(
-                      color: AppColors.containerFF6900,
-                      shape: BoxShape.circle,
-                    ),
+                  SvgPicture.asset(
+                    "assets/svgs/location_outline.svg",
+                    width: 10.w,
+                    height: 10.h,
+                    colorFilter: ColorFilter.mode(AppColors.text4A5565, BlendMode.srcIn),
                   ),
                   SizedBox(width: 4.w),
                   Expanded(
                     child: Text(
-                      "ACTIVE BID",
+                      "Downtown", //TODO: this field value need to get from API
                       style: TextStyle(
                         fontSize: 10.sp,
-                        color: AppColors.containerFF6900,
-                        fontWeight: FontWeight.w700,
+                        color: AppColors.text4A5565,
+                        fontWeight: FontWeight.w400,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -65,156 +136,88 @@ class VendorProfileBidItem extends StatelessWidget {
                   ),
                 ],
               ),
-            SizedBox(height: 4.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    bid.serviceRequestTitle ?? "",
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: AppColors.text101828,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    "\$${bid.proposedPrice ?? 0}",
-                    style: TextStyle(
-                      fontSize: 17.sp,
-                      color: AppColors.container155DFC,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              "Customer: ${bid.serviceRequestUser ?? ""}",
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: AppColors.text4A5565,
-                fontWeight: FontWeight.w400,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            SizedBox(height: 4.h),
-            Row(
-              children: [
-                SvgPicture.asset(
-                  "assets/svgs/location_outline.svg",
-                  width: 10.w,
-                  height: 10.h,
-                  colorFilter: ColorFilter.mode(AppColors.text4A5565, BlendMode.srcIn),
-                ),
-                SizedBox(width: 4.w),
-                Expanded(
-                  child: Text(
-                    "Downtown", //TODO: this field value need to get from API
-                    style: TextStyle(
-                      fontSize: 10.sp,
-                      color: AppColors.text4A5565,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 4.h),
-            Divider(color: AppColors.borderE5E7EB),
-            SizedBox(height: 4.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        "assets/svgs/clock_outline.svg",
-                        width: 10.w,
-                        height: 10.h,
-                        colorFilter: ColorFilter.mode(AppColors.text4A5565, BlendMode.srcIn),
-                      ),
-                      SizedBox(width: 4.w),
-                      Flexible(
-                        child: Text(
-                          formatTimeAgo(bid.bidCreatedOn ?? ""),
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            color: AppColors.text4A5565,
-                            fontWeight: FontWeight.w400,
+              SizedBox(height: 4.h),
+              Divider(color: AppColors.borderE5E7EB),
+              SizedBox(height: 4.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          "assets/svgs/clock_outline.svg",
+                          width: 10.w,
+                          height: 10.h,
+                          colorFilter: ColorFilter.mode(AppColors.text4A5565, BlendMode.srcIn),
+                        ),
+                        SizedBox(width: 4.w),
+                        Flexible(
+                          child: Text(
+                            formatTimeAgo(bid.bidCreatedOn ?? ""),
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: AppColors.text4A5565,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  flex: 1,
-                  child: Wrap(
-                    alignment: WrapAlignment.end,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                        decoration: BoxDecoration(
-                          color: bid.serviceRequestStatus == ServiceRequestStatus.active.typeValue
-                              ? AppColors.activeContainerFFEDD4
-                              : bid.serviceRequestStatus == ServiceRequestStatus.inProgress.typeValue
-                                  ? AppColors.inProgressContainerFEF3C7
-                                  : bid.serviceRequestStatus == ServiceRequestStatus.completed.typeValue
-                                      ? AppColors.completedContainerDCFCE7
-                                      : AppColors.canceledContainerFEE2E2,
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Text(
-                          bid.serviceRequestStatus == ServiceRequestStatus.completed.typeValue
-                              ? ServiceRequestStatus.completed.name.toUpperCase()
-                              : bid.serviceRequestStatus == ServiceRequestStatus.active.typeValue
-                                  ? ServiceRequestStatus.active.name.toUpperCase()
-                                  : bid.serviceRequestStatus == ServiceRequestStatus.canceled.typeValue
-                                      ? ServiceRequestStatus.canceled.name.toUpperCase()
-                                      : ServiceRequestStatus.inProgress.name.toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 10.sp,
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    flex: 1,
+                    child: Wrap(
+                      alignment: WrapAlignment.end,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          decoration: BoxDecoration(
                             color: bid.serviceRequestStatus == ServiceRequestStatus.active.typeValue
-                                ? AppColors.activeTextCA3500
+                                ? AppColors.activeContainerFFEDD4
                                 : bid.serviceRequestStatus == ServiceRequestStatus.inProgress.typeValue
-                                    ? AppColors.inProgressText92400E
+                                    ? AppColors.inProgressContainerFEF3C7
                                     : bid.serviceRequestStatus == ServiceRequestStatus.completed.typeValue
-                                        ? AppColors.completedText166534
-                                        : AppColors.canceledText7F1D1D,
-                            fontWeight: FontWeight.w600,
+                                        ? AppColors.completedContainerDCFCE7
+                                        : AppColors.canceledContainerFEE2E2,
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
+                          child: Text(
+                            bid.serviceRequestStatus == ServiceRequestStatus.completed.typeValue
+                                ? ServiceRequestStatus.completed.name.toUpperCase()
+                                : bid.serviceRequestStatus == ServiceRequestStatus.active.typeValue
+                                    ? ServiceRequestStatus.active.name.toUpperCase()
+                                    : bid.serviceRequestStatus == ServiceRequestStatus.canceled.typeValue
+                                        ? ServiceRequestStatus.canceled.name.toUpperCase()
+                                        : ServiceRequestStatus.inProgress.name.toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: bid.serviceRequestStatus == ServiceRequestStatus.active.typeValue
+                                  ? AppColors.activeTextCA3500
+                                  : bid.serviceRequestStatus == ServiceRequestStatus.inProgress.typeValue
+                                      ? AppColors.inProgressText92400E
+                                      : bid.serviceRequestStatus == ServiceRequestStatus.completed.typeValue
+                                          ? AppColors.completedText166534
+                                          : AppColors.canceledText7F1D1D,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8.h),
-          ],
+                ],
+              ),
+              SizedBox(height: 8.h),
+            ],
+          ),
         ),
       ),
     );

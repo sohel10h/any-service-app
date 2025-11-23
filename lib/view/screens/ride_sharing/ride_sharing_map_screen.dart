@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
+import 'package:service_la/view/widgets/ride_sharing/ride_sharing_map_bottom_sheet.dart';
 import 'package:service_la/view/screens/ride_sharing/controller/ride_sharing_map_controller.dart';
 
 class RideSharingMapScreen extends GetWidget<RideSharingMapController> {
@@ -23,7 +23,7 @@ class RideSharingMapScreen extends GetWidget<RideSharingMapController> {
             child: TopSearchCard(),
           ),
           Positioned(
-            bottom: 20.h,
+            bottom: 80.h,
             right: 12.w,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -56,7 +56,7 @@ class RideSharingMapScreen extends GetWidget<RideSharingMapController> {
                     }
                   },
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: 8.h),
                 AnimatedScale(
                   scale: 1.0,
                   duration: const Duration(milliseconds: 200),
@@ -86,6 +86,13 @@ class RideSharingMapScreen extends GetWidget<RideSharingMapController> {
                   ),
                 ),
               ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: const RideSharingMapBottomSheet(),
             ),
           ),
         ],
@@ -186,7 +193,6 @@ class TopSearchCard extends StatelessWidget {
                     textController: controller.toTextController,
                     onTapSuggestion: (place) async {
                       await controller.onPlaceSelected(place, isFrom: false);
-                      controller.openBottomSheet();
                     },
                     focusNode: _toFocus,
                     suggestionsStream: controller.toAutoCompleteStream,
@@ -202,7 +208,7 @@ class TopSearchCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 4.h),
-            Obx(
+            /*Obx(
               () => Column(
                 children: [
                   Row(
@@ -252,7 +258,7 @@ class TopSearchCard extends StatelessWidget {
                   ],
                 ],
               ),
-            ),
+            ),*/
           ],
         ),
       ),

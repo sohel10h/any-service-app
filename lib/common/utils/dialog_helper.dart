@@ -4,7 +4,6 @@ import 'package:service_la/view/widgets/home/service_request_modal.dart';
 import 'package:service_la/view/widgets/common/notification_bottom_sheet.dart';
 import 'package:service_la/view/widgets/home/service_request_bottom_sheet.dart';
 import 'package:service_la/view/widgets/home/service_request_discard_bottom_sheet.dart';
-import 'package:service_la/view/widgets/ride_sharing/ride_sharing_map_bottom_sheet.dart';
 import 'package:service_la/view/widgets/home/service_request_budget_range_bottom_sheet.dart';
 
 class DialogHelper {
@@ -71,14 +70,5 @@ class DialogHelper {
     ).whenComplete(() {
       if (onClosed != null) onClosed();
     });
-  }
-
-  static void showRideSharingMapBottomSheet(BuildContext context) async {
-    await Future.delayed(const Duration(milliseconds: 50));
-    Get.bottomSheet(
-      const RideSharingMapBottomSheet(),
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-    );
   }
 }

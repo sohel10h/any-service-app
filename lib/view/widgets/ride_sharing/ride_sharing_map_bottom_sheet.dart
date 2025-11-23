@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:service_la/view/widgets/ride_sharing/ride_sharing_map_rider_item.dart';
 import 'package:service_la/view/screens/ride_sharing/controller/ride_sharing_map_controller.dart';
 
 class RideSharingMapBottomSheet extends GetWidget<RideSharingMapController> {
@@ -13,8 +14,8 @@ class RideSharingMapBottomSheet extends GetWidget<RideSharingMapController> {
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.4,
-      minChildSize: 0.3,
-      maxChildSize: 0.5,
+      minChildSize: 0.1,
+      maxChildSize: 0.9,
       builder: (context, scrollController) {
         return Container(
           decoration: BoxDecoration(
@@ -43,7 +44,7 @@ class RideSharingMapBottomSheet extends GetWidget<RideSharingMapController> {
                 ),
               ),
               SizedBox(height: 12.h),
-              Expanded(
+              Flexible(
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   controller: scrollController,
@@ -104,130 +105,29 @@ class RideSharingMapBottomSheet extends GetWidget<RideSharingMapController> {
                       ),
                     ),
                     SizedBox(height: 14.h),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(14.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(20.r),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12.r),
-                                child: Image.network(
-                                  "https://i.pravatar.cc/150?img=12",
-                                  width: 55.w,
-                                  height: 55.w,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              SizedBox(width: 12.w),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "BGK-5623",
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Toyota Sienna",
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Image.network(
-                                "https://pngimg.com/d/toyota_PNG1917.png",
-                                width: 80.w,
-                                height: 45.h,
-                                fit: BoxFit.contain,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 14.h),
-                          Container(
-                            padding: EdgeInsets.all(10.w),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(14.r),
-                            ),
-                            child: Row(
-                              children: [
-                                Image.network(
-                                  "https://pngimg.com/uploads/mastercard/mastercard_PNG1.png",
-                                  width: 40.w,
-                                  height: 30.h,
-                                  fit: BoxFit.contain,
-                                ),
-                                SizedBox(width: 8.w),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Mastercard",
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Your Balance: \$500",
-                                        style: TextStyle(
-                                          fontSize: 11.sp,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                Text(
-                                  "Book MoveEasy\n\$15.90",
-                                  style: TextStyle(
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 14.h),
-                          Container(
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: controller.rideOptions.length,
+                      itemBuilder: (context, index) {
+                        final rideOption = controller.rideOptions[index];
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.h),
+                          child: Container(
                             width: double.infinity,
-                            padding: EdgeInsets.symmetric(vertical: 14.h),
+                            padding: EdgeInsets.all(14.w),
                             decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(32.r),
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(20.r),
                             ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              "All Set for Drop-Off?",
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            child: RideSharingMapRiderItem(rideOption: rideOption),
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                    SizedBox(height: 20.h),
                   ],
                 ),
               ),
-              SizedBox(height: 12.h),
             ],
           ),
         );

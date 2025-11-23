@@ -6,7 +6,6 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:service_la/common/utils/app_colors.dart';
-import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
 
@@ -48,6 +47,58 @@ class RideSharingMapController extends GetxController {
   final TextEditingController priceTextController = TextEditingController();
   final FocusNode priceFocusNode = FocusNode();
   RxString userCountryCode = "".obs;
+  final List<Map<String, dynamic>> rideOptions = [
+    {
+      "avatar": "https://i.pravatar.cc/150?img=12",
+      "plate": "BGK-5623",
+      "car": "Toyota Sienna",
+      "carImage": "https://pngimg.com/d/toyota_PNG1917.png",
+      "paymentLogo": "https://pngimg.com/uploads/mastercard/mastercard_PNG1.png",
+      "paymentMethod": "Mastercard",
+      "balance": "\$500",
+      "bookingText": "Book MoveEasy\n\$15.90",
+    },
+    {
+      "avatar": "https://i.pravatar.cc/150?img=4",
+      "plate": "XYZ-1234",
+      "car": "Honda Civic",
+      "carImage": "https://pngimg.com/uploads/honda/small/honda_PNG102938.png",
+      "paymentLogo": "https://pngimg.com/uploads/visa/visa_PNG17.png",
+      "paymentMethod": "Visa",
+      "balance": "\$300",
+      "bookingText": "Book QuickRide\n\$12.50",
+    },
+    {
+      "avatar": "https://i.pravatar.cc/150?img=7",
+      "plate": "LMN-9876",
+      "car": "BMW X5",
+      "carImage": "https://pngimg.com/uploads/mustang/small/mustang_PNG40655.png",
+      "paymentLogo": "https://pngimg.com/uploads/paypal/paypal_PNG22.png",
+      "paymentMethod": "PayPal",
+      "balance": "\$800",
+      "bookingText": "Book LuxuryRide\n\$25.00",
+    },
+    {
+      "avatar": "https://i.pravatar.cc/150?img=1",
+      "plate": "JKL-3456",
+      "car": "Tesla Model 3",
+      "carImage": "https://pngimg.com/uploads/taxi/small/taxi_PNG74.png",
+      "paymentLogo": "https://pngimg.com/uploads/mastercard/mastercard_PNG1.png",
+      "paymentMethod": "Amex",
+      "balance": "\$1000",
+      "bookingText": "Book EcoRide\n\$18.75",
+    },
+    {
+      "avatar": "https://i.pravatar.cc/150?img=60",
+      "plate": "PQR-2468",
+      "car": "Hyundai Sonata",
+      "carImage": "https://pngimg.com/uploads/bmw/small/bmw_PNG99566.png",
+      "paymentLogo": "https://pngimg.com/uploads/visa/visa_PNG17.png",
+      "paymentMethod": "Discover",
+      "balance": "\$450",
+      "bookingText": "Book SmartRide\n\$14.20",
+    },
+  ];
 
   @override
   void onInit() {
@@ -65,12 +116,6 @@ class RideSharingMapController extends GetxController {
     userCountryCode.value = countryCode.toLowerCase();
     initialCameraTarget.value = LatLng(pos.latitude, pos.longitude);
     log("Got first runtime location: ${pos.latitude}, ${pos.longitude}");
-  }
-
-  void openBottomSheet() {
-    if (Get.context != null) {
-      DialogHelper.showRideSharingMapBottomSheet(Get.context!);
-    }
   }
 
   void onMapCreated(GoogleMapController controller) async {

@@ -147,6 +147,19 @@ class LocationService extends GetxService {
     _positionSubscription = null;
   }
 
+  Future<String?> getCountryCodeFromLatLng(Position pos) async {
+    try {
+      final places = await placemarkFromCoordinates(pos.latitude, pos.longitude);
+      if (places.isNotEmpty) {
+        final p = places.first;
+        return p.isoCountryCode;
+      }
+    } catch (e) {
+      // ignore
+    }
+    return null;
+  }
+
   Future<String?> getAddressFromLatLng(Position pos) async {
     try {
       final places = await placemarkFromCoordinates(pos.latitude, pos.longitude);

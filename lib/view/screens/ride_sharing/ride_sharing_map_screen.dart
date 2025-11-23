@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/ride_sharing/controller/ride_sharing_map_controller.dart';
 
 class RideSharingMapScreen extends GetWidget<RideSharingMapController> {
@@ -142,7 +143,10 @@ class TopSearchCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(14.r),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14.r)),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14.r),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -196,6 +200,58 @@ class TopSearchCard extends StatelessWidget {
                     child: Icon(Icons.close, size: 20.sp),
                   ),
               ],
+            ),
+            SizedBox(height: 4.h),
+            Obx(
+              () => Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Add Proposed Price",
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      Switch(
+                        onChanged: (val) => controller.isPriceToggleOn.value = val,
+                        value: controller.isPriceToggleOn.value,
+                        activeTrackColor: AppColors.primary.withValues(alpha: 0.9),
+                        inactiveThumbColor: AppColors.borderD5D7DA,
+                        inactiveTrackColor: AppColors.borderE5E7EB.withValues(alpha: 0.7),
+                        trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+                        splashRadius: 24.r,
+                      ),
+                    ],
+                  ),
+                  if (controller.isPriceToggleOn.value) ...[
+                    SizedBox(height: 4.h),
+                    CustomTextField(
+                      controller: controller.priceTextController,
+                      focusNode: controller.priceFocusNode,
+                      textInputType: TextInputType.number,
+                      labelStyle: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.text414651,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      hintText: "Enter your proposed price",
+                      hintStyle: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.text717680.withValues(alpha: .60),
+                        fontWeight: FontWeight.w400,
+                      ),
+                      prefixIconPath: "assets/svgs/dollar.svg",
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
             ),
           ],
         ),

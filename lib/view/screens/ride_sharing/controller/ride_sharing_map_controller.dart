@@ -28,8 +28,8 @@ class RideSharingMapController extends GetxController {
   Timer? _animationTimer;
   Duration stepDuration = const Duration(milliseconds: 800);
   double vehicleSpeedMetersPerSecond = 10.0;
-  final fromTextController = TextEditingController();
-  final toTextController = TextEditingController();
+  final TextEditingController fromTextController = TextEditingController();
+  final TextEditingController toTextController = TextEditingController();
   final StreamController<List<Map<String, dynamic>>> _fromSuggestionsController = StreamController.broadcast();
   final StreamController<List<Map<String, dynamic>>> _toSuggestionsController = StreamController.broadcast();
 
@@ -44,10 +44,15 @@ class RideSharingMapController extends GetxController {
   final dio.Dio _dio = dio.Dio();
   final appDIController = Get.find<AppDIController>();
   final RxDouble rotationValue = 0.0.obs;
+  RxBool isPriceToggleOn = false.obs;
+  final TextEditingController priceTextController = TextEditingController();
+  final FocusNode priceFocusNode = FocusNode();
+  RxString userCountryCode = "".obs;
 
   @override
   void onInit() {
     super.onInit();
+    _addListenerFocusNodes();
     _initLocation();
   }
 
@@ -55,6 +60,9 @@ class RideSharingMapController extends GetxController {
     await appDIController.locationService.startListening();
     final pos = await appDIController.locationService.waitForFirstPosition();
     currentPosition.value = pos;
+    fromTextController.text = await appDIController.locationService.getAddressFromLatLng(pos) ?? "";
+    final countryCode = await appDIController.locationService.getCountryCodeFromLatLng(pos) ?? "";
+    userCountryCode.value = countryCode.toLowerCase();
     initialCameraTarget.value = LatLng(pos.latitude, pos.longitude);
     log("Got first runtime location: ${pos.latitude}, ${pos.longitude}");
   }
@@ -108,13 +116,15 @@ class RideSharingMapController extends GetxController {
 
   Future<List<Map<String, dynamic>>> _fetchPlaceAutocomplete(String input) async {
     if (googleApiKey.isEmpty) return [];
+    final country = userCountryCode.value;
     final url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     try {
       final response = await _dio.get(url, queryParameters: {
         'input': input,
         'key': googleApiKey,
         'language': 'en',
-        'types': 'geocode', // adjust as needed
+        'components': 'country:$country',
+        'types': 'geocode',
       });
       if (response.statusCode == 200) {
         final data = response.data;
@@ -403,6 +413,12 @@ class RideSharingMapController extends GetxController {
     _animationTimer?.cancel();
     _fromSuggestionsController.close();
     _toSuggestionsController.close();
+    priceTextController.dispose();
+    priceFocusNode.dispose();
+  }
+
+  void _addListenerFocusNodes() {
+    priceFocusNode.addListener(update);
   }
 
   @override

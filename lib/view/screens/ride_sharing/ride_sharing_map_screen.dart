@@ -1,3 +1,4 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
@@ -159,7 +160,7 @@ class TopSearchCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.location_on, color: AppColors.primary),
+                Icon(Icons.radio_button_checked, color: AppColors.green, size: 18.sp),
                 SizedBox(width: 8.w),
                 Expanded(
                   child: PlaceField(
@@ -185,7 +186,7 @@ class TopSearchCard extends StatelessWidget {
             SizedBox(height: 8.h),
             Row(
               children: [
-                Icon(Icons.place_outlined, color: Colors.black54),
+                SvgPicture.asset("assets/svgs/location_outline.svg"),
                 SizedBox(width: 8.w),
                 Expanded(
                   child: PlaceField(

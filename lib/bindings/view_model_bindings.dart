@@ -13,6 +13,7 @@ import 'package:service_la/view/screens/ride_sharing/controller/ride_sharing_map
 import 'package:service_la/view/screens/auth/verification/controller/otp_verification_controller.dart';
 import 'package:service_la/view/screens/create_service/controller/create_service_details_controller.dart';
 import 'package:service_la/view/screens/auth/sign_up_complete/controller/sign_up_complete_controller.dart';
+import 'package:service_la/view/screens/ride_sharing/controller/ride_sharing_map_location_search_controller.dart';
 import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
 class ViewModelBindings extends Bindings {
@@ -33,5 +34,6 @@ class ViewModelBindings extends Bindings {
     Get.lazyPut<CreateServiceDetailsController>(() => CreateServiceDetailsController(), fenix: true);
     Get.lazyPut<RideSharingController>(() => RideSharingController(), fenix: true);
     Get.lazyPut<RideSharingMapController>(() => RideSharingMapController(), fenix: true);
+    Get.lazyPut<RideSharingMapLocationSearchController>(() => RideSharingMapLocationSearchController(), fenix: true);
   }
 }

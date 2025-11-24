@@ -103,8 +103,9 @@ class RideSharingMapController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _getArguments();
     _addListenerFocusNodes();
-    _initLocation();
+    // _initLocation();
   }
 
   Future<void> _initLocation() async {
@@ -464,6 +465,63 @@ class RideSharingMapController extends GetxController {
 
   void _addListenerFocusNodes() {
     priceFocusNode.addListener(update);
+  }
+
+  void _getArguments() async {
+    if (Get.arguments != null) {
+      double fromLatitude = Get.arguments["fromLatitude"] ?? 0.0;
+      double fromLongitude = Get.arguments["fromLongitude"] ?? 0.0;
+      String fromDescription = Get.arguments["fromDescription"] ?? "";
+      double toLatitude = Get.arguments["toLatitude"] ?? 0.0;
+      double toLongitude = Get.arguments["toLongitude"] ?? 0.0;
+      String toDescription = Get.arguments["toDescription"] ?? "";
+      await _configurePosition(
+        fromLatitude: fromLatitude,
+        fromLongitude: fromLongitude,
+        fromDescription: fromDescription,
+        toLatitude: toLatitude,
+        toLongitude: toLongitude,
+        toDescription: toDescription,
+      );
+    }
+  }
+
+  Future<void> _configurePosition({
+    required double fromLatitude,
+    required double fromLongitude,
+    required String fromDescription,
+    required double toLatitude,
+    required double toLongitude,
+    required String toDescription,
+  }) async {
+    final pos = Position(
+      latitude: fromLatitude,
+      longitude: fromLongitude,
+      timestamp: DateTime.now(),
+      accuracy: 0.0,
+      altitude: 0.0,
+      heading: 0.0,
+      speed: 0.0,
+      speedAccuracy: 0.0,
+      altitudeAccuracy: 0.0,
+      headingAccuracy: 0.0,
+    );
+    final countryCode = await appDIController.locationService.getCountryCodeFromLatLng(pos) ?? "";
+    userCountryCode.value = countryCode.toLowerCase();
+    initialCameraTarget.value = LatLng(fromLatitude, fromLongitude);
+    LatLng fromLatLng = LatLng(fromLatitude, fromLongitude);
+    LatLng toLatLng = LatLng(toLatitude, toLongitude);
+    from.value = fromLatLng;
+    fromTextController.text = fromDescription;
+    _fromSuggestionsController.add([]);
+    _addMarkerAt(fromLatLng, id: 'from', title: fromDescription);
+    to.value = toLatLng;
+    toTextController.text = toDescription;
+    _toSuggestionsController.add([]);
+    _addMarkerAt(toLatLng, id: 'to', title: toDescription);
+    if (from.value != null && to.value != null) {
+      await setFromTo(from.value!, to.value!, animateCamera: true, startMove: true);
+    }
   }
 
   @override

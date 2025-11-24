@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/services/api_constants/api_const.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -44,18 +43,39 @@ class HelperFunction {
     });
   }
 
-  static void snackbar(String message, {String? title, Color? textColor, Color? backgroundColor, IconData? icon, Color? iconColor}) {
-    Get.snackbar(
-      title ?? "Error",
-      message,
-      snackPosition: SnackPosition.BOTTOM,
+  static void snackbar(
+    String message, {
+    String? title,
+    Color? textColor,
+    Color? backgroundColor,
+    IconData? icon,
+    Color? iconColor,
+  }) {
+    final ctx = Get.context;
+    if (ctx == null || !ctx.mounted) return;
+    final snackBar = SnackBar(
+      content: Row(
+        children: [
+          Icon(icon ?? Icons.error, color: iconColor ?? AppColors.white),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              "${title ?? "Error"}: $message",
+              style: TextStyle(color: textColor ?? AppColors.white),
+            ),
+          ),
+        ],
+      ),
       backgroundColor: backgroundColor ?? AppColors.red,
-      colorText: textColor ?? AppColors.white,
-      icon: Icon(icon ?? Icons.error, color: iconColor ?? AppColors.white),
-      borderRadius: 10.r,
-      margin: EdgeInsets.all(8.sp),
-      duration: Duration(seconds: 3),
+      duration: const Duration(milliseconds: 1000),
+      action: SnackBarAction(
+        label: "OK",
+        textColor: AppColors.white,
+        onPressed: () => ScaffoldMessenger.of(ctx).hideCurrentSnackBar(),
+      ),
+      persist: false,
     );
+    ScaffoldMessenger.of(ctx).showSnackBar(snackBar);
   }
 
   static Future<XFile> getImageXFile(XFile picked) async {

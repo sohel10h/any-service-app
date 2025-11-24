@@ -75,7 +75,7 @@ class RideSharingMapBottomSheet extends GetWidget<RideSharingMapController> {
                                     style: TextStyle(color: AppColors.white, fontSize: 12.sp),
                                   ),
                                   Text(
-                                    "1 Mins",
+                                    controller.estimatedTime,
                                     style: TextStyle(
                                       color: AppColors.white,
                                       fontSize: 18.sp,

@@ -212,6 +212,7 @@ class RideSharingMapLocationSearchScreen extends GetWidget<RideSharingMapLocatio
                     item["lat"] ?? 0.0,
                     item["lng"] ?? 0.0,
                     item["description"] ?? "",
+                    item["estimatedTime"] ?? "",
                   );
                 },
                 child: RideSharingMapLocationSearchRecentItemTile(

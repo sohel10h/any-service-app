@@ -102,7 +102,7 @@ class RideSharingMapLocationSearchController extends GetxController {
     _initLocation();
   }
 
-  void goToRideSharingMapScreen(double toLatitude, double toLongitude, String description) => Get.toNamed(
+  void goToRideSharingMapScreen(double toLatitude, double toLongitude, String description, String estimatedTime) => Get.toNamed(
         AppRoutes.rideSharingMapScreen,
         arguments: {
           "fromLatitude": currentPosition.value?.latitude ?? 0.0,
@@ -111,6 +111,7 @@ class RideSharingMapLocationSearchController extends GetxController {
           "toLatitude": toLatitude,
           "toLongitude": toLongitude,
           "toDescription": description,
+          "estimatedTime": estimatedTime,
         },
       );
 
@@ -232,6 +233,7 @@ class RideSharingMapLocationSearchController extends GetxController {
             'lat': lat,
             'lng': lng,
             'distanceKm': distanceKm,
+            'estimatedTime': _calculateEstimatedTime(distanceKm),
           });
         }
         return results;
@@ -240,6 +242,27 @@ class RideSharingMapLocationSearchController extends GetxController {
       log('autocomplete error: $e');
     }
     return [];
+  }
+
+  String? _calculateEstimatedTime(double? distanceKm) {
+    String? estimatedTime;
+    if (distanceKm != null && distanceKm > 0) {
+      const double averageSpeedKmPerHr = 40.0; // Adjust as needed
+      final timeInHours = distanceKm / averageSpeedKmPerHr;
+      final totalMinutes = (timeInHours * 60).round();
+      if (totalMinutes < 60) {
+        estimatedTime = "$totalMinutes ${totalMinutes == 1 ? 'min' : 'mins'}";
+      } else {
+        final hours = totalMinutes ~/ 60;
+        final minutes = totalMinutes % 60;
+        if (minutes == 0) {
+          estimatedTime = "$hours ${hours == 1 ? 'hr' : 'hrs'}";
+        } else {
+          estimatedTime = "$hours ${hours == 1 ? 'hr' : 'hrs'} $minutes ${minutes == 1 ? 'min' : 'mins'}";
+        }
+      }
+    }
+    return estimatedTime;
   }
 
   double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {

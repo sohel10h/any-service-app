@@ -34,42 +34,42 @@ class RideSharingMapLocationSearchController extends GetxController {
   final RxBool isLoadingCurrentLocation = false.obs;
   List<Map<String, dynamic>> recentList = [
     {
-      "description": "Dhaka Airport",
-      "locality": "Dhaka",
-      "postal_code": "1229",
+      "description": "Changi Airport",
+      "locality": "Changi",
+      "postal_code": "819643",
       "distanceKm": "5.2",
     },
     {
-      "description": "Khulna Railway Station",
-      "locality": "Khulna",
-      "postal_code": "9100",
+      "description": "Woodlands MRT Station",
+      "locality": "Woodlands",
+      "postal_code": "738343",
       "distanceKm": "2.8",
     },
     {
-      "description": "New Market",
-      "locality": "Dhaka",
-      "postal_code": "1205",
+      "description": "Bugis Junction",
+      "locality": "Bugis",
+      "postal_code": "188021",
       "distanceKm": "7.4",
     },
   ];
 
   List<Map<String, dynamic>> suggestedList = [
     {
-      "description": "Star Cineplex",
-      "locality": "Dhaka",
-      "postal_code": "1215",
+      "description": "Golden Village VivoCity",
+      "locality": "HarbourFront",
+      "postal_code": "098585",
       "distanceKm": "3.1",
     },
     {
-      "description": "Sundarbans Forest Entry Point",
-      "locality": "Khulna",
-      "postal_code": "9200",
+      "description": "Singapore Botanic Gardens",
+      "locality": "Tanglin",
+      "postal_code": "259569",
       "distanceKm": "12.6",
     },
     {
-      "description": "Bashundhara City Mall",
-      "locality": "Dhaka",
-      "postal_code": "1219",
+      "description": "ION Orchard Mall",
+      "locality": "Orchard",
+      "postal_code": "238801",
       "distanceKm": "4.9",
     },
   ];
@@ -77,20 +77,20 @@ class RideSharingMapLocationSearchController extends GetxController {
   List<Map<String, dynamic>> savedList = [
     {
       "description": "Home",
-      "locality": "Khulna",
-      "postal_code": "9100",
+      "locality": "Yishun",
+      "postal_code": "760101",
       "distanceKm": "0.0",
     },
     {
       "description": "Office",
-      "locality": "Dhaka",
-      "postal_code": "1212",
+      "locality": "Raffles Place",
+      "postal_code": "048616",
       "distanceKm": "6.3",
     },
     {
       "description": "Favorite Restaurant",
-      "locality": "Dhaka",
-      "postal_code": "1207",
+      "locality": "Tanjong Pagar",
+      "postal_code": "088539",
       "distanceKm": "2.5",
     },
   ];

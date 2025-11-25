@@ -1,5 +1,5 @@
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
@@ -24,7 +24,7 @@ class RideSharingMapScreen extends GetWidget<RideSharingMapController> {
             child: TopSearchCard(),
           ),
           Positioned(
-            bottom: 80.h,
+            bottom: 110.h,
             right: 12.w,
             child: Column(
               mainAxisSize: MainAxisSize.min,

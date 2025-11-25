@@ -47,7 +47,11 @@ class RideSharingMapController extends GetxController {
   final TextEditingController priceTextController = TextEditingController();
   final FocusNode priceFocusNode = FocusNode();
   RxString userCountryCode = "".obs;
+  String fromDescription = "";
+  String toDescription = "";
   String estimatedTime = "";
+  double distanceKm = 0.0;
+  final RxInt tabIndex = 0.obs;
   final List<Map<String, dynamic>> rideOptions = [
     {
       "avatar": "https://i.pravatar.cc/150?img=12",
@@ -472,11 +476,12 @@ class RideSharingMapController extends GetxController {
     if (Get.arguments != null) {
       double fromLatitude = Get.arguments["fromLatitude"] ?? 0.0;
       double fromLongitude = Get.arguments["fromLongitude"] ?? 0.0;
-      String fromDescription = Get.arguments["fromDescription"] ?? "";
+      fromDescription = Get.arguments["fromDescription"] ?? "";
       double toLatitude = Get.arguments["toLatitude"] ?? 0.0;
       double toLongitude = Get.arguments["toLongitude"] ?? 0.0;
-      String toDescription = Get.arguments["toDescription"] ?? "";
+      toDescription = Get.arguments["toDescription"] ?? "";
       estimatedTime = Get.arguments["estimatedTime"] ?? "";
+      distanceKm = Get.arguments["distanceKm"] ?? 0.0;
       await _configurePosition(
         fromLatitude: fromLatitude,
         fromLongitude: fromLongitude,

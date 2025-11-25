@@ -207,14 +207,7 @@ class RideSharingMapLocationSearchScreen extends GetWidget<RideSharingMapLocatio
             itemBuilder: (_, i) {
               final item = suggestions[i];
               return InkWell(
-                onTap: () {
-                  controller.goToRideSharingMapScreen(
-                    item["lat"] ?? 0.0,
-                    item["lng"] ?? 0.0,
-                    item["description"] ?? "",
-                    item["estimatedTime"] ?? "",
-                  );
-                },
+                onTap: () => controller.onLocationItemTap(item),
                 child: RideSharingMapLocationSearchRecentItemTile(
                   title: item["description"] ?? "",
                   address: "${item["locality"] ?? ""}, ${item["postal_code"] ?? ""}",

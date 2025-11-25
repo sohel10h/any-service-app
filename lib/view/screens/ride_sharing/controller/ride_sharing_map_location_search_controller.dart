@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
@@ -102,7 +103,25 @@ class RideSharingMapLocationSearchController extends GetxController {
     _initLocation();
   }
 
-  void goToRideSharingMapScreen(double toLatitude, double toLongitude, String description, String estimatedTime) => Get.toNamed(
+  void onLocationItemTap(Map<String, dynamic> item) {
+    HelperFunction.hideKeyboard();
+    _goToRideSharingMapScreen(
+      toLatitude: item["lat"] ?? 0.0,
+      toLongitude: item["lng"] ?? 0.0,
+      description: item["description"] ?? "",
+      estimatedTime: item["estimatedTime"] ?? "",
+      distanceKm: item["distanceKm"] ?? 0.0,
+    );
+  }
+
+  void _goToRideSharingMapScreen({
+    required double toLatitude,
+    required double toLongitude,
+    required String description,
+    required String estimatedTime,
+    required double distanceKm,
+  }) =>
+      Get.toNamed(
         AppRoutes.rideSharingMapScreen,
         arguments: {
           "fromLatitude": currentPosition.value?.latitude ?? 0.0,
@@ -112,6 +131,7 @@ class RideSharingMapLocationSearchController extends GetxController {
           "toLongitude": toLongitude,
           "toDescription": description,
           "estimatedTime": estimatedTime,
+          "distanceKm": distanceKm,
         },
       );
 

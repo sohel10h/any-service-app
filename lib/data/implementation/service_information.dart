@@ -8,4 +8,10 @@ class ServiceInformation extends ServiceApiService {
     dynamic response = await ApiService().get(ApiConstant.getServicesMePath);
     return response;
   }
+
+  @override
+  Future getBestSellingServices() async {
+    dynamic response = await ApiService().get(ApiConstant.getBestSellingServicesPath);
+    return response;
+  }
 }

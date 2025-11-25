@@ -5,6 +5,7 @@ class PictureModel {
   final String? altAttribute;
   final String? titleAttribute;
   final String? virtualPath;
+  final int? displayOrder;
   final bool? isIcon;
 
   PictureModel({
@@ -14,6 +15,7 @@ class PictureModel {
     this.altAttribute,
     this.titleAttribute,
     this.virtualPath,
+    this.displayOrder,
     this.isIcon,
   });
 
@@ -24,6 +26,7 @@ class PictureModel {
         altAttribute: json["alt_attribute"],
         titleAttribute: json["title_attribute"],
         virtualPath: json["virtual_path"],
+        displayOrder: json["display_order"],
         isIcon: json["is_icon"],
       );
 
@@ -34,6 +37,7 @@ class PictureModel {
         "alt_attribute": altAttribute,
         "title_attribute": titleAttribute,
         "virtual_path": virtualPath,
+        "display_order": displayOrder,
         "is_icon": isIcon,
       };
 }

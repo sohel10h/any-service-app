@@ -3,15 +3,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
+import 'package:service_la/data/model/network/best_selling_service_model.dart';
 
 class BestSellingServicesCardItem extends StatelessWidget {
   final VoidCallback onTap;
-  final Map<String, dynamic> service;
+  final BestSellingServiceData bestSellingService;
 
   const BestSellingServicesCardItem({
     super.key,
     required this.onTap,
-    required this.service,
+    required this.bestSellingService,
   });
 
   @override
@@ -39,7 +40,7 @@ class BestSellingServicesCardItem extends StatelessWidget {
               Stack(
                 children: [
                   NetworkImageLoader(
-                    service['imagePath'],
+                    bestSellingService.picture?.virtualPath ?? "",
                     height: 84.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -56,8 +57,8 @@ class BestSellingServicesCardItem extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            service['labelColorStart'],
-                            service['labelColorEnd'],
+                            AppColors.containerFB2C36, // TODO: need this field value from API
+                            AppColors.containerFF6900, // TODO: need this field value from API
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -73,7 +74,7 @@ class BestSellingServicesCardItem extends StatelessWidget {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            service['label'],
+                            "Best", // TODO: need this field value from API
                             style: TextStyle(
                               fontSize: 9.sp,
                               color: AppColors.white,
@@ -102,7 +103,7 @@ class BestSellingServicesCardItem extends StatelessWidget {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            "${service['rating']}",
+                            "${bestSellingService.rating ?? 0}",
                             style: TextStyle(
                               fontSize: 10.sp,
                               color: AppColors.text101828,
@@ -123,7 +124,7 @@ class BestSellingServicesCardItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Text(
-                        "\$${service['price']}",
+                        "\$${bestSellingService.price?.toDouble().toStringAsFixed(2) ?? 0}",
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: AppColors.primary,
@@ -142,7 +143,7 @@ class BestSellingServicesCardItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: Text(
-                        "${service['bookedCount']} Booked",
+                        "${bestSellingService.serviceCompletedCount ?? 0} Booked",
                         style: TextStyle(
                           fontSize: 8.sp,
                           color: AppColors.white,
@@ -159,13 +160,13 @@ class BestSellingServicesCardItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      service['title'],
+                      bestSellingService.name ?? "",
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: AppColors.text101828,
                         fontWeight: FontWeight.w700,
                       ),
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 4.h),
@@ -179,7 +180,7 @@ class BestSellingServicesCardItem extends StatelessWidget {
                         SizedBox(width: 4.w),
                         Expanded(
                           child: Text(
-                            service['description'],
+                            bestSellingService.description ?? "",
                             style: TextStyle(
                               fontSize: 9.sp,
                               color: AppColors.text6A7282,

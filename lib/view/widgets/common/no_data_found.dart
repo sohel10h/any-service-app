@@ -4,13 +4,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NoDataFound extends StatelessWidget {
   final String? message;
+  final TextStyle? textStyle;
   final bool? isRefresh;
+  final double? iconSize;
   final VoidCallback? onPressed;
 
   const NoDataFound({
     super.key,
     this.message,
+    this.textStyle,
     this.isRefresh,
+    this.iconSize,
     this.onPressed,
   });
 
@@ -22,17 +26,18 @@ class NoDataFound extends StatelessWidget {
         Center(
           child: Text(
             message ?? "No data found!",
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.text6A7282,
-              fontWeight: FontWeight.w500,
-            ),
+            style: textStyle ??
+                TextStyle(
+                  fontSize: 14.sp,
+                  color: AppColors.text6A7282,
+                  fontWeight: FontWeight.w500,
+                ),
           ),
         ),
         if (isRefresh ?? true)
           IconButton(
             onPressed: onPressed ?? () {},
-            icon: Icon(Icons.refresh, color: AppColors.text6A7282),
+            icon: Icon(Icons.refresh, color: AppColors.text6A7282, size: iconSize),
           )
       ],
     );

@@ -9,12 +9,14 @@ import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
+import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/local/file_option_model.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
+import 'package:service_la/data/model/network/best_selling_service_model.dart';
 import 'package:service_la/data/model/network/upload_admin_picture_model.dart';
 import 'package:service_la/data/model/network/upload_service_request_model.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
@@ -54,6 +56,9 @@ class HomeController extends GetxController {
   RxString companyName = "".obs;
   RxList<String> attachmentIds = <String>[].obs;
   RxBool isLoadingServiceRequests = false.obs;
+  final ServiceRepo _serviceRepo = ServiceRepo();
+  RxBool isLoadingBestSellingServices = false.obs;
+  RxList<BestSellingServiceData> bestSellingServiceData = <BestSellingServiceData>[].obs;
   final List<Map<String, dynamic>> bestSellingServices = [
     {
       "label": "BEST",
@@ -115,6 +120,42 @@ class HomeController extends GetxController {
     _getStorageValue();
     _addListenerFocusNodes();
     _initFileOptions();
+    getBestSellingServices();
+  }
+
+  Future<void> getBestSellingServices() async {
+    isLoadingBestSellingServices.value = true;
+    try {
+      var response = await _serviceRepo.getBestSellingServices();
+      if (response is String) {
+        log("BestSellingServices get failed from controller response: $response");
+      } else {
+        BestSellingServiceModel sellingService = response as BestSellingServiceModel;
+        if (sellingService.status == 200 || sellingService.status == 201) {
+          bestSellingServiceData.value = sellingService.bestSellingServices ?? [];
+        } else {
+          if (sellingService.status == 401 ||
+              (sellingService.errors != null &&
+                  sellingService.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRepo.getServicesMe());
+            if (retryResponse is BestSellingServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              bestSellingServiceData.value = retryResponse.bestSellingServices ?? [];
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("BestSellingServices get failed from controller: ${sellingService.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("BestSellingServices get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingBestSellingServices.value = false;
+    }
   }
 
   void onTapPostButton(BuildContext context) async => await _postServiceRequests(context);

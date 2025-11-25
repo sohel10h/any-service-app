@@ -9,7 +9,7 @@ class CustomTextFieldShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomShimmerWidget(
       child: Container(
-        height: 48.h,
+        height: 40.h,
         decoration: BoxDecoration(
           color: Colors.grey.shade200,
           borderRadius: BorderRadius.circular(12.r),

@@ -103,8 +103,8 @@ class RideSharingMapLocationSearchController extends GetxController {
     _initLocation();
   }
 
-  void onLocationItemTap(Map<String, dynamic> item) {
-    HelperFunction.hideKeyboard();
+  void onLocationItemTap(Map<String, dynamic> item) async {
+    await HelperFunction.hideKeyboard();
     _goToRideSharingMapScreen(
       toLatitude: item["lat"] ?? 0.0,
       toLongitude: item["lng"] ?? 0.0,

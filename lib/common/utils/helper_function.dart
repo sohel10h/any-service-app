@@ -39,7 +39,7 @@ class HelperFunction {
   static Future<void> hideKeyboard() async {
     await Future.delayed(const Duration(milliseconds: 100));
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(Get.context!).unfocus();
+      if ((Get.context?.mounted ?? false)) FocusScope.of(Get.context!).unfocus();
     });
   }
 

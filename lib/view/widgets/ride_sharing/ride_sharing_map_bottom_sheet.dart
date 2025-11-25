@@ -35,21 +35,26 @@ class RideSharingMapBottomSheet extends GetWidget<RideSharingMapController> {
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(height: 12.h),
-              Container(
-                width: 60.w,
-                height: 5.h,
-                decoration: BoxDecoration(
-                  color: AppColors.white.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(4.r),
-                ),
-              ),
-              SizedBox(height: 12.h),
               Flexible(
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   controller: scrollController,
-                  physics: const BouncingScrollPhysics(),
+                  physics: const AlwaysScrollableScrollPhysics(),
                   children: [
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        Container(
+                          width: 60.w,
+                          height: 5.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.white.withValues(alpha: 0.6),
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
                     GestureDetector(
                       onTap: () async {
                         final from = LatLng(34.052235, -118.243683);

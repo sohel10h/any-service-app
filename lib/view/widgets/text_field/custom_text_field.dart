@@ -19,6 +19,7 @@ class CustomTextField extends StatefulWidget {
   final TextInputType? textInputType;
   final TextInputAction? textInputAction;
   final Color? fillColor;
+  final EdgeInsetsGeometry? contentPadding;
   final Function(String value)? onChanged;
   final String? Function(String?)? validator;
   final OutlineInputBorder? enabledBorder;
@@ -40,6 +41,7 @@ class CustomTextField extends StatefulWidget {
     this.textInputType,
     this.textInputAction,
     this.fillColor,
+    this.contentPadding,
     this.onChanged,
     this.validator,
     this.enabledBorder,
@@ -113,6 +115,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onChanged: widget.onChanged != null ? (value) => widget.onChanged?.call(value) : null,
       cursorColor: AppColors.primary,
       decoration: InputDecoration(
+        contentPadding: widget.contentPadding,
         prefixIcon: widget.prefixIconPath == null
             ? null
             : Padding(

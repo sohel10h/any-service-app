@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/view/widgets/common/custom_app_bar.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/widgets/common/custom_text_field_shimmer.dart';
 import 'package:service_la/view/widgets/ride_sharing/ride_sharing_map_location_search_item_shimmer.dart';
@@ -16,126 +15,94 @@ class RideSharingMapLocationSearchScreen extends GetWidget<RideSharingMapLocatio
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppbar(
-        isBackButton: true,
-        backButton: Padding(
-          padding: EdgeInsets.only(left: 16.w),
-          child: GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              width: 31.w,
-              height: 31.w,
-              padding: EdgeInsets.all(8.sp),
-              decoration: BoxDecoration(
-                color: AppColors.containerF3F4F6,
-                shape: BoxShape.circle,
-              ),
-              child: SvgPicture.asset(
-                "assets/svgs/arrow_left.svg",
-                width: 14.w,
-                height: 14.h,
-              ),
-            ),
-          ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 12.h),
+            _buildSearchFields(),
+            SizedBox(height: 12.h),
+            _buildPriceToggle(),
+            SizedBox(height: 12.h),
+            Expanded(child: _buildSearchResults()),
+          ],
         ),
-        centerTitle: true,
-        title: "Search Location",
-        textStyle: TextStyle(
-          fontSize: 17.sp,
-          color: AppColors.text101828,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      body: Column(
-        children: [
-          SizedBox(height: 12.h),
-          _buildSearchFields(),
-          SizedBox(height: 12.h),
-          _buildPriceToggle(),
-          SizedBox(height: 12.h),
-          Expanded(child: _buildSearchResults()),
-        ],
       ),
     );
   }
 
   Widget _buildSearchFields() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Container(
-        padding: EdgeInsets.all(14.w),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(18.r),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
+      padding: EdgeInsets.only(left: 6.w, right: 16.w),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IconButton(
+            onPressed: () => Get.back(),
+            icon: Icon(Icons.arrow_back),
+          ),
+          SizedBox(width: 8.w),
+          Column(
+            children: [
+              SizedBox(height: 12.h),
+              Icon(Icons.radio_button_checked, color: AppColors.green, size: 18.sp),
+              Container(
+                width: 5.w,
+                height: 5.w,
+                margin: EdgeInsets.symmetric(vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: AppColors.borderE5E7EB.withValues(alpha: 0.7),
+                  shape: BoxShape.circle,
+                ),
+              ),
+              Container(
+                width: 5.w,
+                height: 5.w,
+                margin: EdgeInsets.symmetric(vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: AppColors.borderE5E7EB.withValues(alpha: 0.7),
+                  shape: BoxShape.circle,
+                ),
+              ),
+              Container(
+                width: 5.w,
+                height: 5.w,
+                margin: EdgeInsets.symmetric(vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: AppColors.borderE5E7EB.withValues(alpha: 0.7),
+                  shape: BoxShape.circle,
+                ),
+              ),
+              SvgPicture.asset("assets/svgs/location_outline.svg"),
+            ],
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
               children: [
-                SizedBox(height: 12.h),
-                Icon(Icons.radio_button_checked, color: AppColors.green, size: 18.sp),
-                SizedBox(height: 2.h),
-                Container(
-                  width: 5.w,
-                  height: 5.w,
-                  margin: EdgeInsets.symmetric(vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.borderE5E7EB.withValues(alpha: 0.7),
-                    shape: BoxShape.circle,
-                  ),
+                Obx(() {
+                  final isLoading = controller.isLoadingCurrentLocation.value;
+                  return isLoading
+                      ? CustomTextFieldShimmer()
+                      : CustomTextField(
+                          controller: controller.locationFromController,
+                          focusNode: controller.locationFromFocusNode,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+                          hintText: "From",
+                          onChanged: (val) => controller.onQueryChanged(val, isFrom: true),
+                        );
+                }),
+                SizedBox(height: 16.h),
+                CustomTextField(
+                  controller: controller.locationToController,
+                  focusNode: controller.locationToFocusNode,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+                  hintText: "To",
+                  onChanged: (val) => controller.onQueryChanged(val, isFrom: false),
                 ),
-                SizedBox(height: 1.h),
-                Container(
-                  width: 5.w,
-                  height: 5.w,
-                  margin: EdgeInsets.symmetric(vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.borderE5E7EB.withValues(alpha: 0.7),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                SizedBox(height: 1.h),
-                Container(
-                  width: 5.w,
-                  height: 5.w,
-                  margin: EdgeInsets.symmetric(vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.borderE5E7EB.withValues(alpha: 0.7),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                SvgPicture.asset("assets/svgs/location_outline.svg"),
               ],
             ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                children: [
-                  Obx(() {
-                    final isLoading = controller.isLoadingCurrentLocation.value;
-                    return isLoading
-                        ? CustomTextFieldShimmer()
-                        : CustomTextField(
-                            controller: controller.locationFromController,
-                            focusNode: controller.locationFromFocusNode,
-                            hintText: "From",
-                            onChanged: (val) => controller.onQueryChanged(val, isFrom: true),
-                          );
-                  }),
-                  SizedBox(height: 12.h),
-                  CustomTextField(
-                    controller: controller.locationToController,
-                    focusNode: controller.locationToFocusNode,
-                    hintText: "To",
-                    onChanged: (val) => controller.onQueryChanged(val, isFrom: false),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

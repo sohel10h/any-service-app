@@ -185,6 +185,9 @@ class RideSharingMapBottomSheet extends GetWidget<RideSharingMapController> {
                   _buildDetailsItems("Drop-off: ${controller.toDescription}"),
                   _buildDetailsItems("Estimated Time: ${controller.estimatedTime}"),
                   _buildDetailsItems("Distance: ${controller.distanceKm} km"),
+                  controller.proposedPrice.isEmpty
+                      ? const SizedBox.shrink()
+                      : _buildDetailsItems("Proposed price: \$${controller.proposedPrice}"),
                 ],
               );
       },

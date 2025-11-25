@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/routes/app_routes.dart';
+import 'package:service_la/common/utils/helper_function.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
 
@@ -132,6 +132,7 @@ class RideSharingMapLocationSearchController extends GetxController {
           "toDescription": description,
           "estimatedTime": estimatedTime,
           "distanceKm": distanceKm,
+          "proposedPrice": priceController.text,
         },
       );
 

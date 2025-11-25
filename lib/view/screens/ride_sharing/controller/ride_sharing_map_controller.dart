@@ -51,6 +51,7 @@ class RideSharingMapController extends GetxController {
   String toDescription = "";
   String estimatedTime = "";
   double distanceKm = 0.0;
+  String proposedPrice = "";
   final RxInt tabIndex = 0.obs;
   final List<Map<String, dynamic>> rideOptions = [
     {
@@ -482,6 +483,7 @@ class RideSharingMapController extends GetxController {
       toDescription = Get.arguments["toDescription"] ?? "";
       estimatedTime = Get.arguments["estimatedTime"] ?? "";
       distanceKm = Get.arguments["distanceKm"] ?? 0.0;
+      proposedPrice = Get.arguments["proposedPrice"] ?? "";
       await _configurePosition(
         fromLatitude: fromLatitude,
         fromLongitude: fromLongitude,

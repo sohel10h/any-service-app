@@ -126,7 +126,10 @@ class RideSharingMapLocationSearchScreen extends GetWidget<RideSharingMapLocatio
                 const Spacer(),
                 Switch(
                   value: controller.isPriceToggleOn.value,
-                  onChanged: (val) => controller.isPriceToggleOn.value = val,
+                  onChanged: (val) {
+                    if (val) controller.priceController.clear();
+                    controller.isPriceToggleOn.value = val;
+                  },
                   activeTrackColor: AppColors.primary.withValues(alpha: 0.9),
                   inactiveThumbColor: AppColors.borderD5D7DA,
                   inactiveTrackColor: AppColors.borderE5E7EB.withValues(alpha: 0.7),
@@ -140,9 +143,9 @@ class RideSharingMapLocationSearchScreen extends GetWidget<RideSharingMapLocatio
               CustomTextField(
                 controller: controller.priceController,
                 focusNode: controller.priceFocusNode,
+                contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
                 textInputType: TextInputType.number,
                 hintText: "Enter proposed price",
-                prefixIconPath: "assets/svgs/dollar.svg",
               ),
             ],
           ],

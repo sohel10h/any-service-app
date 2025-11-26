@@ -7,15 +7,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/src/media_type.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
-import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
-import 'package:service_la/data/repository/service_repo.dart';
+import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/local/file_option_model.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
+import 'package:service_la/data/model/network/common/category_model.dart';
+import 'package:service_la/data/model/network/service_category_model.dart';
 import 'package:service_la/data/model/network/best_selling_service_model.dart';
 import 'package:service_la/data/model/network/upload_admin_picture_model.dart';
 import 'package:service_la/data/model/network/upload_service_request_model.dart';
@@ -59,41 +61,11 @@ class HomeController extends GetxController {
   final ServiceRepo _serviceRepo = ServiceRepo();
   RxBool isLoadingBestSellingServices = false.obs;
   RxList<BestSellingServiceData> bestSellingServiceData = <BestSellingServiceData>[].obs;
-  final List<Map<String, dynamic>> bestSellingServices = [
-    {
-      "label": "BEST",
-      "title": "Deep Home Cleaning",
-      "rating": 4.9,
-      "price": 75,
-      "bookedCount": 234,
-      "description": "Professional service",
-      "imagePath": HelperFunction.placeholderImageUrl178_84,
-      "labelColorStart": AppColors.containerFB2C36,
-      "labelColorEnd": AppColors.containerFF6900,
-    },
-    {
-      "label": "TREND",
-      "title": "AC Installation & Repair",
-      "rating": 4.8,
-      "price": 120,
-      "bookedCount": 187,
-      "description": "Expert technicians",
-      "imagePath": HelperFunction.placeholderImageUrl178_84,
-      "labelColorStart": Colors.green,
-      "labelColorEnd": Colors.green,
-    },
-    {
-      "label": "HOT",
-      "title": "Plumbing Services",
-      "rating": 4.8,
-      "price": 90,
-      "bookedCount": 150,
-      "description": "Reliable plumbers",
-      "imagePath": HelperFunction.placeholderImageUrl178_84,
-      "labelColorStart": Colors.green,
-      "labelColorEnd": Colors.green,
-    },
-  ];
+  RxList<CategoryModel> serviceCategories = <CategoryModel>[].obs;
+  RxBool isLoadingServiceCategories = false.obs;
+  RxBool isLoadingMoreServiceCategories = false.obs;
+  int currentPageServiceCategories = 1;
+  int totalPagesServiceCategories = 1;
   final List<Map<String, dynamic>> cleaningServices = [
     {
       "serviceName": "Regular House Cleaning",
@@ -121,6 +93,70 @@ class HomeController extends GetxController {
     _addListenerFocusNodes();
     _initFileOptions();
     getBestSellingServices();
+    getAdminServiceCategories();
+  }
+
+  Future<void> getAdminServiceCategories({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    if (isLoadingEmpty) totalPagesServiceCategories = 1;
+    if (isRefresh) {
+      currentPageServiceCategories = 1;
+      serviceCategories.clear();
+    }
+    if (currentPageServiceCategories > totalPagesServiceCategories) return;
+    if (isRefresh || isLoadingEmpty) {
+      isLoadingServiceCategories.value = true;
+    }
+    try {
+      Map<String, dynamic> queryParams = {
+        'page': currentPageServiceCategories,
+      };
+      var response = await _adminRepo.getAdminServiceCategories(queryParams: queryParams);
+      if (response is String) {
+        log("ServiceCategories get failed from controller response: $response");
+      } else {
+        ServiceCategoryModel serviceCategory = response as ServiceCategoryModel;
+        if (serviceCategory.status == 200 || serviceCategory.status == 201) {
+          final data = serviceCategory.serviceCategory?.categories?.where((category) => category.showInHomepage == true) ?? [];
+          if (isRefresh) {
+            serviceCategories.assignAll(data);
+          } else {
+            serviceCategories.addAll(data);
+          }
+          currentPageServiceCategories = serviceCategory.serviceCategory?.meta?.page ?? currentPageServiceCategories;
+          totalPagesServiceCategories = serviceCategory.serviceCategory?.meta?.totalPages ?? totalPagesServiceCategories;
+        } else {
+          if (serviceCategory.status == 401 ||
+              (serviceCategory.errors != null &&
+                  serviceCategory.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _adminRepo.getAdminServiceCategories(queryParams: queryParams),
+            );
+            if (retryResponse is ServiceCategoryModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              final data = retryResponse.serviceCategory?.categories?.where((category) => category.showInHomepage == true) ?? [];
+              if (isRefresh) {
+                serviceCategories.assignAll(data);
+              } else {
+                serviceCategories.addAll(data);
+              }
+              currentPageServiceCategories = retryResponse.serviceCategory?.meta?.page ?? currentPageServiceCategories;
+              totalPagesServiceCategories = retryResponse.serviceCategory?.meta?.totalPages ?? totalPagesServiceCategories;
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("ServiceCategories get failed from controller: ${serviceCategory.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("ServiceCategories get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingServiceCategories.value = false;
+      isLoadingMoreServiceCategories.value = false;
+    }
   }
 
   Future<void> getBestSellingServices() async {
@@ -224,9 +260,9 @@ class HomeController extends GetxController {
     }
   }
 
-  void goToServiceDetailsScreen(String serviceRequestId) => Get.toNamed(
-        AppRoutes.serviceRequestDetailsScreen,
-        arguments: {"serviceRequestId": serviceRequestId},
+  void goToCreateServiceDetailsScreen(String serviceId) => Get.toNamed(
+        AppRoutes.createServiceDetailsScreen,
+        arguments: {"serviceId": serviceId},
       );
 
   void clearBudgetRange() {

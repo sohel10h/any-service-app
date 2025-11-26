@@ -4,6 +4,7 @@ import 'package:service_la/data/network/admin_api_service.dart';
 import 'package:service_la/data/model/network/service_model.dart';
 import 'package:service_la/data/implementation/admin_information.dart';
 import 'package:service_la/data/model/network/create_service_model.dart';
+import 'package:service_la/data/model/network/service_category_model.dart';
 import 'package:service_la/data/model/network/upload_admin_picture_model.dart';
 import 'package:service_la/data/model/network/create_service_details_model.dart';
 
@@ -45,6 +46,16 @@ class AdminRepo {
       dynamic response = await _adminApiService.getAdminServicesDetails(serviceId);
       log("AdminServicesDetails get details from admin repo: $response");
       return CreateServiceDetailsModel.fromJson(jsonDecode(response.toString()));
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future<dynamic> getAdminServiceCategories({Map<String, dynamic>? queryParams}) async {
+    try {
+      dynamic response = await _adminApiService.getAdminServiceCategories(queryParams: queryParams);
+      log("AdminServiceCategories get details from admin repo: $response");
+      return ServiceCategoryModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
       return e;
     }

@@ -158,4 +158,16 @@ class HelperFunction {
       return null;
     }
   }
+
+  static List<Color> getCategoriesColors(String randomValue) {
+    final hash = randomValue.hashCode;
+    final index = hash % CategoryColors.values.length;
+    return CategoryColors.values[index].colors;
+  }
+
+  static String getServiceIconPath(String randomValue) {
+    final hash = randomValue.hashCode;
+    final index = hash % ServiceIcon.values.length;
+    return ServiceIcon.values[index].path;
+  }
 }

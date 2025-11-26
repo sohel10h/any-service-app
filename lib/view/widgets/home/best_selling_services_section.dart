@@ -126,7 +126,7 @@ class BestSellingServicesSection extends StatelessWidget {
             itemBuilder: (context, index) {
               final bestSellingService = bestSellingServices[index];
               return BestSellingServicesCardItem(
-                onTap: () => controller.goToServiceDetailsScreen("6f79d0b9-5127-4bfd-82ca-ebd8351dd03d"),
+                onTap: () => controller.goToCreateServiceDetailsScreen(bestSellingService.id ?? ""),
                 bestSellingService: bestSellingService,
               );
             },

@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/data/model/local/category_model.dart';
 import 'package:service_la/view/widgets/home/category_section.dart';
-import 'package:service_la/view/widgets/home/cleaning_service_section.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
+import 'package:service_la/view/widgets/home/cleaning_service_section.dart';
 import 'package:service_la/view/screens/home/controller/home_controller.dart';
 import 'package:service_la/view/widgets/home/best_selling_services_section.dart';
 
@@ -47,88 +46,7 @@ class HomeScreen extends GetWidget<HomeController> {
     return CategorySection(
       title: "Categories",
       onShowAll: () => debugPrint("Show all clicked"),
-      items: [
-        CategoryItemModel(
-          title: "Home cleaning",
-          iconPath: "assets/svgs/home_cleaning.svg",
-          providers: 245,
-          colors: [
-            AppColors.container51A2FF,
-            AppColors.container155DFC,
-          ],
-          onTap: () {},
-        ),
-        CategoryItemModel(
-          title: "Plumbing Services",
-          iconPath: "assets/svgs/plumbing.svg",
-          providers: 245,
-          colors: [
-            AppColors.containerC27AFF,
-            AppColors.container9810FA,
-          ],
-          onTap: () {},
-        ),
-        CategoryItemModel(
-          title: "At-Home Haircut",
-          iconPath: "assets/svgs/haircut.svg",
-          providers: 245,
-          colors: [
-            AppColors.containerFF8904,
-            AppColors.containerF54900,
-          ],
-          onTap: () {},
-        ),
-        CategoryItemModel(
-          title: "Locksmith Services",
-          iconPath: "assets/svgs/locksmith.svg",
-          providers: 245,
-          colors: [
-            AppColors.containerFDC700,
-            AppColors.containerD08700,
-          ],
-          onTap: () {},
-        ),
-        CategoryItemModel(
-          title: "Professional Chef",
-          iconPath: "assets/svgs/chef.svg",
-          providers: 245,
-          colors: [
-            AppColors.container05DF72,
-            AppColors.container00A63E,
-          ],
-          onTap: () {},
-        ),
-        CategoryItemModel(
-          title: "Car Cleaning",
-          iconPath: "assets/svgs/car_cleaning.svg",
-          providers: 245,
-          colors: [
-            AppColors.container00D3F2,
-            AppColors.container0092B8,
-          ],
-          onTap: () {},
-        ),
-        CategoryItemModel(
-          title: "Swimming Pool Cleaning",
-          iconPath: "assets/svgs/swimming.svg",
-          providers: 245,
-          colors: [
-            AppColors.containerFB64B6,
-            AppColors.containerE60076,
-          ],
-          onTap: () {},
-        ),
-        CategoryItemModel(
-          title: "Electricity Services",
-          iconPath: "assets/svgs/settings_services.svg",
-          providers: 245,
-          colors: [
-            AppColors.containerFF6467,
-            AppColors.containerE7000B,
-          ],
-          onTap: () {},
-        ),
-      ],
+      controller: controller,
     );
   }
 

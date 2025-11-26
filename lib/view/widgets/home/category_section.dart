@@ -1,21 +1,24 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/data/model/local/category_model.dart';
 import 'package:service_la/view/widgets/home/delayed_widget.dart';
+import 'package:service_la/view/widgets/common/no_data_found.dart';
 import 'package:service_la/view/widgets/home/category_card_item.dart';
+import 'package:service_la/view/widgets/home/category_item_shimmer.dart';
+import 'package:service_la/view/screens/home/controller/home_controller.dart';
 
 class CategorySection extends StatelessWidget {
   final String title;
   final VoidCallback onShowAll;
-  final List<CategoryItemModel> items;
+  final HomeController controller;
 
   const CategorySection({
     super.key,
     required this.title,
     required this.onShowAll,
-    required this.items,
+    required this.controller,
   });
 
   @override
@@ -70,41 +73,75 @@ class CategorySection extends StatelessWidget {
   }
 
   Widget _buildGrid() {
-    return GridView.builder(
-      padding: EdgeInsets.zero,
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: items.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1.8,
-        crossAxisSpacing: 8.w,
-        mainAxisSpacing: 12.h,
-      ),
-      itemBuilder: (context, index) {
-        final isLeft = index % 2 == 0;
-        final offsetX = isLeft ? -80.0 : 80.0;
-
-        return DelayedWidget(
-          delay: Duration(milliseconds: 120 * index),
-          child: TweenAnimationBuilder<Offset>(
-            tween: Tween(begin: Offset(offsetX, 0), end: const Offset(0, 0)),
-            duration: const Duration(milliseconds: 1000),
-            // smoother timing
-            curve: Curves.easeOutQuart,
-            // very smooth easing curve
-            builder: (context, offset, child) {
-              // fade in progressively with movement
-              final opacity = 1 - (offset.dx.abs() / 80);
-              return Opacity(
-                opacity: opacity.clamp(0.0, 1.0),
-                child: Transform.translate(offset: offset, child: child),
-              );
-            },
-            child: CategoryCardItem(item: items[index]),
+    return Obx(() {
+      final isLoading = controller.isLoadingBestSellingServices.value;
+      final serviceCategories = controller.serviceCategories;
+      if (isLoading) {
+        return GridView.builder(
+          padding: EdgeInsets.zero,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: 6,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1.8,
+            crossAxisSpacing: 8.w,
+            mainAxisSpacing: 12.h,
+          ),
+          itemBuilder: (context, index) {
+            return const CategoryItemShimmer();
+          },
+        );
+      }
+      if (serviceCategories.isEmpty) {
+        return Padding(
+          padding: EdgeInsets.all(12.sp),
+          child: NoDataFound(
+            message: "No categories found!",
+            textStyle: TextStyle(
+              fontSize: 11.sp,
+              color: AppColors.text6A7282,
+              fontWeight: FontWeight.w400,
+            ),
+            isRefresh: true,
+            iconSize: 14.sp,
+            onPressed: () => controller.getAdminServiceCategories(),
           ),
         );
-      },
-    );
+      }
+      return GridView.builder(
+        padding: EdgeInsets.zero,
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: serviceCategories.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 1.8,
+          crossAxisSpacing: 8.w,
+          mainAxisSpacing: 12.h,
+        ),
+        itemBuilder: (context, index) {
+          final serviceCategory = serviceCategories[index];
+          final isLeft = index % 2 == 0;
+          final offsetX = isLeft ? -80.0 : 80.0;
+          return DelayedWidget(
+            delay: Duration(milliseconds: 120 * index),
+            child: TweenAnimationBuilder<Offset>(
+              tween: Tween(begin: Offset(offsetX, 0), end: const Offset(0, 0)),
+              duration: const Duration(milliseconds: 1000),
+              curve: Curves.easeOutQuart,
+              builder: (context, offset, child) {
+                final opacity = 1 - (offset.dx.abs() / 80);
+                return Opacity(
+                  opacity: opacity.clamp(0.0, 1.0),
+                  child: Transform.translate(offset: offset, child: child),
+                );
+              },
+              child: CategoryCardItem(serviceCategory: serviceCategory),
+            ),
+          );
+        },
+      );
+    });
   }
 }

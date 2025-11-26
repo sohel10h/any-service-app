@@ -22,6 +22,7 @@ class ApiConstant {
   static const String postAdminPicturesPath = "/api/admin/pictures";
   static const String getPostAdminServicesPath = "/api/admin/services";
   static const String getAdminServicesDetailsPath = "/api/admin/services/#serviceId#";
+  static const String getAdminServiceCategoriesPath = "/api/admin/categories";
 
   // END POINTS - Service requests bids
   static const String postServiceRequestBidsPath = "/api/service-request-bids";

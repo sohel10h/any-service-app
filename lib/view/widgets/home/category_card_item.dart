@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/data/model/local/category_model.dart';
+import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/data/model/network/common/category_model.dart';
 
 class CategoryCardItem extends StatelessWidget {
-  final CategoryItemModel item;
+  final CategoryModel serviceCategory;
 
-  const CategoryCardItem({super.key, required this.item});
+  const CategoryCardItem({super.key, required this.serviceCategory});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: item.onTap,
+      onTap: () {}, // TODO: future implement
       borderRadius: BorderRadius.circular(16.r),
       child: Container(
         decoration: BoxDecoration(
@@ -30,21 +31,19 @@ class CategoryCardItem extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.r),
                 gradient: LinearGradient(
-                  colors: item.colors,
+                  colors: HelperFunction.getCategoriesColors(serviceCategory.name ?? ""),
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
               ),
-              child: item.iconPath.endsWith(".svg")
-                  ? Transform.scale(
-                      scale: 1.3,
-                      child: SvgPicture.asset(
-                        item.iconPath,
-                        colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
-                        fit: BoxFit.scaleDown,
-                      ),
-                    )
-                  : Image.asset(item.iconPath, color: AppColors.white),
+              child: Transform.scale(
+                scale: 1.3,
+                child: SvgPicture.asset(
+                  HelperFunction.getServiceIconPath(serviceCategory.name ?? ""),
+                  colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
             ),
             SizedBox(width: 8.w),
             Expanded(
@@ -53,7 +52,7 @@ class CategoryCardItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    item.title,
+                    serviceCategory.name ?? "",
                     style: TextStyle(
                       fontSize: 12.sp,
                       color: AppColors.black,
@@ -75,7 +74,7 @@ class CategoryCardItem extends StatelessWidget {
                       SizedBox(width: 4.w),
                       Expanded(
                         child: Text(
-                          "${item.providers} Providers",
+                          "${serviceCategory.id?.length} Providers", // TODO: need this providers value from API
                           style: TextStyle(
                             fontSize: 10.sp,
                             color: AppColors.black.withValues(alpha: .6),

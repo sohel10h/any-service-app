@@ -33,6 +33,7 @@ class RideSharingMapLocationSearchController extends GetxController {
   final RxBool isLocationFromSearch = false.obs;
   final RxBool isSearchingLocation = false.obs;
   final RxBool isLoadingCurrentLocation = false.obs;
+  String vehicleIconPath = "";
   List<Map<String, dynamic>> recentList = [
     {
       "description": "Changi Airport",
@@ -99,6 +100,7 @@ class RideSharingMapLocationSearchController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _getArguments();
     _addListenerFocusNodes();
     _initLocation();
   }
@@ -133,6 +135,7 @@ class RideSharingMapLocationSearchController extends GetxController {
           "estimatedTime": estimatedTime,
           "distanceKm": distanceKm,
           "proposedPrice": priceController.text,
+          "vehicleIconPath": vehicleIconPath,
         },
       );
 
@@ -311,6 +314,12 @@ class RideSharingMapLocationSearchController extends GetxController {
     locationFromFocusNode.addListener(update);
     locationToFocusNode.addListener(update);
     priceFocusNode.addListener(update);
+  }
+
+  void _getArguments() {
+    if (Get.arguments != null) {
+      vehicleIconPath = Get.arguments["vehicleIconPath"] ?? "";
+    }
   }
 
   @override

@@ -13,5 +13,8 @@ class RideSharingController extends GetxController {
     super.onInit();
   }
 
-  void goToRideSharingMapLocationSearchScreen() => Get.toNamed(AppRoutes.rideSharingMapLocationSearchScreen);
+  void goToRideSharingMapLocationSearchScreen(String vehicleIconPath) => Get.toNamed(
+        AppRoutes.rideSharingMapLocationSearchScreen,
+        arguments: {"vehicleIconPath": vehicleIconPath},
+      );
 }

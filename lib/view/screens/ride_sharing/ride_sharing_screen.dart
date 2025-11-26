@@ -193,7 +193,7 @@ class RideSharingScreen extends GetWidget<RideSharingController> {
                 SizedBox(height: 20.h),
                 Center(
                   child: TextButton(
-                    onPressed: controller.goToRideSharingMapLocationSearchScreen,
+                    onPressed: () {},
                     child: Text(
                       "See More",
                       style: TextStyle(
@@ -225,40 +225,43 @@ class RideSharingScreen extends GetWidget<RideSharingController> {
       ),
       child: Column(
         children: [
-          _vehicleItem("🏍", "Courier"),
+          _vehicleItem("assets/images/courier.png", "Courier"),
           Divider(color: AppColors.containerF3F4F6),
-          _vehicleItem("🚗", "Car"),
+          _vehicleItem("assets/images/car.png", "Car"),
           Divider(color: AppColors.containerF3F4F6),
-          _vehicleItem("🚙", "MPV (Weight<25KG x 2)"),
+          _vehicleItem("assets/images/mpv.png", "MPV (Weight<25KG x 2)"),
           Divider(color: AppColors.containerF3F4F6),
-          _vehicleItem("🚚", "1.7M Van"),
+          _vehicleItem("assets/images/van.png", "1.7M Van"),
           Divider(color: AppColors.containerF3F4F6),
-          _vehicleItem("🚛", "2.4M Van"),
+          _vehicleItem("assets/images/van.png", "2.4M Van"),
         ],
       ),
     );
   }
 
-  Widget _vehicleItem(String emoji, String name) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      child: Row(
-        children: [
-          Text(emoji, style: TextStyle(fontSize: 22.sp)),
-          SizedBox(width: 12.w),
-          Flexible(
-            child: Text(
-              name,
-              style: TextStyle(
-                fontSize: 15.sp,
-                color: AppColors.text101828,
-                fontWeight: FontWeight.w500,
+  Widget _vehicleItem(String iconPath, String name) {
+    return InkWell(
+      onTap: () => controller.goToRideSharingMapLocationSearchScreen(iconPath),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        child: Row(
+          children: [
+            Image.asset(iconPath),
+            SizedBox(width: 12.w),
+            Flexible(
+              child: Text(
+                name,
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  color: AppColors.text101828,
+                  fontWeight: FontWeight.w500,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

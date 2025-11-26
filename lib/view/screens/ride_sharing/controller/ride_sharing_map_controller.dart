@@ -53,6 +53,7 @@ class RideSharingMapController extends GetxController {
   double distanceKm = 0.0;
   String proposedPrice = "";
   final RxInt tabIndex = 0.obs;
+  String vehicleIconPath = "";
   final List<Map<String, dynamic>> rideOptions = [
     {
       "avatar": "https://i.pravatar.cc/150?img=12",
@@ -382,8 +383,10 @@ class RideSharingMapController extends GetxController {
 
   Future<Marker> _vehicleMarker(LatLng pos, double rotation) async {
     try {
-      final String path = 'assets/images/car_bentley.png';
-      final BitmapDescriptor carIcon = await BitmapDescriptor.asset(const ImageConfiguration(size: Size(48, 48)), path);
+      final BitmapDescriptor carIcon = await BitmapDescriptor.asset(
+        const ImageConfiguration(size: Size(48, 48)),
+        vehicleIconPath,
+      );
       return Marker(
         markerId: const MarkerId('vehicle'),
         position: pos,
@@ -484,6 +487,7 @@ class RideSharingMapController extends GetxController {
       estimatedTime = Get.arguments["estimatedTime"] ?? "";
       distanceKm = Get.arguments["distanceKm"] ?? 0.0;
       proposedPrice = Get.arguments["proposedPrice"] ?? "";
+      vehicleIconPath = Get.arguments["vehicleIconPath"] ?? "";
       await _configurePosition(
         fromLatitude: fromLatitude,
         fromLongitude: fromLongitude,

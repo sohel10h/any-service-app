@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/custom_back_button.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
+  final Widget? titleWidget;
   final String? title;
   final TextStyle? textStyle;
   final Widget? backButton;
@@ -19,6 +20,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.onBackButtonPressed,
     this.iconPath,
     this.isOnlyIcon,
+    this.titleWidget,
     this.title,
     this.backButton,
     this.textStyle,
@@ -34,17 +36,16 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       leadingWidth: leadingWidth ?? 56.w,
       centerTitle: centerTitle,
       leading: backButton ?? CustomBackButton(),
-      title: title == null
-          ? const SizedBox.shrink()
-          : Text(
-              title ?? "",
-              style: textStyle ??
-                  TextStyle(
-                    fontSize: 17.sp,
-                    color: AppColors.text101828,
-                    fontWeight: FontWeight.w700,
-                  ),
-            ),
+      title: titleWidget ??
+          Text(
+            title ?? "",
+            style: textStyle ??
+                TextStyle(
+                  fontSize: 17.sp,
+                  color: AppColors.text101828,
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
       actions: actions,
     );
   }

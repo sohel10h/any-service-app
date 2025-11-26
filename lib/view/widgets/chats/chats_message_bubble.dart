@@ -23,7 +23,7 @@ class ChatsMessageBubble extends StatelessWidget {
         padding: EdgeInsets.all(12.sp),
         constraints: const BoxConstraints(maxWidth: 260),
         decoration: BoxDecoration(
-          color: isMe ? Colors.teal.shade300 : Colors.grey.shade200,
+          color: isMe ? AppColors.primary.withValues(alpha: .9) : AppColors.dividerE9EAEB.withValues(alpha: .4),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16.r),
             topRight: Radius.circular(16.r),
@@ -37,7 +37,9 @@ class ChatsMessageBubble extends StatelessWidget {
             Text(
               message,
               style: TextStyle(
+                fontSize: 11.sp,
                 color: isMe ? AppColors.white : AppColors.black,
+                fontWeight: FontWeight.w600,
               ),
             ),
             SizedBox(height: 4.h),
@@ -45,7 +47,8 @@ class ChatsMessageBubble extends StatelessWidget {
               time,
               style: TextStyle(
                 fontSize: 10.sp,
-                color: isMe ? Colors.white70 : Colors.black54,
+                color: isMe ? AppColors.white.withValues(alpha: .7) : AppColors.text101828.withValues(alpha: .3),
+                fontWeight: FontWeight.w400,
               ),
             ),
           ],

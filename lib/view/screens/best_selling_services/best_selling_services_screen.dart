@@ -18,7 +18,7 @@ class BestSellingServicesScreen extends GetWidget<BestSellingServicesController>
       body: RefreshIndicator(
         color: AppColors.primary,
         backgroundColor: AppColors.white,
-        onRefresh: controller.getBestSellingServices,
+        onRefresh: controller.refreshBestSellingServices,
         child: Obx(() {
           final isLoading = controller.isLoadingBestSellingServices.value;
           final bestSellingServices = controller.bestSellingServiceData;
@@ -37,7 +37,7 @@ class BestSellingServicesScreen extends GetWidget<BestSellingServicesController>
               child: NoDataFound(
                 message: "No best selling services are found!",
                 isRefresh: true,
-                onPressed: controller.getBestSellingServices,
+                onPressed: controller.refreshBestSellingServices,
               ),
             );
           }

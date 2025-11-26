@@ -45,7 +45,7 @@ class HomeScreen extends GetWidget<HomeController> {
   Widget _buildCategorySection() {
     return CategorySection(
       title: "Categories",
-      onShowAll: () => debugPrint("Show all clicked"),
+      onShowAll: controller.goToCategoryScreen,
       controller: controller,
     );
   }

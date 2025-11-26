@@ -97,7 +97,7 @@ class CategorySection extends StatelessWidget {
         return Padding(
           padding: EdgeInsets.all(12.sp),
           child: NoDataFound(
-            message: "No categories found!",
+            message: "No categories are found!",
             textStyle: TextStyle(
               fontSize: 11.sp,
               color: AppColors.text6A7282,

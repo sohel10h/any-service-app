@@ -13,7 +13,7 @@ class BestSellingServicesController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getBestSellingServices();
+    _getBestSellingServices();
   }
 
   void goToCreateServiceDetailsScreen(String serviceId) => Get.toNamed(
@@ -21,7 +21,11 @@ class BestSellingServicesController extends GetxController {
         arguments: {"serviceId": serviceId},
       );
 
-  Future<void> getBestSellingServices() async {
+  Future<void> refreshBestSellingServices() async {
+    await _getBestSellingServices();
+  }
+
+  Future<void> _getBestSellingServices() async {
     isLoadingBestSellingServices.value = true;
     try {
       var response = await _serviceRepo.getBestSellingServices();

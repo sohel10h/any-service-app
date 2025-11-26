@@ -6,6 +6,7 @@ import 'package:service_la/view/screens/landing/controller/landing_controller.da
 import 'package:service_la/view/screens/settings/controller/settings_controller.dart';
 import 'package:service_la/view/screens/auth/sign_in/controller/sign_in_controller.dart';
 import 'package:service_la/view/screens/auth/sign_up/controller/sign_up_controller.dart';
+import 'package:service_la/view/screens/category_screen/controller/category_controller.dart';
 import 'package:service_la/view/screens/ride_sharing/controller/ride_sharing_controller.dart';
 import 'package:service_la/view/screens/create_service/controller/create_service_controller.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
@@ -37,5 +38,6 @@ class ViewModelBindings extends Bindings {
     Get.lazyPut<RideSharingMapController>(() => RideSharingMapController(), fenix: true);
     Get.lazyPut<RideSharingMapLocationSearchController>(() => RideSharingMapLocationSearchController(), fenix: true);
     Get.lazyPut<BestSellingServicesController>(() => BestSellingServicesController(), fenix: true);
+    Get.lazyPut<CategoryController>(() => CategoryController(), fenix: true);
   }
 }

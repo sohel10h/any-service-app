@@ -58,6 +58,11 @@ class AppTheme {
           ),
         ),
       ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: AppColors.white,
+        textStyle: TextStyle(color: AppColors.black),
+      ),
+      iconTheme: const IconThemeData(color: AppColors.text101828),
     );
   }
 }

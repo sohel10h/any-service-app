@@ -7,12 +7,20 @@ class RideSharingMapLocationSearchRecentItemTile extends StatelessWidget {
   final String title;
   final String distance;
   final String address;
+  final bool isSaved;
+  final bool isRemoved;
+  final VoidCallback? onSave;
+  final VoidCallback? onRemove;
 
   const RideSharingMapLocationSearchRecentItemTile({
     super.key,
     required this.title,
     required this.distance,
     required this.address,
+    this.isSaved = true,
+    this.isRemoved = true,
+    this.onSave,
+    this.onRemove,
   });
 
   @override
@@ -34,10 +42,35 @@ class RideSharingMapLocationSearchRecentItemTile extends StatelessWidget {
           color: AppColors.text6A7282,
           fontWeight: FontWeight.w400,
         ),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
       ),
-      trailing: Icon(
-        Icons.more_vert,
-        color: AppColors.black.withValues(alpha: .3),
+      trailing: PopupMenuButton<String>(
+        icon: Icon(
+          Icons.more_vert,
+          color: AppColors.black.withValues(alpha: .3),
+        ),
+        offset: const Offset(-35, -1),
+        position: PopupMenuPosition.under,
+        onSelected: (value) {
+          if (value == "save" && onSave != null) {
+            onSave!();
+          } else if (value == "remove" && onRemove != null) {
+            onRemove!();
+          }
+        },
+        itemBuilder: (context) => [
+          if (isSaved)
+            const PopupMenuItem<String>(
+              value: "save",
+              child: Text("Save"),
+            ),
+          if (isRemoved)
+            const PopupMenuItem<String>(
+              value: "remove",
+              child: Text("Remove"),
+            ),
+        ],
       ),
     );
   }

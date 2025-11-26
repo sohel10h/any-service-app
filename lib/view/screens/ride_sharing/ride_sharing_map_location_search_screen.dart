@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/view/widgets/common/no_data_found.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/widgets/common/custom_text_field_shimmer.dart';
 import 'package:service_la/view/widgets/ride_sharing/ride_sharing_map_location_search_item_shimmer.dart';
@@ -182,6 +183,8 @@ class RideSharingMapLocationSearchScreen extends GetWidget<RideSharingMapLocatio
                   title: item["description"] ?? "",
                   address: "${item["locality"] ?? ""}, ${item["postal_code"] ?? ""}",
                   distance: "${item["distanceKm"] ?? ""}",
+                  isRemoved: false,
+                  onSave: () => controller.saveSavedLocations([item]),
                 ),
               );
             },
@@ -237,25 +240,13 @@ class RideSharingMapLocationSearchScreen extends GetWidget<RideSharingMapLocatio
 
   Widget _buildTabContent() {
     return Obx(() {
-      List<Map<String, dynamic>> list;
-
-      if (controller.tabIndex.value == 0) {
-        list = controller.recentList;
-      } else if (controller.tabIndex.value == 1) {
-        list = controller.suggestedList;
-      } else {
-        list = controller.savedList;
-      }
-
+      List<Map<String, dynamic>> list = getCurrentList();
       if (list.isEmpty) {
-        return Center(
-          child: Text(
-            "No items found",
-            style: TextStyle(color: Colors.grey, fontSize: 13.sp),
-          ),
+        return NoDataFound(
+          message: "No locations are found!",
+          isRefresh: false,
         );
       }
-
       return ListView.separated(
         padding: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 8.h),
         itemCount: list.length,
@@ -265,14 +256,41 @@ class RideSharingMapLocationSearchScreen extends GetWidget<RideSharingMapLocatio
         ),
         itemBuilder: (_, i) {
           final item = list[i];
-          return RideSharingMapLocationSearchRecentItemTile(
-            title: item["description"] ?? "",
-            address: "${item["locality"] ?? ""}, ${item["postal_code"] ?? ""}",
-            distance: "${item["distanceKm"] ?? ""}",
+          return InkWell(
+            onTap: () => controller.onLocationItemTap(item),
+            child: RideSharingMapLocationSearchRecentItemTile(
+              title: item["description"] ?? "",
+              address: "${item["locality"] ?? ""}, ${item["postal_code"] ?? ""}",
+              distance: "${item["distanceKm"] ?? ""}",
+              isSaved: controller.tabIndex.value != 2,
+              onSave: () => controller.saveSavedLocations([item]),
+              onRemove: () => handleRemoveItem(item),
+            ),
           );
         },
       );
     });
+  }
+
+  void handleRemoveItem(Map<String, dynamic> item) {
+    final placeId = item["place_id"];
+    if (controller.tabIndex.value == 0) {
+      controller.removeRecentLocation(placeId);
+    } else if (controller.tabIndex.value == 1) {
+      controller.removeSuggestedLocation(placeId);
+    } else {
+      controller.removeSavedLocation(placeId);
+    }
+  }
+
+  RxList<Map<String, dynamic>> getCurrentList() {
+    if (controller.tabIndex.value == 0) {
+      return controller.recentLocations;
+    } else if (controller.tabIndex.value == 1) {
+      return controller.suggestedLocations;
+    } else {
+      return controller.savedLocations;
+    }
   }
 
   Widget _buildShimmerList() {

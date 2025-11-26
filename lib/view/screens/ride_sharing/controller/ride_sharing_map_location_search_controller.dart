@@ -9,6 +9,7 @@ import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
+import 'package:service_la/common/utils/storage/storage_helper.dart';
 
 class RideSharingMapLocationSearchController extends GetxController {
   String googleApiKey = 'AIzaSyDRjM3xxFgdn4_67tNnr_XY91Qw5HXw5AU';
@@ -34,73 +35,15 @@ class RideSharingMapLocationSearchController extends GetxController {
   final RxBool isSearchingLocation = false.obs;
   final RxBool isLoadingCurrentLocation = false.obs;
   String vehicleIconPath = "";
-  List<Map<String, dynamic>> recentList = [
-    {
-      "description": "Changi Airport",
-      "locality": "Changi",
-      "postal_code": "819643",
-      "distanceKm": "5.2",
-    },
-    {
-      "description": "Woodlands MRT Station",
-      "locality": "Woodlands",
-      "postal_code": "738343",
-      "distanceKm": "2.8",
-    },
-    {
-      "description": "Bugis Junction",
-      "locality": "Bugis",
-      "postal_code": "188021",
-      "distanceKm": "7.4",
-    },
-  ];
-
-  List<Map<String, dynamic>> suggestedList = [
-    {
-      "description": "Golden Village VivoCity",
-      "locality": "HarbourFront",
-      "postal_code": "098585",
-      "distanceKm": "3.1",
-    },
-    {
-      "description": "Singapore Botanic Gardens",
-      "locality": "Tanglin",
-      "postal_code": "259569",
-      "distanceKm": "12.6",
-    },
-    {
-      "description": "ION Orchard Mall",
-      "locality": "Orchard",
-      "postal_code": "238801",
-      "distanceKm": "4.9",
-    },
-  ];
-
-  List<Map<String, dynamic>> savedList = [
-    {
-      "description": "Home",
-      "locality": "Yishun",
-      "postal_code": "760101",
-      "distanceKm": "0.0",
-    },
-    {
-      "description": "Office",
-      "locality": "Raffles Place",
-      "postal_code": "048616",
-      "distanceKm": "6.3",
-    },
-    {
-      "description": "Favorite Restaurant",
-      "locality": "Tanjong Pagar",
-      "postal_code": "088539",
-      "distanceKm": "2.5",
-    },
-  ];
+  RxList<Map<String, dynamic>> recentLocations = <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> suggestedLocations = <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> savedLocations = <Map<String, dynamic>>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     _getArguments();
+    _getLocalStorageLocations();
     _addListenerFocusNodes();
     _initLocation();
   }
@@ -260,12 +203,81 @@ class RideSharingMapLocationSearchController extends GetxController {
             'estimatedTime': _calculateEstimatedTime(distanceKm),
           });
         }
+        // saved in local db
+        savedRecentLocations(results);
+        saveSuggestedLocations(results);
         return results;
       }
     } catch (e) {
       log('autocomplete error: $e');
     }
     return [];
+  }
+
+  Future<void> saveSavedLocations(List<Map<String, dynamic>> newResults) async {
+    await saveLocalStorageLocations(newResults, StorageHelper.autoCompleteSavedResponse);
+  }
+
+  Future<void> saveSuggestedLocations(List<Map<String, dynamic>> newResults) async {
+    await saveLocalStorageLocations(newResults, StorageHelper.autoCompleteSuggestedResponse);
+  }
+
+  Future<void> savedRecentLocations(List<Map<String, dynamic>> newResults) async {
+    await saveLocalStorageLocations(newResults, StorageHelper.autoCompleteRecentResponse);
+  }
+
+  Future<void> saveLocalStorageLocations(List<Map<String, dynamic>> newResults, String storageKey) async {
+    final data = StorageHelper.getObject(storageKey);
+    List<Map<String, dynamic>> existing = [];
+    if (data != null) {
+      existing = List<Map<String, dynamic>>.from(data);
+    }
+    for (var newItem in newResults) {
+      existing.removeWhere((item) => item['place_id'] == newItem['place_id']);
+    }
+    existing.insertAll(0, newResults);
+    if (existing.length > 50) {
+      existing = existing.sublist(0, 50);
+    }
+    await StorageHelper.setObject(storageKey, existing);
+    if (storageKey == StorageHelper.autoCompleteRecentResponse) {
+      recentLocations.value = existing;
+    } else if (storageKey == StorageHelper.autoCompleteSuggestedResponse) {
+      suggestedLocations.value = existing;
+    } else if (storageKey == StorageHelper.autoCompleteSavedResponse) {
+      savedLocations.value = existing;
+    }
+    log("SavedLocalStorageLocations for $storageKey: $existing");
+  }
+
+  Future<void> removeSavedLocation(String placeId) async {
+    await removeLocation(StorageHelper.autoCompleteSavedResponse, placeId);
+  }
+
+  Future<void> removeSuggestedLocation(String placeId) async {
+    await removeLocation(StorageHelper.autoCompleteSuggestedResponse, placeId);
+  }
+
+  Future<void> removeRecentLocation(String placeId) async {
+    await removeLocation(StorageHelper.autoCompleteRecentResponse, placeId);
+  }
+
+  Future<void> removeLocation(String storageKey, String placeId) async {
+    final data = StorageHelper.getObject(storageKey);
+    List<Map<String, dynamic>> existing = [];
+    if (data != null) {
+      existing = List<Map<String, dynamic>>.from(data);
+    }
+    existing.removeWhere((item) => item['place_id'] == placeId);
+    await StorageHelper.setObject(storageKey, existing);
+    if (storageKey == StorageHelper.autoCompleteRecentResponse) {
+      recentLocations.value = existing;
+    } else if (storageKey == StorageHelper.autoCompleteSuggestedResponse) {
+      suggestedLocations.value = existing;
+    } else if (storageKey == StorageHelper.autoCompleteSavedResponse) {
+      savedLocations.value = existing;
+    }
+    log("RemovedLocalStorageLocations for $storageKey: $existing");
   }
 
   String? _calculateEstimatedTime(double? distanceKm) {
@@ -314,6 +326,24 @@ class RideSharingMapLocationSearchController extends GetxController {
     locationFromFocusNode.addListener(update);
     locationToFocusNode.addListener(update);
     priceFocusNode.addListener(update);
+  }
+
+  void _getLocalStorageLocations() {
+    final recentData = StorageHelper.getObject(StorageHelper.autoCompleteRecentResponse);
+    if (recentData != null) {
+      recentLocations.value = List<Map<String, dynamic>>.from(recentData);
+      log("LocalStorageValues for recent locations: $recentLocations");
+    }
+    final suggestedData = StorageHelper.getObject(StorageHelper.autoCompleteSuggestedResponse);
+    if (suggestedData != null) {
+      suggestedLocations.value = List<Map<String, dynamic>>.from(suggestedData);
+      log("LocalStorageValues for suggested locations: $suggestedLocations");
+    }
+    final savedData = StorageHelper.getObject(StorageHelper.autoCompleteSavedResponse);
+    if (savedData != null) {
+      savedLocations.value = List<Map<String, dynamic>>.from(savedData);
+      log("LocalStorageValues for saved locations: $savedLocations");
+    }
   }
 
   void _getArguments() {

@@ -8,6 +8,9 @@ class StorageHelper {
   static const String signInResponse = "signInResponse";
   static const String websocketVendorFoundResponse = "websocketVendorFoundResponse";
   static const String notificationPermissionAsked = "notificationPermissionAsked";
+  static const String autoCompleteRecentResponse = "autoCompleteRecentResponse";
+  static const String autoCompleteSuggestedResponse = "autoCompleteSuggestedResponse";
+  static const String autoCompleteSavedResponse = "autoCompleteSavedResponse";
 
   static dynamic getValue(String key) {
     final box = GetStorage();

@@ -57,7 +57,7 @@ class BestSellingServicesSection extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: controller.goToBestSellingServicesScreen,
             child: Row(
               children: [
                 Text(

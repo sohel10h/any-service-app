@@ -96,6 +96,8 @@ class HomeController extends GetxController {
     getAdminServiceCategories();
   }
 
+  void goToBestSellingServicesScreen() => Get.toNamed(AppRoutes.bestSellingServicesScreen);
+
   Future<void> getAdminServiceCategories({bool isRefresh = false, bool isLoadingEmpty = false}) async {
     if (isLoadingEmpty) totalPagesServiceCategories = 1;
     if (isRefresh) {

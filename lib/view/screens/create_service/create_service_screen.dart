@@ -17,36 +17,7 @@ class CreateServiceScreen extends GetWidget<CreateServiceController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppbar(
-        isBackButton: true,
-        backButton: Padding(
-          padding: EdgeInsets.only(left: 16.w),
-          child: GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              width: 31.w,
-              height: 31.w,
-              padding: EdgeInsets.all(8.sp),
-              decoration: BoxDecoration(
-                color: AppColors.containerF3F4F6,
-                shape: BoxShape.circle,
-              ),
-              child: SvgPicture.asset(
-                "assets/svgs/arrow_left.svg",
-                width: 14.w,
-                height: 14.h,
-              ),
-            ),
-          ),
-        ),
-        centerTitle: true,
-        title: "Create Service",
-        textStyle: TextStyle(
-          fontSize: 17.sp,
-          color: AppColors.text101828,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
+      appBar: CustomAppbar(title: "Create Service"),
       body: SingleChildScrollView(
         child: Form(
           key: controller.formKey,

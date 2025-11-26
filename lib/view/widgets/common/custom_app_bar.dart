@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/view/widgets/common/custom_back_button.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final TextStyle? textStyle;
-  final bool isBackButton;
   final Widget? backButton;
   final bool centerTitle;
   final List<Widget> actions;
   final VoidCallback? onBackButtonPressed;
   final String? iconPath;
   final bool? isOnlyIcon;
+  final double? leadingWidth;
 
   const CustomAppbar({
     super.key,
@@ -21,32 +22,27 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.title,
     this.backButton,
     this.textStyle,
-    this.isBackButton = true,
-    this.centerTitle = false,
+    this.centerTitle = true,
     this.actions = const [],
+    this.leadingWidth,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      leadingWidth: 56,
+      leadingWidth: leadingWidth ?? 56.w,
       centerTitle: centerTitle,
-      leading: isBackButton
-          ? backButton
-          : Padding(
-              padding: EdgeInsets.only(left: 16.w),
-              child: Icon(Icons.arrow_back_ios, color: AppColors.black),
-            ),
+      leading: backButton ?? CustomBackButton(),
       title: title == null
           ? const SizedBox.shrink()
           : Text(
               title ?? "",
               style: textStyle ??
                   TextStyle(
-                    fontSize: 18.sp,
-                    color: AppColors.black,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 17.sp,
+                    color: AppColors.text101828,
+                    fontWeight: FontWeight.w700,
                   ),
             ),
       actions: actions,

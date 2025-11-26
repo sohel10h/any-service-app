@@ -12,7 +12,12 @@ class SettingsScreen extends GetWidget<SettingsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppbar(title: "Settings"),
+      appBar: CustomAppbar(
+        title: "Settings",
+        centerTitle: false,
+        leadingWidth: 2.w,
+        backButton: const SizedBox.shrink(),
+      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.only(bottom: 110.h),
         child: Column(

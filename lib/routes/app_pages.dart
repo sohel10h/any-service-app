@@ -12,6 +12,7 @@ import 'package:service_la/view/screens/ride_sharing/ride_sharing_map_screen.dar
 import 'package:service_la/view/screens/auth/verification/otp_verification_screen.dart';
 import 'package:service_la/view/screens/create_service/create_service_details_screen.dart';
 import 'package:service_la/view/screens/auth/sign_up_complete/sign_up_complete_screen.dart';
+import 'package:service_la/view/screens/best_selling_services/best_selling_services_screen.dart';
 import 'package:service_la/view/screens/ride_sharing/ride_sharing_map_location_search_screen.dart';
 import 'package:service_la/view/screens/service_request_details/service_request_details_screen.dart';
 
@@ -74,6 +75,10 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.rideSharingMapLocationSearchScreen,
       page: () => const RideSharingMapLocationSearchScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.bestSellingServicesScreen,
+      page: () => const BestSellingServicesScreen(),
     ),
   ];
 }

@@ -27,34 +27,7 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
         },
         child: Scaffold(
           appBar: CustomAppbar(
-            isBackButton: true,
-            backButton: Padding(
-              padding: EdgeInsets.only(left: 16.w),
-              child: GestureDetector(
-                onTap: () => controller.landingController.changeIndex(0, context),
-                child: Container(
-                  width: 31.w,
-                  height: 31.w,
-                  padding: EdgeInsets.all(8.sp),
-                  decoration: BoxDecoration(
-                    color: AppColors.containerF3F4F6,
-                    shape: BoxShape.circle,
-                  ),
-                  child: SvgPicture.asset(
-                    "assets/svgs/arrow_left.svg",
-                    width: 14.w,
-                    height: 14.h,
-                  ),
-                ),
-              ),
-            ),
-            centerTitle: true,
             title: "Vendor Profile",
-            textStyle: TextStyle(
-              fontSize: 17.sp,
-              color: AppColors.text101828,
-              fontWeight: FontWeight.w700,
-            ),
             actions: [
               Padding(
                 padding: EdgeInsets.only(right: 16.w),

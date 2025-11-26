@@ -15,4 +15,6 @@ abstract class AppRoutes {
   static const String rideSharingMapLocationSearchScreen = '/rideSharingMapLocationSearchScreen';
   static const String bestSellingServicesScreen = '/bestSellingServicesScreen';
   static const String categoryScreen = '/categoryScreen';
+  static const String chatsListScreen = '/chatsListScreen';
+  static const String chatsRoomScreen = '/chatsRoomScreen';
 }

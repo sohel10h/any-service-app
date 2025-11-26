@@ -99,18 +99,24 @@ class HomeScreen extends GetWidget<HomeController> {
           ),
         ),
         SizedBox(width: 16.w),
-        SvgPicture.asset(
-          "assets/svgs/notification_outline.svg",
-          width: 24.w,
-          height: 24.h,
-          colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+        GestureDetector(
+          onTap: () {},
+          child: SvgPicture.asset(
+            "assets/svgs/notification_outline.svg",
+            width: 20.w,
+            height: 20.h,
+            colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+          ),
         ),
         SizedBox(width: 16.w),
-        SvgPicture.asset(
-          "assets/svgs/message.svg",
-          width: 24.w,
-          height: 24.h,
-          colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+        GestureDetector(
+          onTap: controller.goToChatListScreen,
+          child: SvgPicture.asset(
+            "assets/svgs/message.svg",
+            width: 20.w,
+            height: 20.h,
+            colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+          ),
         ),
       ],
     );

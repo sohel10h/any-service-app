@@ -3,6 +3,8 @@ import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/view/screens/home/controller/home_controller.dart';
 import 'package:service_la/view/screens/init/controller/splash_controller.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
+import 'package:service_la/view/screens/chats/controller/chats_list_controller.dart';
+import 'package:service_la/view/screens/chats/controller/chats_room_controller.dart';
 import 'package:service_la/view/screens/settings/controller/settings_controller.dart';
 import 'package:service_la/view/screens/auth/sign_in/controller/sign_in_controller.dart';
 import 'package:service_la/view/screens/auth/sign_up/controller/sign_up_controller.dart';
@@ -39,5 +41,7 @@ class ViewModelBindings extends Bindings {
     Get.lazyPut<RideSharingMapLocationSearchController>(() => RideSharingMapLocationSearchController(), fenix: true);
     Get.lazyPut<BestSellingServicesController>(() => BestSellingServicesController(), fenix: true);
     Get.lazyPut<CategoryController>(() => CategoryController(), fenix: true);
+    Get.lazyPut<ChatsListController>(() => ChatsListController(), fenix: true);
+    Get.lazyPut<ChatsRoomController>(() => ChatsRoomController(), fenix: true);
   }
 }

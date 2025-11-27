@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
+import 'package:service_la/view/widgets/chats/chats_input_field.dart';
 import 'package:service_la/view/widgets/chats/chats_message_bubble.dart';
 import 'package:service_la/view/screens/chats/controller/chats_room_controller.dart';
 
@@ -95,40 +97,14 @@ class ChatsRoomScreen extends GetWidget<ChatsRoomController> {
               );
             }),
           ),
-          SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: controller.chatInputController,
-                      decoration: InputDecoration(
-                        hintText: "Message",
-                        filled: true,
-                        fillColor: Colors.grey.shade100,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24.r),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8.h),
-                  CircleAvatar(
-                    backgroundColor: AppColors.primary,
-                    child: IconButton(
-                      icon: const Icon(Icons.send, color: Colors.white),
-                      onPressed: () {
-                        controller.sendMessage(controller.chatInputController.text);
-                        controller.chatInputController.clear();
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
+          ChatsInputField(
+            controller: controller.chatInputController,
+            isTyping: controller.isTyping,
+            onSend: () => controller.sendMessage(controller.chatInputController.text),
+            onMic: () => log("Mic pressed"),
+            onEmoji: () => log("Emoji pressed"),
+            onAttachment: () => log("Attachment pressed"),
+            onCamera: () => log("Camera pressed"),
           ),
         ],
       ),

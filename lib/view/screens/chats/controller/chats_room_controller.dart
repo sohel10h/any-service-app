@@ -6,6 +6,7 @@ class ChatsRoomController extends GetxController {
   String id = "";
   final chatInputController = TextEditingController();
   final RxList<Map<String, dynamic>> messages = <Map<String, dynamic>>[].obs;
+  final RxBool isTyping = false.obs;
 
   @override
   void onInit() {

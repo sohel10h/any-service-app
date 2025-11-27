@@ -17,4 +17,5 @@ abstract class AppRoutes {
   static const String categoryScreen = '/categoryScreen';
   static const String chatsListScreen = '/chatsListScreen';
   static const String chatsRoomScreen = '/chatsRoomScreen';
+  static const String chatsArchivedListScreen = '/chatsArchivedListScreen';
 }

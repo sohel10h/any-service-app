@@ -10,6 +10,9 @@ class ChatsTile extends StatelessWidget {
   final String time;
   final int unread;
   final VoidCallback onTap;
+  final VoidCallback onLongPress;
+  final bool isSelected;
+  final bool isPinned;
 
   const ChatsTile({
     super.key,
@@ -19,71 +22,114 @@ class ChatsTile extends StatelessWidget {
     required this.time,
     required this.unread,
     required this.onTap,
+    required this.onLongPress,
+    this.isSelected = false,
+    this.isPinned = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.only(
-        left: 10.w,
-        right: 12.w,
-      ),
-      onTap: onTap,
-      leading: NetworkImageLoader(
-        iconPath,
-        height: 48.w,
-        width: 48.w,
-        radius: 30.r,
-      ),
-      title: Text(
-        name,
-        style: TextStyle(
-          fontSize: 12.sp,
-          color: AppColors.text101828,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      subtitle: Text(
-        lastMessage,
-        style: TextStyle(
-          fontSize: 11.sp,
-          color: AppColors.text6A7282,
-          fontWeight: FontWeight.w400,
-        ),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            time,
-            style: TextStyle(
-              fontSize: 10.sp,
-              color: AppColors.text6A7282,
-              fontWeight: FontWeight.w400,
+    return Container(
+      color: isSelected ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 12.w),
+        onTap: onTap,
+        onLongPress: onLongPress,
+        leading: Stack(
+          fit: StackFit.loose,
+          children: [
+            NetworkImageLoader(
+              iconPath,
+              height: 44.w,
+              width: 44.w,
+              radius: 30.r,
             ),
-          ),
-          if (unread > 0)
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                shape: BoxShape.circle,
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(8.sp),
-                child: Text(
-                  unread.toString(),
-                  style: TextStyle(
-                    fontSize: 9.sp,
+            if (isSelected)
+              Positioned(
+                right: 0.0,
+                bottom: 0.0,
+                child: Container(
+                  height: 18.w,
+                  width: 18.w,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.check,
                     color: AppColors.white,
-                    fontWeight: FontWeight.w400,
+                    size: 12.sp,
                   ),
                 ),
               ),
-            )
-        ],
+          ],
+        ),
+        title: Text(
+          name,
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: AppColors.text101828,
+            fontWeight: FontWeight.w600,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+          lastMessage,
+          style: TextStyle(
+            fontSize: 11.sp,
+            color: AppColors.text6A7282,
+            fontWeight: FontWeight.w400,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              time,
+              style: TextStyle(
+                fontSize: 10.sp,
+                color: unread > 0 ? AppColors.primary : AppColors.text6A7282,
+                fontWeight: unread > 0 ? FontWeight.w600 : FontWeight.w400,
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isPinned) SizedBox(height: 4.h),
+                if (isPinned)
+                  Padding(
+                    padding: EdgeInsets.only(right: 4.w, top: unread > 0 ? 0.h : 4.h),
+                    child: Icon(
+                      Icons.push_pin,
+                      size: 14.sp,
+                      color: AppColors.text6A7282,
+                    ),
+                  ),
+                if (unread > 0)
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.sp),
+                      child: Text(
+                        unread.toString(),
+                        style: TextStyle(
+                          fontSize: 9.sp,
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

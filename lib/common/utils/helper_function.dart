@@ -29,7 +29,13 @@ class HelperFunction {
   static String userImage3 = "https://i.pravatar.cc/150?img=4";
   static String userImage4 = "https://i.pravatar.cc/150?img=7";
   static String userImage5 = "https://i.pravatar.cc/150?img=12";
-  static String userImage6 = "https://i.pravatar.cc/150?img=60";
+  static String userImage6 = "https://i.pravatar.cc/150?img=17";
+  static String userImage7 = "https://i.pravatar.cc/150?img=51";
+  static String userImage8 = "https://i.pravatar.cc/150?img=52";
+  static String userImage9 = "https://i.pravatar.cc/150?img=56";
+  static String userImage10 = "https://i.pravatar.cc/150?img=57";
+  static String userImage11 = "https://i.pravatar.cc/150?img=59";
+  static String userImage12 = "https://i.pravatar.cc/150?img=60";
 
   static void changeStatusBarColor() => SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(

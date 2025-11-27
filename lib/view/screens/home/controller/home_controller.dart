@@ -96,7 +96,7 @@ class HomeController extends GetxController {
     getAdminServiceCategories();
   }
 
-  void goToChatListScreen() => Get.toNamed(AppRoutes.chatsListScreen);
+  void goToChatsListScreen() => Get.toNamed(AppRoutes.chatsListScreen);
 
   void goToCategoryScreen() => Get.toNamed(AppRoutes.categoryScreen);
 

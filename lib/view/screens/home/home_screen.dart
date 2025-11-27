@@ -110,7 +110,7 @@ class HomeScreen extends GetWidget<HomeController> {
         ),
         SizedBox(width: 16.w),
         GestureDetector(
-          onTap: controller.goToChatListScreen,
+          onTap: controller.goToChatsListScreen,
           child: SvgPicture.asset(
             "assets/svgs/message.svg",
             width: 20.w,

@@ -1,135 +1,23 @@
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
-import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/data/repository/chats_repo.dart';
+import 'package:service_la/data/model/network/chat_model.dart';
+import 'package:service_la/services/api_service/api_service.dart';
 
 class ChatsListController extends GetxController {
   final TextEditingController searchController = TextEditingController();
-  final RxList<Map<String, dynamic>> chats = <Map<String, dynamic>>[
-    {
-      "id": "1",
-      "name": "Jack",
-      "lastMessage": "Hello, how are you?",
-      "iconPath": HelperFunction.userImage1,
-      "time": "10:24 AM",
-      "unread": 2,
-      "archived": false,
-      "pinned": false,
-    },
-    {
-      "id": "2",
-      "name": "Dan",
-      "lastMessage": "Thanks!",
-      "iconPath": HelperFunction.userImage2,
-      "time": "Yesterday",
-      "unread": 0,
-      "archived": false,
-      "pinned": false,
-    },
-    {
-      "id": "3",
-      "name": "Archived User",
-      "lastMessage": "Archived message",
-      "iconPath": HelperFunction.userImage3,
-      "time": "Nov 20",
-      "unread": 0,
-      "archived": true,
-      "pinned": false,
-    },
-    {
-      "id": "4",
-      "name": "Mike",
-      "lastMessage": "Nice to meet you!, what are you doing now?",
-      "iconPath": HelperFunction.userImage4,
-      "time": "Sept 11",
-      "unread": 5,
-      "archived": false,
-      "pinned": false,
-    },
-    {
-      "id": "5",
-      "name": "Nash",
-      "lastMessage": "Are you there?",
-      "iconPath": HelperFunction.userImage5,
-      "time": "Dec 9",
-      "unread": 1,
-      "archived": true,
-      "pinned": false,
-    },
-    {
-      "id": "6",
-      "name": "Trot",
-      "lastMessage": "I am fine!",
-      "iconPath": HelperFunction.userImage6,
-      "time": "Jan 2",
-      "unread": 7,
-      "archived": false,
-      "pinned": false,
-    },
-    {
-      "id": "7",
-      "name": "Moris",
-      "lastMessage": "OK, I am asking now",
-      "iconPath": HelperFunction.userImage7,
-      "time": "Mar 29",
-      "unread": 1,
-      "archived": false,
-      "pinned": false,
-    },
-    {
-      "id": "8",
-      "name": "Kelvin",
-      "lastMessage": "No, he didn't replied yet, do you need anything now?",
-      "iconPath": HelperFunction.userImage8,
-      "time": "Feb 13",
-      "unread": 0,
-      "archived": false,
-      "pinned": false,
-    },
-    {
-      "id": "9",
-      "name": "Becker",
-      "lastMessage": "Tomorrow is the last day of the selection, please come first in the morning in the Anfield",
-      "iconPath": HelperFunction.userImage9,
-      "time": "Apr 9",
-      "unread": 3,
-      "archived": false,
-      "pinned": false,
-    },
-    {
-      "id": "10",
-      "name": "Luke",
-      "lastMessage": "Tomorrow is the last day of the selection, please come first in the morning in the Anfield",
-      "iconPath": HelperFunction.userImage10,
-      "time": "Apr 9",
-      "unread": 8,
-      "archived": false,
-      "pinned": false,
-    },
-    {
-      "id": "11",
-      "name": "Rossie",
-      "lastMessage": "Dan is with us right now, you can go there alone, thank you!",
-      "iconPath": HelperFunction.userImage11,
-      "time": "Jul 7",
-      "unread": 2,
-      "archived": false,
-      "pinned": false,
-    },
-    {
-      "id": "12",
-      "name": "Rossie",
-      "lastMessage": "Sir, I am asking for the gravity system, I need to know it very urgently, could you please describe?",
-      "iconPath": HelperFunction.userImage12,
-      "time": "May 7",
-      "unread": 3,
-      "archived": true,
-      "pinned": false,
-    },
-  ].obs;
   final RxString searchQuery = "".obs;
   final RxInt selectedBottomIndex = 0.obs;
   var selectedChats = <String>[].obs;
+  final ChatsRepo _chatsRepo = ChatsRepo();
+  RxList<Conversation> conversations = <Conversation>[].obs;
+  RxBool isLoadingChats = false.obs;
+  RxBool isLoadingMoreChats = false.obs;
+  int currentPageChats = 1;
+  int totalPagesChats = 1;
+  RxList<Conversation> archivedChats = <Conversation>[].obs;
 
   @override
   void onInit() {
@@ -137,46 +25,139 @@ class ChatsListController extends GetxController {
     searchController.addListener(() {
       searchQuery.value = searchController.text;
     });
+    _getChats(isRefresh: true);
+  }
+
+  void goToChatsArchivedListScreen() => Get.toNamed(AppRoutes.chatsArchivedListScreen);
+
+  void goToChatsRoomScreen(String username, {String? id}) {
+    Get.toNamed(
+      AppRoutes.chatsRoomScreen,
+      arguments: {
+        "username": username,
+        "id": id,
+      },
+    );
+  }
+
+  Future<void> loadNextPageChats() async {
+    if (currentPageChats < totalPagesChats && !isLoadingMoreChats.value) {
+      isLoadingMoreChats.value = true;
+      currentPageChats++;
+      await _getChats();
+    }
+  }
+
+  Future<void> refreshChatsData({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    await _getChats(isRefresh: isRefresh, isLoadingEmpty: isLoadingEmpty);
+  }
+
+  Future<void> _getChats({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    if (isLoadingEmpty) totalPagesChats = 1;
+    if (isRefresh) {
+      currentPageChats = 1;
+      conversations.clear();
+    }
+    if (currentPageChats > totalPagesChats) return;
+    if (isRefresh || isLoadingEmpty) {
+      isLoadingChats.value = true;
+    }
+    try {
+      Map<String, dynamic> queryParams = {
+        'page': currentPageChats,
+      };
+      var response = await _chatsRepo.getChats(queryParams: queryParams);
+      if (response is String) {
+        log("Chats get failed from controller response: $response");
+      } else {
+        ChatModel chat = response as ChatModel;
+        if (chat.status == 200 || chat.status == 201) {
+          final data = chat.chatData?.conversations ?? [];
+          if (isRefresh) {
+            conversations.assignAll(data);
+          } else {
+            conversations.addAll(data);
+          }
+          currentPageChats = chat.chatData?.meta?.page ?? currentPageChats;
+          totalPagesChats = chat.chatData?.meta?.totalPages ?? totalPagesChats;
+        } else {
+          if (chat.status == 401 ||
+              (chat.errors != null &&
+                  chat.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _chatsRepo.getChats(queryParams: queryParams),
+            );
+            if (retryResponse is ChatModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              final data = retryResponse.chatData?.conversations ?? [];
+              if (isRefresh) {
+                conversations.assignAll(data);
+              } else {
+                conversations.addAll(data);
+              }
+              currentPageChats = chat.chatData?.meta?.page ?? currentPageChats;
+              totalPagesChats = chat.chatData?.meta?.totalPages ?? totalPagesChats;
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("Chats get failed from controller: ${chat.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("Chats get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingChats.value = false;
+      isLoadingMoreChats.value = false;
+    }
   }
 
   RxBool get isSelectedPinned => RxBool(
         selectedChats.any((id) {
-          final chat = chats.firstWhere(
-            (c) => c['id'] == id,
-            orElse: () => {},
+          final chat = conversations.firstWhere(
+            (c) => c.id == id,
           );
-          return chat.isNotEmpty && chat['pinned'] == true;
+          return (chat.id?.isNotEmpty ?? false) && chat.pinned == true;
         }),
       );
 
   RxBool get isSelectedArchived => RxBool(
         selectedChats.any((id) {
-          final chat = chats.firstWhere(
-            (c) => c['id'] == id,
-            orElse: () => {},
+          final chat = conversations.firstWhere(
+            (c) => c.id == id,
           );
-          return chat.isNotEmpty && chat['archived'] == true;
+          return (chat.id?.isNotEmpty ?? false) && chat.archived == true;
         }),
       );
 
   void togglePin(List<String> ids) {
+    if (ids.isEmpty) return;
     for (var id in ids) {
-      final idx = chats.indexWhere((c) => c['id'] == id);
+      final idx = conversations.indexWhere((c) => c.id == id);
       if (idx == -1) continue;
-      final current = chats[idx];
-      chats[idx] = {...current, "pinned": !(current['pinned'] as bool)};
+      final current = conversations[idx];
+      conversations[idx].pinned = !(current.pinned ?? false);
     }
-    chats.sort((a, b) {
-      final aPinned = a['pinned'] == true;
-      final bPinned = b['pinned'] == true;
+    conversations.sort((a, b) {
+      final aPinned = a.pinned == true;
+      final bPinned = b.pinned == true;
       if (aPinned && !bPinned) return -1;
       if (!aPinned && bPinned) return 1;
       return 0;
     });
   }
 
+  void deleteArchivedChats(List<String> ids) {
+    if (ids.isEmpty) return;
+    archivedChats.removeWhere((c) => ids.contains(c.id));
+  }
+
   void deleteChats(List<String> ids) {
-    chats.removeWhere((c) => ids.contains(c['id']));
+    if (ids.isEmpty) return;
+    conversations.removeWhere((c) => ids.contains(c.id));
   }
 
   void toggleSelection(String chatId) {
@@ -193,38 +174,28 @@ class ChatsListController extends GetxController {
 
   bool get isSelectionMode => selectedChats.isNotEmpty;
 
-  List<Map<String, dynamic>> get filteredChats {
+  List<Conversation> get filteredChats {
+    conversations.any((c) => c.archived = false);
     final q = searchQuery.value.trim().toLowerCase();
-    final list = chats.where((c) => c['archived'] == false).toList();
+    final list = conversations.where((c) => c.archived == false).toList();
     if (q.isEmpty) return list;
     return list.where((c) {
-      final name = (c['name'] ?? '').toString().toLowerCase();
-      final last = (c['lastMessage'] ?? '').toString().toLowerCase();
+      final name = (c.lastMessage?.senderName ?? '').toString().toLowerCase();
+      final last = (c.lastMessage?.content ?? '').toString().toLowerCase();
       return name.contains(q) || last.contains(q);
     }).toList();
   }
 
-  RxList<Map<String, dynamic>> get archivedChats => chats.where((c) => c['archived'] == true).toList().obs;
-
-  void goToChatsArchivedListScreen() => Get.toNamed(AppRoutes.chatsArchivedListScreen);
-
-  void goToChatsRoomScreen(String username, {String? id}) {
-    Get.toNamed(
-      AppRoutes.chatsRoomScreen,
-      arguments: {
-        "username": username,
-        "id": id,
-      },
-    );
-  }
-
   void toggleArchive(List<String> ids) {
+    if (ids.isEmpty) return;
     for (var id in ids) {
-      final idx = chats.indexWhere((c) => c['id'] == id);
+      final idx = conversations.indexWhere((c) => c.id == id);
       if (idx == -1) return;
-      final current = chats[idx];
-      chats[idx] = {...current, "archived": !(current['archived'] as bool)};
+      final current = conversations[idx];
+      final isArchived = !(current.archived ?? false);
+      conversations[idx].archived = isArchived;
     }
+    archivedChats.assignAll(conversations.where((c) => c.archived == true));
   }
 
   void changeBottomNav(int idx) {
@@ -232,20 +203,22 @@ class ChatsListController extends GetxController {
   }
 
   void addNewContact(String iconPath) {
-    final newItem = {
-      "id": DateTime.now().millisecondsSinceEpoch.toString(),
-      "name": "New Contact ${chats.length + 1}",
-      "lastMessage": "Hi there!",
-      "iconPath": iconPath,
-      "time": "Now",
-      "unread": 0,
-      "archived": false,
-      "pinned": false,
-    };
-    chats.insert(0, newItem);
-    chats.sort((a, b) {
-      final aPinned = a['pinned'] == true;
-      final bPinned = b['pinned'] == true;
+    final newItem = Conversation(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      pinned: false,
+      archived: false,
+      lastMessage: LastMessage(
+        id: "${DateTime.now().millisecondsSinceEpoch.toString()}_last_message",
+        senderId: "${DateTime.now().millisecondsSinceEpoch.toString()}_sender_id",
+        senderName: "Test User",
+        content: "Hi, how are you?",
+        createdAt: DateTime.now().toIso8601String(),
+      ),
+    );
+    conversations.insert(0, newItem);
+    conversations.sort((a, b) {
+      final aPinned = a.pinned == true;
+      final bPinned = b.pinned == true;
       if (aPinned && !bPinned) return -1;
       if (!aPinned && bPinned) return 1;
       return 0;
@@ -254,7 +227,7 @@ class ChatsListController extends GetxController {
 
   Future<void> refreshChats() async {
     await Future.delayed(const Duration(milliseconds: 600));
-    chats.refresh();
+    conversations.refresh();
   }
 
   @override

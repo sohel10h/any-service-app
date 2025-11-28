@@ -2,7 +2,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/view/widgets/chats/chats_tile.dart';
+import 'package:service_la/common/utils/date_time/format_date.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
 import 'package:service_la/view/screens/chats/controller/chats_list_controller.dart';
 
@@ -33,7 +35,7 @@ class ChatsArchivedListScreen extends GetWidget<ChatsListController> {
                     icon: const Icon(Icons.delete_outline_outlined, color: AppColors.black),
                     tooltip: "Delete",
                     onPressed: () {
-                      controller.deleteChats(controller.selectedChats);
+                      controller.deleteArchivedChats(controller.selectedChats);
                       controller.clearSelection();
                     },
                   ),
@@ -56,7 +58,7 @@ class ChatsArchivedListScreen extends GetWidget<ChatsListController> {
                       if (value == "mute") {
                         // handle mute
                       } else if (value == "delete") {
-                        controller.deleteChats(controller.selectedChats);
+                        controller.deleteArchivedChats(controller.selectedChats);
                         controller.clearSelection();
                       }
                     },
@@ -85,6 +87,9 @@ class ChatsArchivedListScreen extends GetWidget<ChatsListController> {
           child: Column(
             children: [
               Obx(() {
+                for (var c in controller.archivedChats) {
+                  c.archived = true;
+                }
                 final list = controller.archivedChats;
                 return Expanded(
                   child: RefreshIndicator(
@@ -131,16 +136,17 @@ class ChatsArchivedListScreen extends GetWidget<ChatsListController> {
                             itemBuilder: (context, index) {
                               final chat = list[index];
                               return ChatsTile(
-                                name: chat["name"],
-                                lastMessage: chat["lastMessage"],
-                                iconPath: chat["iconPath"],
-                                time: chat["time"],
-                                unread: chat["unread"],
+                                name: chat.lastMessage?.senderName ?? "",
+                                lastMessage: chat.lastMessage?.content ?? "",
+                                iconPath: HelperFunction.userImage7,
+                                time: formatChatTimestamp(DateTime.tryParse(chat.lastMessage?.createdAt ?? "")),
+                                unread: 2,
+                                // TODO: need this value from API
                                 onTap: () => controller.selectedChats.isNotEmpty
-                                    ? controller.toggleSelection(chat["id"])
-                                    : controller.goToChatsRoomScreen(chat["name"], id: chat["id"]),
-                                onLongPress: () => controller.toggleSelection(chat["id"]),
-                                isSelected: controller.selectedChats.contains(chat["id"]),
+                                    ? controller.toggleSelection(chat.id ?? "")
+                                    : controller.goToChatsRoomScreen(chat.lastMessage?.senderName ?? "", id: chat.id ?? ""),
+                                onLongPress: () => controller.toggleSelection(chat.id ?? ""),
+                                isSelected: controller.selectedChats.contains(chat.id ?? ""),
                               );
                             },
                           ),

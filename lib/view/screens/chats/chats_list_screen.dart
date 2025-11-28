@@ -5,6 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/view/widgets/chats/chats_tile.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
+import 'package:service_la/common/utils/date_time/format_date.dart';
+import 'package:service_la/view/widgets/chats/chats_tile_shimmer.dart';
+import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/screens/chats/controller/chats_list_controller.dart';
 
 class ChatsListScreen extends GetWidget<ChatsListController> {
@@ -109,6 +112,7 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                 child: TextField(
                   controller: controller.searchController,
+                  onChanged: (val) => controller.searchQuery.value = val,
                   decoration: InputDecoration(
                     hintText: "Search...",
                     prefixIcon: const Icon(Icons.search),
@@ -131,100 +135,130 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                   textInputAction: TextInputAction.search,
                 ),
               ),
-              Obx(() {
-                final archivedCount = controller.archivedChats.length;
-                final list = controller.filteredChats;
-                return Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: controller.refreshChats,
-                    child: list.isEmpty && archivedCount == 0
-                        ? Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.message_outlined,
-                                    size: 64.sp,
+              Expanded(
+                child: RefreshIndicator(
+                  color: AppColors.primary,
+                  backgroundColor: AppColors.white,
+                  onRefresh: () => controller.refreshChatsData(isRefresh: true),
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (notification) {
+                      if (notification.metrics.pixels >= notification.metrics.maxScrollExtent - 100) {
+                        controller.loadNextPageChats();
+                      }
+                      return false;
+                    },
+                    child: Obx(() {
+                      final archivedCount = controller.archivedChats.length;
+                      final list = controller.filteredChats;
+                      final isLoading = controller.isLoadingChats.value;
+                      final isLoadingMore = controller.isLoadingMoreChats.value;
+                      if (isLoading) {
+                        return ListView.separated(
+                          padding: EdgeInsets.only(top: 4.h, bottom: 100.h),
+                          itemCount: 10,
+                          separatorBuilder: (_, __) => SizedBox(height: 8.h),
+                          itemBuilder: (_, __) => const ChatsTileShimmer(),
+                        );
+                      }
+                      if (list.isEmpty && archivedCount == 0) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.message_outlined,
+                                  size: 64.sp,
+                                  color: AppColors.text6A7282,
+                                ),
+                                SizedBox(height: 16.h),
+                                Text(
+                                  "No chats yet",
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
                                     color: AppColors.text6A7282,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  SizedBox(height: 16.h),
-                                  Text(
-                                    "No chats yet",
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: AppColors.text6A7282,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  "Start a conversation\n and it will appear here.",
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    color: AppColors.text6A7282.withValues(alpha: 0.7),
+                                    fontWeight: FontWeight.w400,
                                   ),
-                                  SizedBox(height: 8.h),
-                                  Text(
-                                    "Start a conversation\n and it will appear here.",
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      color: AppColors.text6A7282.withValues(alpha: 0.7),
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
-                          )
-                        : ListView.separated(
-                            padding: EdgeInsets.only(top: 4.h, bottom: 100.h),
-                            itemCount: list.length + (archivedCount > 0 ? 1 : 0),
-                            separatorBuilder: (_, __) => SizedBox(height: 8.h),
-                            itemBuilder: (context, index) {
-                              if (archivedCount > 0 && index == 0) {
-                                return ListTile(
-                                  contentPadding: EdgeInsets.only(left: 16.w, right: 12.w),
-                                  onTap: controller.goToChatsArchivedListScreen,
-                                  leading: CircleAvatar(
-                                    radius: 18.r,
-                                    backgroundColor: Colors.grey.shade200,
-                                    child: Icon(Icons.archive_outlined, size: 18.sp),
-                                  ),
-                                  title: Text(
-                                    "Archived",
-                                    style: TextStyle(
-                                      fontSize: 13.sp,
-                                      color: AppColors.text6A7282,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  trailing: Text(
-                                    "$archivedCount",
-                                    style: TextStyle(
-                                      fontSize: 10.sp,
-                                      color: AppColors.text6A7282,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    textAlign: TextAlign.end,
-                                  ),
-                                );
-                              }
-                              final chatIndex = archivedCount > 0 ? index - 1 : index;
-                              final chat = list[chatIndex];
-                              return ChatsTile(
-                                name: chat["name"],
-                                lastMessage: chat["lastMessage"],
-                                iconPath: chat["iconPath"],
-                                time: chat["time"],
-                                unread: chat["unread"],
-                                onTap: () => controller.selectedChats.isNotEmpty
-                                    ? controller.toggleSelection(chat["id"])
-                                    : controller.goToChatsRoomScreen(chat["name"], id: chat["id"]),
-                                onLongPress: () => controller.toggleSelection(chat["id"]),
-                                isSelected: controller.selectedChats.contains(chat["id"]),
-                                isPinned: chat["pinned"] == true,
-                              );
-                            },
                           ),
+                        );
+                      }
+                      return ListView.separated(
+                        padding: EdgeInsets.only(top: 4.h, bottom: 100.h),
+                        itemCount: list.length + (archivedCount > 0 ? 1 : 0),
+                        separatorBuilder: (_, __) => SizedBox(height: 8.h),
+                        itemBuilder: (context, index) {
+                          if (index < list.length) {
+                            if (archivedCount > 0 && index == 0) {
+                              return ListTile(
+                                contentPadding: EdgeInsets.only(left: 16.w, right: 12.w),
+                                onTap: controller.goToChatsArchivedListScreen,
+                                leading: CircleAvatar(
+                                  radius: 18.r,
+                                  backgroundColor: Colors.grey.shade200,
+                                  child: Icon(Icons.archive_outlined, size: 18.sp),
+                                ),
+                                title: Text(
+                                  "Archived",
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: AppColors.text6A7282,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                trailing: Text(
+                                  "$archivedCount",
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    color: AppColors.text6A7282,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  textAlign: TextAlign.end,
+                                ),
+                              );
+                            }
+                            final chatIndex = archivedCount > 0 ? index - 1 : index;
+                            final chat = list[chatIndex];
+                            return ChatsTile(
+                              name: chat.lastMessage?.senderName ?? "",
+                              lastMessage: chat.lastMessage?.content ?? "",
+                              iconPath: HelperFunction.userImage4,
+                              time: formatChatTimestamp(DateTime.tryParse(chat.lastMessage?.createdAt ?? "")),
+                              unread: 2,
+                              // TODO: need this value from API
+                              onTap: () => controller.selectedChats.isNotEmpty
+                                  ? controller.toggleSelection(chat.id ?? "")
+                                  : controller.goToChatsRoomScreen(chat.lastMessage?.senderName ?? "", id: chat.id ?? ""),
+                              onLongPress: () => controller.toggleSelection(chat.id ?? ""),
+                              isSelected: controller.selectedChats.contains(chat.id ?? ""),
+                              isPinned: chat.pinned == true,
+                            );
+                          }
+                          return isLoadingMore
+                              ? Padding(
+                                  padding: EdgeInsets.all(16.sp),
+                                  child: const CustomProgressBar(),
+                                )
+                              : const SizedBox.shrink();
+                        },
+                      );
+                    }),
                   ),
-                );
-              }),
+                ),
+              ),
             ],
           ),
         ),

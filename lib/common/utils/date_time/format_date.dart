@@ -34,6 +34,26 @@ String formatTimeAgo(String dateTime) {
   }
 }
 
+String formatChatTimestamp(DateTime? utcTime) {
+  if (utcTime == null) return "";
+  try {
+    final localTime = utcTime.toLocal();
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final messageDate = DateTime(localTime.year, localTime.month, localTime.day);
+    if (messageDate == today) {
+      return DateFormat.jm().format(localTime);
+    } else if (messageDate == yesterday) {
+      return "Yesterday";
+    } else {
+      return DateFormat("dd/MM/yy").format(localTime);
+    }
+  } catch (e) {
+    return "";
+  }
+}
+
 /*
 * How to use formatDate
       *** Predefined Patterns: ***

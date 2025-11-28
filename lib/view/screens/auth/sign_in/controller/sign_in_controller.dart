@@ -85,6 +85,7 @@ class SignInController extends GetxController {
           StorageHelper.setValue(StorageHelper.authToken, signIn.data?.accessToken);
           StorageHelper.setValue(StorageHelper.refreshToken, signIn.data?.refreshToken);
           StorageHelper.setValue(StorageHelper.userId, signIn.data?.userId);
+          StorageHelper.setValue(StorageHelper.username, signIn.data?.userName);
           StorageHelper.setObject(StorageHelper.signInResponse, signIn);
           AppDIController.setSignInDetails(signIn);
           HelperFunction.snackbar(

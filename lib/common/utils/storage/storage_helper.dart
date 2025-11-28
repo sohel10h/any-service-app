@@ -5,6 +5,7 @@ class StorageHelper {
   static const String authToken = "authToken";
   static const String refreshToken = "refreshToken";
   static const String userId = "userId";
+  static const String username = "username";
   static const String signInResponse = "signInResponse";
   static const String websocketVendorFoundResponse = "websocketVendorFoundResponse";
   static const String notificationPermissionAsked = "notificationPermissionAsked";

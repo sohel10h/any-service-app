@@ -241,7 +241,10 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                               // TODO: need this value from API
                               onTap: () => controller.selectedChats.isNotEmpty
                                   ? controller.toggleSelection(chat.id ?? "")
-                                  : controller.goToChatsRoomScreen(chat.lastMessage?.senderName ?? "", id: chat.id ?? ""),
+                                  : controller.goToChatsRoomScreen(
+                                      chat.lastMessage?.senderName ?? "",
+                                      conversationId: chat.id ?? "",
+                                    ),
                               onLongPress: () => controller.toggleSelection(chat.id ?? ""),
                               isSelected: controller.selectedChats.contains(chat.id ?? ""),
                               isPinned: chat.pinned == true,

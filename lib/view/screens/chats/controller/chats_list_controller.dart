@@ -30,12 +30,12 @@ class ChatsListController extends GetxController {
 
   void goToChatsArchivedListScreen() => Get.toNamed(AppRoutes.chatsArchivedListScreen);
 
-  void goToChatsRoomScreen(String username, {String? id}) {
+  void goToChatsRoomScreen(String username, {String? conversationId}) {
     Get.toNamed(
       AppRoutes.chatsRoomScreen,
       arguments: {
-        "username": username,
-        "id": id,
+        "chatUsername": username,
+        "conversationId": conversationId,
       },
     );
   }

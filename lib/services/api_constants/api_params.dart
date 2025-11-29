@@ -35,4 +35,9 @@ class ApiParams {
   static const String isShortlisted = "is_shortlisted";
   static const String isApproved = "is_approved";
   static const String status = "status";
+  static const String type = "type";
+  static const String conversationId = "conversation_id";
+  static const String senderId = "sender_id";
+  static const String content = "content";
+  static const String createdAt = "created_at";
 }

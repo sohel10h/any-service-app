@@ -237,7 +237,7 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                               lastMessage: chat.lastMessage?.content ?? "",
                               iconPath: HelperFunction.userImage4,
                               time: formatChatTimestamp(DateTime.tryParse(chat.lastMessage?.createdAt ?? "")),
-                              unread: 2,
+                              unread: 0,
                               // TODO: need this value from API
                               onTap: () => controller.selectedChats.isNotEmpty
                                   ? controller.toggleSelection(chat.id ?? "")

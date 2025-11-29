@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/common/utils/date_time/format_date.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
 import 'package:service_la/view/widgets/chats/chats_input_field.dart';
 import 'package:service_la/view/widgets/chats/chats_message_bubble.dart';
@@ -146,16 +145,16 @@ class ChatsRoomScreen extends GetWidget<ChatsRoomController> {
                     );
                   }
                   return ListView.builder(
-                    reverse: false,
+                    controller: controller.scrollController,
+                    reverse: true,
                     padding: EdgeInsets.all(12.sp),
-                    itemCount: messages.length + 1,
+                    itemCount: isLoadingMore ? messages.length + 1 : messages.length,
                     itemBuilder: (context, index) {
                       if (index < messages.length) {
-                        final m = messages[index];
+                        final message = messages[index];
                         return ChatsMessageBubble(
-                          message: m.content ?? "",
-                          isMe: m.senderId == controller.loginUserId,
-                          time: formatChatTimestamp(DateTime.tryParse(m.createdAt ?? "")),
+                          messageData: message,
+                          loginUserId: controller.loginUserId,
                         );
                       }
                       return isLoadingMore

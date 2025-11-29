@@ -1,15 +1,18 @@
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/data/repository/chats_repo.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/model/network/chat_message_model.dart';
 
 class ChatsRoomController extends GetxController {
   String chatUsername = "";
   String conversationId = "";
-  String loginUserName = "";
+  String loginUsername = "";
   String loginUserId = "";
   final chatInputController = TextEditingController();
   final RxBool isTyping = false.obs;
@@ -19,13 +22,34 @@ class ChatsRoomController extends GetxController {
   RxBool isLoadingMoreChatsMessages = false.obs;
   int currentPageChatsMessages = 1;
   int totalPagesChatsMessages = 1;
+  AppDIController appDIController = Get.find<AppDIController>();
+  final ScrollController scrollController = ScrollController();
 
   @override
   void onInit() {
     super.onInit();
     _getArguments();
     _getStorageValue();
+    _sendWebsocketsConversationJoinData();
     _getChatsMessages(isRefresh: true);
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    ever(chatsMessages, (_) {
+      Future.delayed(const Duration(milliseconds: 100), _scrollToBottom);
+    });
+  }
+
+  void _scrollToBottom() {
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   Future<void> loadNextPageChats() async {
@@ -103,22 +127,65 @@ class ChatsRoomController extends GetxController {
     }
   }
 
-  void sendMessage(String text) {
+  void _sendWebsocketsConversationJoinData() {
+    Map<String, dynamic> joinPayload = {
+      ApiParams.type: WebsocketParamType.join.name,
+      ApiParams.conversationId: conversationId,
+    };
+    appDIController.sendWebsocketsConversationJoinData(joinPayload);
+  }
+
+  void sendMessage(String text) async {
     if (text.trim().isEmpty) return;
-    chatsMessages.add(
-      ChatMessage(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        conversationId: conversationId,
-        senderId: loginUserId,
-        senderName: loginUserId,
-        content: chatInputController.text,
-        createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
-      ),
+    final now = DateTime.now().toUtc();
+    final formatted = now.toIso8601String();
+    final localMessage = ChatMessage(
+      id: "temp_${now.microsecondsSinceEpoch}",
+      content: text,
+      senderId: loginUserId,
+      createdAt: formatted,
+      isLocal: true,
+      isFailed: false,
     );
+    chatsMessages.insert(0, localMessage);
+    chatsMessages.refresh();
+    _scrollToBottom();
+    final payload = {
+      "type": "message",
+      "conversation_id": conversationId,
+      "content": text,
+    };
+    try {
+      await appDIController.sendWebsocketsMessageData(payload);
+    } catch (e) {
+      markMessageAsFailed(localMessage.id ?? "");
+    }
+  }
+
+  void onWebsocketReceived(ChatMessage msg) {
+    final idx = chatsMessages.indexWhere(
+      (m) => m.isLocal == true && m.content == msg.content && m.senderId == loginUserId,
+    );
+    if (idx != -1) {
+      chatsMessages[idx] = msg
+        ..isLocal = false
+        ..isFailed = false;
+    } else {
+      chatsMessages.insert(0, msg);
+    }
+    chatsMessages.refresh();
+  }
+
+  void markMessageAsFailed(String tempId) {
+    final idx = chatsMessages.indexWhere((m) => m.id == tempId);
+    if (idx != -1) {
+      chatsMessages[idx].isFailed = true;
+      chatsMessages.refresh();
+    }
   }
 
   void _getStorageValue() {
-    loginUserName = StorageHelper.getValue(StorageHelper.username) ?? "";
+    loginUsername = StorageHelper.getValue(StorageHelper.username) ?? "";
     loginUserId = StorageHelper.getValue(StorageHelper.userId) ?? "";
   }
 

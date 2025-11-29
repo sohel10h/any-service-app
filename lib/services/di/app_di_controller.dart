@@ -12,6 +12,8 @@ import 'package:service_la/common/notification/notification_service.dart';
 import 'package:service_la/common/utils/notification_bottom_sheet_queue.dart';
 import 'package:service_la/data/model/network/websocket/websocket_bid_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_vendor_model.dart';
+import 'package:service_la/view/screens/chats/controller/chats_room_controller.dart';
+import 'package:service_la/data/model/network/websocket/websocket_message_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_response_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_service_request_model.dart';
 import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
@@ -20,6 +22,7 @@ class AppDIController extends GetxController {
   String authToken = "";
   static Rx<SignInModel> signInDetails = SignInModel().obs;
   late final LocationService locationService;
+  final Rx<WebsocketMessageModel> message = WebsocketMessageModel().obs;
 
   @override
   void onInit() {
@@ -30,6 +33,16 @@ class AppDIController extends GetxController {
     _initVendorFoundNotifications();
     _initWebsockets();
     _setupLocationServices();
+  }
+
+  void sendWebsocketsConversationJoinData(Map<String, dynamic> joinPayload) async {
+    log("WebsocketsMessageSendParams: $joinPayload");
+    WebSocketService.to.send(joinPayload);
+  }
+
+  Future<void> sendWebsocketsMessageData(Map<String, dynamic> messagePayload) async {
+    log("WebsocketsMessageSendParams: $messagePayload");
+    WebSocketService.to.send(messagePayload);
   }
 
   Future<void> _setupLocationServices() async {
@@ -51,12 +64,25 @@ class AppDIController extends GetxController {
   void _initWebsockets() async {
     if (authToken.isNotEmpty) {
       await HelperFunction.initWebSockets(authToken);
-      _checkWebsocketsData();
+      _checkWebsocketsNotificationData();
+      _checkWebsocketsMessageData();
     }
   }
 
-  void _checkWebsocketsData() async {
-    WebSocketService.to.on('notification', (payload) async {
+  void _checkWebsocketsMessageData() async {
+    WebSocketService.to.on(WebsocketPayloadType.message.name, (payload) async {
+      log("WebsocketsMessageResponse from AppDIController: ${payload['raw']}");
+      final model = WebsocketMessageModel.fromMap(payload['raw']);
+      message.value = model;
+      ChatsRoomController controller = Get.find<ChatsRoomController>();
+      if (message.value.message != null) {
+        controller.onWebsocketReceived(message.value.message!);
+      }
+    });
+  }
+
+  void _checkWebsocketsNotificationData() async {
+    WebSocketService.to.on(WebsocketPayloadType.notification.name, (payload) async {
       int? type = HelperFunction.getWebsocketNotificationType(payload['raw']);
       log("WebsocketsResponseType from AppDIController: ${type ?? 0}");
       if (type == NotificationType.serviceRequest.typeValue) {
@@ -198,7 +224,6 @@ class AppDIController extends GetxController {
 
   @override
   void onClose() {
-    // if you want to dispose service here remove permanent registration
     Get.delete<LocationService>();
     super.onClose();
   }

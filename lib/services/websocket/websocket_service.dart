@@ -4,9 +4,11 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
+import 'package:service_la/data/model/network/websocket/websocket_message_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_notification_model.dart';
 
 class WebSocketService extends GetxService with WidgetsBindingObserver {
@@ -91,7 +93,20 @@ class WebSocketService extends GetxService with WidgetsBindingObserver {
   Future<void> send(Map<String, dynamic> payload) async {
     if (!isConnected.value || _socket == null) {
       _log('Send failed: socket not connected');
-      throw SocketException('Websocket not connected');
+      if (autoReconnect) {
+        await connect();
+        int attempts = 0;
+        while ((_socket == null || !isConnected.value) && attempts < 20) {
+          await Future.delayed(const Duration(milliseconds: 150));
+          attempts++;
+        }
+        if (_socket == null || !isConnected.value) {
+          _log('Send error: socket STILL null after reconnect');
+          throw SocketException('Websocket not connected');
+        }
+      } else {
+        throw SocketException('Websocket not connected');
+      }
     }
     try {
       final text = jsonEncode(payload);
@@ -169,8 +184,8 @@ class WebSocketService extends GetxService with WidgetsBindingObserver {
 
   void _handleTypedPayload(Map<String, dynamic> payload) {
     final type = (payload['type'] ?? '').toString();
-    if (type == 'notification') {
-      final notificationRaw = payload['notification'];
+    if (type == WebsocketPayloadType.notification.name) {
+      final notificationRaw = payload[WebsocketPayloadType.notification.name];
       if (notificationRaw != null) {
         final notificationMap = notificationRaw is Map ? Map<String, dynamic>.from(notificationRaw) : <String, dynamic>{};
         final model = WebsocketNotificationModel.fromMap(notificationMap);
@@ -178,7 +193,20 @@ class WebSocketService extends GetxService with WidgetsBindingObserver {
           'raw': payload,
           'parsed': model,
         };
-        _emitInternal('notification', wrapped);
+        _emitInternal(WebsocketPayloadType.notification.name, wrapped);
+        return;
+      }
+    }
+    if (type == WebsocketPayloadType.message.name) {
+      final messageRaw = payload[WebsocketPayloadType.message.name];
+      if (messageRaw != null) {
+        final messageMap = messageRaw is Map ? Map<String, dynamic>.from(messageRaw) : <String, dynamic>{};
+        final model = WebsocketMessageModel.fromMap(messageMap);
+        final wrapped = {
+          'raw': payload,
+          'parsed': model,
+        };
+        _emitInternal(WebsocketPayloadType.message.name, wrapped);
         return;
       }
     }

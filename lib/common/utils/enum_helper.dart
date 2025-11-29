@@ -25,12 +25,17 @@ enum NotificationType {
   const NotificationType(this.typeValue);
 }
 
-enum PayLoadType {
+enum WebsocketPayloadType {
   joined,
   left,
   message,
   notification,
   error,
+}
+
+enum WebsocketParamType {
+  join,
+  leave,
 }
 
 enum ServiceRequestBidStatus {

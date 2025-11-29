@@ -66,6 +66,8 @@ class ChatMessage {
   final String? senderName;
   final String? content;
   final String? createdAt;
+  bool? isLocal;
+  bool? isFailed;
 
   ChatMessage({
     this.id,
@@ -74,6 +76,8 @@ class ChatMessage {
     this.senderName,
     this.content,
     this.createdAt,
+    this.isLocal,
+    this.isFailed,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) => ChatMessage(
@@ -83,6 +87,8 @@ class ChatMessage {
         senderName: json["sender_name"],
         content: json["content"],
         createdAt: json["created_at"],
+        isLocal: json["is_local"],
+        isFailed: json["is_failed"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -92,5 +98,7 @@ class ChatMessage {
         "sender_name": senderName,
         "content": content,
         "created_at": createdAt,
+        "is_local": isLocal,
+        "is_failed": isFailed,
       };
 }

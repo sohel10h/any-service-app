@@ -2,12 +2,14 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/view/widgets/common/network_image_loader.dart';
 
 class NotificationBottomSheet extends StatelessWidget {
   final String title;
   final String message;
   final VoidCallback? onPressed;
   final String? actionTitle;
+  final String? imageUrl;
 
   const NotificationBottomSheet({
     super.key,
@@ -15,6 +17,7 @@ class NotificationBottomSheet extends StatelessWidget {
     required this.message,
     this.onPressed,
     this.actionTitle,
+    this.imageUrl,
   });
 
   @override
@@ -46,7 +49,29 @@ class NotificationBottomSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 4.h),
+              if (imageUrl != null && imageUrl!.isNotEmpty) ...[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.black.withValues(alpha: 0.08),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: NetworkImageLoader(
+                      imageUrl ?? "",
+                      height: 160.h,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+              ],
               Text(
                 title,
                 textAlign: TextAlign.center,

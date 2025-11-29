@@ -8,6 +8,7 @@ class StorageHelper {
   static const String username = "username";
   static const String signInResponse = "signInResponse";
   static const String websocketVendorFoundResponse = "websocketVendorFoundResponse";
+  static const String websocketVendorNotFoundResponse = "websocketVendorNotFoundResponse";
   static const String notificationPermissionAsked = "notificationPermissionAsked";
   static const String autoCompleteRecentResponse = "autoCompleteRecentResponse";
   static const String autoCompleteSuggestedResponse = "autoCompleteSuggestedResponse";

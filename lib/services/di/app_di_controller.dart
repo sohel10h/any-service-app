@@ -132,7 +132,7 @@ class AppDIController extends GetxController {
           payload['raw'],
           (json) => WebsocketVendorModel.fromJson(json),
         );
-        StorageHelper.setObject(StorageHelper.websocketVendorFoundResponse, vendor.notification?.parsedData);
+        StorageHelper.setObject(StorageHelper.websocketVendorNotFoundResponse, vendor.notification?.parsedData);
         NotificationQueue.of<WebsocketResponseModel<WebsocketVendorModel>>().add(vendor);
         if (!WebSocketService.to.isForeground) {
           NotificationService.showSimpleNotification(
@@ -152,6 +152,7 @@ class AppDIController extends GetxController {
           Get.context!,
           title: model.notification?.title ?? "",
           message: model.notification?.parsedData?.data ?? "",
+          imageUrl: model.notification?.pictureUrl,
           onClosed: close,
         );
       },
@@ -165,6 +166,7 @@ class AppDIController extends GetxController {
           Get.context!,
           title: model.notification?.title ?? "",
           message: model.notification?.parsedData?.data ?? "",
+          imageUrl: model.notification?.pictureUrl,
           actionTitle: "Open",
           onPressed: () {
             Get.back();
@@ -202,6 +204,7 @@ class AppDIController extends GetxController {
           Get.context!,
           title: model.notification?.title ?? "",
           message: model.notification?.parsedData?.message ?? "",
+          imageUrl: model.notification?.pictureUrl,
           actionTitle: "View Bid",
           onPressed: () {
             Get.back();
@@ -236,6 +239,8 @@ class AppDIController extends GetxController {
     authToken = StorageHelper.getValue(StorageHelper.authToken) ?? "";
     dynamic websocketVendorFoundResponse = StorageHelper.getObject(StorageHelper.websocketVendorFoundResponse);
     log("WebsocketVendorFoundResponse: $websocketVendorFoundResponse");
+    dynamic websocketVendorNotFoundResponse = StorageHelper.getObject(StorageHelper.websocketVendorNotFoundResponse);
+    log("WebsocketVendorNotFoundResponse: $websocketVendorNotFoundResponse");
   }
 
   @override

@@ -100,13 +100,28 @@ class HomeScreen extends GetWidget<HomeController> {
         ),
         SizedBox(width: 16.w),
         GestureDetector(
-          onTap: () {},
-          child: SvgPicture.asset(
-            "assets/svgs/notification_outline.svg",
-            width: 20.w,
-            height: 20.h,
-            colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
-          ),
+          onTap: controller.goToNotificationsScreen,
+          child: Obx(() {
+            final unreadCount = controller.appDIController.unreadNotificationCount.value;
+            final unread = (unreadCount ?? 0) > 99 ? "99+" : "${unreadCount ?? ""}";
+            if (unread.isEmpty) {
+              return SvgPicture.asset(
+                "assets/svgs/notification_outline.svg",
+                width: 20.w,
+                height: 20.h,
+                colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+              );
+            }
+            return Badge(
+              label: Text(unread),
+              child: SvgPicture.asset(
+                "assets/svgs/notification_outline.svg",
+                width: 20.w,
+                height: 20.h,
+                colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+              ),
+            );
+          }),
         ),
         SizedBox(width: 16.w),
         GestureDetector(

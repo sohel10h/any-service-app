@@ -11,6 +11,7 @@ import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/repository/service_repo.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/local/file_option_model.dart';
@@ -66,6 +67,7 @@ class HomeController extends GetxController {
   RxBool isLoadingMoreServiceCategories = false.obs;
   int currentPageServiceCategories = 1;
   int totalPagesServiceCategories = 1;
+  AppDIController appDIController = Get.find<AppDIController>();
   final List<Map<String, dynamic>> cleaningServices = [
     {
       "serviceName": "Regular House Cleaning",
@@ -95,6 +97,8 @@ class HomeController extends GetxController {
     getBestSellingServices();
     getAdminServiceCategories();
   }
+
+  void goToNotificationsScreen() => Get.toNamed(AppRoutes.notificationsScreen);
 
   void goToChatsListScreen() => Get.toNamed(AppRoutes.chatsListScreen);
 

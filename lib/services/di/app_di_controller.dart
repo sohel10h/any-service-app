@@ -23,6 +23,7 @@ class AppDIController extends GetxController {
   static Rx<SignInModel> signInDetails = SignInModel().obs;
   late final LocationService locationService;
   final Rx<WebsocketMessageModel> message = WebsocketMessageModel().obs;
+  final RxnInt unreadNotificationCount = RxnInt();
 
   @override
   void onInit() {
@@ -84,6 +85,7 @@ class AppDIController extends GetxController {
   void _checkWebsocketsNotificationData() async {
     WebSocketService.to.on(WebsocketPayloadType.notification.name, (payload) async {
       int? type = HelperFunction.getWebsocketNotificationType(payload['raw']);
+      unreadNotificationCount.value = HelperFunction.getWebsocketNotificationUnreadCount(payload['raw']);
       log("WebsocketsResponseType from AppDIController: ${type ?? 0}");
       if (type == NotificationType.serviceRequest.typeValue) {
         final serviceRequest = WebsocketResponseModel.fromApiResponse(
@@ -93,9 +95,9 @@ class AppDIController extends GetxController {
         NotificationQueue.of<WebsocketResponseModel<WebsocketServiceRequestModel>>().add(serviceRequest);
         if (!WebSocketService.to.isForeground) {
           NotificationService.showSimpleNotification(
-            title: serviceRequest.title ?? "",
-            body: serviceRequest.parsedData?.data ?? "",
-            payload: serviceRequest.parsedData?.id ?? "",
+            title: serviceRequest.notification?.title ?? "",
+            body: serviceRequest.notification?.body ?? "",
+            payload: serviceRequest.notification?.parsedData?.id ?? "",
           );
         }
       } else if (type == NotificationType.bid.typeValue) {
@@ -106,9 +108,9 @@ class AppDIController extends GetxController {
         NotificationQueue.of<WebsocketResponseModel<WebsocketBidModel>>().add(bid);
         if (!WebSocketService.to.isForeground) {
           NotificationService.showSimpleNotification(
-            title: bid.title ?? "",
-            body: bid.parsedData?.message ?? "",
-            payload: bid.parsedData?.serviceRequestId ?? "",
+            title: bid.notification?.title ?? "",
+            body: bid.notification?.body ?? "",
+            payload: bid.notification?.parsedData?.serviceRequestId ?? "",
           );
         }
       } else if (type == NotificationType.vendorFound.typeValue) {
@@ -116,12 +118,26 @@ class AppDIController extends GetxController {
           payload['raw'],
           (json) => WebsocketVendorModel.fromJson(json),
         );
-        StorageHelper.setObject(StorageHelper.websocketVendorFoundResponse, vendor.parsedData);
+        StorageHelper.setObject(StorageHelper.websocketVendorFoundResponse, vendor.notification?.parsedData);
         NotificationQueue.of<WebsocketResponseModel<WebsocketVendorModel>>().add(vendor);
         if (!WebSocketService.to.isForeground) {
           NotificationService.showSimpleNotification(
-            title: vendor.title ?? "",
-            body: vendor.parsedData?.data ?? "",
+            title: vendor.notification?.title ?? "",
+            body: vendor.notification?.body ?? "",
+            payload: "",
+          );
+        }
+      } else if (type == NotificationType.vendorNotFound.typeValue) {
+        final vendor = WebsocketResponseModel.fromApiResponse(
+          payload['raw'],
+          (json) => WebsocketVendorModel.fromJson(json),
+        );
+        StorageHelper.setObject(StorageHelper.websocketVendorFoundResponse, vendor.notification?.parsedData);
+        NotificationQueue.of<WebsocketResponseModel<WebsocketVendorModel>>().add(vendor);
+        if (!WebSocketService.to.isForeground) {
+          NotificationService.showSimpleNotification(
+            title: vendor.notification?.title ?? "",
+            body: vendor.notification?.body ?? "",
             payload: "",
           );
         }
@@ -134,8 +150,8 @@ class AppDIController extends GetxController {
       builder: (model, close) {
         DialogHelper.showNotificationBottomSheet(
           Get.context!,
-          title: model.title ?? "",
-          message: model.parsedData?.data ?? "",
+          title: model.notification?.title ?? "",
+          message: model.notification?.parsedData?.data ?? "",
           onClosed: close,
         );
       },
@@ -147,17 +163,17 @@ class AppDIController extends GetxController {
       builder: (model, close) {
         DialogHelper.showNotificationBottomSheet(
           Get.context!,
-          title: model.title ?? "",
-          message: model.parsedData?.data ?? "",
+          title: model.notification?.title ?? "",
+          message: model.notification?.parsedData?.data ?? "",
           actionTitle: "Open",
           onPressed: () {
             Get.back();
             final currentRoute = Get.currentRoute;
             if (currentRoute == AppRoutes.serviceRequestDetailsScreen) {
               ServiceRequestDetailsController controller = Get.find<ServiceRequestDetailsController>();
-              controller.onRefresh(serviceRequestIdValue: model.parsedData?.id);
+              controller.onRefresh(serviceRequestIdValue: model.notification?.parsedData?.id);
             } else {
-              goToServiceRequestDetails(model.parsedData?.id ?? "");
+              goToServiceRequestDetails(model.notification?.parsedData?.id ?? "");
             }
           },
           onClosed: close,
@@ -184,17 +200,17 @@ class AppDIController extends GetxController {
       builder: (model, close) {
         DialogHelper.showNotificationBottomSheet(
           Get.context!,
-          title: model.title ?? "",
-          message: model.parsedData?.message ?? "",
+          title: model.notification?.title ?? "",
+          message: model.notification?.parsedData?.message ?? "",
           actionTitle: "View Bid",
           onPressed: () {
             Get.back();
             final currentRoute = Get.currentRoute;
             if (currentRoute == AppRoutes.serviceRequestDetailsScreen) {
               ServiceRequestDetailsController controller = Get.find<ServiceRequestDetailsController>();
-              controller.onRefresh(serviceRequestIdValue: model.parsedData?.serviceRequestId);
+              controller.onRefresh(serviceRequestIdValue: model.notification?.parsedData?.serviceRequestId);
             } else {
-              goToBidDetails(model.parsedData?.serviceRequestId ?? "");
+              goToBidDetails(model.notification?.parsedData?.serviceRequestId ?? "");
             }
           },
           onClosed: close,

@@ -168,6 +168,17 @@ class HelperFunction {
     }
   }
 
+  static int? getWebsocketNotificationUnreadCount(Map<String, dynamic> response) {
+    try {
+      final unread = response["notification"]?["unread_count"];
+      if (unread == null) return null;
+      return unread is int ? unread : int.tryParse(unread.toString());
+    } catch (e) {
+      log("Error parsing unread_count: $e");
+      return null;
+    }
+  }
+
   static List<Color> getCategoriesColors(String randomValue) {
     final hash = randomValue.hashCode;
     final index = hash % CategoryColors.values.length;

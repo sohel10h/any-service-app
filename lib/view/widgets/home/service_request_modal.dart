@@ -25,98 +25,92 @@ class ServiceRequestModal extends GetWidget<HomeController> {
       controller.isKeyboardVisible.value = viewInsets > 0;
     });
 
-    return Hero(
-      tag: "service_request_modal",
-      createRectTween: (begin, end) {
-        return MaterialRectCenterArcTween(begin: begin, end: end);
-      },
-      child: Material(
-        color: Colors.transparent,
-        child: Obx(() {
-          return PopScope(
-            canPop: false,
-            onPopInvokedWithResult: (didPop, result) async {
-              if (didPop) return;
+    return Material(
+      color: Colors.transparent,
+      child: Obx(() {
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) async {
+            if (didPop) return;
 
-              if (controller.hasUnsavedChanges.value) {
-                DialogHelper.showDiscardWarning(context);
-              } else {
-                controller.isIndividualSelected.value = true;
-                Get.back();
-                controller.landingController.changeIndex(0, context);
-              }
-            },
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Stack(
-                children: [
-                  GestureDetector(
-                    onTap: () => Get.back(),
-                    child: AnimatedOpacity(
-                      duration: const Duration(milliseconds: 400),
-                      opacity: 1,
+            if (controller.hasUnsavedChanges.value) {
+              DialogHelper.showDiscardWarning(context);
+            } else {
+              controller.isIndividualSelected.value = true;
+              Get.back();
+              controller.landingController.changeIndex(0, context);
+            }
+          },
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Stack(
+              children: [
+                GestureDetector(
+                  onTap: () => Get.back(),
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 400),
+                    opacity: 1,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeOutCubic,
+                    height: size.height * 1,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 16.h),
+                        _header(context),
+                        Divider(color: AppColors.containerE5E7EB, height: 0.h, thickness: 5),
+                        Expanded(
+                          child: SingleChildScrollView(child: _body(context)),
+                        ),
+                      ],
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 400),
-                      curve: Curves.easeOutCubic,
-                      height: size.height * 1,
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                      ),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 16.h),
-                          _header(context),
-                          Divider(color: AppColors.containerE5E7EB, height: 0.h, thickness: 5),
-                          Expanded(
-                            child: SingleChildScrollView(child: _body(context)),
+                ),
+                Obx(
+                  () {
+                    if (!controller.isKeyboardVisible.value) return SizedBox.shrink();
+                    return Positioned(
+                      bottom: 0.h,
+                      left: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 0.w),
+                        child: Container(
+                          height: 50.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.containerF4F4F4,
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Obx(
-                    () {
-                      if (!controller.isKeyboardVisible.value) return SizedBox.shrink();
-                      return Positioned(
-                        bottom: 0.h,
-                        left: 0,
-                        right: 0,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 0.w),
-                          child: Container(
-                            height: 50.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.containerF4F4F4,
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: controller.fileOptions.map((option) {
-                                return IconButton(
-                                  onPressed: option.onTap,
-                                  icon: SvgPicture.asset(
-                                    option.image ?? "",
-                                    width: 24.w,
-                                    height: 24.h,
-                                  ),
-                                );
-                              }).toList(),
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: controller.fileOptions.map((option) {
+                              return IconButton(
+                                onPressed: option.onTap,
+                                icon: SvgPicture.asset(
+                                  option.image ?? "",
+                                  width: 24.w,
+                                  height: 24.h,
+                                ),
+                              );
+                            }).toList(),
                           ),
                         ),
-                      );
-                    },
-                  )
-                ],
-              ),
+                      ),
+                    );
+                  },
+                )
+              ],
             ),
-          );
-        }),
-      ),
+          ),
+        );
+      }),
     );
   }
 

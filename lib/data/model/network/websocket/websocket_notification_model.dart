@@ -3,18 +3,24 @@ import 'dart:convert';
 class WebsocketNotificationModel {
   final String title;
   final String rawData;
-  final String? message;
+  final String? data;
   final String? id;
   final int? type;
   final String? userId;
+  final String? body;
+  final String? pictureUrl;
+  final int? unreadCount;
 
   WebsocketNotificationModel({
     required this.title,
     required this.rawData,
-    this.message,
+    this.data,
     this.id,
     this.type,
     this.userId,
+    this.body,
+    this.pictureUrl,
+    this.unreadCount,
   });
 
   factory WebsocketNotificationModel.fromMap(Map<String, dynamic> m) {
@@ -37,19 +43,25 @@ class WebsocketNotificationModel {
     return WebsocketNotificationModel(
       title: title,
       rawData: rawData,
-      message: parsed['Data']?.toString(),
+      data: parsed['Data']?.toString(),
       id: parsed['ID']?.toString(),
       type: parsed['Type'] is int ? parsed['Type'] : int.tryParse(parsed['Type']?.toString() ?? ''),
       userId: parsed['UserID']?.toString(),
+      body: m['body']?.toString(),
+      pictureUrl: m['picture_url']?.toString(),
+      unreadCount: m['unread_count'] is int ? m['unread_count'] : int.tryParse(m['unread_count']?.toString() ?? ''),
     );
   }
 
   Map<String, dynamic> toMap() => {
         'title': title,
         'rawData': rawData,
-        'message': message,
+        'data': data,
         'id': id,
         'type': type,
         'userId': userId,
+        'body': body,
+        'pictureUrl': pictureUrl,
+        'unreadCount': unreadCount,
       };
 }

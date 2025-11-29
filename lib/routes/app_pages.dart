@@ -11,6 +11,7 @@ import 'package:service_la/view/screens/auth/sign_up/sign_up_screen.dart';
 import 'package:service_la/view/screens/category_screen/category_screen.dart';
 import 'package:service_la/view/screens/chats/chats_archived_list_screen.dart';
 import 'package:service_la/view/screens/ride_sharing/ride_sharing_screen.dart';
+import 'package:service_la/view/screens/notification/notifications_screen.dart';
 import 'package:service_la/view/screens/create_service/create_service_screen.dart';
 import 'package:service_la/view/screens/ride_sharing/ride_sharing_map_screen.dart';
 import 'package:service_la/view/screens/auth/verification/otp_verification_screen.dart';
@@ -99,6 +100,10 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.chatsArchivedListScreen,
       page: () => const ChatsArchivedListScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.notificationsScreen,
+      page: () => const NotificationsScreen(),
     ),
   ];
 }

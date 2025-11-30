@@ -291,14 +291,15 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                 icon: Icon(Icons.message_outlined),
                 label: 'Chats',
               ),
-              BottomNavigationBarItem(
+              //TODO: commenting for future implement
+              /*BottomNavigationBarItem(
                 icon: Icon(Icons.update_outlined),
                 label: 'Updates',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.group_outlined),
                 label: 'Communities',
-              ),
+              ),*/
               BottomNavigationBarItem(
                 icon: Icon(Icons.call_outlined),
                 label: 'Calls',

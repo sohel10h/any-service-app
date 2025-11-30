@@ -5,14 +5,16 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomBackButton extends StatelessWidget {
-  const CustomBackButton({super.key});
+  final VoidCallback? onTap;
+
+  const CustomBackButton({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 16.w),
       child: GestureDetector(
-        onTap: () => Get.back(),
+        onTap: onTap ?? () => Get.back(),
         child: Container(
           width: 31.w,
           height: 31.w,

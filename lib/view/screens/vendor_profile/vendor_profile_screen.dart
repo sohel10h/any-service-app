@@ -28,6 +28,7 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
         child: Scaffold(
           appBar: CustomAppbar(
             title: "Vendor Profile",
+            onTap: () => controller.landingController.changeIndex(0, context),
             actions: [
               Padding(
                 padding: EdgeInsets.only(right: 16.w),

@@ -14,6 +14,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String? iconPath;
   final bool? isOnlyIcon;
   final double? leadingWidth;
+  final VoidCallback? onTap;
 
   const CustomAppbar({
     super.key,
@@ -27,6 +28,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.centerTitle = true,
     this.actions = const [],
     this.leadingWidth,
+    this.onTap,
   });
 
   @override
@@ -35,7 +37,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       leadingWidth: leadingWidth ?? 56.w,
       centerTitle: centerTitle,
-      leading: backButton ?? CustomBackButton(),
+      leading: backButton ?? CustomBackButton(onTap: onTap),
       title: titleWidget ??
           Text(
             title ?? "",

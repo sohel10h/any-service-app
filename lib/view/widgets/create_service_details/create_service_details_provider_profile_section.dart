@@ -51,7 +51,7 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                       clipBehavior: Clip.none,
                       children: [
                         NetworkImageLoader(
-                          HelperFunction.userImage2, //TODO: need to get this data from API
+                          HelperFunction.userImage5, //TODO: need to get this data from API
                           width: 49.w,
                           height: 49.w,
                           borderRadius: BorderRadius.circular(60.r),
@@ -87,7 +87,7 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "CoolAir Experts", //TODO: need to get this data from API
+                            controller.createServiceDetailsData.value.user?.name ?? "",
                             style: TextStyle(
                               fontSize: 14.sp,
                               color: AppColors.text101828,
@@ -146,7 +146,9 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                               Expanded(
                                 flex: 2,
                                 child: Text(
-                                  "Member since 2019", //TODO: need to get this data from API
+                                  HelperFunction.formatMemberSince(
+                                    controller.createServiceDetailsData.value.user?.createdAt ?? "",
+                                  ),
                                   style: TextStyle(
                                     fontSize: 10.sp,
                                     color: AppColors.text6A7282,

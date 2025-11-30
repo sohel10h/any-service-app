@@ -190,4 +190,17 @@ class HelperFunction {
     final index = hash % ServiceIcon.values.length;
     return ServiceIcon.values[index].path;
   }
+
+  static String formatMemberSince(String dateTimeString) {
+    try {
+      final dateTime = DateTime.parse(dateTimeString);
+      final year = dateTime.year;
+      if (year <= 1) {
+        return "Member since Unknown";
+      }
+      return "Member since $year";
+    } catch (e) {
+      return "Member since Unknown";
+    }
+  }
 }

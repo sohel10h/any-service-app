@@ -98,6 +98,14 @@ class HomeController extends GetxController {
     getAdminServiceCategories();
   }
 
+  void openBudgetRangeBottomSheet(BuildContext context) async {
+    final currentContext = Get.context ?? context;
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (currentContext.mounted) {
+      DialogHelper.showBudgetRangeSheet(currentContext);
+    }
+  }
+
   void goToNotificationsScreen() => Get.toNamed(AppRoutes.notificationsScreen);
 
   void goToChatsListScreen() => Get.toNamed(AppRoutes.chatsListScreen);
@@ -345,13 +353,13 @@ class HomeController extends GetxController {
       ),
       FileOptionModel(
         id: 3,
-        image: "assets/svgs/clock_outline.svg",
-        onTap: () => log("Clock tapped"),
+        image: "assets/svgs/dollar.svg",
+        onTap: () => openBudgetRangeBottomSheet(Get.context!),
       ),
       FileOptionModel(
         id: 4,
         image: "assets/svgs/more_horizontal.svg",
-        onTap: () => DialogHelper.showBottomSheet(Get.context!),
+        onTap: () => DialogHelper.showBottomSheet(),
       ),
     ];
   }

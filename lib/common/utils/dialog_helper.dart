@@ -27,7 +27,7 @@ class DialogHelper {
     );
   }
 
-  static void showBottomSheet(BuildContext context) async {
+  static void showBottomSheet() async {
     await Future.delayed(const Duration(milliseconds: 50));
     await Get.bottomSheet(
       const ServiceRequestBottomSheet(),

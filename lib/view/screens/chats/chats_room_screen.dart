@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
 import 'package:service_la/view/widgets/chats/chats_input_field.dart';
 import 'package:service_la/view/widgets/chats/chats_message_bubble.dart';
@@ -154,7 +155,7 @@ class ChatsRoomScreen extends GetWidget<ChatsRoomController> {
                         final message = messages[index];
                         return ChatsMessageBubble(
                           messageData: message,
-                          loginUserId: controller.loginUserId,
+                          loginUserId: AppDIController.loginUserId,
                         );
                       }
                       return isLoadingMore

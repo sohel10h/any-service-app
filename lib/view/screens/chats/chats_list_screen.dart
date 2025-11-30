@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/helper_function.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/view/widgets/chats/chats_tile.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
 import 'package:service_la/common/utils/date_time/format_date.dart';
@@ -232,18 +233,23 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                             }
                             final chatIndex = archivedCount > 0 ? index - 1 : index;
                             final chat = list[chatIndex];
+                            final participants = chat.participants ?? [];
                             return ChatsTile(
-                              name: chat.lastMessage?.senderName ?? "",
+                              name: participants.isNotEmpty ? (participants.first.userName ?? "") : "",
                               lastMessage: chat.lastMessage?.content ?? "",
-                              iconPath: HelperFunction.userImage4,
+                              iconPath: participants.isNotEmpty ? (participants.first.pictureUrl ?? "") : "",
                               time: formatChatTimestamp(DateTime.tryParse(chat.lastMessage?.createdAt ?? "")),
                               unread: 0,
                               // TODO: need this value from API
                               onTap: () => controller.selectedChats.isNotEmpty
                                   ? controller.toggleSelection(chat.id ?? "")
                                   : controller.goToChatsRoomScreen(
-                                      chat.lastMessage?.senderName ?? "",
+                                      username: chat.lastMessage?.senderName ?? "",
                                       conversationId: chat.id ?? "",
+                                      userId: HelperFunction.getParticipantUserId(
+                                        chat.participants,
+                                        AppDIController.loginUserId,
+                                      ),
                                     ),
                               onLongPress: () => controller.toggleSelection(chat.id ?? ""),
                               isSelected: controller.selectedChats.contains(chat.id ?? ""),

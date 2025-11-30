@@ -12,36 +12,32 @@ import 'package:service_la/common/notification/notification_service.dart';
 import 'package:service_la/common/utils/notification_bottom_sheet_queue.dart';
 import 'package:service_la/data/model/network/websocket/websocket_bid_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_vendor_model.dart';
-import 'package:service_la/view/screens/chats/controller/chats_room_controller.dart';
 import 'package:service_la/data/model/network/websocket/websocket_message_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_response_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_service_request_model.dart';
 import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
 class AppDIController extends GetxController {
-  String authToken = "";
+  static String authToken = "";
+  static String loginUserId = "";
+  static String loginUsername = "";
   static Rx<SignInModel> signInDetails = SignInModel().obs;
   late final LocationService locationService;
-  final Rx<WebsocketMessageModel> message = WebsocketMessageModel().obs;
-  final RxnInt unreadNotificationCount = RxnInt();
+  static final Rx<WebsocketMessageModel> message = WebsocketMessageModel().obs;
+  static final RxnInt unreadNotificationCount = RxnInt();
 
   @override
   void onInit() {
     super.onInit();
-    _getStorageValue();
+    getStorageValue();
     _initServiceRequestNotifications();
     _initBidNotifications();
     _initVendorFoundNotifications();
-    _initWebsockets();
+    initWebsockets();
     _setupLocationServices();
   }
 
-  void sendWebsocketsConversationJoinData(Map<String, dynamic> joinPayload) async {
-    log("WebsocketsMessageSendParams: $joinPayload");
-    WebSocketService.to.send(joinPayload);
-  }
-
-  Future<void> sendWebsocketsMessageData(Map<String, dynamic> messagePayload) async {
+  static Future<void> sendWebsocketsMessageData(Map<String, dynamic> messagePayload) async {
     log("WebsocketsMessageSendParams: $messagePayload");
     WebSocketService.to.send(messagePayload);
   }
@@ -62,7 +58,7 @@ class AppDIController extends GetxController {
     return signInDetails.value;
   }
 
-  void _initWebsockets() async {
+  static void initWebsockets() async {
     if (authToken.isNotEmpty) {
       await HelperFunction.initWebSockets(authToken);
       _checkWebsocketsNotificationData();
@@ -70,19 +66,15 @@ class AppDIController extends GetxController {
     }
   }
 
-  void _checkWebsocketsMessageData() async {
+  static void _checkWebsocketsMessageData() async {
     WebSocketService.to.on(WebsocketPayloadType.message.name, (payload) async {
       log("WebsocketsMessageResponse from AppDIController: ${payload['raw']}");
       final model = WebsocketMessageModel.fromMap(payload['raw']);
       message.value = model;
-      ChatsRoomController controller = Get.find<ChatsRoomController>();
-      if (message.value.message != null) {
-        controller.onWebsocketReceived(message.value.message!);
-      }
     });
   }
 
-  void _checkWebsocketsNotificationData() async {
+  static void _checkWebsocketsNotificationData() async {
     WebSocketService.to.on(WebsocketPayloadType.notification.name, (payload) async {
       int? type = HelperFunction.getWebsocketNotificationType(payload['raw']);
       unreadNotificationCount.value = HelperFunction.getWebsocketNotificationUnreadCount(payload['raw']);
@@ -225,7 +217,6 @@ class AppDIController extends GetxController {
   void goToBidDetails(String id) {
     final queue = NotificationQueue.of<WebsocketBidModel>();
     queue.allowedRoute = AppRoutes.landingScreen;
-
     Get.toNamed(
       AppRoutes.serviceRequestDetailsScreen,
       arguments: {"serviceRequestId": id},
@@ -235,8 +226,11 @@ class AppDIController extends GetxController {
     });
   }
 
-  void _getStorageValue() {
+  static void getStorageValue() {
     authToken = StorageHelper.getValue(StorageHelper.authToken) ?? "";
+    loginUserId = StorageHelper.getValue(StorageHelper.userId) ?? "";
+    loginUsername = StorageHelper.getValue(StorageHelper.username) ?? "";
+    log("LoggedInInfo: AuthToken: $authToken - LoginUserId: $loginUserId - LoginUsername: $loginUsername");
     dynamic websocketVendorFoundResponse = StorageHelper.getObject(StorageHelper.websocketVendorFoundResponse);
     log("WebsocketVendorFoundResponse: $websocketVendorFoundResponse");
     dynamic websocketVendorNotFoundResponse = StorageHelper.getObject(StorageHelper.websocketVendorNotFoundResponse);

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
+import 'package:service_la/data/model/network/chat_model.dart';
 import 'package:service_la/services/api_constants/api_const.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -201,6 +202,18 @@ class HelperFunction {
       return "Member since $year";
     } catch (e) {
       return "Member since Unknown";
+    }
+  }
+
+  static String getParticipantUserId(List<Participant>? participants, String loginUserId) {
+    try {
+      final other = participants?.firstWhere(
+        (p) => p.userId != loginUserId,
+        orElse: () => Participant(userId: ""),
+      );
+      return other?.userId ?? "";
+    } catch (e) {
+      return "";
     }
   }
 }

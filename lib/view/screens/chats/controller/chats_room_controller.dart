@@ -6,14 +6,12 @@ import 'package:service_la/data/repository/chats_repo.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
-import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/model/network/chat_message_model.dart';
 
 class ChatsRoomController extends GetxController {
   String chatUsername = "";
+  String chatUserId = "";
   String conversationId = "";
-  String loginUsername = "";
-  String loginUserId = "";
   final chatInputController = TextEditingController();
   final RxBool isTyping = false.obs;
   final ChatsRepo _chatsRepo = ChatsRepo();
@@ -22,16 +20,18 @@ class ChatsRoomController extends GetxController {
   RxBool isLoadingMoreChatsMessages = false.obs;
   int currentPageChatsMessages = 1;
   int totalPagesChatsMessages = 1;
-  AppDIController appDIController = Get.find<AppDIController>();
   final ScrollController scrollController = ScrollController();
 
   @override
   void onInit() {
     super.onInit();
     _getArguments();
-    _getStorageValue();
-    _sendWebsocketsConversationJoinData();
     _getChatsMessages(isRefresh: true);
+    ever(AppDIController.message, (msg) {
+      if (msg.message != null) {
+        onWebsocketReceived(msg.message!);
+      }
+    });
   }
 
   @override
@@ -127,14 +127,6 @@ class ChatsRoomController extends GetxController {
     }
   }
 
-  void _sendWebsocketsConversationJoinData() {
-    Map<String, dynamic> joinPayload = {
-      ApiParams.type: WebsocketParamType.join.name,
-      ApiParams.conversationId: conversationId,
-    };
-    appDIController.sendWebsocketsConversationJoinData(joinPayload);
-  }
-
   void sendMessage(String text) async {
     if (text.trim().isEmpty) return;
     final now = DateTime.now().toUtc();
@@ -142,7 +134,7 @@ class ChatsRoomController extends GetxController {
     final localMessage = ChatMessage(
       id: "temp_${now.microsecondsSinceEpoch}",
       content: text,
-      senderId: loginUserId,
+      senderId: AppDIController.loginUserId,
       createdAt: formatted,
       isLocal: true,
       isFailed: false,
@@ -151,25 +143,27 @@ class ChatsRoomController extends GetxController {
     chatsMessages.refresh();
     _scrollToBottom();
     final payload = {
-      "type": "message",
-      "conversation_id": conversationId,
-      "content": text,
+      ApiParams.type: WebsocketPayloadType.message.name,
+      ApiParams.userId: chatUserId,
+      ApiParams.content: text,
     };
     try {
-      await appDIController.sendWebsocketsMessageData(payload);
+      await AppDIController.sendWebsocketsMessageData(payload);
     } catch (e) {
       markMessageAsFailed(localMessage.id ?? "");
     }
   }
 
   void onWebsocketReceived(ChatMessage msg) {
-    final idx = chatsMessages.indexWhere(
-      (m) => m.isLocal == true && m.content == msg.content && m.senderId == loginUserId,
-    );
+    final idx = chatsMessages.indexWhere((m) => m.isLocal == true);
     if (idx != -1) {
-      chatsMessages[idx] = msg
-        ..isLocal = false
-        ..isFailed = false;
+      chatsMessages.removeAt(idx);
+      chatsMessages.insert(
+        idx,
+        msg
+          ..isLocal = false
+          ..isFailed = false,
+      );
     } else {
       chatsMessages.insert(0, msg);
     }
@@ -184,15 +178,12 @@ class ChatsRoomController extends GetxController {
     }
   }
 
-  void _getStorageValue() {
-    loginUsername = StorageHelper.getValue(StorageHelper.username) ?? "";
-    loginUserId = StorageHelper.getValue(StorageHelper.userId) ?? "";
-  }
-
   void _getArguments() {
     if (Get.arguments != null) {
       chatUsername = Get.arguments["chatUsername"] ?? "User";
       conversationId = Get.arguments["conversationId"] ?? "";
+      chatUserId = Get.arguments["chatUserId"] ?? "";
+      log("ChatUserDetails: ChatUsername: $chatUsername - ConversationId: $conversationId - ChatUserId: $chatUserId");
     }
   }
 

@@ -88,6 +88,8 @@ class SignInController extends GetxController {
           StorageHelper.setValue(StorageHelper.username, signIn.data?.userName);
           StorageHelper.setObject(StorageHelper.signInResponse, signIn);
           AppDIController.setSignInDetails(signIn);
+          AppDIController.getStorageValue();
+          AppDIController.initWebsockets();
           HelperFunction.snackbar(
             "Signed in successfully. Redirecting to your dashboard...",
             title: "Success",
@@ -95,9 +97,6 @@ class SignInController extends GetxController {
             backgroundColor: AppColors.green,
           );
           await _postUserDeviceTokens();
-          if ((signIn.data?.accessToken ?? "").isNotEmpty) {
-            await HelperFunction.initWebSockets(signIn.data?.accessToken ?? "");
-          }
           _goToLandingScreen();
         } else {
           HelperFunction.snackbar("Sign in failed. Please check your email and password.");

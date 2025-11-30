@@ -30,12 +30,17 @@ class ChatsListController extends GetxController {
 
   void goToChatsArchivedListScreen() => Get.toNamed(AppRoutes.chatsArchivedListScreen);
 
-  void goToChatsRoomScreen(String username, {String? conversationId}) {
+  void goToChatsRoomScreen({
+    required String username,
+    required String conversationId,
+    required String userId,
+  }) {
     Get.toNamed(
       AppRoutes.chatsRoomScreen,
       arguments: {
         "chatUsername": username,
         "conversationId": conversationId,
+        "chatUserId": userId,
       },
     );
   }
@@ -49,6 +54,7 @@ class ChatsListController extends GetxController {
   }
 
   Future<void> refreshChatsData({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    archivedChats.clear();
     await _getChats(isRefresh: isRefresh, isLoadingEmpty: isLoadingEmpty);
   }
 
@@ -223,11 +229,6 @@ class ChatsListController extends GetxController {
       if (!aPinned && bPinned) return 1;
       return 0;
     });
-  }
-
-  Future<void> refreshChats() async {
-    await Future.delayed(const Duration(milliseconds: 600));
-    conversations.refresh();
   }
 
   @override

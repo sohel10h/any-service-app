@@ -44,8 +44,13 @@ class ChatData {
 
   factory ChatData.fromJson(Map<String, dynamic> json) => ChatData(
         meta: json["meta"] == null ? null : MetaModel.fromJson(json["meta"]),
-        conversations:
-            json["conversations"] == null ? [] : List<Conversation>.from(json["conversations"]!.map((x) => Conversation.fromJson(x))),
+        conversations: json["conversations"] == null
+            ? []
+            : List<Conversation>.from(
+                json["conversations"]!.map(
+                  (x) => Conversation.fromJson(x),
+                ),
+              ),
       );
 
   Map<String, dynamic> toJson() => {
@@ -109,6 +114,7 @@ class LastMessage {
   final String? senderName;
   final String? content;
   final String? createdAt;
+  final bool? isRead;
 
   LastMessage({
     this.id,
@@ -117,6 +123,7 @@ class LastMessage {
     this.senderName,
     this.content,
     this.createdAt,
+    this.isRead,
   });
 
   factory LastMessage.fromJson(Map<String, dynamic> json) => LastMessage(
@@ -126,6 +133,7 @@ class LastMessage {
         senderName: json["sender_name"],
         content: json["content"],
         createdAt: json["created_at"],
+        isRead: json["is_read"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -135,25 +143,30 @@ class LastMessage {
         "sender_name": senderName,
         "content": content,
         "created_at": createdAt,
+        "is_read": isRead,
       };
 }
 
 class Participant {
   final String? userId;
   final String? userName;
+  final String? pictureUrl;
 
   Participant({
     this.userId,
     this.userName,
+    this.pictureUrl,
   });
 
   factory Participant.fromJson(Map<String, dynamic> json) => Participant(
         userId: json["user_id"],
         userName: json["user_name"],
+        pictureUrl: json["picture_url"],
       );
 
   Map<String, dynamic> toJson() => {
         "user_id": userId,
         "user_name": userName,
+        "picture_url": pictureUrl,
       };
 }

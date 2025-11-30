@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/view/widgets/home/category_section.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/widgets/home/cleaning_service_section.dart';
@@ -102,7 +103,7 @@ class HomeScreen extends GetWidget<HomeController> {
         GestureDetector(
           onTap: controller.goToNotificationsScreen,
           child: Obx(() {
-            final unreadCount = controller.appDIController.unreadNotificationCount.value;
+            final unreadCount = AppDIController.unreadNotificationCount.value;
             final unread = (unreadCount ?? 0) > 99 ? "99+" : "${unreadCount ?? ""}";
             if (unread.isEmpty) {
               return SvgPicture.asset(

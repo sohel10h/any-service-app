@@ -372,7 +372,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
           final buttonLabel = isApproved ? "Unapprove Bid" : "Accept Bid";
           final isServiceRequestCompleted = controller.serviceDetailsData.value.status == ServiceRequestStatus.completed.typeValue;
           if (isServiceRequestCompleted) return const SizedBox.shrink();
-          final isBothApproved = (bid.userApproved ?? false) && (bid.vendorApproved ?? false);
+          final isBothApproved = controller.isBidBothApproved.value;
           if (isBothApproved) return const SizedBox.shrink();
           final isRejected = bid.status == ServiceRequestBidStatus.rejected.typeValue;
           if (isRejected) return const SizedBox.shrink();

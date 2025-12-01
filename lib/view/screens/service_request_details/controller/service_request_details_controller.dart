@@ -27,7 +27,7 @@ class ServiceRequestDetailsController extends GetxController {
   final FocusNode descriptionFocusNode = FocusNode();
   final FocusNode priceFocusNode = FocusNode();
   String serviceRequestId = "";
-  RxInt currentIndex = 0.obs;
+  RxInt currentImageSliderIndex = 1.obs;
   RxInt selectedTabIndex = 0.obs;
   RxInt selectedFilterIndex = 0.obs;
   final List<String> tabs = ["All Bids", "Shortlisted", "Rejected", "Final Bid"];
@@ -52,6 +52,7 @@ class ServiceRequestDetailsController extends GetxController {
   final RxMap<String, RxBool> isShortlistedLoadingMap = <String, RxBool>{}.obs;
   final RxMap<String, RxBool> isRejectedLoadingMap = <String, RxBool>{}.obs;
   RxBool isLoadingServiceRequestStatus = false.obs;
+  RxBool isBidBothApproved = false.obs;
 
   @override
   void onInit() {
@@ -60,8 +61,12 @@ class ServiceRequestDetailsController extends GetxController {
     _getArguments();
     _addListenerFocusNodes();
     _addViews();
-    _getServiceRequestsDetails();
-    _getServicesMe();
+    _getServices();
+  }
+
+  void _getServices() async {
+    await _getServiceRequestsDetails();
+    await _getServicesMe();
   }
 
   void goToChatsRoomScreen({
@@ -549,6 +554,7 @@ class ServiceRequestDetailsController extends GetxController {
   }
 
   Future<void> _getServicesMe() async {
+    if (isProvider.value) return; // check if service creator
     try {
       var response = await _serviceRepo.getServicesMe();
       if (response is String) {
@@ -590,6 +596,10 @@ class ServiceRequestDetailsController extends GetxController {
         ServiceDetailsModel serviceDetails = response as ServiceDetailsModel;
         if (serviceDetails.status == 200 || serviceDetails.status == 201) {
           serviceDetailsData.value = serviceDetails.serviceDetailsData ?? ServiceDetailsData();
+          isBidBothApproved.value = serviceDetailsData.value.bids?.any(
+                (bid) => (bid.userApproved ?? false) && (bid.vendorApproved ?? false),
+              ) ??
+              false;
           isProvider.value = serviceDetailsData.value.createdBy == userId;
           if (!isProvider.value) {
             if ((serviceDetailsData.value.bids?.isNotEmpty ?? false)) {
@@ -624,6 +634,10 @@ class ServiceRequestDetailsController extends GetxController {
                 await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.getServiceRequestsDetails(serviceRequestId));
             if (retryResponse is ServiceDetailsModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceDetailsData.value = retryResponse.serviceDetailsData ?? ServiceDetailsData();
+              isBidBothApproved.value = serviceDetailsData.value.bids?.any(
+                    (bid) => (bid.userApproved ?? false) && (bid.vendorApproved ?? false),
+                  ) ??
+                  false;
               isProvider.value = serviceDetailsData.value.createdBy == userId;
               if (!isProvider.value) {
                 if ((serviceDetailsData.value.bids?.isNotEmpty ?? false)) {

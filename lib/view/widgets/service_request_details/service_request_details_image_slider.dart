@@ -12,20 +12,21 @@ class ServiceRequestDetailsImageSlider extends GetWidget<ServiceRequestDetailsCo
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Stack(
+    return Obx(() {
+      final serviceDetails = controller.serviceDetailsData.value;
+      return Stack(
         fit: StackFit.loose,
         clipBehavior: Clip.none,
         children: [
           SizedBox(
             height: 320.h,
-            child: (controller.serviceDetailsData.value.pictures?.isEmpty ?? true)
+            child: (serviceDetails.pictures?.isEmpty ?? true)
                 ? Image.asset("assets/images/no_image_available.jpg")
                 : PageView.builder(
-                    itemCount: controller.serviceDetailsData.value.pictures?.length ?? 0,
-                    onPageChanged: (index) => controller.currentIndex.value = index,
+                    itemCount: serviceDetails.pictures?.length ?? 0,
+                    onPageChanged: (index) => controller.currentImageSliderIndex.value = index + 1,
                     itemBuilder: (context, index) {
-                      final picture = controller.serviceDetailsData.value.pictures?[index] ?? PictureModel();
+                      final picture = serviceDetails.pictures?[index] ?? PictureModel();
                       return NetworkImageLoader(
                         picture.virtualPath ?? "",
                         width: double.infinity,
@@ -46,7 +47,7 @@ class ServiceRequestDetailsImageSlider extends GetWidget<ServiceRequestDetailsCo
                 height: 31.w,
                 padding: EdgeInsets.all(4.sp),
                 decoration: BoxDecoration(
-                  color: (controller.serviceDetailsData.value.pictures?.isEmpty ?? true) ? AppColors.containerF4F4F4 : AppColors.white,
+                  color: (serviceDetails.pictures?.isEmpty ?? true) ? AppColors.containerF4F4F4 : AppColors.white,
                   shape: BoxShape.circle,
                 ),
                 child: SvgPicture.asset(
@@ -65,7 +66,7 @@ class ServiceRequestDetailsImageSlider extends GetWidget<ServiceRequestDetailsCo
               height: 31.w,
               padding: EdgeInsets.all(8.sp),
               decoration: BoxDecoration(
-                color: (controller.serviceDetailsData.value.pictures?.isEmpty ?? true) ? AppColors.containerF4F4F4 : AppColors.white,
+                color: (serviceDetails.pictures?.isEmpty ?? true) ? AppColors.containerF4F4F4 : AppColors.white,
                 shape: BoxShape.circle,
               ),
               child: SvgPicture.asset(
@@ -83,7 +84,7 @@ class ServiceRequestDetailsImageSlider extends GetWidget<ServiceRequestDetailsCo
               height: 31.w,
               padding: EdgeInsets.all(8.sp),
               decoration: BoxDecoration(
-                color: (controller.serviceDetailsData.value.pictures?.isEmpty ?? true) ? AppColors.containerF4F4F4 : AppColors.white,
+                color: (serviceDetails.pictures?.isEmpty ?? true) ? AppColors.containerF4F4F4 : AppColors.white,
                 shape: BoxShape.circle,
               ),
               child: SvgPicture.asset(
@@ -102,7 +103,7 @@ class ServiceRequestDetailsImageSlider extends GetWidget<ServiceRequestDetailsCo
               height: 67.h,
             ),
           ),
-          (controller.serviceDetailsData.value.pictures?.isEmpty ?? true)
+          (serviceDetails.pictures?.isEmpty ?? true)
               ? const SizedBox.shrink()
               : Positioned(
                   right: 16.w,
@@ -114,7 +115,7 @@ class ServiceRequestDetailsImageSlider extends GetWidget<ServiceRequestDetailsCo
                       borderRadius: BorderRadius.circular(4.r),
                     ),
                     child: Text(
-                      "${controller.currentIndex + 1}/${controller.serviceDetailsData.value.pictures?.length ?? 0}",
+                      "${controller.currentImageSliderIndex.value}/${serviceDetails.pictures?.length ?? 0}",
                       style: TextStyle(
                         fontSize: 11.sp,
                         color: AppColors.white,
@@ -124,7 +125,7 @@ class ServiceRequestDetailsImageSlider extends GetWidget<ServiceRequestDetailsCo
                   ),
                 ),
         ],
-      ),
-    );
+      );
+    });
   }
 }

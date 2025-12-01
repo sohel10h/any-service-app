@@ -17,8 +17,10 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
       padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 16.h),
       child: Obx(() {
         final bid = controller.bidData.value;
+        final serviceDetails = controller.serviceDetailsData.value;
         final isUserApproved = bid?.userApproved ?? false;
         final isBidRejected = bid?.status == ServiceRequestBidStatus.rejected.typeValue;
+        final isServiceRequestCompleted = serviceDetails.status == ServiceRequestStatus.completed.typeValue;
         return Stack(
           clipBehavior: Clip.none,
           children: [
@@ -239,7 +241,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                 ],
               ),
             ),
-            isUserApproved || isBidRejected
+            isUserApproved || isBidRejected || isServiceRequestCompleted
                 ? const SizedBox.shrink()
                 : Positioned(
                     top: -14.h,
@@ -346,7 +348,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
         final bid = controller.bidData.value;
         final userApprovedMessage = 'Great news! Your bid was accepted. Tap "Accept Bid" to move forward with the next steps.';
         final userAndVendorApprovedMessage = "This bid has been approved and is ready for further action.";
-        final isBothApproved = (bid?.userApproved ?? false) && (bid?.vendorApproved ?? false);
+        final isBothApproved = controller.isBidBothApproved.value;
         return Column(
           children: [
             ...!(bid?.userApproved ?? false)
@@ -430,17 +432,19 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                               ),
                             ),
                       SizedBox(width: 8.w),
-                      Expanded(
-                        flex: 1,
-                        child: _iconButton(
-                          containerColor: AppColors.white,
-                          borderColor: AppColors.containerE5E7EB,
-                          iconPath: "assets/svgs/message_bubble.svg",
-                          label: "",
-                          color: AppColors.black,
-                          onTap: () {}, // TODO: onMessage
-                        ),
-                      ),
+                      !controller.isProvider.value
+                          ? const SizedBox.shrink()
+                          : Expanded(
+                              flex: 1,
+                              child: _iconButton(
+                                containerColor: AppColors.white,
+                                borderColor: AppColors.containerE5E7EB,
+                                iconPath: "assets/svgs/message_bubble.svg",
+                                label: "",
+                                color: AppColors.black,
+                                onTap: () {}, // TODO: onMessage
+                              ),
+                            ),
                       SizedBox(width: 8.w),
                       !controller.isProvider.value
                           ? const SizedBox.shrink()

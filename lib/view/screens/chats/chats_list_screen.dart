@@ -244,7 +244,7 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                               onTap: () => controller.selectedChats.isNotEmpty
                                   ? controller.toggleSelection(chat.id ?? "")
                                   : controller.goToChatsRoomScreen(
-                                      username: chat.lastMessage?.senderName ?? "",
+                                      username: participants.isNotEmpty ? (participants.first.userName ?? "") : "",
                                       conversationId: chat.id ?? "",
                                       userId: HelperFunction.getParticipantUserId(
                                         chat.participants,

@@ -85,6 +85,7 @@ class ChatsListController extends GetxController {
           } else {
             conversations.addAll(data);
           }
+          conversations.removeWhere((conversation) => conversation.participants?.isEmpty ?? true);
           currentPageChats = chat.chatData?.meta?.page ?? currentPageChats;
           totalPagesChats = chat.chatData?.meta?.totalPages ?? totalPagesChats;
         } else {
@@ -103,6 +104,7 @@ class ChatsListController extends GetxController {
               } else {
                 conversations.addAll(data);
               }
+              conversations.removeWhere((conversation) => conversation.participants?.isEmpty ?? true);
               currentPageChats = chat.chatData?.meta?.page ?? currentPageChats;
               totalPagesChats = chat.chatData?.meta?.totalPages ?? totalPagesChats;
             } else {

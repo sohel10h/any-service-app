@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
+import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_tab.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_header.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bids_tab.dart';
@@ -49,44 +50,54 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
               ),
             ],
           ),
-          body: DefaultTabController(
-            length: controller.tabs.length,
-            initialIndex: controller.selectedTabIndex.value,
-            child: NestedScrollView(
-              headerSliverBuilder: (context, innerBoxIsScrolled) {
-                return [
-                  SliverOverlapAbsorber(
-                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                    sliver: SliverToBoxAdapter(
-                      child: Column(
+          body: controller.isLoadingAdminUser.value
+              ? CustomProgressBar()
+              : DefaultTabController(
+                  length: controller.tabs.length,
+                  initialIndex: controller.selectedTabIndex.value,
+                  child: NestedScrollView(
+                    headerSliverBuilder: (context, innerBoxIsScrolled) {
+                      return [
+                        SliverOverlapAbsorber(
+                          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                          sliver: SliverToBoxAdapter(
+                            child: Column(
+                              children: [
+                                SizedBox(height: 16.h),
+                                VendorProfileHeader(),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SliverPersistentHeader(
+                          pinned: true,
+                          delegate: VendorProfileTabBarHeaderDelegate(
+                            minHeight: 40.h,
+                            maxHeight: 40.h,
+                            child: VendorProfileTab(isFromNestedScroll: true),
+                          ),
+                        ),
+                      ];
+                    },
+                    body: RefreshIndicator(
+                      color: AppColors.primary,
+                      backgroundColor: AppColors.white,
+                      onRefresh: controller.refreshAdminUser,
+                      notificationPredicate: (notification) {
+                        return notification.depth == 1;
+                      },
+                      child: TabBarView(
+                        physics: const NeverScrollableScrollPhysics(),
                         children: [
-                          SizedBox(height: 16.h),
-                          VendorProfileHeader(),
+                          VendorProfileBidsTab(),
+                          VendorProfileServicesTab(),
+                          VendorProfileServiceRequestsTab(),
+                          VendorProfileServiceRequestsTab(),
                         ],
                       ),
                     ),
                   ),
-                  SliverPersistentHeader(
-                    pinned: true,
-                    delegate: VendorProfileTabBarHeaderDelegate(
-                      minHeight: 40.h,
-                      maxHeight: 40.h,
-                      child: VendorProfileTab(isFromNestedScroll: true),
-                    ),
-                  ),
-                ];
-              },
-              body: TabBarView(
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  VendorProfileBidsTab(),
-                  VendorProfileServicesTab(),
-                  VendorProfileServiceRequestsTab(),
-                  VendorProfileServiceRequestsTab(),
-                ],
-              ),
-            ),
-          ),
+                ),
         ),
       ),
     );

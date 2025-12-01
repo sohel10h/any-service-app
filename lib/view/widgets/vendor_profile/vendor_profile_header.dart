@@ -31,140 +31,145 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  NetworkImageLoader(
-                    HelperFunction.userImage1,
-                    width: 84.w,
-                    height: 84.w,
-                    borderRadius: BorderRadius.circular(60.r),
-                  ),
-                  Positioned(
-                    right: -6,
-                    bottom: -4,
-                    child: Container(
-                      width: 32.w,
-                      height: 32.w,
-                      decoration: BoxDecoration(
-                        color: AppColors.container155DFC,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.white, width: 2),
-                      ),
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        icon: SvgPicture.asset(
-                          "assets/svgs/camera.svg",
-                          width: 16.w,
-                          height: 16.h,
-                        ),
-                        onPressed: () {},
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(width: 8.w),
-              ElevatedButton.icon(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.container155DFC,
-                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                ),
-                label: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+    return Obx(() {
+      final user = controller.adminUser.value;
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
                   children: [
-                    SvgPicture.asset(
-                      "assets/svgs/edit.svg",
-                      width: 14.w,
-                      height: 14.h,
-                      colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+                    NetworkImageLoader(
+                      user.picture?.virtualPath ?? "",
+                      width: 84.w,
+                      height: 84.w,
+                      borderRadius: BorderRadius.circular(60.r),
                     ),
-                    SizedBox(width: 6.w),
-                    Text(
-                      "Edit Profile",
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppColors.white,
-                        fontWeight: FontWeight.w600,
+                    Positioned(
+                      right: -6,
+                      bottom: -4,
+                      child: Container(
+                        width: 32.w,
+                        height: 32.w,
+                        decoration: BoxDecoration(
+                          color: AppColors.container155DFC,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColors.white, width: 2),
+                        ),
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: SvgPicture.asset(
+                            "assets/svgs/camera.svg",
+                            width: 16.w,
+                            height: 16.h,
+                          ),
+                          onPressed: () {},
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.h),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppDIController.signInDetails.value.data?.userName ?? "",
-                style: TextStyle(
-                  fontSize: 17.sp,
-                  color: AppColors.text101828,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Text(
-                "Deep Cleaning Expert",
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: AppColors.text4A5565,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              Row(
-                children: [
-                  SvgPicture.asset(
-                    "assets/svgs/location_outline.svg",
-                    width: 14.w,
-                    height: 14.h,
-                    colorFilter: ColorFilter.mode(AppColors.text4A5565, BlendMode.srcIn),
-                  ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    "San Francisco, CA",
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: AppColors.text4A5565,
-                      fontWeight: FontWeight.w400,
+                SizedBox(width: 8.w),
+                ElevatedButton.icon(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.container155DFC,
+                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+                  label: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/svgs/edit.svg",
+                        width: 14.w,
+                        height: 14.h,
+                        colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+                      ),
+                      SizedBox(width: 6.w),
+                      Text(
+                        "Edit Profile",
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.h),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user.name ?? AppDIController.signInDetails.value.data?.userName ?? "",
+                  style: TextStyle(
+                    fontSize: 17.sp,
+                    color: AppColors.text101828,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  "Deep Cleaning Expert", //TODO: need to get this field value from API
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: AppColors.text4A5565,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Row(
+                  children: [
+                    SvgPicture.asset(
+                      "assets/svgs/location_outline.svg",
+                      width: 14.w,
+                      height: 14.h,
+                      colorFilter: ColorFilter.mode(AppColors.text4A5565, BlendMode.srcIn),
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      "San Francisco, CA", //TODO: need to get this field value from API
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.text4A5565,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildStatsRow() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildStatBox("4.9", "Rating", AppColors.containerEFF6FF, iconPath: "assets/svgs/rating.svg"),
-          _buildStatBox("456", "Jobs", AppColors.containerF0FDF4),
-          _buildStatBox("324", "Reviews", AppColors.containerFAF5FF),
-          _buildStatBox("1 hour", "Response", AppColors.containerFFF7ED),
-        ],
-      ),
-    );
+    return Obx(() {
+      final user = controller.adminUser.value;
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 14.w),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildStatBox("${user.rating ?? 0}", "Rating", AppColors.containerEFF6FF, iconPath: "assets/svgs/rating.svg"),
+            _buildStatBox("${user.serviceCompletedCount ?? 0}", "Jobs", AppColors.containerF0FDF4),
+            _buildStatBox("${user.totalReview ?? 0}", "Reviews", AppColors.containerFAF5FF),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildStatBox(String value, String label, Color color, {String? iconPath}) {
@@ -222,73 +227,76 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
   }
 
   Widget _buildContactInfo() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              SvgPicture.asset(
-                "assets/svgs/email.svg",
-                width: 14.w,
-                height: 14.h,
-                colorFilter: ColorFilter.mode(AppColors.text364153, BlendMode.srcIn),
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                AppDIController.signInDetails.value.data?.userEmail ?? "",
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: AppColors.text364153,
-                  fontWeight: FontWeight.w400,
+    return Obx(() {
+      final user = controller.adminUser.value;
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                SvgPicture.asset(
+                  "assets/svgs/email.svg",
+                  width: 14.w,
+                  height: 14.h,
+                  colorFilter: ColorFilter.mode(AppColors.text364153, BlendMode.srcIn),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8.h),
-          Row(
-            children: [
-              SvgPicture.asset(
-                "assets/svgs/phone.svg",
-                width: 14.w,
-                height: 14.h,
-                colorFilter: ColorFilter.mode(AppColors.text364153, BlendMode.srcIn),
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                "+1 (555) 123-4567",
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: AppColors.text364153,
-                  fontWeight: FontWeight.w400,
+                SizedBox(width: 8.w),
+                Text(
+                  user.email ?? AppDIController.signInDetails.value.data?.userEmail ?? "",
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: AppColors.text364153,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8.h),
-          Row(
-            children: [
-              SvgPicture.asset(
-                "assets/svgs/calendar_outline.svg",
-                width: 14.w,
-                height: 14.h,
-                colorFilter: ColorFilter.mode(AppColors.text364153, BlendMode.srcIn),
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                "Member since Jan 2023",
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: AppColors.text364153,
-                  fontWeight: FontWeight.w400,
+              ],
+            ),
+            SizedBox(height: 8.h),
+            Row(
+              children: [
+                SvgPicture.asset(
+                  "assets/svgs/phone.svg",
+                  width: 14.w,
+                  height: 14.h,
+                  colorFilter: ColorFilter.mode(AppColors.text364153, BlendMode.srcIn),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+                SizedBox(width: 8.w),
+                Text(
+                  user.mobile ?? "",
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: AppColors.text364153,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 8.h),
+            Row(
+              children: [
+                SvgPicture.asset(
+                  "assets/svgs/calendar_outline.svg",
+                  width: 14.w,
+                  height: 14.h,
+                  colorFilter: ColorFilter.mode(AppColors.text364153, BlendMode.srcIn),
+                ),
+                SizedBox(width: 8.w),
+                Text(
+                  HelperFunction.formatMemberSince(user.createdAt ?? ""),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: AppColors.text364153,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildMembershipBadge() {
@@ -311,7 +319,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
             ),
             SizedBox(width: 8.w),
             Text(
-              "Verified Provider",
+              "Verified Provider", //TODO: need to get this field value from API
               style: TextStyle(
                 fontSize: 12.sp,
                 color: AppColors.text008236,

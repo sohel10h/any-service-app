@@ -37,4 +37,10 @@ class AdminInformation extends AdminApiService {
     );
     return response;
   }
+
+  @override
+  Future getAdminUser(String userId) async {
+    dynamic response = await ApiService().get(ApiConstant.getAdminUserPath.replaceAll("#userId#", userId));
+    return response;
+  }
 }

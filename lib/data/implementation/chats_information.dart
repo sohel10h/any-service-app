@@ -24,4 +24,15 @@ class ChatsInformation extends ChatsApiService {
     );
     return response;
   }
+
+  @override
+  Future getChatsMessagesUser(String userId, {Map<String, dynamic>? queryParams}) async {
+    dynamic response = await ApiService().get(
+      ApiConstant.dynamicQueryParams(
+        ApiConstant.getChatsMessagesUserPath.replaceAll("#userId#", userId),
+        queryParams: queryParams,
+      ),
+    );
+    return response;
+  }
 }

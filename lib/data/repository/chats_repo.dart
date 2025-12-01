@@ -27,4 +27,14 @@ class ChatsRepo {
       return e;
     }
   }
+
+  Future<dynamic> getChatsMessagesUser(String userId, {Map<String, dynamic>? queryParams}) async {
+    try {
+      dynamic response = await _chatsApiService.getChatsMessagesUser(userId, queryParams: queryParams);
+      log("ChatsMessagesUser get details from chats repo: $response");
+      return ChatMessageModel.fromJson(jsonDecode(response.toString()));
+    } catch (e) {
+      return e;
+    }
+  }
 }

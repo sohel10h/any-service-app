@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:get/get.dart';
+import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/api_service/api_service.dart';
@@ -54,6 +55,22 @@ class CreateServiceDetailsController extends GetxController {
     super.onInit();
     _getArguments();
     _getAdminServicesDetails();
+  }
+
+  void goToChatsRoomScreen({
+    required String username,
+    required String conversationId,
+    required String userId,
+  }) {
+    Get.toNamed(
+      AppRoutes.chatsRoomScreen,
+      arguments: {
+        "chatUsername": username,
+        "conversationId": conversationId,
+        "chatUserId": userId,
+        "isInsideChat": false,
+      },
+    );
   }
 
   Future<void> _getAdminServicesDetails() async {

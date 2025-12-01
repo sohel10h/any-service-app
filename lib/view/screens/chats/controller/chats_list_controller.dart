@@ -41,6 +41,7 @@ class ChatsListController extends GetxController {
         "chatUsername": username,
         "conversationId": conversationId,
         "chatUserId": userId,
+        "isInsideChat": true,
       },
     );
   }

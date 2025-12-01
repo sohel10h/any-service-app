@@ -12,6 +12,7 @@ class ChatsRoomController extends GetxController {
   String chatUsername = "";
   String chatUserId = "";
   String conversationId = "";
+  bool isInsideChat = false;
   final chatInputController = TextEditingController();
   final RxBool isTyping = false.obs;
   final ChatsRepo _chatsRepo = ChatsRepo();
@@ -78,7 +79,9 @@ class ChatsRoomController extends GetxController {
       Map<String, dynamic> queryParams = {
         'page': currentPageChatsMessages,
       };
-      var response = await _chatsRepo.getChatsMessages(conversationId, queryParams: queryParams);
+      var response = isInsideChat
+          ? await _chatsRepo.getChatsMessages(conversationId, queryParams: queryParams)
+          : await _chatsRepo.getChatsMessagesUser(chatUserId, queryParams: queryParams);
       if (response is String) {
         log("ChatsMessages get failed from controller response: $response");
       } else {
@@ -99,7 +102,9 @@ class ChatsRoomController extends GetxController {
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(
-              () => _chatsRepo.getChatsMessages(conversationId, queryParams: queryParams),
+              () => isInsideChat
+                  ? _chatsRepo.getChatsMessages(conversationId, queryParams: queryParams)
+                  : _chatsRepo.getChatsMessagesUser(chatUserId, queryParams: queryParams),
             );
             if (retryResponse is ChatMessageModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               final data = retryResponse.chatMessageData?.chatMessages ?? [];
@@ -183,7 +188,13 @@ class ChatsRoomController extends GetxController {
       chatUsername = Get.arguments["chatUsername"] ?? "User";
       conversationId = Get.arguments["conversationId"] ?? "";
       chatUserId = Get.arguments["chatUserId"] ?? "";
-      log("ChatUserDetails: ChatUsername: $chatUsername - ConversationId: $conversationId - ChatUserId: $chatUserId");
+      isInsideChat = Get.arguments["isInsideChat"] ?? false;
+      log(
+        "ChatUserDetails: ChatUsername: $chatUsername "
+        "- ConversationId: $conversationId "
+        "- ChatUserId: $chatUserId "
+        "- IsInsideChat: $isInsideChat",
+      );
     }
   }
 

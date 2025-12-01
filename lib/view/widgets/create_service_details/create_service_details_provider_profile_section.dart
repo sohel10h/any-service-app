@@ -193,7 +193,13 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          controller.goToChatsRoomScreen(
+                            username: controller.createServiceDetailsData.value.user?.name ?? "",
+                            conversationId: "",
+                            userId: controller.createServiceDetailsData.value.user?.id ?? "",
+                          );
+                        },
                         style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                           side: BorderSide(color: AppColors.primary, width: 2.h),

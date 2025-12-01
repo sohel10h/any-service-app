@@ -42,6 +42,7 @@ class ApiConstant {
   // END POINTS - Chats
   static const String getChatsPath = "/api/chats";
   static const String getChatsMessagesPath = "/api/chats/messages/#conversationId#";
+  static const String getChatsMessagesUserPath = "/api/chats/messages/user/#userId#";
 
   // Functions
   static String dynamicQueryParams(String endpoint, {Map<String, dynamic>? queryParams}) {

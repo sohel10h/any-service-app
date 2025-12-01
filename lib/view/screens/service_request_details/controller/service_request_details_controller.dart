@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/common/utils/helper_function.dart';
@@ -61,6 +62,22 @@ class ServiceRequestDetailsController extends GetxController {
     _addViews();
     _getServiceRequestsDetails();
     _getServicesMe();
+  }
+
+  void goToChatsRoomScreen({
+    required String username,
+    required String conversationId,
+    required String userId,
+  }) {
+    Get.toNamed(
+      AppRoutes.chatsRoomScreen,
+      arguments: {
+        "chatUsername": username,
+        "conversationId": conversationId,
+        "chatUserId": userId,
+        "isInsideChat": false,
+      },
+    );
   }
 
   Future<void> onRefresh({String? serviceRequestIdValue}) async {

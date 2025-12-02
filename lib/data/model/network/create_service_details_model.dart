@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:service_la/data/model/network/common/review_model.dart';
+import 'package:service_la/data/model/network/common/picture_model.dart';
+import 'package:service_la/data/model/network/common/service_user_model.dart';
 
 CreateServiceDetailsModel createServiceDetailsModelFromJson(String str) => CreateServiceDetailsModel.fromJson(json.decode(str));
 
@@ -48,9 +51,9 @@ class CreateServiceDetailsData {
   final num? priceEnd;
   final String? createdAt;
   final String? updatedAt;
-  final List<CreateServiceDetailsPicture>? pictures;
-  final List<dynamic>? review;
-  final User? user;
+  final List<PictureModel>? pictures;
+  final List<CreateServiceDetailsReview>? review;
+  final ServiceUserModel? user;
 
   CreateServiceDetailsData({
     this.id,
@@ -91,11 +94,11 @@ class CreateServiceDetailsData {
         priceEnd: json["price_end"],
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
-        pictures: json["pictures"] == null
+        pictures: json["pictures"] == null ? [] : List<PictureModel>.from(json["pictures"]!.map((x) => PictureModel.fromJson(x))),
+        review: json["review"] == null
             ? []
-            : List<CreateServiceDetailsPicture>.from(json["pictures"]!.map((x) => CreateServiceDetailsPicture.fromJson(x))),
-        review: json["review"] == null ? [] : List<dynamic>.from(json["review"]!.map((x) => x)),
-        user: json["user"] == null ? null : User.fromJson(json["user"]),
+            : List<CreateServiceDetailsReview>.from(json["review"]!.map((x) => CreateServiceDetailsReview.fromJson(x))),
+        user: json["user"] == null ? null : ServiceUserModel.fromJson(json["user"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -115,7 +118,7 @@ class CreateServiceDetailsData {
         "created_at": createdAt,
         "updated_at": updatedAt,
         "pictures": pictures == null ? [] : List<dynamic>.from(pictures!.map((x) => x.toJson())),
-        "review": review == null ? [] : List<dynamic>.from(review!.map((x) => x)),
+        "review": review == null ? [] : List<dynamic>.from(review!.map((x) => x.toJson())),
         "user": user?.toJson(),
       };
 }
@@ -140,118 +143,26 @@ class CreateServiceDetailsCategory {
       };
 }
 
-class CreateServiceDetailsPicture {
-  final String? id;
-  final String? mimeType;
-  final String? seoFilename;
-  final String? altAttribute;
-  final String? titleAttribute;
-  final String? virtualPath;
-  final int? displayOrder;
-  final bool? isIcon;
+class CreateServiceDetailsReview {
+  final ReviewModel? review;
+  final ServiceUserModel? user;
+  final PictureModel? picture;
 
-  CreateServiceDetailsPicture({
-    this.id,
-    this.mimeType,
-    this.seoFilename,
-    this.altAttribute,
-    this.titleAttribute,
-    this.virtualPath,
-    this.displayOrder,
-    this.isIcon,
+  CreateServiceDetailsReview({
+    this.review,
+    this.user,
+    this.picture,
   });
 
-  factory CreateServiceDetailsPicture.fromJson(Map<String, dynamic> json) => CreateServiceDetailsPicture(
-        id: json["id"],
-        mimeType: json["mime_type"],
-        seoFilename: json["seo_filename"],
-        altAttribute: json["alt_attribute"],
-        titleAttribute: json["title_attribute"],
-        virtualPath: json["virtual_path"],
-        displayOrder: json["display_order"],
-        isIcon: json["is_icon"],
+  factory CreateServiceDetailsReview.fromJson(Map<String, dynamic> json) => CreateServiceDetailsReview(
+        review: json["review"] == null ? null : ReviewModel.fromJson(json["review"]),
+        user: json["user"] == null ? null : ServiceUserModel.fromJson(json["user"]),
+        picture: json["picture"] == null ? null : PictureModel.fromJson(json["picture"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "mime_type": mimeType,
-        "seo_filename": seoFilename,
-        "alt_attribute": altAttribute,
-        "title_attribute": titleAttribute,
-        "virtual_path": virtualPath,
-        "display_order": displayOrder,
-        "is_icon": isIcon,
-      };
-}
-
-class User {
-  final String? id;
-  final String? name;
-  final String? email;
-  final String? mobile;
-  final int? userType;
-  final String? createdBy;
-  final String? updatedBy;
-  final String? createdAt;
-  final String? updatedAt;
-  final bool? isActive;
-  final bool? isDelete;
-  final int? serviceCompletedCount;
-  final int? totalReview;
-  final dynamic pictureId;
-  final int? rating;
-
-  User({
-    this.id,
-    this.name,
-    this.email,
-    this.mobile,
-    this.userType,
-    this.createdBy,
-    this.updatedBy,
-    this.createdAt,
-    this.updatedAt,
-    this.isActive,
-    this.isDelete,
-    this.serviceCompletedCount,
-    this.totalReview,
-    this.pictureId,
-    this.rating,
-  });
-
-  factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json["id"],
-        name: json["name"],
-        email: json["email"],
-        mobile: json["mobile"],
-        userType: json["user_type"],
-        createdBy: json["created_by"],
-        updatedBy: json["updated_by"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
-        isActive: json["is_active"],
-        isDelete: json["is_delete"],
-        serviceCompletedCount: json["service_completed_count"],
-        totalReview: json["total_review"],
-        pictureId: json["picture_id"],
-        rating: json["rating"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "email": email,
-        "mobile": mobile,
-        "user_type": userType,
-        "created_by": createdBy,
-        "updated_by": updatedBy,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
-        "is_active": isActive,
-        "is_delete": isDelete,
-        "service_completed_count": serviceCompletedCount,
-        "total_review": totalReview,
-        "picture_id": pictureId,
-        "rating": rating,
+        "review": review?.toJson(),
+        "user": user?.toJson(),
+        "picture": picture?.toJson(),
       };
 }

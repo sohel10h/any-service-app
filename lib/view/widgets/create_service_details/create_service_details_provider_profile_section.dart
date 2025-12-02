@@ -55,7 +55,7 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                           GestureDetector(
                             onTap: () => controller.goToProfileScreen(serviceDetails.user?.id),
                             child: NetworkImageLoader(
-                              HelperFunction.userImage5, //TODO: need to get this data from API
+                              serviceDetails.user?.virtualPath ?? "",
                               width: 49.w,
                               height: 49.w,
                               borderRadius: BorderRadius.circular(60.r),

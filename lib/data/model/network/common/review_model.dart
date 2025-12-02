@@ -5,7 +5,7 @@ class ReviewModel {
   final String? serviceId;
   final String? serviceRequestId;
   final String? serviceRequestBidId;
-  final int? rating;
+  final num? rating;
   final String? reviewText;
   final String? createdAt;
   final String? updatedAt;

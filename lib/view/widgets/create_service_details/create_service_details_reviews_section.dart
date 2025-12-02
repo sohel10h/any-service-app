@@ -75,7 +75,7 @@ class CreateServiceDetailsReviewsSection extends GetWidget<CreateServiceDetailsC
     required String name,
     required String timeAgo,
     required String review,
-    required int rating,
+    required num rating,
   }) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -118,7 +118,7 @@ class CreateServiceDetailsReviewsSection extends GetWidget<CreateServiceDetailsC
                       SizedBox(height: 4.h),
                       Row(
                         children: List.generate(
-                          rating,
+                          rating.toInt(),
                           (index) {
                             return Padding(
                               padding: EdgeInsets.only(right: 3.w),

@@ -14,7 +14,7 @@ class ServiceUserModel {
   final int? totalReview;
   final String? pictureId;
   final String? virtualPath;
-  final int? rating;
+  final num? rating;
 
   ServiceUserModel({
     this.id,

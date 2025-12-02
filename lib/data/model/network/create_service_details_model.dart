@@ -40,7 +40,7 @@ class CreateServiceDetailsData {
   final String? name;
   final num? price;
   final int? serviceCompletedCount;
-  final int? rating;
+  final num? rating;
   final int? totalReview;
   final List<CreateServiceDetailsCategory>? categories;
   final String? description;

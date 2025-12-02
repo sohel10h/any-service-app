@@ -2,7 +2,7 @@ class VendorModel {
   final String? id;
   final String? name;
   final String? virtualPath;
-  final int? rating;
+  final num? rating;
   final int? serviceCompletedCount;
 
   VendorModel({

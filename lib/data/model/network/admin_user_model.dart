@@ -49,7 +49,7 @@ class AdminUser {
   final int? totalReview;
   final String? pictureId;
   final PictureModel? picture;
-  final int? rating;
+  final num? rating;
 
   AdminUser({
     this.id,

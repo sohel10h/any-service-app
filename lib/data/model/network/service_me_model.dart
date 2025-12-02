@@ -40,7 +40,7 @@ class ServiceMeData {
   final bool? priceRange;
   final num? priceStart;
   final num? priceEnd;
-  final int? rating;
+  final num? rating;
   final int? serviceCompletedCount;
   final int? totalReview;
   final Picture? picture;

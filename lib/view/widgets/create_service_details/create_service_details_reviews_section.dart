@@ -46,7 +46,7 @@ class CreateServiceDetailsReviewsSection extends GetWidget<CreateServiceDetailsC
             image: review.picture?.virtualPath ?? "",
             name: review.user?.name ?? "",
             timeAgo: formatTimeAgo(review.review?.createdAt ?? ""),
-            review: "${review.user?.totalReview ?? 0}",
+            review: review.review?.reviewText ?? "",
             rating: review.user?.rating ?? 0,
           );
           if (index < reviews.length - 1) {

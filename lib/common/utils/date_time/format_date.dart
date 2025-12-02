@@ -1,36 +1,39 @@
 import 'package:intl/intl.dart';
 
-//convert any date to any pattern and return string
 String formatDate(DateTime date, String pattern) {
   return DateFormat(pattern).format(date);
 }
 
-String formatTimeAgo(String dateTime) {
-  final DateTime created = DateTime.parse(dateTime).toLocal();
-  final DateTime now = DateTime.now();
-  final Duration diff = now.difference(created);
-
-  if (diff.inHours < 24) {
-    return "${diff.inHours} hour${diff.inHours == 1 ? '' : 's'} ago";
-  } else if (diff.inDays == 1) {
-    return "1 day ago";
-  } else if (diff.inDays < 7) {
-    return "${diff.inDays} days ago";
-  } else if (diff.inDays < 14) {
-    return "1 week ago";
-  } else if (diff.inDays < 21) {
-    return "2 weeks ago";
-  } else if (diff.inDays < 30) {
-    return "1 month ago";
-  } else if (diff.inDays < 60) {
-    return "2 months ago";
-  } else if (diff.inDays < 365) {
-    // For anything less than a year, show months difference
-    final months = (diff.inDays / 30).floor();
-    return "$months month${months == 1 ? '' : 's'} ago";
-  } else {
-    // If more than a year, show exact date
-    return DateFormat("MMMM d, yyyy").format(created);
+String formatTimeAgo(String? dateTime) {
+  try {
+    if (dateTime == null || dateTime.trim().isEmpty) {
+      return "Unknown time";
+    }
+    final DateTime created = DateTime.parse(dateTime).toLocal();
+    final DateTime now = DateTime.now();
+    final Duration diff = now.difference(created);
+    if (diff.inHours < 24) {
+      return "${diff.inHours} hour${diff.inHours == 1 ? '' : 's'} ago";
+    } else if (diff.inDays == 1) {
+      return "1 day ago";
+    } else if (diff.inDays < 7) {
+      return "${diff.inDays} days ago";
+    } else if (diff.inDays < 14) {
+      return "1 week ago";
+    } else if (diff.inDays < 21) {
+      return "2 weeks ago";
+    } else if (diff.inDays < 30) {
+      return "1 month ago";
+    } else if (diff.inDays < 60) {
+      return "2 months ago";
+    } else if (diff.inDays < 365) {
+      final months = (diff.inDays / 30).floor();
+      return "$months month${months == 1 ? '' : 's'} ago";
+    } else {
+      return DateFormat("MMMM d, yyyy").format(created);
+    }
+  } catch (e) {
+    return "Invalid date";
   }
 }
 

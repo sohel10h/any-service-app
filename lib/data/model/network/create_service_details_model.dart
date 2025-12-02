@@ -52,7 +52,7 @@ class CreateServiceDetailsData {
   final String? createdAt;
   final String? updatedAt;
   final List<PictureModel>? pictures;
-  final List<CreateServiceDetailsReview>? review;
+  final List<CreateServiceDetailsReview>? reviews;
   final ServiceUserModel? user;
 
   CreateServiceDetailsData({
@@ -72,7 +72,7 @@ class CreateServiceDetailsData {
     this.createdAt,
     this.updatedAt,
     this.pictures,
-    this.review,
+    this.reviews,
     this.user,
   });
 
@@ -95,7 +95,7 @@ class CreateServiceDetailsData {
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
         pictures: json["pictures"] == null ? [] : List<PictureModel>.from(json["pictures"]!.map((x) => PictureModel.fromJson(x))),
-        review: json["review"] == null
+        reviews: json["review"] == null
             ? []
             : List<CreateServiceDetailsReview>.from(json["review"]!.map((x) => CreateServiceDetailsReview.fromJson(x))),
         user: json["user"] == null ? null : ServiceUserModel.fromJson(json["user"]),
@@ -118,7 +118,7 @@ class CreateServiceDetailsData {
         "created_at": createdAt,
         "updated_at": updatedAt,
         "pictures": pictures == null ? [] : List<dynamic>.from(pictures!.map((x) => x.toJson())),
-        "review": review == null ? [] : List<dynamic>.from(review!.map((x) => x.toJson())),
+        "review": reviews == null ? [] : List<dynamic>.from(reviews!.map((x) => x.toJson())),
         "user": user?.toJson(),
       };
 }

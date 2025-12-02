@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/data/repository/admin_repo.dart';
-import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/data/model/network/create_service_details_model.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
@@ -13,49 +12,16 @@ class CreateServiceDetailsController extends GetxController {
   final AdminRepo _adminRepo = AdminRepo();
   RxBool isLoadingServicesDetails = false.obs;
   Rx<CreateServiceDetailsData> createServiceDetailsData = CreateServiceDetailsData().obs;
-  final List<Map<String, dynamic>> reviews = [
-    {
-      "image": HelperFunction.userImage1,
-      "name": "Jay Johnson",
-      "timeAgo": "2 days ago",
-      "rating": 3,
-      "review": "Excellent service! They fixed my AC quickly and professionally. Very satisfied with the work.",
-    },
-    {
-      "image": HelperFunction.userImage2,
-      "name": "Michael Chen",
-      "timeAgo": "2 weeks ago",
-      "rating": 4,
-      "review": "Great technician! Arrived on time and explained everything clearly. Highly recommend!",
-    },
-    {
-      "image": HelperFunction.userImage3,
-      "name": "Rock Russel",
-      "timeAgo": "1 week ago",
-      "rating": 5,
-      "review": "Good service overall. The AC is working perfectly now. Price was fair.",
-    },
-    {
-      "image": HelperFunction.userImage2,
-      "name": "Francky Jhu",
-      "timeAgo": "3 weeks ago",
-      "rating": 4,
-      "review": "Great technician! Arrived on time and explained everything clearly. Highly recommend!",
-    },
-    {
-      "image": HelperFunction.userImage3,
-      "name": "Philips Dilli",
-      "timeAgo": "1 hour ago",
-      "rating": 4,
-      "review": "Excellent service! They fixed my AC quickly and professionally. Very satisfied with the work.",
-    },
-  ];
 
   @override
   void onInit() {
     super.onInit();
     _getArguments();
     _getAdminServicesDetails();
+  }
+
+  Future<void> onRefresh() async {
+    await _getAdminServicesDetails();
   }
 
   void goToProfileScreen(String? userId) {
@@ -88,7 +54,6 @@ class CreateServiceDetailsController extends GetxController {
     isLoadingServicesDetails.value = true;
     try {
       var response = await _adminRepo.getAdminServicesDetails(serviceId);
-
       if (response is String) {
         log("AdminServicesDetails get failed from controller response: $response");
       } else {

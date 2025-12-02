@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/data/repository/admin_repo.dart';
@@ -12,8 +13,9 @@ import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/data/model/network/service_request_me_model.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 import 'package:service_la/data/model/network/service_request_bid_provider_model.dart';
+import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
-class VendorProfileController extends GetxController {
+class VendorProfileController extends GetxController with GetSingleTickerProviderStateMixin {
   String? userId;
   LandingController landingController = Get.find<LandingController>();
   RxInt currentIndex = 0.obs;
@@ -41,6 +43,7 @@ class VendorProfileController extends GetxController {
   final AdminRepo _adminRepo = AdminRepo();
   RxBool isLoadingAdminUser = false.obs;
   Rx<AdminUser> adminUser = AdminUser().obs;
+  late TabController tabController;
 
   @override
   void onInit() {
@@ -48,8 +51,22 @@ class VendorProfileController extends GetxController {
     _getArguments();
     _initTabViews();
     _initTabCounts();
+    _setupTabController();
     _getAdminUser();
     _getServices();
+  }
+
+  void _setupTabController() {
+    try {
+      tabController.dispose();
+    } catch (_) {}
+    tabController = TabController(
+      length: tabs.length,
+      vsync: this,
+    );
+    tabController.addListener(() {
+      selectedTabIndex.value = tabController.index;
+    });
   }
 
   void _getServices() async {
@@ -103,10 +120,13 @@ class VendorProfileController extends GetxController {
     }
   }
 
-  void goToServiceDetailsScreen(String serviceRequestId) => Get.toNamed(
-        AppRoutes.serviceRequestDetailsScreen,
-        arguments: {"serviceRequestId": serviceRequestId},
-      );
+  void goToServiceDetailsScreen(String serviceRequestId) {
+    Get.delete<ServiceRequestDetailsController>();
+    Get.toNamed(
+      AppRoutes.serviceRequestDetailsScreen,
+      arguments: {"serviceRequestId": serviceRequestId},
+    );
+  }
 
   Future<void> loadNextPageServiceRequests() async {
     if (currentPageServiceRequests < totalPagesServiceRequests && !isLoadingMoreServiceRequests.value) {
@@ -265,12 +285,19 @@ class VendorProfileController extends GetxController {
           }
           currentPageServiceRequestBids = serviceRequestBid.serviceRequestBidData?.meta?.page ?? currentPageServiceRequestBids;
           totalPagesServiceRequestBids = serviceRequestBid.serviceRequestBidData?.meta?.totalPages ?? totalPagesServiceRequestBids;
-          tabsCounts.value = [
-            serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
-            serviceMeDataList.length,
-            serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-            0,
-          ];
+          if (userId == null) {
+            tabsCounts.value = [
+              serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
+              serviceMeDataList.length,
+              serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+              0,
+            ];
+          } else {
+            tabsCounts.value = [
+              serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+              0,
+            ];
+          }
         } else {
           if (serviceRequestBid.status == 401 ||
               (serviceRequestBid.errors != null &&
@@ -292,12 +319,19 @@ class VendorProfileController extends GetxController {
               }
               currentPageServiceRequestBids = retryResponse.serviceRequestBidData?.meta?.page ?? currentPageServiceRequestBids;
               totalPagesServiceRequestBids = retryResponse.serviceRequestBidData?.meta?.totalPages ?? totalPagesServiceRequestBids;
-              tabsCounts.value = [
-                serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
-                serviceMeDataList.length,
-                serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-                0,
-              ];
+              if (userId == null) {
+                tabsCounts.value = [
+                  serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
+                  serviceMeDataList.length,
+                  serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+                  0,
+                ];
+              } else {
+                tabsCounts.value = [
+                  serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+                  0,
+                ];
+              }
             } else {
               log("Retry request failed after token refresh");
             }
@@ -325,12 +359,19 @@ class VendorProfileController extends GetxController {
         ServiceMeModel serviceMe = response as ServiceMeModel;
         if (serviceMe.status == 200 || serviceMe.status == 201) {
           serviceMeDataList.value = serviceMe.serviceMeData ?? [];
-          tabsCounts.value = [
-            serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
-            serviceMeDataList.length,
-            serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-            0,
-          ];
+          if (userId == null) {
+            tabsCounts.value = [
+              serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
+              serviceMeDataList.length,
+              serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+              0,
+            ];
+          } else {
+            tabsCounts.value = [
+              serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+              0,
+            ];
+          }
         } else {
           if (serviceMe.status == 401 ||
               (serviceMe.errors != null &&
@@ -340,12 +381,19 @@ class VendorProfileController extends GetxController {
             final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRepo.getServicesMe());
             if (retryResponse is ServiceMeModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceMeDataList.value = retryResponse.serviceMeData ?? [];
-              tabsCounts.value = [
-                serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
-                serviceMeDataList.length,
-                serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-                0,
-              ];
+              if (userId == null) {
+                tabsCounts.value = [
+                  serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
+                  serviceMeDataList.length,
+                  serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+                  0,
+                ];
+              } else {
+                tabsCounts.value = [
+                  serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+                  0,
+                ];
+              }
             } else {
               log("Retry request failed after token refresh");
             }
@@ -379,23 +427,26 @@ class VendorProfileController extends GetxController {
     }
   }
 
-  void _initTabCounts() => tabsCounts.value = [
-        if (userId == null) 0,
-        if (userId == null) 0,
-        0,
-        0,
-      ];
+  void _initTabCounts() {
+    if (userId == null) {
+      tabsCounts.value = [0, 0, 0, 0];
+    } else {
+      tabsCounts.value = [0, 0];
+    }
+  }
 
-  void _initTabViews() => tabs.value = [
-        if (userId == null) "All Bids",
-        if (userId == null) "Services",
-        "Requests",
-        "Reviews",
-      ];
+  void _initTabViews() {
+    if (userId == null) {
+      tabs.value = ["All Bids", "Services", "Requests", "Reviews"];
+    } else {
+      tabs.value = ["Requests", "Reviews"];
+    }
+  }
 
   void _getArguments() {
     if (Get.arguments != null) {
       userId = Get.arguments["userId"] == AppDIController.loginUserId ? null : Get.arguments["userId"];
     }
+    log("VendorProfileUserId: $userId");
   }
 }

@@ -44,11 +44,14 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      NetworkImageLoader(
-                        controller.bidData.value?.vendor?.virtualPath ?? "",
-                        width: 42.w,
-                        height: 42.w,
-                        borderRadius: BorderRadius.circular(30.r),
+                      GestureDetector(
+                        onTap: () => controller.goToProfileScreen(bid?.vendor?.id),
+                        child: NetworkImageLoader(
+                          controller.bidData.value?.vendor?.virtualPath ?? "",
+                          width: 42.w,
+                          height: 42.w,
+                          borderRadius: BorderRadius.circular(30.r),
+                        ),
                       ),
                       SizedBox(width: 6.w),
                       Expanded(

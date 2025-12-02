@@ -1,10 +1,12 @@
 class VendorModel {
+  final String? id;
   final String? name;
   final String? virtualPath;
   final int? rating;
   final int? serviceCompletedCount;
 
   VendorModel({
+    this.id,
     this.name,
     this.virtualPath,
     this.rating,
@@ -12,6 +14,7 @@ class VendorModel {
   });
 
   factory VendorModel.fromJson(Map<String, dynamic> json) => VendorModel(
+        id: json["id"],
         name: json["name"],
         virtualPath: json["virtual_path"],
         rating: json["rating"],
@@ -19,6 +22,7 @@ class VendorModel {
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "name": name,
         "virtual_path": virtualPath,
         "rating": rating,

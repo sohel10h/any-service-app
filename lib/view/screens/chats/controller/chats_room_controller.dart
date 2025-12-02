@@ -8,6 +8,7 @@ import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/network/chat_message_model.dart';
+import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
 class ChatsRoomController extends GetxController {
   String chatUsername = "";
@@ -45,6 +46,7 @@ class ChatsRoomController extends GetxController {
   }
 
   void goToProfileScreen(String? userId) {
+    Get.delete<VendorProfileController>();
     Get.toNamed(
       AppRoutes.vendorProfileScreen,
       arguments: {

@@ -16,6 +16,7 @@ class VendorProfileTab extends GetWidget<VendorProfileController> {
       alignment: Alignment.center,
       child: Obx(() {
         return TabBar(
+          controller: controller.tabController,
           isScrollable: false,
           indicatorColor: AppColors.container155DFC,
           dividerColor: Colors.transparent,

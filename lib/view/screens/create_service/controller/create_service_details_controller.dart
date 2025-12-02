@@ -5,6 +5,7 @@ import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/data/model/network/create_service_details_model.dart';
+import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
 class CreateServiceDetailsController extends GetxController {
   String serviceId = "";
@@ -58,6 +59,7 @@ class CreateServiceDetailsController extends GetxController {
   }
 
   void goToProfileScreen(String? userId) {
+    Get.delete<VendorProfileController>();
     Get.toNamed(
       AppRoutes.vendorProfileScreen,
       arguments: {

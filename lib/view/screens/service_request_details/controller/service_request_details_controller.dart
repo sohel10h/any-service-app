@@ -14,6 +14,7 @@ import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
 import 'package:service_la/data/model/network/service_details_model.dart';
 import 'package:service_la/data/model/network/create_service_request_bid_model.dart';
+import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_bids_section.dart';
 import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_final_bids_section.dart';
 import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_rejected_bids_section.dart';
@@ -65,6 +66,7 @@ class ServiceRequestDetailsController extends GetxController {
   }
 
   void goToProfileScreen(String? userId) {
+    Get.delete<VendorProfileController>();
     Get.toNamed(
       AppRoutes.vendorProfileScreen,
       arguments: {

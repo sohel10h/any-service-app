@@ -22,21 +22,21 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
       () => PopScope(
         canPop: controller.landingController.currentIndex.value == 0,
         onPopInvokedWithResult: (didPop, result) async {
-          if (controller.userId == null) {
-            if (!didPop && controller.landingController.currentIndex.value != 0) {
+          if (!didPop) {
+            if (controller.landingController.currentIndex.value != 0) {
               controller.landingController.changeIndex(0, context);
-              Get.back();
             }
+            Get.back();
           }
         },
         child: Scaffold(
           appBar: CustomAppbar(
             title: "Vendor Profile",
             onTap: () {
-              if (controller.userId == null) {
+              if (controller.landingController.currentIndex.value != 0) {
                 controller.landingController.changeIndex(0, context);
               }
-              Get.back();
+              Future.microtask(() => Get.back());
             },
             actions: [
               Padding(
@@ -60,49 +60,46 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
           ),
           body: controller.isLoadingAdminUser.value
               ? CustomProgressBar()
-              : DefaultTabController(
-                  length: controller.tabs.length,
-                  initialIndex: controller.selectedTabIndex.value,
-                  child: NestedScrollView(
-                    headerSliverBuilder: (context, innerBoxIsScrolled) {
-                      return [
-                        SliverOverlapAbsorber(
-                          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                          sliver: SliverToBoxAdapter(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 16.h),
-                                VendorProfileHeader(),
-                              ],
-                            ),
+              : NestedScrollView(
+                  headerSliverBuilder: (context, innerBoxIsScrolled) {
+                    return [
+                      SliverOverlapAbsorber(
+                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                        sliver: SliverToBoxAdapter(
+                          child: Column(
+                            children: [
+                              SizedBox(height: 16.h),
+                              VendorProfileHeader(),
+                            ],
                           ),
                         ),
-                        SliverPersistentHeader(
-                          pinned: true,
-                          delegate: VendorProfileTabBarHeaderDelegate(
-                            minHeight: 40.h,
-                            maxHeight: 40.h,
-                            child: VendorProfileTab(isFromNestedScroll: true),
-                          ),
-                        ),
-                      ];
-                    },
-                    body: RefreshIndicator(
-                      color: AppColors.primary,
-                      backgroundColor: AppColors.white,
-                      onRefresh: controller.refreshAdminUser,
-                      notificationPredicate: (notification) {
-                        return notification.depth == 1;
-                      },
-                      child: TabBarView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: [
-                          if (controller.userId == null) VendorProfileBidsTab(),
-                          if (controller.userId == null) VendorProfileServicesTab(),
-                          VendorProfileServiceRequestsTab(),
-                          VendorProfileServiceRequestsTab(),
-                        ],
                       ),
+                      SliverPersistentHeader(
+                        pinned: true,
+                        delegate: VendorProfileTabBarHeaderDelegate(
+                          minHeight: 40.h,
+                          maxHeight: 40.h,
+                          child: VendorProfileTab(isFromNestedScroll: true),
+                        ),
+                      ),
+                    ];
+                  },
+                  body: RefreshIndicator(
+                    color: AppColors.primary,
+                    backgroundColor: AppColors.white,
+                    onRefresh: controller.refreshAdminUser,
+                    notificationPredicate: (notification) {
+                      return notification.depth == 1;
+                    },
+                    child: TabBarView(
+                      controller: controller.tabController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        if (controller.userId == null) VendorProfileBidsTab(),
+                        if (controller.userId == null) VendorProfileServicesTab(),
+                        VendorProfileServiceRequestsTab(),
+                        VendorProfileServiceRequestsTab(),
+                      ],
                     ),
                   ),
                 ),

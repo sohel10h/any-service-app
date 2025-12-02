@@ -5,6 +5,7 @@ import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/data/repository/chats_repo.dart';
 import 'package:service_la/data/model/network/chat_model.dart';
 import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
 class ChatsListController extends GetxController {
   final TextEditingController searchController = TextEditingController();
@@ -29,6 +30,7 @@ class ChatsListController extends GetxController {
   }
 
   void goToProfileScreen(String? userId) {
+    Get.delete<VendorProfileController>();
     Get.toNamed(
       AppRoutes.vendorProfileScreen,
       arguments: {

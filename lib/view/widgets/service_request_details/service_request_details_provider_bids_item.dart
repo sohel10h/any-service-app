@@ -57,11 +57,14 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                NetworkImageLoader(
-                  bid.vendor?.virtualPath ?? "",
-                  width: 42.w,
-                  height: 42.w,
-                  borderRadius: BorderRadius.circular(30.r),
+                GestureDetector(
+                  onTap: () => controller.goToProfileScreen(bid.vendor?.id),
+                  child: NetworkImageLoader(
+                    bid.vendor?.virtualPath ?? "",
+                    width: 42.w,
+                    height: 42.w,
+                    borderRadius: BorderRadius.circular(30.r),
+                  ),
                 ),
                 SizedBox(width: 6.w),
                 Expanded(

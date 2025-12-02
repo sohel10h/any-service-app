@@ -28,6 +28,15 @@ class ChatsListController extends GetxController {
     _getChats(isRefresh: true);
   }
 
+  void goToProfileScreen(String? userId) {
+    Get.toNamed(
+      AppRoutes.vendorProfileScreen,
+      arguments: {
+        "userId": userId,
+      },
+    );
+  }
+
   void goToChatsArchivedListScreen() => Get.toNamed(AppRoutes.chatsArchivedListScreen);
 
   void goToChatsRoomScreen({

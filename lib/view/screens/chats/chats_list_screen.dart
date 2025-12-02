@@ -254,6 +254,8 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                               onLongPress: () => controller.toggleSelection(chat.id ?? ""),
                               isSelected: controller.selectedChats.contains(chat.id ?? ""),
                               isPinned: chat.pinned == true,
+                              userId: participants.isNotEmpty ? participants.first.userId : null,
+                              controller: controller,
                             );
                           }
                           return isLoadingMore

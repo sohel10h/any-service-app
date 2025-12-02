@@ -14,10 +14,11 @@ import 'package:service_la/view/screens/landing/controller/landing_controller.da
 import 'package:service_la/data/model/network/service_request_bid_provider_model.dart';
 
 class VendorProfileController extends GetxController {
+  String? userId;
   LandingController landingController = Get.find<LandingController>();
   RxInt currentIndex = 0.obs;
   RxInt selectedTabIndex = 0.obs;
-  final List<String> tabs = ["All Bids", "Services", "Requests", "Reviews"];
+  RxList<String> tabs = <String>[].obs;
   final RxList<int> tabsCounts = <int>[].obs;
   final ServiceRepo _serviceRepo = ServiceRepo();
   RxList<ServiceMeData> serviceMeDataList = <ServiceMeData>[].obs;
@@ -44,11 +45,21 @@ class VendorProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _getArguments();
+    _initTabViews();
     _initTabCounts();
     _getAdminUser();
-    _getServiceServiceRequestBids(isRefresh: true);
-    _getServicesMe();
-    _getServiceRequestsMe(isRefresh: true);
+    _getServices();
+  }
+
+  void _getServices() async {
+    if (userId == null) {
+      _getServiceServiceRequestBids(isRefresh: true);
+      _getServicesMe();
+      _getServiceRequestsMe(isRefresh: true);
+    } else {
+      _getServiceRequestsMe(isRefresh: true);
+    }
   }
 
   Future<void> refreshAdminUser() async {
@@ -58,7 +69,7 @@ class VendorProfileController extends GetxController {
   Future<void> _getAdminUser() async {
     isLoadingAdminUser.value = true;
     try {
-      var response = await _adminRepo.getAdminUser(AppDIController.loginUserId);
+      var response = await _adminRepo.getAdminUser(userId ?? AppDIController.loginUserId);
       if (response is String) {
         log("AdminUser get failed from controller response: $response");
       } else {
@@ -72,7 +83,7 @@ class VendorProfileController extends GetxController {
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(
-              () => _adminRepo.getAdminUser(AppDIController.loginUserId),
+              () => _adminRepo.getAdminUser(userId ?? AppDIController.loginUserId),
             );
             if (retryResponse is AdminUserModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               adminUser.value = retryResponse.adminUser ?? AdminUser();
@@ -147,12 +158,19 @@ class VendorProfileController extends GetxController {
           }
           currentPageServiceRequests = serviceRequestMe.serviceRequestMeData?.meta?.page ?? currentPageServiceRequests;
           totalPagesServiceRequests = serviceRequestMe.serviceRequestMeData?.meta?.totalPages ?? totalPagesServiceRequests;
-          tabsCounts.value = [
-            serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
-            serviceMeDataList.length,
-            serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-            0,
-          ];
+          if (userId == null) {
+            tabsCounts.value = [
+              serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
+              serviceMeDataList.length,
+              serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+              0,
+            ];
+          } else {
+            tabsCounts.value = [
+              serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+              0,
+            ];
+          }
         } else {
           if (serviceRequestMe.status == 401 ||
               (serviceRequestMe.errors != null &&
@@ -174,12 +192,19 @@ class VendorProfileController extends GetxController {
               }
               currentPageServiceRequests = retryResponse.serviceRequestMeData?.meta?.page ?? currentPageServiceRequests;
               totalPagesServiceRequests = retryResponse.serviceRequestMeData?.meta?.totalPages ?? totalPagesServiceRequests;
-              tabsCounts.value = [
-                serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
-                serviceMeDataList.length,
-                serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-                0,
-              ];
+              if (userId == null) {
+                tabsCounts.value = [
+                  serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
+                  serviceMeDataList.length,
+                  serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+                  0,
+                ];
+              } else {
+                tabsCounts.value = [
+                  serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+                  0,
+                ];
+              }
             } else {
               log("Retry request failed after token refresh");
             }
@@ -354,5 +379,23 @@ class VendorProfileController extends GetxController {
     }
   }
 
-  void _initTabCounts() => tabsCounts.value = [0, 0, 0, 0];
+  void _initTabCounts() => tabsCounts.value = [
+        if (userId == null) 0,
+        if (userId == null) 0,
+        0,
+        0,
+      ];
+
+  void _initTabViews() => tabs.value = [
+        if (userId == null) "All Bids",
+        if (userId == null) "Services",
+        "Requests",
+        "Reviews",
+      ];
+
+  void _getArguments() {
+    if (Get.arguments != null) {
+      userId = Get.arguments["userId"] == AppDIController.loginUserId ? null : Get.arguments["userId"];
+    }
+  }
 }

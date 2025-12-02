@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/data/repository/chats_repo.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
@@ -41,6 +42,15 @@ class ChatsRoomController extends GetxController {
     ever(chatsMessages, (_) {
       Future.delayed(const Duration(milliseconds: 100), _scrollToBottom);
     });
+  }
+
+  void goToProfileScreen(String? userId) {
+    Get.toNamed(
+      AppRoutes.vendorProfileScreen,
+      arguments: {
+        "userId": userId,
+      },
+    );
   }
 
   void _scrollToBottom() {

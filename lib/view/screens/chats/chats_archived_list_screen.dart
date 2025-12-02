@@ -156,6 +156,8 @@ class ChatsArchivedListScreen extends GetWidget<ChatsListController> {
                                       ),
                                 onLongPress: () => controller.toggleSelection(chat.id ?? ""),
                                 isSelected: controller.selectedChats.contains(chat.id ?? ""),
+                                userId: participants.isNotEmpty ? participants.first.userId : null,
+                                controller: controller,
                               );
                             },
                           ),

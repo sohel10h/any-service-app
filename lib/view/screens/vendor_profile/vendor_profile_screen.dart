@@ -22,14 +22,22 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
       () => PopScope(
         canPop: controller.landingController.currentIndex.value == 0,
         onPopInvokedWithResult: (didPop, result) async {
-          if (!didPop && controller.landingController.currentIndex.value != 0) {
-            controller.landingController.changeIndex(0, context);
+          if (controller.userId == null) {
+            if (!didPop && controller.landingController.currentIndex.value != 0) {
+              controller.landingController.changeIndex(0, context);
+              Get.back();
+            }
           }
         },
         child: Scaffold(
           appBar: CustomAppbar(
             title: "Vendor Profile",
-            onTap: () => controller.landingController.changeIndex(0, context),
+            onTap: () {
+              if (controller.userId == null) {
+                controller.landingController.changeIndex(0, context);
+              }
+              Get.back();
+            },
             actions: [
               Padding(
                 padding: EdgeInsets.only(right: 16.w),
@@ -89,8 +97,8 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
                       child: TabBarView(
                         physics: const NeverScrollableScrollPhysics(),
                         children: [
-                          VendorProfileBidsTab(),
-                          VendorProfileServicesTab(),
+                          if (controller.userId == null) VendorProfileBidsTab(),
+                          if (controller.userId == null) VendorProfileServicesTab(),
                           VendorProfileServiceRequestsTab(),
                           VendorProfileServiceRequestsTab(),
                         ],

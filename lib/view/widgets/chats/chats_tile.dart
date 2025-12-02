@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
+import 'package:service_la/view/screens/chats/controller/chats_list_controller.dart';
 
 class ChatsTile extends StatelessWidget {
   final String name;
@@ -13,6 +14,8 @@ class ChatsTile extends StatelessWidget {
   final VoidCallback onLongPress;
   final bool isSelected;
   final bool isPinned;
+  final String? userId;
+  final ChatsListController controller;
 
   const ChatsTile({
     super.key,
@@ -25,6 +28,8 @@ class ChatsTile extends StatelessWidget {
     required this.onLongPress,
     this.isSelected = false,
     this.isPinned = false,
+    this.userId,
+    required this.controller,
   });
 
   @override
@@ -38,11 +43,14 @@ class ChatsTile extends StatelessWidget {
         leading: Stack(
           fit: StackFit.loose,
           children: [
-            NetworkImageLoader(
-              iconPath,
-              height: 44.w,
-              width: 44.w,
-              radius: 30.r,
+            GestureDetector(
+              onTap: () => controller.goToProfileScreen(userId),
+              child: NetworkImageLoader(
+                iconPath,
+                height: 44.w,
+                width: 44.w,
+                radius: 30.r,
+              ),
             ),
             if (isSelected)
               Positioned(

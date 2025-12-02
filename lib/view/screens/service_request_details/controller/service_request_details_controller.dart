@@ -64,6 +64,15 @@ class ServiceRequestDetailsController extends GetxController {
     _getServices();
   }
 
+  void goToProfileScreen(String? userId) {
+    Get.toNamed(
+      AppRoutes.vendorProfileScreen,
+      arguments: {
+        "userId": userId,
+      },
+    );
+  }
+
   void _getServices() async {
     await _getServiceRequestsDetails();
     await _getServicesMe();

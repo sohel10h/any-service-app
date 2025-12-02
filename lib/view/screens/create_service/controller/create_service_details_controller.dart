@@ -57,6 +57,15 @@ class CreateServiceDetailsController extends GetxController {
     _getAdminServicesDetails();
   }
 
+  void goToProfileScreen(String? userId) {
+    Get.toNamed(
+      AppRoutes.vendorProfileScreen,
+      arguments: {
+        "userId": userId,
+      },
+    );
+  }
+
   void goToChatsRoomScreen({
     required String username,
     required String conversationId,

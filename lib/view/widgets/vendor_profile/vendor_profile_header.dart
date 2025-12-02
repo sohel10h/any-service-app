@@ -51,61 +51,63 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                       height: 84.w,
                       borderRadius: BorderRadius.circular(60.r),
                     ),
-                    Positioned(
-                      right: -6,
-                      bottom: -4,
-                      child: Container(
-                        width: 32.w,
-                        height: 32.w,
-                        decoration: BoxDecoration(
-                          color: AppColors.container155DFC,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.white, width: 2),
-                        ),
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: SvgPicture.asset(
-                            "assets/svgs/camera.svg",
-                            width: 16.w,
-                            height: 16.h,
+                    if (controller.userId == null)
+                      Positioned(
+                        right: -6,
+                        bottom: -4,
+                        child: Container(
+                          width: 32.w,
+                          height: 32.w,
+                          decoration: BoxDecoration(
+                            color: AppColors.container155DFC,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: AppColors.white, width: 2),
                           ),
-                          onPressed: () {},
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: SvgPicture.asset(
+                              "assets/svgs/camera.svg",
+                              width: 16.w,
+                              height: 16.h,
+                            ),
+                            onPressed: () {},
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 ),
                 SizedBox(width: 8.w),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.container155DFC,
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                if (controller.userId == null)
+                  ElevatedButton.icon(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.container155DFC,
+                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    label: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/svgs/edit.svg",
+                          width: 14.w,
+                          height: 14.h,
+                          colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
+                        ),
+                        SizedBox(width: 6.w),
+                        Text(
+                          "Edit Profile",
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: AppColors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  label: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        "assets/svgs/edit.svg",
-                        width: 14.w,
-                        height: 14.h,
-                        colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
-                      ),
-                      SizedBox(width: 6.w),
-                      Text(
-                        "Edit Profile",
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: AppColors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
             SizedBox(height: 16.h),

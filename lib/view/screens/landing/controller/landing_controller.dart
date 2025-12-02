@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/view/screens/home/home_screen.dart';
 import 'package:service_la/services/location/location_service.dart';
@@ -32,10 +33,13 @@ class LandingController extends GetxController {
     }
     if (index == 4) {
       isHideBottomNav.value = true;
+      _goToVendorProfileScreen();
     }
     currentIndex.value = index;
     log("Changed tab index: $index");
   }
+
+  void _goToVendorProfileScreen() => Get.toNamed(AppRoutes.vendorProfileScreen);
 
   Future<bool> _checkIsLocationEnabled() async {
     final svc = LocationService.to;

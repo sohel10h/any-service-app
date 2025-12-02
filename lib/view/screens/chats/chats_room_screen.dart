@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:service_la/common/utils/extensions.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
@@ -19,31 +20,34 @@ class ChatsRoomScreen extends GetWidget<ChatsRoomController> {
     return Scaffold(
       appBar: CustomAppbar(
         centerTitle: false,
-        titleWidget: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              controller.chatUsername,
-              style: TextStyle(
-                fontSize: 17.sp,
-                color: AppColors.text101828,
-                fontWeight: FontWeight.w700,
+        titleWidget: GestureDetector(
+          onTap: () => controller.goToProfileScreen(controller.chatUserId.nullIfEmpty),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                controller.chatUsername,
+                style: TextStyle(
+                  fontSize: 17.sp,
+                  color: AppColors.text101828,
+                  fontWeight: FontWeight.w700,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              "last seen 11:59 AM",
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: AppColors.text6A7282,
-                fontWeight: FontWeight.w400,
+              Text(
+                "last seen 11:59 AM",
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  color: AppColors.text6A7282,
+                  fontWeight: FontWeight.w400,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+            ],
+          ),
         ),
         actions: [
           IconButton(

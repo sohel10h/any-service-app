@@ -9,6 +9,7 @@ import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/network/chat_messages_model.dart';
 import 'package:service_la/data/model/network/common/chat_message_model.dart';
+import 'package:service_la/data/model/network/websocket/websocket_message_model.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
 class ChatsRoomController extends GetxController {
@@ -32,9 +33,7 @@ class ChatsRoomController extends GetxController {
     _getArguments();
     _getChatsMessages(isRefresh: true);
     ever(AppDIController.message, (msg) {
-      if (msg.message != null) {
-        onWebsocketReceived(msg.message!);
-      }
+      onWebsocketReceived(msg);
     });
   }
 
@@ -172,7 +171,9 @@ class ChatsRoomController extends GetxController {
     }
   }
 
-  void onWebsocketReceived(ChatMessageModel msg) {
+  void onWebsocketReceived(WebsocketMessageModel wsMsg) {
+    if (wsMsg.message == null) return;
+    final msg = wsMsg.message!;
     final idx = chatsMessages.indexWhere((m) => m.isLocal == true);
     if (idx != -1) {
       chatsMessages.removeAt(idx);
@@ -183,7 +184,7 @@ class ChatsRoomController extends GetxController {
           ..isFailed = false,
       );
     } else {
-      chatsMessages.insert(0, msg);
+      if (chatUserId == msg.senderId) chatsMessages.insert(0, msg);
     }
     chatsMessages.refresh();
   }

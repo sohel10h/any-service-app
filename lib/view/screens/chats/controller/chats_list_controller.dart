@@ -8,6 +8,7 @@ import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/common/notification/notification_service.dart';
 import 'package:service_la/data/model/network/common/chat_message_model.dart';
+import 'package:service_la/data/model/network/websocket/websocket_message_model.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
 class ChatsListController extends GetxController with WidgetsBindingObserver {
@@ -23,6 +24,7 @@ class ChatsListController extends GetxController with WidgetsBindingObserver {
   int currentPageChats = 1;
   int totalPagesChats = 1;
   RxList<Conversation> archivedChats = <Conversation>[].obs;
+  String lastChatRoomUserId = "";
 
   @override
   void onInit() {
@@ -33,24 +35,28 @@ class ChatsListController extends GetxController with WidgetsBindingObserver {
     });
     _getChats(isRefresh: true);
     ever(AppDIController.message, (msg) {
-      if (msg.message != null) {
-        onWebsocketReceived(msg.message!);
-      }
+      onWebsocketReceived(msg);
     });
   }
 
-  void onWebsocketReceived(ChatMessageModel msg) async {
+  void onWebsocketReceived(WebsocketMessageModel wsMsg) async {
+    log("LastChatRoomUserId: $lastChatRoomUserId");
+    if (wsMsg.message == null) return;
+    final msg = wsMsg.message!;
     final convIdx = conversations.indexWhere((c) => c.id == msg.conversationId);
     if (convIdx != -1) {
       conversations[convIdx].lastMessage = msg;
       final isBackground = appLifecycleState.value != AppLifecycleState.resumed;
-      final isNotChatRoom = Get.currentRoute != AppRoutes.chatsRoomScreen;
-      if (isBackground || isNotChatRoom) {
-        NotificationService.showSimpleNotification(
-          title: msg.senderName ?? "",
-          body: msg.content ?? "",
-          payload: msg.conversationId ?? "",
-        );
+      final isDifferentChatRoomUser = lastChatRoomUserId != msg.senderId;
+      final isDifferentLoginUser = AppDIController.loginUserId != msg.senderId;
+      if (isBackground || isDifferentChatRoomUser) {
+        if (isDifferentLoginUser) {
+          NotificationService.showSimpleNotification(
+            title: msg.senderName ?? "",
+            body: msg.content ?? "",
+            payload: msg.conversationId ?? "",
+          );
+        }
       }
       _sortingChatsWithCreatedAt();
       conversations.refresh();
@@ -90,6 +96,7 @@ class ChatsListController extends GetxController with WidgetsBindingObserver {
     required String conversationId,
     required String userId,
   }) {
+    lastChatRoomUserId = userId;
     Get.toNamed(
       AppRoutes.chatsRoomScreen,
       arguments: {

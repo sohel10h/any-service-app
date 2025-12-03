@@ -1,9 +1,13 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:service_la/routes/app_routes.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:service_la/data/model/network/websocket/websocket_message_model.dart';
 
 final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -61,18 +65,40 @@ class NotificationService {
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) async {
-        final payload = response.payload;
-        if (payload != null && payload.isNotEmpty) {
-          log("Notification payload: $payload");
-          Get.toNamed(
-            AppRoutes.serviceRequestDetailsScreen,
-            arguments: {"serviceRequestId": payload},
-          );
+        final payloadStr = response.payload;
+        log("Notification payload: $payloadStr");
+        if (payloadStr != null) {
+          final Map<String, dynamic> payload = jsonDecode(payloadStr);
+          final websocketMessage = WebsocketMessageModel.fromMap(payload);
+          if (websocketMessage.type == WebsocketPayloadType.message.name) {
+            AppDIController.lastChatRoomUserId.value = websocketMessage.message?.senderId ?? "";
+            _goToChatsRoomScreen(
+              username: websocketMessage.message?.senderName ?? "",
+              conversationId: websocketMessage.conversationId ?? "",
+              userId: websocketMessage.message?.senderId ?? "",
+            );
+          }
         }
       },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
     //await subscribeToTopic("all_users");
+  }
+
+  static void _goToChatsRoomScreen({
+    required String username,
+    required String conversationId,
+    required String userId,
+  }) {
+    Get.toNamed(
+      AppRoutes.chatsRoomScreen,
+      arguments: {
+        "chatUsername": username,
+        "conversationId": conversationId,
+        "chatUserId": userId,
+        "isInsideChat": false,
+      },
+    );
   }
 
   static Future<void> _requestNotificationPermissionFirstTime() async {

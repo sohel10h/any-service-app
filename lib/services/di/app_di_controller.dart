@@ -25,6 +25,7 @@ class AppDIController extends GetxController {
   late final LocationService locationService;
   static final Rx<WebsocketMessageModel> message = WebsocketMessageModel().obs;
   static final RxnInt unreadNotificationCount = RxnInt();
+  static RxString lastChatRoomUserId = "".obs;
 
   @override
   void onInit() {

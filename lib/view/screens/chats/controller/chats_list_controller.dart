@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,6 @@ class ChatsListController extends GetxController with WidgetsBindingObserver {
   int currentPageChats = 1;
   int totalPagesChats = 1;
   RxList<Conversation> archivedChats = <Conversation>[].obs;
-  String lastChatRoomUserId = "";
 
   @override
   void onInit() {
@@ -40,21 +40,21 @@ class ChatsListController extends GetxController with WidgetsBindingObserver {
   }
 
   void onWebsocketReceived(WebsocketMessageModel wsMsg) async {
-    log("LastChatRoomUserId: $lastChatRoomUserId");
+    log("LastChatRoomUserId: ${AppDIController.lastChatRoomUserId.value}");
     if (wsMsg.message == null) return;
     final msg = wsMsg.message!;
     final convIdx = conversations.indexWhere((c) => c.id == msg.conversationId);
     if (convIdx != -1) {
       conversations[convIdx].lastMessage = msg;
       final isBackground = appLifecycleState.value != AppLifecycleState.resumed;
-      final isDifferentChatRoomUser = lastChatRoomUserId != msg.senderId;
+      final isDifferentChatRoomUser = AppDIController.lastChatRoomUserId.value != msg.senderId;
       final isDifferentLoginUser = AppDIController.loginUserId != msg.senderId;
       if (isBackground || isDifferentChatRoomUser) {
         if (isDifferentLoginUser) {
           NotificationService.showSimpleNotification(
             title: msg.senderName ?? "",
             body: msg.content ?? "",
-            payload: msg.conversationId ?? "",
+            payload: jsonEncode(wsMsg.toMap()),
           );
         }
       }
@@ -96,7 +96,7 @@ class ChatsListController extends GetxController with WidgetsBindingObserver {
     required String conversationId,
     required String userId,
   }) {
-    lastChatRoomUserId = userId;
+    AppDIController.lastChatRoomUserId.value = userId;
     Get.toNamed(
       AppRoutes.chatsRoomScreen,
       arguments: {

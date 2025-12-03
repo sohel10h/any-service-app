@@ -27,7 +27,7 @@ class ViewModelBindings extends Bindings {
     Get.lazyPut<SplashController>(() => SplashController(), fenix: true);
     Get.lazyPut<LandingController>(() => LandingController(), fenix: true);
     Get.lazyPut<SignInController>(() => SignInController(), fenix: true);
-    Get.put(AppDIController());
+    Get.put(AppDIController(), permanent: true);
     Get.lazyPut<SignUpController>(() => SignUpController(), fenix: true);
     Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
     Get.lazyPut<SettingsController>(() => SettingsController(), fenix: true);
@@ -42,7 +42,7 @@ class ViewModelBindings extends Bindings {
     Get.lazyPut<RideSharingMapLocationSearchController>(() => RideSharingMapLocationSearchController(), fenix: true);
     Get.lazyPut<BestSellingServicesController>(() => BestSellingServicesController(), fenix: true);
     Get.lazyPut<CategoryController>(() => CategoryController(), fenix: true);
-    Get.lazyPut<ChatsListController>(() => ChatsListController(), fenix: true);
+    Get.put(ChatsListController(), permanent: true);
     Get.lazyPut<ChatsRoomController>(() => ChatsRoomController(), fenix: true);
     Get.lazyPut<NotificationsController>(() => NotificationsController(), fenix: true);
   }

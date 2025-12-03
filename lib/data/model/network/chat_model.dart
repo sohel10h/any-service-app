@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:service_la/data/model/network/common/chat_message_model.dart';
 import 'package:service_la/data/model/network/common/meta_model.dart';
 
 ChatModel chatModelFromJson(String str) => ChatModel.fromJson(json.decode(str));
@@ -66,7 +67,7 @@ class Conversation {
   final String? createdAt;
   final String? updatedAt;
   final List<Participant>? participants;
-  final LastMessage? lastMessage;
+  ChatMessageModel? lastMessage;
   bool? pinned;
   bool? archived;
 
@@ -89,7 +90,7 @@ class Conversation {
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
         participants: json["participants"] == null ? [] : List<Participant>.from(json["participants"]!.map((x) => Participant.fromJson(x))),
-        lastMessage: json["last_message"] == null ? null : LastMessage.fromJson(json["last_message"]),
+        lastMessage: json["last_message"] == null ? null : ChatMessageModel.fromJson(json["last_message"]),
         pinned: json["pinned"],
         archived: json["archived"],
       );
@@ -104,46 +105,6 @@ class Conversation {
         "last_message": lastMessage?.toJson(),
         "pinned": pinned,
         "archived": archived,
-      };
-}
-
-class LastMessage {
-  final String? id;
-  final String? conversationId;
-  final String? senderId;
-  final String? senderName;
-  final String? content;
-  final String? createdAt;
-  final bool? isRead;
-
-  LastMessage({
-    this.id,
-    this.conversationId,
-    this.senderId,
-    this.senderName,
-    this.content,
-    this.createdAt,
-    this.isRead,
-  });
-
-  factory LastMessage.fromJson(Map<String, dynamic> json) => LastMessage(
-        id: json["id"],
-        conversationId: json["conversation_id"],
-        senderId: json["sender_id"],
-        senderName: json["sender_name"],
-        content: json["content"],
-        createdAt: json["created_at"],
-        isRead: json["is_read"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "conversation_id": conversationId,
-        "sender_id": senderId,
-        "sender_name": senderName,
-        "content": content,
-        "created_at": createdAt,
-        "is_read": isRead,
       };
 }
 

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:service_la/data/model/network/chat_model.dart';
 import 'package:service_la/data/network/chats_api_service.dart';
-import 'package:service_la/data/model/network/chat_message_model.dart';
 import 'package:service_la/data/implementation/chats_information.dart';
+import 'package:service_la/data/model/network/chat_messages_model.dart';
 
 class ChatsRepo {
   final ChatsApiService _chatsApiService = ChatsInformation();
@@ -22,7 +22,7 @@ class ChatsRepo {
     try {
       dynamic response = await _chatsApiService.getChatsMessages(conversationId, queryParams: queryParams);
       log("ChatsMessages get details from chats repo: $response");
-      return ChatMessageModel.fromJson(jsonDecode(response.toString()));
+      return ChatMessagesModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
       return e;
     }
@@ -32,7 +32,7 @@ class ChatsRepo {
     try {
       dynamic response = await _chatsApiService.getChatsMessagesUser(userId, queryParams: queryParams);
       log("ChatsMessagesUser get details from chats repo: $response");
-      return ChatMessageModel.fromJson(jsonDecode(response.toString()));
+      return ChatMessagesModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
       return e;
     }

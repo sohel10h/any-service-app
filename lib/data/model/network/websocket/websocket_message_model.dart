@@ -1,9 +1,9 @@
-import 'package:service_la/data/model/network/chat_message_model.dart';
+import 'package:service_la/data/model/network/common/chat_message_model.dart';
 
 class WebsocketMessageModel {
   final String? type;
   final String? conversationId;
-  final ChatMessage? message;
+  final ChatMessageModel? message;
 
   WebsocketMessageModel({
     this.type,
@@ -15,7 +15,7 @@ class WebsocketMessageModel {
     return WebsocketMessageModel(
       type: json['type']?.toString() ?? '',
       conversationId: json['conversation_id']?.toString() ?? '',
-      message: json["message"] == null ? null : ChatMessage.fromJson(json["message"]),
+      message: json["message"] == null ? null : ChatMessageModel.fromJson(json["message"]),
     );
   }
 

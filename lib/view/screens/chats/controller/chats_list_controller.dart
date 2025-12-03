@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/data/repository/chats_repo.dart';
 import 'package:service_la/data/model/network/chat_model.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/data/model/network/common/chat_message_model.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
 class ChatsListController extends GetxController {
@@ -27,6 +29,36 @@ class ChatsListController extends GetxController {
       searchQuery.value = searchController.text;
     });
     _getChats(isRefresh: true);
+    ever(AppDIController.message, (msg) {
+      if (msg.message != null) {
+        onWebsocketReceived(msg.message!);
+      }
+    });
+  }
+
+  void onWebsocketReceived(ChatMessageModel msg) async {
+    final convIdx = conversations.indexWhere((c) => c.id == msg.conversationId);
+    if (convIdx != -1) {
+      conversations[convIdx].lastMessage = msg;
+      _sortingChatsWithCreatedAt();
+      conversations.refresh();
+    } else {
+      await refreshChatsData(isRefresh: true);
+    }
+  }
+
+  void _sortingChatsWithCreatedAt() {
+    final sorted = conversations.toList()
+      ..sort((a, b) {
+        final aPinned = a.pinned == true;
+        final bPinned = b.pinned == true;
+        if (aPinned && !bPinned) return -1;
+        if (!aPinned && bPinned) return 1;
+        final aDate = DateTime.tryParse(a.lastMessage?.createdAt ?? a.createdAt ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final bDate = DateTime.tryParse(b.lastMessage?.createdAt ?? b.createdAt ?? '') ?? DateTime.fromMillisecondsSinceEpoch(0);
+        return bDate.compareTo(aDate);
+      });
+    conversations.assignAll(sorted);
   }
 
   void goToProfileScreen(String? userId) {
@@ -161,13 +193,7 @@ class ChatsListController extends GetxController {
       final current = conversations[idx];
       conversations[idx].pinned = !(current.pinned ?? false);
     }
-    conversations.sort((a, b) {
-      final aPinned = a.pinned == true;
-      final bPinned = b.pinned == true;
-      if (aPinned && !bPinned) return -1;
-      if (!aPinned && bPinned) return 1;
-      return 0;
-    });
+    _sortingChatsWithPinned();
   }
 
   void deleteArchivedChats(List<String> ids) {
@@ -227,7 +253,7 @@ class ChatsListController extends GetxController {
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       pinned: false,
       archived: false,
-      lastMessage: LastMessage(
+      lastMessage: ChatMessageModel(
         id: "${DateTime.now().millisecondsSinceEpoch.toString()}_last_message",
         senderId: "${DateTime.now().millisecondsSinceEpoch.toString()}_sender_id",
         senderName: "Test User",
@@ -236,6 +262,10 @@ class ChatsListController extends GetxController {
       ),
     );
     conversations.insert(0, newItem);
+    _sortingChatsWithPinned();
+  }
+
+  void _sortingChatsWithPinned() {
     conversations.sort((a, b) {
       final aPinned = a.pinned == true;
       final bPinned = b.pinned == true;

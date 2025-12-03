@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/date_time/format_date.dart';
-import 'package:service_la/data/model/network/chat_message_model.dart';
+import 'package:service_la/data/model/network/common/chat_message_model.dart';
 
 class ChatsMessageBubble extends StatelessWidget {
-  final ChatMessage messageData;
+  final ChatMessageModel messageData;
   final String loginUserId;
 
   const ChatsMessageBubble({

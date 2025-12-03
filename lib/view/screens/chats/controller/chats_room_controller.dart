@@ -7,7 +7,8 @@ import 'package:service_la/data/repository/chats_repo.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
-import 'package:service_la/data/model/network/chat_message_model.dart';
+import 'package:service_la/data/model/network/chat_messages_model.dart';
+import 'package:service_la/data/model/network/common/chat_message_model.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
 class ChatsRoomController extends GetxController {
@@ -18,7 +19,7 @@ class ChatsRoomController extends GetxController {
   final chatInputController = TextEditingController();
   final RxBool isTyping = false.obs;
   final ChatsRepo _chatsRepo = ChatsRepo();
-  RxList<ChatMessage> chatsMessages = <ChatMessage>[].obs;
+  RxList<ChatMessageModel> chatsMessages = <ChatMessageModel>[].obs;
   RxBool isLoadingChatsMessages = false.obs;
   RxBool isLoadingMoreChatsMessages = false.obs;
   int currentPageChatsMessages = 1;
@@ -97,7 +98,7 @@ class ChatsRoomController extends GetxController {
       if (response is String) {
         log("ChatsMessages get failed from controller response: $response");
       } else {
-        ChatMessageModel chatMessage = response as ChatMessageModel;
+        ChatMessagesModel chatMessage = response as ChatMessagesModel;
         if (chatMessage.status == 200 || chatMessage.status == 201) {
           final data = chatMessage.chatMessageData?.chatMessages ?? [];
           if (isRefresh) {
@@ -118,7 +119,7 @@ class ChatsRoomController extends GetxController {
                   ? _chatsRepo.getChatsMessages(conversationId, queryParams: queryParams)
                   : _chatsRepo.getChatsMessagesUser(chatUserId, queryParams: queryParams),
             );
-            if (retryResponse is ChatMessageModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+            if (retryResponse is ChatMessagesModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               final data = retryResponse.chatMessageData?.chatMessages ?? [];
               if (isRefresh) {
                 chatsMessages.assignAll(data);
@@ -148,7 +149,7 @@ class ChatsRoomController extends GetxController {
     if (text.trim().isEmpty) return;
     final now = DateTime.now().toUtc();
     final formatted = now.toIso8601String();
-    final localMessage = ChatMessage(
+    final localMessage = ChatMessageModel(
       id: "temp_${now.microsecondsSinceEpoch}",
       content: text,
       senderId: AppDIController.loginUserId,
@@ -171,7 +172,7 @@ class ChatsRoomController extends GetxController {
     }
   }
 
-  void onWebsocketReceived(ChatMessage msg) {
+  void onWebsocketReceived(ChatMessageModel msg) {
     final idx = chatsMessages.indexWhere((m) => m.isLocal == true);
     if (idx != -1) {
       chatsMessages.removeAt(idx);

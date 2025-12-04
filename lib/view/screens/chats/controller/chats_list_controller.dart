@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -7,13 +6,11 @@ import 'package:service_la/data/repository/chats_repo.dart';
 import 'package:service_la/data/model/network/chat_model.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/services/api_service/api_service.dart';
-import 'package:service_la/common/notification/notification_service.dart';
 import 'package:service_la/data/model/network/common/chat_message_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_message_model.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
-class ChatsListController extends GetxController with WidgetsBindingObserver {
-  Rx<AppLifecycleState> appLifecycleState = AppLifecycleState.resumed.obs;
+class ChatsListController extends GetxController {
   final TextEditingController searchController = TextEditingController();
   final RxString searchQuery = "".obs;
   final RxInt selectedBottomIndex = 0.obs;
@@ -29,7 +26,6 @@ class ChatsListController extends GetxController with WidgetsBindingObserver {
   @override
   void onInit() {
     super.onInit();
-    WidgetsBinding.instance.addObserver(this);
     searchController.addListener(() {
       searchQuery.value = searchController.text;
     });
@@ -40,24 +36,11 @@ class ChatsListController extends GetxController with WidgetsBindingObserver {
   }
 
   void onWebsocketReceived(WebsocketMessageModel wsMsg) async {
-    log("LastChatRoomUserId: ${AppDIController.lastChatRoomUserId.value}");
     if (wsMsg.message == null) return;
     final msg = wsMsg.message!;
     final convIdx = conversations.indexWhere((c) => c.id == msg.conversationId);
     if (convIdx != -1) {
       conversations[convIdx].lastMessage = msg;
-      final isBackground = appLifecycleState.value != AppLifecycleState.resumed;
-      final isDifferentChatRoomUser = AppDIController.lastChatRoomUserId.value != msg.senderId;
-      final isDifferentLoginUser = AppDIController.loginUserId != msg.senderId;
-      if (isBackground || isDifferentChatRoomUser) {
-        if (isDifferentLoginUser) {
-          NotificationService.showSimpleNotification(
-            title: msg.senderName ?? "",
-            body: msg.content ?? "",
-            payload: jsonEncode(wsMsg.toMap()),
-          );
-        }
-      }
       _sortingChatsWithCreatedAt();
       conversations.refresh();
     } else {
@@ -295,13 +278,7 @@ class ChatsListController extends GetxController with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    appLifecycleState.value = state;
-  }
-
-  @override
   void onClose() {
-    WidgetsBinding.instance.removeObserver(this);
     searchController.dispose();
     super.onClose();
   }

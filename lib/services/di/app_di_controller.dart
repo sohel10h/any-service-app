@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
@@ -17,7 +19,8 @@ import 'package:service_la/data/model/network/websocket/websocket_response_model
 import 'package:service_la/data/model/network/websocket/websocket_service_request_model.dart';
 import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
-class AppDIController extends GetxController {
+class AppDIController extends GetxController with WidgetsBindingObserver {
+  static Rx<AppLifecycleState> appLifecycleState = AppLifecycleState.resumed.obs;
   static String authToken = "";
   static String loginUserId = "";
   static String loginUsername = "";
@@ -30,6 +33,7 @@ class AppDIController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
     getStorageValue();
     _initServiceRequestNotifications();
     _initBidNotifications();
@@ -72,7 +76,26 @@ class AppDIController extends GetxController {
       log("WebsocketsMessageResponse from AppDIController: ${payload['raw']}");
       final model = WebsocketMessageModel.fromMap(payload['raw']);
       message.value = model;
+      _sendWebsocketsMessagesNotifications(message.value);
     });
+  }
+
+  static void _sendWebsocketsMessagesNotifications(WebsocketMessageModel wsMsg) async {
+    log("LastChatRoomUserId: ${AppDIController.lastChatRoomUserId.value}");
+    if (wsMsg.message == null) return;
+    final msg = wsMsg.message!;
+    final isBackground = appLifecycleState.value != AppLifecycleState.resumed;
+    final isDifferentChatRoomUser = AppDIController.lastChatRoomUserId.value != msg.senderId;
+    final isDifferentLoginUser = AppDIController.loginUserId != msg.senderId;
+    if (isBackground || isDifferentChatRoomUser) {
+      if (isDifferentLoginUser) {
+        await NotificationService.showSimpleNotification(
+          title: msg.senderName ?? "",
+          body: msg.content ?? "",
+          payload: jsonEncode(wsMsg.toMap()),
+        );
+      }
+    }
   }
 
   static void _checkWebsocketsNotificationData() async {
@@ -239,7 +262,13 @@ class AppDIController extends GetxController {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    appLifecycleState.value = state;
+  }
+
+  @override
   void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
     Get.delete<LocationService>();
     super.onClose();
   }

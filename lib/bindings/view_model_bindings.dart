@@ -42,7 +42,7 @@ class ViewModelBindings extends Bindings {
     Get.lazyPut<RideSharingMapLocationSearchController>(() => RideSharingMapLocationSearchController(), fenix: true);
     Get.lazyPut<BestSellingServicesController>(() => BestSellingServicesController(), fenix: true);
     Get.lazyPut<CategoryController>(() => CategoryController(), fenix: true);
-    Get.put(ChatsListController(), permanent: true);
+    Get.lazyPut<ChatsListController>(() => ChatsListController(), fenix: true);
     Get.lazyPut<ChatsRoomController>(() => ChatsRoomController(), fenix: true);
     Get.lazyPut<NotificationsController>(() => NotificationsController(), fenix: true);
   }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/network/common/category_model.dart';
+import 'package:service_la/view/widgets/common/network_image_loader.dart';
 
 class CategoryCardItem extends StatelessWidget {
   final CategoryModel serviceCategory;
@@ -31,17 +30,20 @@ class CategoryCardItem extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.r),
                 gradient: LinearGradient(
-                  colors: HelperFunction.getCategoriesColors(serviceCategory.name ?? ""),
+                  colors: [
+                    AppColors.primary.withValues(alpha: .06),
+                    AppColors.primary.withValues(alpha: .01),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
               ),
               child: Transform.scale(
                 scale: 1.3,
-                child: SvgPicture.asset(
-                  HelperFunction.getServiceIconPath(serviceCategory.name ?? ""),
-                  colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
-                  fit: BoxFit.scaleDown,
+                child: NetworkImageLoader(
+                  serviceCategory.picture?.virtualPath ?? "",
+                  height: 52.w,
+                  width: 52.w,
                 ),
               ),
             ),

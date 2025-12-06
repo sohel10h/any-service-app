@@ -1,3 +1,5 @@
+import 'package:service_la/data/model/network/common/picture_model.dart';
+
 class CategoryModel {
   final String? id;
   final String? name;
@@ -11,6 +13,7 @@ class CategoryModel {
   final String? createdAt;
   final String? updatedAt;
   final bool? showInHomepage;
+  final PictureModel? picture;
 
   CategoryModel({
     this.id,
@@ -25,6 +28,7 @@ class CategoryModel {
     this.createdAt,
     this.updatedAt,
     this.showInHomepage,
+    this.picture,
   });
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
@@ -40,6 +44,7 @@ class CategoryModel {
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
         showInHomepage: json["show_in_homepage"],
+        picture: json["picture"] == null ? null : PictureModel.fromJson(json["picture"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -55,5 +60,6 @@ class CategoryModel {
         "created_at": createdAt,
         "updated_at": updatedAt,
         "show_in_homepage": showInHomepage,
+        "picture": picture?.toJson(),
       };
 }

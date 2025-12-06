@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/src/media_type.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/helper_function.dart';
@@ -17,10 +18,10 @@ import 'package:service_la/data/model/local/file_option_model.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
 import 'package:service_la/data/model/network/common/category_model.dart';
-import 'package:service_la/data/model/network/service_category_model.dart';
 import 'package:service_la/data/model/network/best_selling_service_model.dart';
 import 'package:service_la/data/model/network/upload_admin_picture_model.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
+import 'package:service_la/data/model/network/service_category_response_model.dart';
 import 'package:service_la/data/model/network/upload_service_request_response_model.dart';
 import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
@@ -64,9 +65,6 @@ class HomeController extends GetxController {
   RxList<BestSellingServiceData> bestSellingServiceData = <BestSellingServiceData>[].obs;
   RxList<CategoryModel> serviceCategories = <CategoryModel>[].obs;
   RxBool isLoadingServiceCategories = false.obs;
-  RxBool isLoadingMoreServiceCategories = false.obs;
-  int currentPageServiceCategories = 1;
-  int totalPagesServiceCategories = 1;
   final List<Map<String, dynamic>> cleaningServices = [
     {
       "serviceName": "Regular House Cleaning",
@@ -113,34 +111,20 @@ class HomeController extends GetxController {
 
   void goToBestSellingServicesScreen() => Get.toNamed(AppRoutes.bestSellingServicesScreen);
 
-  Future<void> getAdminServiceCategories({bool isRefresh = false, bool isLoadingEmpty = false}) async {
-    if (isLoadingEmpty) totalPagesServiceCategories = 1;
-    if (isRefresh) {
-      currentPageServiceCategories = 1;
-      serviceCategories.clear();
-    }
-    if (currentPageServiceCategories > totalPagesServiceCategories) return;
-    if (isRefresh || isLoadingEmpty) {
-      isLoadingServiceCategories.value = true;
-    }
+  Future<void> getAdminServiceCategories() async {
+    isLoadingServiceCategories.value = true;
     try {
       Map<String, dynamic> queryParams = {
-        'page': currentPageServiceCategories,
+        ApiParams.type: ClientPlatform.app.name,
       };
-      var response = await _adminRepo.getAdminServiceCategories(queryParams: queryParams);
+      var response = await _adminRepo.getServiceCategories(queryParams: queryParams);
       if (response is String) {
         log("ServiceCategories get failed from controller response: $response");
       } else {
-        ServiceCategoryModel serviceCategory = response as ServiceCategoryModel;
+        ServiceCategoryResponseModel serviceCategory = response as ServiceCategoryResponseModel;
         if (serviceCategory.status == 200 || serviceCategory.status == 201) {
-          final data = serviceCategory.serviceCategory?.categories?.where((category) => category.showInHomepage == true) ?? [];
-          if (isRefresh) {
-            serviceCategories.assignAll(data);
-          } else {
-            serviceCategories.addAll(data);
-          }
-          currentPageServiceCategories = serviceCategory.serviceCategory?.meta?.page ?? currentPageServiceCategories;
-          totalPagesServiceCategories = serviceCategory.serviceCategory?.meta?.totalPages ?? totalPagesServiceCategories;
+          final data = serviceCategory.categories?.where((category) => category.showInHomepage == true) ?? [];
+          serviceCategories.assignAll(data);
         } else {
           if (serviceCategory.status == 401 ||
               (serviceCategory.errors != null &&
@@ -148,17 +132,11 @@ class HomeController extends GetxController {
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(
-              () => _adminRepo.getAdminServiceCategories(queryParams: queryParams),
+              () => _adminRepo.getServiceCategories(queryParams: queryParams),
             );
-            if (retryResponse is ServiceCategoryModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              final data = retryResponse.serviceCategory?.categories?.where((category) => category.showInHomepage == true) ?? [];
-              if (isRefresh) {
-                serviceCategories.assignAll(data);
-              } else {
-                serviceCategories.addAll(data);
-              }
-              currentPageServiceCategories = retryResponse.serviceCategory?.meta?.page ?? currentPageServiceCategories;
-              totalPagesServiceCategories = retryResponse.serviceCategory?.meta?.totalPages ?? totalPagesServiceCategories;
+            if (retryResponse is ServiceCategoryResponseModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              final data = retryResponse.categories?.where((category) => category.showInHomepage == true) ?? [];
+              serviceCategories.assignAll(data);
             } else {
               log("Retry request failed after token refresh");
             }
@@ -172,7 +150,6 @@ class HomeController extends GetxController {
       log("ServiceCategories get catch error from controller: ${e.toString()}");
     } finally {
       isLoadingServiceCategories.value = false;
-      isLoadingMoreServiceCategories.value = false;
     }
   }
 

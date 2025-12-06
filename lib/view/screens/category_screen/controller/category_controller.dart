@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/data/model/network/common/category_model.dart';
-import 'package:service_la/data/model/network/service_category_model.dart';
+import 'package:service_la/data/model/network/admin_service_category_response_model.dart';
 
 class CategoryController extends GetxController {
   final AdminRepo _adminRepo = AdminRepo();
@@ -49,7 +49,7 @@ class CategoryController extends GetxController {
       if (response is String) {
         log("ServiceCategories get failed from controller response: $response");
       } else {
-        ServiceCategoryModel serviceCategory = response as ServiceCategoryModel;
+        AdminServiceCategoryResponseModel serviceCategory = response as AdminServiceCategoryResponseModel;
         if (serviceCategory.status == 200 || serviceCategory.status == 201) {
           final data = serviceCategory.serviceCategory?.categories ?? [];
           if (isRefresh) {
@@ -68,7 +68,7 @@ class CategoryController extends GetxController {
             final retryResponse = await ApiService().postRefreshTokenAndRetry(
               () => _adminRepo.getAdminServiceCategories(queryParams: queryParams),
             );
-            if (retryResponse is ServiceCategoryModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+            if (retryResponse is AdminServiceCategoryResponseModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               final data = retryResponse.serviceCategory?.categories ?? [];
               if (isRefresh) {
                 serviceCategories.assignAll(data);

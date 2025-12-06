@@ -2,24 +2,25 @@ import 'dart:convert';
 import 'package:service_la/data/model/network/common/meta_model.dart';
 import 'package:service_la/data/model/network/common/category_model.dart';
 
-ServiceCategoryModel serviceCategoryModelFromJson(String str) => ServiceCategoryModel.fromJson(json.decode(str));
+AdminServiceCategoryResponseModel adminServiceCategoryResponseModelFromJson(String str) =>
+    AdminServiceCategoryResponseModel.fromJson(json.decode(str));
 
-String serviceCategoryModelToJson(ServiceCategoryModel data) => json.encode(data.toJson());
+String adminServiceCategoryResponseModelToJson(AdminServiceCategoryResponseModel data) => json.encode(data.toJson());
 
-class ServiceCategoryModel {
+class AdminServiceCategoryResponseModel {
   final bool? isSuccess;
   final int? status;
   final dynamic errors;
   final ServiceCategory? serviceCategory;
 
-  ServiceCategoryModel({
+  AdminServiceCategoryResponseModel({
     this.isSuccess,
     this.status,
     this.errors,
     this.serviceCategory,
   });
 
-  factory ServiceCategoryModel.fromJson(Map<String, dynamic> json) => ServiceCategoryModel(
+  factory AdminServiceCategoryResponseModel.fromJson(Map<String, dynamic> json) => AdminServiceCategoryResponseModel(
         isSuccess: json["isSuccess"],
         status: json["status"],
         errors: json["errors"],

@@ -35,6 +35,7 @@ class ApiConstant {
   // END POINTS - Services
   static const String getServicesMePath = "/api/services/me";
   static const String getBestSellingServicesPath = "/services/best-sellers";
+  static const String getServiceCategoriesPath = "/categories/homepage";
 
   // END POINTS - Vendor details
   static const String getServiceRequestBidsProviderPath = "/api/service-request-bids/provider";

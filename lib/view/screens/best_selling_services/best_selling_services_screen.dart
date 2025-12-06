@@ -23,11 +23,16 @@ class BestSellingServicesScreen extends GetWidget<BestSellingServicesController>
           final isLoading = controller.isLoadingBestSellingServices.value;
           final bestSellingServices = controller.bestSellingServiceData;
           if (isLoading) {
-            return ListView.separated(
+            return GridView.builder(
+              padding: EdgeInsets.all(12.sp),
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
-              itemCount: 5,
-              separatorBuilder: (_, __) => SizedBox(height: 12.h),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 2.w,
+                mainAxisSpacing: 12.h,
+                childAspectRatio: 0.8,
+              ),
+              itemCount: 10,
               itemBuilder: (_, __) => const BestSellingServicesItemShimmer(),
             );
           }
@@ -41,11 +46,16 @@ class BestSellingServicesScreen extends GetWidget<BestSellingServicesController>
               ),
             );
           }
-          return ListView.separated(
+          return GridView.builder(
+            padding: EdgeInsets.all(12.sp),
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 2.w,
+              mainAxisSpacing: 12.h,
+              childAspectRatio: 0.8,
+            ),
             itemCount: bestSellingServices.length,
-            separatorBuilder: (_, __) => SizedBox(height: 12.h),
             itemBuilder: (context, index) {
               final bestSellingService = bestSellingServices[index];
               return BestSellingServicesCardItem(

@@ -22,7 +22,6 @@ class ApiConstant {
   static const String postAdminPicturesPath = "/api/admin/pictures";
   static const String getPostAdminServicesPath = "/api/admin/services";
   static const String getAdminServicesDetailsPath = "/api/admin/services/#serviceId#";
-  static const String getAdminServiceCategoriesPath = "/api/admin/categories";
   static const String getAdminUserPath = "/api/admin/users/#userId#";
 
   // END POINTS - Service requests bids
@@ -35,7 +34,6 @@ class ApiConstant {
   // END POINTS - Services
   static const String getServicesMePath = "/api/services/me";
   static const String getBestSellingServicesPath = "/services/best-sellers";
-  static const String getServiceCategoriesPath = "/categories/homepage";
 
   // END POINTS - Vendor details
   static const String getServiceRequestBidsProviderPath = "/api/service-request-bids/provider";
@@ -45,6 +43,10 @@ class ApiConstant {
   static const String getChatsPath = "/api/chats";
   static const String getChatsMessagesPath = "/api/chats/messages/#conversationId#";
   static const String getChatsMessagesUserPath = "/api/chats/messages/user/#userId#";
+
+  // END POINTS - Others
+  static const String getServiceCategoriesPath = "/categories/homepage";
+  static const String getAllServiceCategoriesPath = "/categories";
 
   // Functions
   static String dynamicQueryParams(String endpoint, {Map<String, dynamic>? queryParams}) {

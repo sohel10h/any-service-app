@@ -53,9 +53,9 @@ class AdminRepo {
     }
   }
 
-  Future<dynamic> getAdminServiceCategories({Map<String, dynamic>? queryParams}) async {
+  Future<dynamic> getAllServiceCategories({Map<String, dynamic>? queryParams}) async {
     try {
-      dynamic response = await _adminApiService.getAdminServiceCategories(queryParams: queryParams);
+      dynamic response = await _adminApiService.getAllServiceCategories(queryParams: queryParams);
       log("AdminServiceCategories get details from admin repo: $response");
       return AdminServiceCategoryResponseModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {

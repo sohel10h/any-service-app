@@ -7,7 +7,7 @@ abstract class AdminApiService {
 
   Future<dynamic> getAdminServicesDetails(String serviceId);
 
-  Future<dynamic> getAdminServiceCategories({Map<String, dynamic>? queryParams});
+  Future<dynamic> getAllServiceCategories({Map<String, dynamic>? queryParams});
 
   Future<dynamic> getServiceCategories({Map<String, dynamic>? queryParams});
 

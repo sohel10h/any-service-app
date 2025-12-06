@@ -19,11 +19,11 @@ class CategoryScreen extends GetWidget<CategoryController> {
       body: RefreshIndicator(
         color: AppColors.primary,
         backgroundColor: AppColors.white,
-        onRefresh: () => controller.refreshAdminServiceCategories(isRefresh: true),
+        onRefresh: () => controller.refreshAllServiceCategories(isRefresh: true),
         child: NotificationListener<ScrollNotification>(
           onNotification: (notification) {
             if (notification.metrics.pixels >= notification.metrics.maxScrollExtent - 100) {
-              controller.loadNextPageAdminServiceCategories();
+              controller.loadNextPageAllServiceCategories();
             }
             return false;
           },
@@ -45,7 +45,7 @@ class CategoryScreen extends GetWidget<CategoryController> {
                 child: NoDataFound(
                   message: "No categories are found!",
                   isRefresh: true,
-                  onPressed: () => controller.refreshAdminServiceCategories(isLoadingEmpty: true),
+                  onPressed: () => controller.refreshAllServiceCategories(isLoadingEmpty: true),
                 ),
               );
             }

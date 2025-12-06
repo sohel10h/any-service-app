@@ -28,10 +28,10 @@ class AdminInformation extends AdminApiService {
   }
 
   @override
-  Future getAdminServiceCategories({Map<String, dynamic>? queryParams}) async {
+  Future getAllServiceCategories({Map<String, dynamic>? queryParams}) async {
     dynamic response = await ApiService().get(
       ApiConstant.dynamicQueryParams(
-        ApiConstant.getAdminServiceCategoriesPath,
+        ApiConstant.getAllServiceCategoriesPath,
         queryParams: queryParams,
       ),
     );

@@ -16,22 +16,22 @@ class CategoryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _getAdminServiceCategories(isRefresh: true);
+    _getAllServiceCategories(isRefresh: true);
   }
 
-  Future<void> loadNextPageAdminServiceCategories() async {
+  Future<void> loadNextPageAllServiceCategories() async {
     if (currentPageServiceCategories < totalPagesServiceCategories && !isLoadingMoreServiceCategories.value) {
       isLoadingMoreServiceCategories.value = true;
       currentPageServiceCategories++;
-      await _getAdminServiceCategories();
+      await _getAllServiceCategories();
     }
   }
 
-  Future<void> refreshAdminServiceCategories({bool isRefresh = false, bool isLoadingEmpty = false}) async {
-    await _getAdminServiceCategories(isRefresh: isRefresh, isLoadingEmpty: isLoadingEmpty);
+  Future<void> refreshAllServiceCategories({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    await _getAllServiceCategories(isRefresh: isRefresh, isLoadingEmpty: isLoadingEmpty);
   }
 
-  Future<void> _getAdminServiceCategories({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+  Future<void> _getAllServiceCategories({bool isRefresh = false, bool isLoadingEmpty = false}) async {
     if (isLoadingEmpty) totalPagesServiceCategories = 1;
     if (isRefresh) {
       currentPageServiceCategories = 1;
@@ -45,7 +45,7 @@ class CategoryController extends GetxController {
       Map<String, dynamic> queryParams = {
         'page': currentPageServiceCategories,
       };
-      var response = await _adminRepo.getAdminServiceCategories(queryParams: queryParams);
+      var response = await _adminRepo.getAllServiceCategories(queryParams: queryParams);
       if (response is String) {
         log("ServiceCategories get failed from controller response: $response");
       } else {
@@ -66,7 +66,7 @@ class CategoryController extends GetxController {
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(
-              () => _adminRepo.getAdminServiceCategories(queryParams: queryParams),
+              () => _adminRepo.getAllServiceCategories(queryParams: queryParams),
             );
             if (retryResponse is AdminServiceCategoryResponseModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               final data = retryResponse.serviceCategory?.categories ?? [];

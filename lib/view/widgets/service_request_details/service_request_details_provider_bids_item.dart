@@ -64,6 +64,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                     width: 42.w,
                     height: 42.w,
                     borderRadius: BorderRadius.circular(30.r),
+                    isUserImage: true,
                   ),
                 ),
                 SizedBox(width: 6.w),

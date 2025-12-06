@@ -97,6 +97,7 @@ class CreateServiceDetailsReviewsSection extends GetWidget<CreateServiceDetailsC
                     width: 35.w,
                     height: 35.w,
                     borderRadius: BorderRadius.circular(60.r),
+                    isUserImage: true,
                   ),
                 ),
                 SizedBox(width: 8.w),

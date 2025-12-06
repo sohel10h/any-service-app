@@ -59,6 +59,7 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                               width: 49.w,
                               height: 49.w,
                               borderRadius: BorderRadius.circular(60.r),
+                              isUserImage: true,
                             ),
                           ),
                           Positioned(

@@ -42,6 +42,7 @@ class CleaningServiceCardItem extends StatelessWidget {
                         "${service["profileImageUrl"]}",
                         width: 35.w,
                         height: 35.w,
+                        isUserImage: true,
                       ),
                     ),
                     Positioned(

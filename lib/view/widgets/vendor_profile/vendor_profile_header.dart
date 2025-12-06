@@ -50,6 +50,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                       width: 84.w,
                       height: 84.w,
                       borderRadius: BorderRadius.circular(60.r),
+                      isUserImage: true,
                     ),
                     if (controller.userId == null)
                       Positioned(

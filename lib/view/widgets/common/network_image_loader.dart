@@ -13,6 +13,7 @@ class NetworkImageLoader extends StatelessWidget {
   final BoxFit fit;
   final BorderRadius? borderRadius;
   final String? errorImagePath;
+  final bool? isUserImage;
 
   const NetworkImageLoader(
     this.src, {
@@ -24,14 +25,18 @@ class NetworkImageLoader extends StatelessWidget {
     this.radius,
     this.borderRadius,
     this.errorImagePath,
+    this.isUserImage,
   });
 
   @override
   Widget build(BuildContext context) {
     final safeUrl = _getSafeUrl(src);
-    final fallback = errorImagePath?.isNotEmpty == true ? errorImagePath! : "assets/images/no_image_available.jpg";
+    final fallback = errorImagePath?.isNotEmpty == true
+        ? errorImagePath!
+        : (isUserImage ?? false)
+            ? "assets/images/user.png"
+            : "assets/images/no_image_available.jpg";
     final border = borderRadius ?? BorderRadius.circular(radius ?? 16.r);
-
     return ClipRRect(
       borderRadius: border,
       child: safeUrl.startsWith("assets/")
@@ -64,7 +69,11 @@ class NetworkImageLoader extends StatelessWidget {
 
   String _getSafeUrl(String? url) {
     if (url == null || url.trim().isEmpty || url.toLowerCase() == "null") {
-      return errorImagePath?.isNotEmpty == true ? errorImagePath! : "assets/images/no_image_available.jpg";
+      return errorImagePath?.isNotEmpty == true
+          ? errorImagePath!
+          : (isUserImage ?? false)
+              ? "assets/images/user.png"
+              : "assets/images/no_image_available.jpg";
     }
     return url;
   }

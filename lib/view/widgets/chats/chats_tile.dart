@@ -50,6 +50,7 @@ class ChatsTile extends StatelessWidget {
                 height: 44.w,
                 width: 44.w,
                 radius: 30.r,
+                isUserImage: true,
               ),
             ),
             if (isSelected)

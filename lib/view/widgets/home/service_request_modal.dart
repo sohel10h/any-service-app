@@ -218,6 +218,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                     height: 35.w,
                     width: 35.w,
                     radius: 32.r,
+                    isUserImage: true,
                   ),
                 ),
                 SizedBox(width: 8.w),

@@ -20,8 +20,9 @@ import 'package:service_la/data/model/network/common/category_model.dart';
 import 'package:service_la/data/model/network/service_category_model.dart';
 import 'package:service_la/data/model/network/best_selling_service_model.dart';
 import 'package:service_la/data/model/network/upload_admin_picture_model.dart';
-import 'package:service_la/data/model/network/upload_service_request_model.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
+import 'package:service_la/data/model/network/upload_service_request_response_model.dart';
+import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
 class HomeController extends GetxController {
   String userId = "";
@@ -231,7 +232,7 @@ class HomeController extends GetxController {
       if (response is String) {
         log("ServiceRequests failed from controller response: $response");
       } else {
-        UploadServiceRequestModel serviceRequest = response as UploadServiceRequestModel;
+        UploadServiceRequestResponseModel serviceRequest = response as UploadServiceRequestResponseModel;
         if (serviceRequest.status == 200 || serviceRequest.status == 201) {
           clearDraft();
           Get.back();
@@ -242,6 +243,8 @@ class HomeController extends GetxController {
             icon: Icons.check,
             backgroundColor: AppColors.green,
           );
+          await Future.delayed(Duration(milliseconds: 100));
+          _goToServiceDetailsScreen(serviceRequest.serviceDetailsData?.id ?? "");
         } else {
           if (serviceRequest.status == 401 ||
               (serviceRequest.errors != null &&
@@ -249,7 +252,7 @@ class HomeController extends GetxController {
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.postServiceRequests(params));
-            if (retryResponse is UploadServiceRequestModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+            if (retryResponse is UploadServiceRequestResponseModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               clearDraft();
               Get.back();
               if (context.mounted) landingController.changeIndex(0, context);
@@ -259,6 +262,8 @@ class HomeController extends GetxController {
                 icon: Icons.check,
                 backgroundColor: AppColors.green,
               );
+              await Future.delayed(Duration(milliseconds: 100));
+              _goToServiceDetailsScreen(retryResponse.serviceDetailsData?.id ?? "");
             } else {
               log("Retry request failed after token refresh");
             }
@@ -274,6 +279,14 @@ class HomeController extends GetxController {
     } finally {
       isLoadingServiceRequests.value = false;
     }
+  }
+
+  void _goToServiceDetailsScreen(String serviceRequestId) {
+    Get.delete<ServiceRequestDetailsController>();
+    Get.toNamed(
+      AppRoutes.serviceRequestDetailsScreen,
+      arguments: {"serviceRequestId": serviceRequestId},
+    );
   }
 
   void goToCreateServiceDetailsScreen(String serviceId) => Get.toNamed(

@@ -12,7 +12,7 @@ import 'package:service_la/data/model/network/common/bid_model.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
-import 'package:service_la/data/model/network/service_details_model.dart';
+import 'package:service_la/data/model/network/service_details_response_model.dart';
 import 'package:service_la/data/model/network/create_service_request_bid_model.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_bids_section.dart';
@@ -117,7 +117,7 @@ class ServiceRequestDetailsController extends GetxController {
       if (response is String) {
         log("ServiceRequestsStatus failed from controller response: $response");
       } else {
-        ServiceDetailsModel serviceDetails = response as ServiceDetailsModel;
+        ServiceDetailsResponseModel serviceDetails = response as ServiceDetailsResponseModel;
         if (serviceDetails.status == 200 || serviceDetails.status == 201) {
           serviceDetailsData.value.status = ServiceRequestStatus.completed.typeValue;
           serviceDetailsData.refresh();
@@ -136,7 +136,7 @@ class ServiceRequestDetailsController extends GetxController {
             final retryResponse = await ApiService().postRefreshTokenAndRetry(
               () => _serviceRequestRepo.putServiceRequestsStatus(serviceId, params),
             );
-            if (retryResponse is ServiceDetailsModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+            if (retryResponse is ServiceDetailsResponseModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceDetailsData.value.status = ServiceRequestStatus.completed.typeValue;
               serviceDetailsData.refresh();
               HelperFunction.snackbar(
@@ -604,7 +604,7 @@ class ServiceRequestDetailsController extends GetxController {
       if (response is String) {
         log("ServiceRequestsDetails get failed from controller response: $response");
       } else {
-        ServiceDetailsModel serviceDetails = response as ServiceDetailsModel;
+        ServiceDetailsResponseModel serviceDetails = response as ServiceDetailsResponseModel;
         if (serviceDetails.status == 200 || serviceDetails.status == 201) {
           serviceDetailsData.value = serviceDetails.serviceDetailsData ?? ServiceDetailsData();
           isBidBothApproved.value = serviceDetailsData.value.bids?.any(
@@ -643,7 +643,7 @@ class ServiceRequestDetailsController extends GetxController {
             log("Token expired detected, refreshing...");
             final retryResponse =
                 await ApiService().postRefreshTokenAndRetry(() => _serviceRequestRepo.getServiceRequestsDetails(serviceRequestId));
-            if (retryResponse is ServiceDetailsModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+            if (retryResponse is ServiceDetailsResponseModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceDetailsData.value = retryResponse.serviceDetailsData ?? ServiceDetailsData();
               isBidBothApproved.value = serviceDetailsData.value.bids?.any(
                     (bid) => (bid.userApproved ?? false) && (bid.vendorApproved ?? false),

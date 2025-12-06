@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:service_la/data/model/network/service_details_model.dart';
 import 'package:service_la/data/network/service_request_api_service.dart';
-import 'package:service_la/data/model/network/upload_service_request_model.dart';
 import 'package:service_la/data/implementation/service_request_information.dart';
+import 'package:service_la/data/model/network/service_details_response_model.dart';
 import 'package:service_la/data/model/network/create_service_request_bid_model.dart';
+import 'package:service_la/data/model/network/upload_service_request_response_model.dart';
 
 class ServiceRequestRepo {
   final ServiceRequestApiService _serviceRequestApiService = ServiceRequestInformation();
@@ -13,7 +13,7 @@ class ServiceRequestRepo {
     try {
       dynamic response = await _serviceRequestApiService.postServiceRequests(params);
       log("ServiceRequests details from service request repo: $response");
-      return UploadServiceRequestModel.fromJson(jsonDecode(response.toString()));
+      return UploadServiceRequestResponseModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
       return e;
     }
@@ -23,7 +23,7 @@ class ServiceRequestRepo {
     try {
       dynamic response = await _serviceRequestApiService.getServiceRequestsDetails(serviceId);
       log("ServiceRequestsDetails get details from service request repo: $response");
-      return ServiceDetailsModel.fromJson(jsonDecode(response.toString()));
+      return ServiceDetailsResponseModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
       return e;
     }
@@ -83,7 +83,7 @@ class ServiceRequestRepo {
     try {
       dynamic response = await _serviceRequestApiService.putServiceRequestsStatus(bidId, params);
       log("ServiceRequestsStatus update details from service request repo: $response");
-      return ServiceDetailsModel.fromJson(jsonDecode(response.toString()));
+      return ServiceDetailsResponseModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
       return e;
     }

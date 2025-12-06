@@ -4,24 +4,24 @@ import 'package:service_la/data/model/network/common/user_model.dart';
 import 'package:service_la/data/model/network/common/picture_model.dart';
 import 'package:service_la/data/model/network/common/category_model.dart';
 
-ServiceDetailsModel serviceDetailsModelFromJson(String str) => ServiceDetailsModel.fromJson(json.decode(str));
+ServiceDetailsResponseModel serviceDetailsResponseModelFromJson(String str) => ServiceDetailsResponseModel.fromJson(json.decode(str));
 
-String serviceDetailsModelToJson(ServiceDetailsModel data) => json.encode(data.toJson());
+String serviceDetailsResponseModelToJson(ServiceDetailsResponseModel data) => json.encode(data.toJson());
 
-class ServiceDetailsModel {
+class ServiceDetailsResponseModel {
   final bool? isSuccess;
   final int? status;
   final dynamic errors;
   final ServiceDetailsData? serviceDetailsData;
 
-  ServiceDetailsModel({
+  ServiceDetailsResponseModel({
     this.isSuccess,
     this.status,
     this.errors,
     this.serviceDetailsData,
   });
 
-  factory ServiceDetailsModel.fromJson(Map<String, dynamic> json) => ServiceDetailsModel(
+  factory ServiceDetailsResponseModel.fromJson(Map<String, dynamic> json) => ServiceDetailsResponseModel(
         isSuccess: json["isSuccess"],
         status: json["status"],
         errors: json["errors"],

@@ -1,9 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/view/widgets/home/custom_dropdown_chip.dart';
 import 'package:service_la/view/screens/ride_sharing/controller/ride_sharing_controller.dart';
 
 class RideSharingScreen extends GetWidget<RideSharingController> {
@@ -100,81 +98,6 @@ class RideSharingScreen extends GetWidget<RideSharingController> {
                         "assets/images/container_box.png",
                         width: 49.w,
                         height: 75.h,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                Container(
-                  padding: EdgeInsets.all(16.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14.r),
-                    border: Border.all(color: AppColors.borderE5E7EB),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.circle, size: 10.sp, color: AppColors.containerFF6900),
-                          SizedBox(width: 8.w),
-                          Expanded(
-                            child: Text(
-                              "14 Lorong Limau",
-                              style: TextStyle(
-                                fontSize: 15.sp,
-                                color: AppColors.text101828.withValues(alpha: .5),
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                          CustomDropdownChip<String>(
-                            width: Get.width / 4,
-                            options: controller.timeOptions,
-                            selectedValue: controller.selectedTime,
-                            labelBuilder: (v) => v,
-                            onChanged: (val) {
-                              // handle change
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16.h),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svgs/location_outline.svg",
-                            width: 10.w,
-                            height: 10.w,
-                            colorFilter: ColorFilter.mode(AppColors.containerFF6900, BlendMode.srcIn),
-                          ),
-                          SizedBox(width: 8.w),
-                          Text(
-                            "Drop-off location",
-                            style: TextStyle(
-                              fontSize: 15.sp,
-                              color: AppColors.text101828.withValues(alpha: .5),
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16.h),
-                      Center(
-                        child: TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            "+ Add Stop",
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: AppColors.text4A5565,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
                       ),
                     ],
                   ),

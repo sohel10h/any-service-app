@@ -3,12 +3,10 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
-import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/data/repository/vendor_repo.dart';
 import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/services/api_service/api_service.dart';
-import 'package:service_la/data/model/network/admin_user_model.dart';
 import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/data/model/network/service_request_me_model.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
@@ -40,9 +38,6 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
   int totalPagesServiceRequests = 1;
   final Rxn<ServiceRequestStatus> selectedServiceRequestStatus = Rxn<ServiceRequestStatus>();
   RxBool isDropdownDisabled = false.obs;
-  final AdminRepo _adminRepo = AdminRepo();
-  RxBool isLoadingAdminUser = false.obs;
-  Rx<AdminUser> adminUser = AdminUser().obs;
   late TabController tabController;
 
   @override
@@ -79,45 +74,10 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
     }
   }
 
-  Future<void> refreshAdminUser() async {
-    await _getAdminUser();
-  }
-
   Future<void> _getAdminUser() async {
-    isLoadingAdminUser.value = true;
-    try {
-      var response = await _adminRepo.getAdminUser(userId ?? AppDIController.loginUserId);
-      if (response is String) {
-        log("AdminUser get failed from controller response: $response");
-      } else {
-        AdminUserModel adminUserModel = response as AdminUserModel;
-        if (adminUserModel.status == 200 || adminUserModel.status == 201) {
-          adminUser.value = adminUserModel.adminUser ?? AdminUser();
-        } else {
-          if (adminUserModel.status == 401 ||
-              (adminUserModel.errors != null &&
-                  adminUserModel.errors.any((error) =>
-                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
-            log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().postRefreshTokenAndRetry(
-              () => _adminRepo.getAdminUser(userId ?? AppDIController.loginUserId),
-            );
-            if (retryResponse is AdminUserModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              adminUser.value = retryResponse.adminUser ?? AdminUser();
-            } else {
-              log("Retry request failed after token refresh");
-            }
-            return;
-          }
-          log("AdminUser get failed from controller: ${adminUserModel.status}");
-          return;
-        }
-      }
-    } catch (e) {
-      log("AdminUser get catch error from controller: ${e.toString()}");
-    } finally {
-      isLoadingAdminUser.value = false;
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await AppDIController.refreshAdminUser(userId: userId);
+    });
   }
 
   void goToServiceDetailsScreen(String serviceRequestId) {

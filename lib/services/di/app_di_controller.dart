@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
+import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/network/sign_in_model.dart';
+import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/location/location_service.dart';
+import 'package:service_la/data/model/network/admin_user_model.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/services/websocket/websocket_service.dart';
 import 'package:service_la/common/notification/notification_service.dart';
@@ -29,6 +32,9 @@ class AppDIController extends GetxController with WidgetsBindingObserver {
   static final Rx<WebsocketMessageModel> message = WebsocketMessageModel().obs;
   static final RxnInt unreadNotificationCount = RxnInt();
   static RxString lastChatRoomUserId = "".obs;
+  static final AdminRepo _adminRepo = AdminRepo();
+  static RxBool isLoadingAdminUser = false.obs;
+  static Rx<AdminUser> adminUser = AdminUser().obs;
 
   @override
   void onInit() {
@@ -40,6 +46,48 @@ class AppDIController extends GetxController with WidgetsBindingObserver {
     _initVendorFoundNotifications();
     initWebsockets();
     _setupLocationServices();
+    _getAdminUser();
+  }
+
+  static Future<void> refreshAdminUser({String? userId}) async {
+    await _getAdminUser(userId: userId);
+  }
+
+  static Future<void> _getAdminUser({String? userId}) async {
+    isLoadingAdminUser.value = true;
+    try {
+      var response = await _adminRepo.getAdminUser(userId ?? AppDIController.loginUserId);
+      if (response is String) {
+        log("AdminUser get failed from controller response: $response");
+      } else {
+        AdminUserModel adminUserModel = response as AdminUserModel;
+        if (adminUserModel.status == 200 || adminUserModel.status == 201) {
+          adminUser.value = adminUserModel.adminUser ?? AdminUser();
+        } else {
+          if (adminUserModel.status == 401 ||
+              (adminUserModel.errors != null &&
+                  adminUserModel.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _adminRepo.getAdminUser(userId ?? AppDIController.loginUserId),
+            );
+            if (retryResponse is AdminUserModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              adminUser.value = retryResponse.adminUser ?? AdminUser();
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("AdminUser get failed from controller: ${adminUserModel.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("AdminUser get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingAdminUser.value = false;
+    }
   }
 
   static Future<void> sendWebsocketsMessageData(Map<String, dynamic> messagePayload) async {

@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
-import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
@@ -214,7 +213,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                 CircleAvatar(
                   radius: 16.r,
                   child: NetworkImageLoader(
-                    HelperFunction.placeholderImageUrl30,
+                    AppDIController.adminUser.value.picture?.virtualPath ?? "",
                     height: 35.w,
                     width: 35.w,
                     radius: 32.r,

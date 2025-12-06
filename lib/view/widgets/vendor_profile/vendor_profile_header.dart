@@ -32,7 +32,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
 
   Widget _buildHeader(BuildContext context) {
     return Obx(() {
-      final user = controller.adminUser.value;
+      final user = AppDIController.adminUser.value;
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Column(
@@ -160,7 +160,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
 
   Widget _buildStatsRow() {
     return Obx(() {
-      final user = controller.adminUser.value;
+      final user = AppDIController.adminUser.value;
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 14.w),
         child: Row(
@@ -231,7 +231,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
 
   Widget _buildContactInfo() {
     return Obx(() {
-      final user = controller.adminUser.value;
+      final user = AppDIController.adminUser.value;
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Column(

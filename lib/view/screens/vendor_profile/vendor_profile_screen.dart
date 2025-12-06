@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_tab.dart';
@@ -27,6 +28,7 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
               controller.landingController.changeIndex(0, context);
             }
             Get.back();
+            AppDIController.refreshAdminUser();
           }
         },
         child: Scaffold(
@@ -37,6 +39,7 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
                 controller.landingController.changeIndex(0, context);
               }
               Future.microtask(() => Get.back());
+              AppDIController.refreshAdminUser();
             },
             actions: [
               Padding(
@@ -58,7 +61,7 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
               ),
             ],
           ),
-          body: controller.isLoadingAdminUser.value
+          body: AppDIController.isLoadingAdminUser.value
               ? CustomProgressBar()
               : NestedScrollView(
                   headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -87,7 +90,7 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
                   body: RefreshIndicator(
                     color: AppColors.primary,
                     backgroundColor: AppColors.white,
-                    onRefresh: controller.refreshAdminUser,
+                    onRefresh: () => AppDIController.refreshAdminUser(userId: controller.userId),
                     notificationPredicate: (notification) {
                       return notification.depth == 1;
                     },

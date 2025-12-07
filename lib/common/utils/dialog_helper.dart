@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/view/widgets/home/service_request_modal.dart';
+import 'package:service_la/view/widgets/common/custom_logout_dialog.dart';
 import 'package:service_la/view/widgets/common/notification_bottom_sheet.dart';
 import 'package:service_la/view/widgets/home/service_request_bottom_sheet.dart';
 import 'package:service_la/view/widgets/home/service_request_discard_bottom_sheet.dart';
@@ -77,5 +78,36 @@ class DialogHelper {
     ).whenComplete(() {
       if (onClosed != null) onClosed();
     });
+  }
+
+  static void showAnimatedLogoutDialog() {
+    Get.generalDialog(
+      barrierDismissible: true,
+      barrierLabel: '',
+      transitionDuration: const Duration(milliseconds: 350),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return const SizedBox.shrink();
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutBack,
+          reverseCurve: Curves.easeIn,
+        );
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.85, end: 1).animate(curved),
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, 0.08),
+                end: Offset.zero,
+              ).animate(curved),
+              child: const CustomLogoutDialog(),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

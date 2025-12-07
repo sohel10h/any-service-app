@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
@@ -43,20 +44,23 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
               AppDIController.refreshAdminUser();
             },
             actions: [
-              Padding(
-                padding: EdgeInsets.only(right: 16.w),
-                child: Container(
-                  width: 31.w,
-                  height: 31.w,
-                  padding: EdgeInsets.all(8.sp),
-                  decoration: BoxDecoration(
-                    color: AppColors.containerF3F4F6,
-                    shape: BoxShape.circle,
-                  ),
-                  child: SvgPicture.asset(
-                    "assets/svgs/share.svg",
-                    width: 14.w,
-                    height: 14.h,
+              GestureDetector(
+                onTap: () => DialogHelper.showAnimatedLogoutDialog(),
+                child: Padding(
+                  padding: EdgeInsets.only(right: 16.w),
+                  child: Container(
+                    width: 36.w,
+                    height: 36.w,
+                    padding: EdgeInsets.all(8.sp),
+                    decoration: BoxDecoration(
+                      color: AppColors.containerF3F4F6,
+                      shape: BoxShape.circle,
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/svgs/logout.svg",
+                      width: 14.w,
+                      height: 14.h,
+                    ),
                   ),
                 ),
               ),

@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/view/widgets/common/custom_app_bar.dart';
 import 'package:service_la/view/screens/settings/controller/settings_controller.dart';
 
@@ -18,39 +17,15 @@ class SettingsScreen extends GetWidget<SettingsController> {
         leadingWidth: 2.w,
         backButton: const SizedBox.shrink(),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(bottom: 110.h),
-        child: Column(
-          children: [
-            InkWell(
-              onTap: () => HelperFunction.logOut(),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Container(
-                  padding: EdgeInsets.all(16.sp),
-                  decoration: BoxDecoration(
-                    color: AppColors.black.withValues(alpha: .1),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Log Out",
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: AppColors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      Icon(Icons.logout),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20.h),
-          ],
+      body: Center(
+        child: Text(
+          "Settings",
+          style: TextStyle(
+            fontSize: 13.sp,
+            color: AppColors.text6A7282,
+            fontWeight: FontWeight.w400,
+          ),
+          textAlign: TextAlign.center,
         ),
       ),
     );

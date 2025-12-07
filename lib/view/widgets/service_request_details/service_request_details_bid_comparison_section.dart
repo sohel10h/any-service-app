@@ -64,23 +64,7 @@ class ServiceRequestDetailsBidComparisonSection extends GetWidget<ServiceRequest
                 ),
               ],
             ),
-            SizedBox(height: 12.h),
-            Row(
-              children: [
-                Icon(Icons.lightbulb, color: Colors.amber, size: 18.sp),
-                SizedBox(width: 4.w),
-                Expanded(
-                  child: Text(
-                    "You can save up to \$18 from the average bid",
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      color: AppColors.text8200DB,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            SizedBox(height: 8.h),
           ],
         ),
       );

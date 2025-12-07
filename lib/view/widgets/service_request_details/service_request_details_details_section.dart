@@ -47,27 +47,6 @@ class ServiceRequestDetailsDetailsSection extends GetWidget<ServiceRequestDetail
                     " – \$${controller.serviceDetailsData.value.budgetMax ?? "0"}",
                 imageContainerColor: AppColors.containerFFEDD4,
               ),
-              _buildDetailTile(
-                imagesPath: "assets/images/timer_clock.png",
-                title: "Urgency Level",
-                subtitleWidget: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.containerFEF9C2,
-                    borderRadius: BorderRadius.circular(4.r),
-                    border: Border.all(color: AppColors.borderFFF085),
-                  ),
-                  child: Text(
-                    "Medium",
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      color: AppColors.text894B00,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                imageContainerColor: AppColors.containerFEF9C2,
-              ),
             ],
           ),
         ),

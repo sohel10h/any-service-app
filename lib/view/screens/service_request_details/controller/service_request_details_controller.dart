@@ -65,6 +65,34 @@ class ServiceRequestDetailsController extends GetxController {
     _getServices();
   }
 
+  void sortingBidsByTopRatedUser() {
+    final bids = serviceDetailsData.value.bids;
+    if (bids != null) {
+      bids.sort((a, b) {
+        final ratingA = a.vendor?.rating ?? 0;
+        final ratingB = b.vendor?.rating ?? 0;
+        return ratingB.compareTo(ratingA);
+      });
+      serviceDetailsData.update((val) {
+        val?.bids = List.from(bids);
+      });
+    }
+  }
+
+  void sortingBidsByLowestPrice() {
+    final bids = serviceDetailsData.value.bids;
+    if (bids != null) {
+      bids.sort((a, b) {
+        final priceA = a.proposedPrice ?? 0;
+        final priceB = b.proposedPrice ?? 0;
+        return priceA.compareTo(priceB);
+      });
+      serviceDetailsData.update((val) {
+        val?.bids = List.from(bids);
+      });
+    }
+  }
+
   void goToProfileScreen(String? userId) {
     Get.delete<VendorProfileController>();
     Get.toNamed(
@@ -78,6 +106,9 @@ class ServiceRequestDetailsController extends GetxController {
   void _getServices() async {
     await _getServiceRequestsDetails();
     await _getServicesMe();
+    if (selectedFilterIndex.value == 0) {
+      sortingBidsByLowestPrice();
+    }
   }
 
   void goToChatsRoomScreen({

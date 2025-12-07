@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/view/widgets/service_request_details/custom_service_request_bid_filter.dart';
 import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_bids_item.dart';
 import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
@@ -17,33 +17,13 @@ class ServiceRequestDetailsProviderShortlistedBidsSection extends GetWidget<Serv
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 16.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Text(
-              "Shortlisted Bids",
-              style: TextStyle(
-                fontSize: 18.sp,
-                color: AppColors.text101828,
-                fontWeight: FontWeight.w700,
-              ),
+          Obx(
+            () => CustomServiceRequestBidFilter(
+              filters: controller.filters,
+              selectedIndex: controller.selectedFilterIndex.value,
+              onSelected: (index) => controller.selectedFilterIndex.value = index,
             ),
           ),
-          SizedBox(height: 8.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Obx(
-              () => Text(
-                "${controller.shortlistedBids.length} received",
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  color: AppColors.text6A7282,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 12.h),
-          _buildFilters(),
           SizedBox(height: 20.h),
           Obx(
             () {
@@ -83,71 +63,6 @@ class ServiceRequestDetailsProviderShortlistedBidsSection extends GetWidget<Serv
             },
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildFilters() {
-    return Obx(
-      () => Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.w),
-        child: Row(
-          children: List.generate(
-            controller.filters.length,
-            (index) {
-              final isSelected = index == controller.selectedFilterIndex.value;
-              return Expanded(
-                child: GestureDetector(
-                  onTap: () => controller.selectedFilterIndex.value = index,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-                      decoration: BoxDecoration(
-                        color: isSelected ? AppColors.container155DFC : AppColors.containerF3F4F6,
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (controller.filters[index] == "Lowest Price")
-                            SvgPicture.asset(
-                              "assets/svgs/trending_down.svg",
-                              width: 14.w,
-                              height: 14.h,
-                              colorFilter: ColorFilter.mode(
-                                isSelected ? AppColors.white : AppColors.text364153,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          if (controller.filters[index] == "Top Rated")
-                            SvgPicture.asset(
-                              "assets/svgs/rating_outline.svg",
-                              width: 14.w,
-                              height: 14.h,
-                              colorFilter: ColorFilter.mode(
-                                isSelected ? AppColors.white : AppColors.text364153,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          SizedBox(width: 6.w),
-                          Text(
-                            controller.filters[index],
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              color: isSelected ? AppColors.white : AppColors.text364153,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
       ),
     );
   }

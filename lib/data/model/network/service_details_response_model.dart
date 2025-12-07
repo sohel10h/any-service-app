@@ -57,7 +57,7 @@ class ServiceDetailsData {
   final String? updatedOnUtc;
   final List<CategoryModel>? categories;
   final List<PictureModel>? pictures;
-  final List<BidModel>? bids;
+  List<BidModel>? bids;
   final UserModel? user;
 
   ServiceDetailsData({

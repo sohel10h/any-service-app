@@ -12,8 +12,10 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Container(
+    return Obx(() {
+      final createServiceDetails = controller.createServiceDetailsData.value;
+      final categories = createServiceDetails.categories;
+      return Container(
         decoration: BoxDecoration(
           color: AppColors.white,
         ),
@@ -26,9 +28,9 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
-                itemCount: controller.createServiceDetailsData.value.categories?.length ?? 0,
+                itemCount: categories?.length ?? 0,
                 itemBuilder: (context, index) {
-                  final category = controller.createServiceDetailsData.value.categories?[index] ?? CreateServiceDetailsCategory();
+                  final category = categories?[index] ?? CreateServiceDetailsCategory();
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.w),
                     child: Container(
@@ -68,7 +70,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
-                controller.createServiceDetailsData.value.name?.capitalizeFirst ?? "",
+                createServiceDetails.name?.capitalizeFirst ?? "",
                 style: TextStyle(
                   fontSize: 14.sp,
                   color: AppColors.text101828,
@@ -95,7 +97,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: "${controller.createServiceDetailsData.value.rating ?? "0"}",
+                            text: "${createServiceDetails.rating ?? "0"}",
                             style: TextStyle(
                               fontSize: 14.sp,
                               color: AppColors.text101828,
@@ -104,7 +106,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                           ),
                           TextSpan(text: " "),
                           TextSpan(
-                            text: "(${controller.createServiceDetailsData.value.totalReview ?? "0"} reviews)",
+                            text: "(${createServiceDetails.totalReview ?? "0"} reviews)",
                             style: TextStyle(
                               fontSize: 12.sp,
                               color: AppColors.text6A7282,
@@ -128,7 +130,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                   Expanded(
                     flex: 1,
                     child: Text(
-                      "${controller.createServiceDetailsData.value.serviceCompletedCount ?? "0"} jobs completed",
+                      "${createServiceDetails.serviceCompletedCount ?? "0"} jobs completed",
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: AppColors.text4A5565,
@@ -142,64 +144,70 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
               ),
             ),
             SizedBox(height: 16.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Wrap(
-                alignment: WrapAlignment.start,
-                runAlignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Text(
-                    "\$${(controller.createServiceDetailsData.value.price as double?)?.toStringAsFixed(2) ?? "0"}",
-                    style: TextStyle(
-                      fontSize: 26.sp,
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w700,
+            if (!(createServiceDetails.priceRange ?? false)) ...[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  runAlignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      "\$${(createServiceDetails.price as double?)?.toStringAsFixed(2) ?? "0"}",
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(width: 12.w),
-                  Text(
-                    "\$${(controller.createServiceDetailsData.value.price as double?)?.toStringAsFixed(2) ?? "0"}",
-                    //TODO: need to get this data from API
-                    style: TextStyle(
-                      fontSize: 15.sp,
-                      color: AppColors.text99A1AF,
-                      decoration: TextDecoration.lineThrough,
-                      decorationColor: AppColors.text99A1AF,
+                    SizedBox(width: 8.w),
+                    Text(
+                      "starting price",
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.text4A5565,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    "starting price",
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: AppColors.text4A5565,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 4.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Text(
-                "Price range: \$${controller.createServiceDetailsData.value.priceStart ?? "0"}"
-                " - \$${controller.createServiceDetailsData.value.priceEnd ?? "0"}",
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: AppColors.text6A7282,
-                  fontWeight: FontWeight.w400,
+                  ],
                 ),
               ),
-            ),
-            SizedBox(height: 12.h),
+              SizedBox(height: 12.h),
+            ],
+            if ((createServiceDetails.priceRange ?? false)) ...[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Price range:",
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          color: AppColors.text6A7282,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      TextSpan(text: " "),
+                      TextSpan(
+                        text: "\$${createServiceDetails.priceStart ?? "0"}"
+                            " - \$${createServiceDetails.priceEnd ?? "0"}",
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.h),
+            ],
             Divider(color: AppColors.containerF3F4F6),
             SizedBox(height: 12.h),
             Padding(
@@ -224,7 +232,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
-                controller.createServiceDetailsData.value.description ?? "",
+                createServiceDetails.description ?? "",
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: AppColors.text4A5565,
@@ -237,7 +245,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
             SizedBox(height: 12.h),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 }

@@ -21,7 +21,16 @@ class ServiceRequestDetailsProviderShortlistedBidsSection extends GetWidget<Serv
             () => CustomServiceRequestBidFilter(
               filters: controller.filters,
               selectedIndex: controller.selectedFilterIndex.value,
-              onSelected: (index) => controller.selectedFilterIndex.value = index,
+              onSelected: (index) {
+                controller.selectedFilterIndex.value = index;
+                if (controller.selectedFilterIndex.value == 0) {
+                  controller.sortBidsByLowestPrice(controller.shortlistedBids);
+                  controller.shortlistedBids.refresh();
+                } else {
+                  controller.sortBidsByTopRatedUser(controller.shortlistedBids);
+                  controller.shortlistedBids.refresh();
+                }
+              },
             ),
           ),
           SizedBox(height: 20.h),

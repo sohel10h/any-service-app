@@ -65,32 +65,22 @@ class ServiceRequestDetailsController extends GetxController {
     _getServices();
   }
 
-  void sortingBidsByTopRatedUser() {
-    final bids = serviceDetailsData.value.bids;
-    if (bids != null) {
-      bids.sort((a, b) {
-        final ratingA = a.vendor?.rating ?? 0;
-        final ratingB = b.vendor?.rating ?? 0;
-        return ratingB.compareTo(ratingA);
-      });
-      serviceDetailsData.update((val) {
-        val?.bids = List.from(bids);
-      });
-    }
+  void sortBidsByTopRatedUser(List<BidModel>? bids) {
+    if (bids == null) return;
+    bids.sort((a, b) {
+      final ratingA = a.vendor?.rating ?? 0;
+      final ratingB = b.vendor?.rating ?? 0;
+      return ratingB.compareTo(ratingA);
+    });
   }
 
-  void sortingBidsByLowestPrice() {
-    final bids = serviceDetailsData.value.bids;
-    if (bids != null) {
-      bids.sort((a, b) {
-        final priceA = a.proposedPrice ?? 0;
-        final priceB = b.proposedPrice ?? 0;
-        return priceA.compareTo(priceB);
-      });
-      serviceDetailsData.update((val) {
-        val?.bids = List.from(bids);
-      });
-    }
+  void sortBidsByLowestPrice(List<BidModel>? bids) {
+    if (bids == null) return;
+    bids.sort((a, b) {
+      final priceA = a.proposedPrice ?? 0;
+      final priceB = b.proposedPrice ?? 0;
+      return priceA.compareTo(priceB);
+    });
   }
 
   void goToProfileScreen(String? userId) {
@@ -107,7 +97,10 @@ class ServiceRequestDetailsController extends GetxController {
     await _getServiceRequestsDetails();
     await _getServicesMe();
     if (selectedFilterIndex.value == 0) {
-      sortingBidsByLowestPrice();
+      sortBidsByLowestPrice(serviceDetailsData.value.bids);
+      serviceDetailsData.update((val) {
+        val?.bids = List.from(serviceDetailsData.value.bids ?? []);
+      });
     }
   }
 

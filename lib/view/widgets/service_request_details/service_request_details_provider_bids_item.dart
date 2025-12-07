@@ -2,8 +2,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/network/common/bid_model.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
@@ -116,7 +117,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                               textAlign: TextAlign.end,
                             ),
                           ),
-                          if (true) //TODO: need isBest value from API
+                          if (false) //TODO: need isBest value from API
                             Expanded(
                               child: Wrap(
                                 alignment: WrapAlignment.end,
@@ -144,7 +145,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                             ),
                         ],
                       ),
-                      if (true) //TODO: need belowBudget value from API
+                      if (HelperFunction.isBidBelowBudget(controller.serviceDetailsData.value.budgetMin, bid.proposedPrice))
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [

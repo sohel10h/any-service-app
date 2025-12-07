@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
@@ -20,23 +18,29 @@ class ServiceRequestDetailsProviderBidsSection extends GetWidget<ServiceRequestD
         children: [
           SizedBox(height: 16.h),
           Obx(
-            () => CustomServiceRequestBidFilter(
-              filters: controller.filters,
-              selectedIndex: controller.selectedFilterIndex.value,
-              onSelected: (index) {
-                controller.selectedFilterIndex.value = index;
-                log("LogIndex: ${controller.selectedFilterIndex.value}");
-                if (controller.selectedFilterIndex.value == 0) {
-                  controller.sortingBidsByLowestPrice();
-                } else {
-                  controller.sortingBidsByTopRatedUser();
-                }
-              },
-            ),
+                () =>
+                CustomServiceRequestBidFilter(
+                  filters: controller.filters,
+                  selectedIndex: controller.selectedFilterIndex.value,
+                  onSelected: (index) {
+                    controller.selectedFilterIndex.value = index;
+                    if (controller.selectedFilterIndex.value == 0) {
+                      controller.sortBidsByLowestPrice(controller.serviceDetailsData.value.bids);
+                      controller.serviceDetailsData.update((val) {
+                        val?.bids = List.from(controller.serviceDetailsData.value.bids ?? []);
+                      });
+                    } else {
+                      controller.sortBidsByTopRatedUser(controller.serviceDetailsData.value.bids);
+                      controller.serviceDetailsData.update((val) {
+                        val?.bids = List.from(controller.serviceDetailsData.value.bids ?? []);
+                      });
+                    }
+                  },
+                ),
           ),
           SizedBox(height: 20.h),
           Obx(
-            () {
+                () {
               final allBids = controller.serviceDetailsData.value.bids;
               if ((allBids?.isEmpty ?? true)) {
                 return SizedBox(
@@ -55,20 +59,21 @@ class ServiceRequestDetailsProviderBidsSection extends GetWidget<ServiceRequestD
               }
               return Column(
                 children: allBids
-                        ?.map(
-                          (bid) => ServiceRequestDetailsProviderBidsItem(
-                            bid: bid,
-                            onAccept: () => controller.onTapAcceptBidButton(bid.id ?? "", !(bid.userApproved ?? false)),
-                            onShortlist: () => controller.onTapShortlistButton(bid.id ?? "", !(bid.isShortlisted ?? false)),
-                            onReject: () => controller.onTapRejectBidButton(bid.id ?? "", ServiceRequestBidStatus.rejected.typeValue),
-                            onMessage: () {},
-                            isApprovedLoading: controller.isApprovedLoadingMap[bid.id] ?? false.obs,
-                            isShortlistedLoading: controller.isShortlistedLoadingMap[bid.id] ?? false.obs,
-                            isRejectedLoading: controller.isRejectedLoadingMap[bid.id] ?? false.obs,
-                            controller: controller,
-                          ),
-                        )
-                        .toList() ??
+                    ?.map(
+                      (bid) =>
+                      ServiceRequestDetailsProviderBidsItem(
+                        bid: bid,
+                        onAccept: () => controller.onTapAcceptBidButton(bid.id ?? "", !(bid.userApproved ?? false)),
+                        onShortlist: () => controller.onTapShortlistButton(bid.id ?? "", !(bid.isShortlisted ?? false)),
+                        onReject: () => controller.onTapRejectBidButton(bid.id ?? "", ServiceRequestBidStatus.rejected.typeValue),
+                        onMessage: () {},
+                        isApprovedLoading: controller.isApprovedLoadingMap[bid.id] ?? false.obs,
+                        isShortlistedLoading: controller.isShortlistedLoadingMap[bid.id] ?? false.obs,
+                        isRejectedLoading: controller.isRejectedLoadingMap[bid.id] ?? false.obs,
+                        controller: controller,
+                      ),
+                )
+                    .toList() ??
                     [],
               );
             },

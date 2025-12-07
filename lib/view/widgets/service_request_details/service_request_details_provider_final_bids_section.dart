@@ -20,7 +20,16 @@ class ServiceDetailsProviderFinalBidsSection extends GetWidget<ServiceRequestDet
             () => CustomServiceRequestBidFilter(
               filters: controller.filters,
               selectedIndex: controller.selectedFilterIndex.value,
-              onSelected: (index) => controller.selectedFilterIndex.value = index,
+              onSelected: (index) {
+                controller.selectedFilterIndex.value = index;
+                if (controller.selectedFilterIndex.value == 0) {
+                  controller.sortBidsByLowestPrice(controller.finalBids);
+                  controller.finalBids.refresh();
+                } else {
+                  controller.sortBidsByTopRatedUser(controller.finalBids);
+                  controller.finalBids.refresh();
+                }
+              },
             ),
           ),
           SizedBox(height: 20.h),

@@ -60,7 +60,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                           width: 32.w,
                           height: 32.w,
                           decoration: BoxDecoration(
-                            color: AppColors.container155DFC,
+                            color: AppColors.primary,
                             shape: BoxShape.circle,
                             border: Border.all(color: AppColors.white, width: 2),
                           ),
@@ -82,10 +82,10 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                   ElevatedButton.icon(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.container155DFC,
+                      backgroundColor: AppColors.primary,
                       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                     ),
                     label: Row(

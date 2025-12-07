@@ -24,4 +24,15 @@ class VendorInformation extends VendorApiService {
     );
     return response;
   }
+
+  @override
+  Future getVendorReviews(String userId, {Map<String, dynamic>? queryParams}) async {
+    dynamic response = await ApiService().get(
+      ApiConstant.dynamicQueryParams(
+        ApiConstant.getVendorReviewsPath.replaceAll("#userId#", userId),
+        queryParams: queryParams,
+      ),
+    );
+    return response;
+  }
 }

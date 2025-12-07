@@ -47,6 +47,7 @@ class ApiConstant {
   // END POINTS - Others
   static const String getServiceCategoriesPath = "/categories/homepage";
   static const String getAllServiceCategoriesPath = "/categories";
+  static const String getVendorReviewsPath = "/api/reviews/vendor/#userId#";
 
   // Functions
   static String dynamicQueryParams(String endpoint, {Map<String, dynamic>? queryParams}) {

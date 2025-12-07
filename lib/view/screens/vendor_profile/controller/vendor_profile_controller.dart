@@ -7,14 +7,17 @@ import 'package:service_la/data/repository/vendor_repo.dart';
 import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/data/model/network/service_request_me_model.dart';
+import 'package:service_la/data/model/network/common/service_review_model.dart';
+import 'package:service_la/data/model/network/vendor_review_response_model.dart';
 import 'package:service_la/view/screens/landing/controller/landing_controller.dart';
 import 'package:service_la/data/model/network/service_request_bid_provider_model.dart';
 import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
-class VendorProfileController extends GetxController with GetSingleTickerProviderStateMixin {
-  String? userId;
+class VendorProfileController extends GetxController with GetTickerProviderStateMixin {
+  Rxn<String>? userId = Rxn(null);
   LandingController landingController = Get.find<LandingController>();
   RxInt currentIndex = 0.obs;
   RxInt selectedTabIndex = 0.obs;
@@ -36,47 +39,60 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
   RxBool isLoadingMoreServiceRequests = false.obs;
   int currentPageServiceRequests = 1;
   int totalPagesServiceRequests = 1;
+  Rxn<VendorReviewResponseModel> vendorReviewResponse = Rxn<VendorReviewResponseModel>();
+  RxList<ServiceReviewModel> vendorReviews = <ServiceReviewModel>[].obs;
+  RxBool isLoadingVendorReviews = false.obs;
+  RxBool isLoadingMoreVendorReviews = false.obs;
+  int currentPageVendorReviews = 1;
+  int totalPagesVendorReviews = 1;
   final Rxn<ServiceRequestStatus> selectedServiceRequestStatus = Rxn<ServiceRequestStatus>();
   RxBool isDropdownDisabled = false.obs;
   late TabController tabController;
 
   @override
   void onInit() {
-    super.onInit();
     _getArguments();
     _initTabViews();
     _initTabCounts();
     _setupTabController();
-    _getAdminUser();
-    _getServices();
+    super.onInit();
   }
 
-  void _setupTabController() {
-    try {
-      tabController.dispose();
-    } catch (_) {}
-    tabController = TabController(
-      length: tabs.length,
-      vsync: this,
-    );
-    tabController.addListener(() {
-      selectedTabIndex.value = tabController.index;
-    });
+  @override
+  void onReady() {
+    _refreshAll();
+    super.onReady();
   }
 
-  void _getServices() async {
-    if (userId == null) {
-      _getServiceServiceRequestBids(isRefresh: true);
-      _getServicesMe();
-      _getServiceRequestsMe(isRefresh: true);
+  void loadProfile(String? id) {
+    userId?.value = id;
+    vendorReviewResponse.value = null;
+    _initTabViews();
+    _initTabCounts();
+    _setupTabController();
+    _refreshAll();
+  }
+
+  void _refreshAll() async {
+    await _getAdminUser();
+    await _getServices();
+  }
+
+  Future<void> _getServices() async {
+    if (userId?.value == null) {
+      await _getServiceServiceRequestBids(isRefresh: true);
+      await _getServicesMe();
+      await _getServiceRequestsMe(isRefresh: true);
+      await _getVendorReviews(isRefresh: true);
     } else {
-      _getServiceRequestsMe(isRefresh: true);
+      await _getServicesMe();
+      await _getVendorReviews(isRefresh: true);
     }
   }
 
   Future<void> _getAdminUser() async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await AppDIController.refreshAdminUser(userId: userId);
+      await AppDIController.refreshAdminUser(userId: userId?.value);
     });
   }
 
@@ -86,6 +102,113 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
       AppRoutes.serviceRequestDetailsScreen,
       arguments: {"serviceRequestId": serviceRequestId},
     );
+  }
+
+  Future<void> loadNextPageVendorReviews() async {
+    if (currentPageVendorReviews < totalPagesVendorReviews && !isLoadingMoreVendorReviews.value) {
+      isLoadingMoreVendorReviews.value = true;
+      currentPageVendorReviews++;
+      await _getVendorReviews();
+    }
+  }
+
+  Future<void> refreshVendorReviews({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    await _getVendorReviews(isRefresh: isRefresh, isLoadingEmpty: isLoadingEmpty);
+  }
+
+  Future<void> _getVendorReviews({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    if (isLoadingEmpty) totalPagesVendorReviews = 1;
+    if (isRefresh) {
+      currentPageVendorReviews = 1;
+      vendorReviews.clear();
+    }
+    if (currentPageVendorReviews > totalPagesVendorReviews) return;
+    if (isRefresh || isLoadingEmpty) {
+      isLoadingVendorReviews.value = true;
+    }
+    try {
+      Map<String, dynamic> queryParams = {
+        ApiParams.page: currentPageVendorReviews,
+      };
+      var response = await _vendorRepo.getVendorReviews(userId?.value ?? AppDIController.loginUserId, queryParams: queryParams);
+      if (response is String) {
+        log("VendorReviews get failed from controller response: $response");
+      } else {
+        VendorReviewResponseModel vendorReview = response as VendorReviewResponseModel;
+        if (vendorReview.status == 200 || vendorReview.status == 201) {
+          if (vendorReviewResponse.value == null) {
+            vendorReviewResponse.value = vendorReview;
+          }
+          final data = vendorReview.vendorReviewData?.serviceReviews ?? [];
+          if (isRefresh) {
+            vendorReviews.assignAll(data);
+          } else {
+            vendorReviews.addAll(data);
+          }
+          currentPageVendorReviews = vendorReview.vendorReviewData?.meta?.page ?? currentPageVendorReviews;
+          totalPagesVendorReviews = vendorReview.vendorReviewData?.meta?.totalPages ?? totalPagesVendorReviews;
+          if (userId?.value == null) {
+            tabsCounts.value = [
+              serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
+              serviceMeDataList.length,
+              serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+              vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
+            ];
+          } else {
+            tabsCounts.value = [
+              serviceMeDataList.length,
+              vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
+            ];
+          }
+        } else {
+          if (vendorReview.status == 401 ||
+              (vendorReview.errors != null &&
+                  vendorReview.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _vendorRepo.getVendorReviews(userId?.value ?? AppDIController.loginUserId, queryParams: queryParams),
+            );
+            if (retryResponse is VendorReviewResponseModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              if (vendorReviewResponse.value == null) {
+                vendorReviewResponse.value = retryResponse;
+              }
+              final data = retryResponse.vendorReviewData?.serviceReviews ?? [];
+              if (isRefresh) {
+                vendorReviews.assignAll(data);
+              } else {
+                vendorReviews.addAll(data);
+              }
+              currentPageVendorReviews = retryResponse.vendorReviewData?.meta?.page ?? currentPageVendorReviews;
+              totalPagesVendorReviews = retryResponse.vendorReviewData?.meta?.totalPages ?? totalPagesVendorReviews;
+              if (userId?.value == null) {
+                tabsCounts.value = [
+                  serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
+                  serviceMeDataList.length,
+                  serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
+                  vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
+                ];
+              } else {
+                tabsCounts.value = [
+                  serviceMeDataList.length,
+                  vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
+                ];
+              }
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("VendorReviews get failed from controller: ${vendorReview.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("VendorReviews get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingVendorReviews.value = false;
+      isLoadingMoreVendorReviews.value = false;
+    }
   }
 
   Future<void> loadNextPageServiceRequests() async {
@@ -112,7 +235,7 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
     }
     try {
       Map<String, dynamic> queryParams = {
-        'page': currentPageServiceRequests,
+        ApiParams.page: currentPageServiceRequests,
       };
       if (!isRefresh) {
         if (selectedServiceRequestStatus.value != null) {
@@ -138,17 +261,17 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
           }
           currentPageServiceRequests = serviceRequestMe.serviceRequestMeData?.meta?.page ?? currentPageServiceRequests;
           totalPagesServiceRequests = serviceRequestMe.serviceRequestMeData?.meta?.totalPages ?? totalPagesServiceRequests;
-          if (userId == null) {
+          if (userId?.value == null) {
             tabsCounts.value = [
               serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
               serviceMeDataList.length,
               serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-              0,
+              vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
             ];
           } else {
             tabsCounts.value = [
-              serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-              0,
+              serviceMeDataList.length,
+              vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
             ];
           }
         } else {
@@ -172,17 +295,17 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
               }
               currentPageServiceRequests = retryResponse.serviceRequestMeData?.meta?.page ?? currentPageServiceRequests;
               totalPagesServiceRequests = retryResponse.serviceRequestMeData?.meta?.totalPages ?? totalPagesServiceRequests;
-              if (userId == null) {
+              if (userId?.value == null) {
                 tabsCounts.value = [
                   serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
                   serviceMeDataList.length,
                   serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-                  0,
+                  vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
                 ];
               } else {
                 tabsCounts.value = [
-                  serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-                  0,
+                  serviceMeDataList.length,
+                  vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
                 ];
               }
             } else {
@@ -226,7 +349,7 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
     }
     try {
       Map<String, dynamic> queryParams = {
-        'page': currentPageServiceRequestBids,
+        ApiParams.page: currentPageServiceRequestBids,
       };
       var response = await _vendorRepo.getServiceRequestBidsProvider(queryParams: queryParams);
       if (response is String) {
@@ -245,17 +368,17 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
           }
           currentPageServiceRequestBids = serviceRequestBid.serviceRequestBidData?.meta?.page ?? currentPageServiceRequestBids;
           totalPagesServiceRequestBids = serviceRequestBid.serviceRequestBidData?.meta?.totalPages ?? totalPagesServiceRequestBids;
-          if (userId == null) {
+          if (userId?.value == null) {
             tabsCounts.value = [
               serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
               serviceMeDataList.length,
               serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-              0,
+              vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
             ];
           } else {
             tabsCounts.value = [
-              serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-              0,
+              serviceMeDataList.length,
+              vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
             ];
           }
         } else {
@@ -279,17 +402,17 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
               }
               currentPageServiceRequestBids = retryResponse.serviceRequestBidData?.meta?.page ?? currentPageServiceRequestBids;
               totalPagesServiceRequestBids = retryResponse.serviceRequestBidData?.meta?.totalPages ?? totalPagesServiceRequestBids;
-              if (userId == null) {
+              if (userId?.value == null) {
                 tabsCounts.value = [
                   serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
                   serviceMeDataList.length,
                   serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-                  0,
+                  vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
                 ];
               } else {
                 tabsCounts.value = [
-                  serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-                  0,
+                  serviceMeDataList.length,
+                  vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
                 ];
               }
             } else {
@@ -310,6 +433,7 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
   }
 
   Future<void> _getServicesMe() async {
+    serviceMeDataList.clear();
     isLoadingServices.value = true;
     try {
       var response = await _serviceRepo.getServicesMe();
@@ -319,17 +443,17 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
         ServiceMeModel serviceMe = response as ServiceMeModel;
         if (serviceMe.status == 200 || serviceMe.status == 201) {
           serviceMeDataList.value = serviceMe.serviceMeData ?? [];
-          if (userId == null) {
+          if (userId?.value == null) {
             tabsCounts.value = [
               serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
               serviceMeDataList.length,
               serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-              0,
+              vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
             ];
           } else {
             tabsCounts.value = [
-              serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-              0,
+              serviceMeDataList.length,
+              vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
             ];
           }
         } else {
@@ -341,17 +465,17 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
             final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRepo.getServicesMe());
             if (retryResponse is ServiceMeModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceMeDataList.value = retryResponse.serviceMeData ?? [];
-              if (userId == null) {
+              if (userId?.value == null) {
                 tabsCounts.value = [
                   serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0,
                   serviceMeDataList.length,
                   serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-                  0,
+                  vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
                 ];
               } else {
                 tabsCounts.value = [
-                  serviceRequestMeModel.value?.serviceRequestMeData?.meta?.totalItems ?? 0,
-                  0,
+                  serviceMeDataList.length,
+                  vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0,
                 ];
               }
             } else {
@@ -387,8 +511,21 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
     }
   }
 
+  void _setupTabController() {
+    try {
+      tabController.dispose();
+    } catch (_) {}
+    tabController = TabController(
+      length: tabs.length,
+      vsync: this,
+    );
+    tabController.addListener(() {
+      selectedTabIndex.value = tabController.index;
+    });
+  }
+
   void _initTabCounts() {
-    if (userId == null) {
+    if (userId?.value == null) {
       tabsCounts.value = [0, 0, 0, 0];
     } else {
       tabsCounts.value = [0, 0];
@@ -396,17 +533,23 @@ class VendorProfileController extends GetxController with GetSingleTickerProvide
   }
 
   void _initTabViews() {
-    if (userId == null) {
+    if (userId?.value == null) {
       tabs.value = ["All Bids", "Services", "Requests", "Reviews"];
     } else {
-      tabs.value = ["Requests", "Reviews"];
+      tabs.value = ["Services", "Reviews"];
     }
   }
 
   void _getArguments() {
     if (Get.arguments != null) {
-      userId = Get.arguments["userId"] == AppDIController.loginUserId ? null : Get.arguments["userId"];
+      userId?.value = Get.arguments["userId"] == AppDIController.loginUserId ? null : Get.arguments["userId"];
     }
-    log("VendorProfileUserId: $userId");
+    log("VendorProfileUserId: ${userId?.value}");
+  }
+
+  @override
+  void onClose() {
+    tabController.dispose();
+    super.onClose();
   }
 }

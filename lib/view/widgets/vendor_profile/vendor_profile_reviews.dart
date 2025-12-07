@@ -4,8 +4,8 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 
-class VendorProfileBids extends GetWidget<VendorProfileController> {
-  const VendorProfileBids({super.key});
+class VendorProfileReviews extends GetWidget<VendorProfileController> {
+  const VendorProfileReviews({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class VendorProfileBids extends GetWidget<VendorProfileController> {
             children: [
               Expanded(
                 child: Text(
-                  "Bids",
+                  "Reviews",
                   style: TextStyle(
                     fontSize: 14.sp,
                     color: AppColors.text101828,
@@ -29,9 +29,9 @@ class VendorProfileBids extends GetWidget<VendorProfileController> {
               SizedBox(width: 8.w),
               Expanded(
                 child: Obx(() {
-                  final bidsCount = controller.serviceRequestBidProvider.value?.serviceRequestBidData?.meta?.totalItems ?? 0;
+                  final reviewsCount = controller.vendorReviewResponse.value?.vendorReviewData?.meta?.totalItems ?? 0;
                   return Text(
-                    "$bidsCount total",
+                    "$reviewsCount total",
                     style: TextStyle(
                       fontSize: 12.sp,
                       color: AppColors.text4A5565,

@@ -9,6 +9,7 @@ import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_tab.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_header.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_bids_tab.dart';
+import 'package:service_la/view/widgets/vendor_profile/vendor_profile_reviews_tab.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_services_tab.dart';
 import 'package:service_la/view/widgets/vendor_profile/vendor_profile_service_requests_tab.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
@@ -90,20 +91,22 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
                   body: RefreshIndicator(
                     color: AppColors.primary,
                     backgroundColor: AppColors.white,
-                    onRefresh: () => AppDIController.refreshAdminUser(userId: controller.userId),
+                    onRefresh: () => AppDIController.refreshAdminUser(userId: controller.userId?.value),
                     notificationPredicate: (notification) {
                       return notification.depth == 1;
                     },
-                    child: TabBarView(
-                      controller: controller.tabController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        if (controller.userId == null) VendorProfileBidsTab(),
-                        if (controller.userId == null) VendorProfileServicesTab(),
-                        VendorProfileServiceRequestsTab(),
-                        VendorProfileServiceRequestsTab(),
-                      ],
-                    ),
+                    child: Obx(() {
+                      return TabBarView(
+                        controller: controller.tabController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          if (controller.userId?.value == null) VendorProfileBidsTab(),
+                          VendorProfileServicesTab(),
+                          if (controller.userId?.value == null) VendorProfileServiceRequestsTab(),
+                          VendorProfileReviewsTab(),
+                        ],
+                      );
+                    }),
                   ),
                 ),
         ),

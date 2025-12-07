@@ -103,7 +103,7 @@ class BestSellingServicesCardItem extends StatelessWidget {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            "${bestSellingService.rating ?? 0}",
+                            "${bestSellingService.rating?.toStringAsFixed(2) ?? 0}",
                             style: TextStyle(
                               fontSize: 10.sp,
                               color: AppColors.text101828,

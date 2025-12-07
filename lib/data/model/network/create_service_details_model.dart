@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:service_la/data/model/network/common/review_model.dart';
 import 'package:service_la/data/model/network/common/picture_model.dart';
 import 'package:service_la/data/model/network/common/service_user_model.dart';
+import 'package:service_la/data/model/network/common/service_review_model.dart';
 
 CreateServiceDetailsModel createServiceDetailsModelFromJson(String str) => CreateServiceDetailsModel.fromJson(json.decode(str));
 
@@ -52,7 +52,7 @@ class CreateServiceDetailsData {
   final String? createdAt;
   final String? updatedAt;
   final List<PictureModel>? pictures;
-  final List<CreateServiceDetailsReview>? reviews;
+  final List<ServiceReviewModel>? reviews;
   final ServiceUserModel? user;
 
   CreateServiceDetailsData({
@@ -95,9 +95,7 @@ class CreateServiceDetailsData {
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
         pictures: json["pictures"] == null ? [] : List<PictureModel>.from(json["pictures"]!.map((x) => PictureModel.fromJson(x))),
-        reviews: json["review"] == null
-            ? []
-            : List<CreateServiceDetailsReview>.from(json["review"]!.map((x) => CreateServiceDetailsReview.fromJson(x))),
+        reviews: json["review"] == null ? [] : List<ServiceReviewModel>.from(json["review"]!.map((x) => ServiceReviewModel.fromJson(x))),
         user: json["user"] == null ? null : ServiceUserModel.fromJson(json["user"]),
       );
 
@@ -140,29 +138,5 @@ class CreateServiceDetailsCategory {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-      };
-}
-
-class CreateServiceDetailsReview {
-  final ReviewModel? review;
-  final ServiceUserModel? user;
-  final PictureModel? picture;
-
-  CreateServiceDetailsReview({
-    this.review,
-    this.user,
-    this.picture,
-  });
-
-  factory CreateServiceDetailsReview.fromJson(Map<String, dynamic> json) => CreateServiceDetailsReview(
-        review: json["review"] == null ? null : ReviewModel.fromJson(json["review"]),
-        user: json["user"] == null ? null : ServiceUserModel.fromJson(json["user"]),
-        picture: json["picture"] == null ? null : PictureModel.fromJson(json["picture"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "review": review?.toJson(),
-        "user": user?.toJson(),
-        "picture": picture?.toJson(),
       };
 }

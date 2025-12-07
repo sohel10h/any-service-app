@@ -52,7 +52,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                       borderRadius: BorderRadius.circular(60.r),
                       isUserImage: true,
                     ),
-                    if (controller.userId == null)
+                    if (controller.userId?.value == null)
                       Positioned(
                         right: -6,
                         bottom: -4,
@@ -78,7 +78,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                   ],
                 ),
                 SizedBox(width: 8.w),
-                if (controller.userId == null)
+                if (controller.userId?.value == null)
                   ElevatedButton.icon(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
@@ -166,7 +166,12 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildStatBox("${user.rating ?? 0}", "Rating", AppColors.containerEFF6FF, iconPath: "assets/svgs/rating.svg"),
+            _buildStatBox(
+              "${user.rating?.toStringAsFixed(2) ?? 0}",
+              "Rating",
+              AppColors.containerEFF6FF,
+              iconPath: "assets/svgs/rating.svg",
+            ),
             _buildStatBox("${user.serviceCompletedCount ?? 0}", "Jobs", AppColors.containerF0FDF4),
             _buildStatBox("${user.totalReview ?? 0}", "Reviews", AppColors.containerFAF5FF),
           ],

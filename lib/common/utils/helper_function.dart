@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:service_la/data/model/network/common/bid_model.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
@@ -214,6 +215,35 @@ class HelperFunction {
       return other?.userId ?? "";
     } catch (e) {
       return "";
+    }
+  }
+
+  static String calculateAverageBidPrice(List<BidModel>? bids) {
+    try {
+      final totalBid = bids?.length ?? 0;
+      double totalPriceValue = 0.0;
+      bids?.forEach((bid) => totalPriceValue += (bid.proposedPrice ?? 0.0));
+      final averageBidPrice = totalPriceValue / totalBid;
+      return averageBidPrice.toStringAsFixed(2);
+    } catch (e) {
+      log("CalculateAverageBidPrice: ${e.toString()}");
+      return "0.0";
+    }
+  }
+
+  static String calculateLowestBidPrice(List<BidModel>? bids) {
+    try {
+      double? lowestPriceValue;
+      for (var bid in bids!) {
+        lowestPriceValue ??= (bid.proposedPrice ?? 0).toDouble();
+        if (lowestPriceValue > (bid.proposedPrice ?? 0)) {
+          lowestPriceValue = (bid.proposedPrice ?? 0).toDouble();
+        }
+      }
+      return lowestPriceValue?.toStringAsFixed(2) ?? "0.0";
+    } catch (e) {
+      log("CalculateLowestBidPrice: ${e.toString()}");
+      return "0.0";
     }
   }
 }

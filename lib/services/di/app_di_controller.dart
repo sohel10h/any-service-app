@@ -1,19 +1,24 @@
+import 'dart:io';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
+import 'package:service_la/data/repository/fcm_repo.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/model/network/sign_in_model.dart';
 import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/services/location/location_service.dart';
 import 'package:service_la/data/model/network/admin_user_model.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/services/websocket/websocket_service.dart';
 import 'package:service_la/common/notification/notification_service.dart';
+import 'package:service_la/data/model/network/user_device_token_model.dart';
 import 'package:service_la/common/utils/notification_bottom_sheet_queue.dart';
 import 'package:service_la/data/model/network/websocket/websocket_bid_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_vendor_model.dart';
@@ -35,6 +40,7 @@ class AppDIController extends GetxController with WidgetsBindingObserver {
   static final AdminRepo _adminRepo = AdminRepo();
   static RxBool isLoadingAdminUser = false.obs;
   static Rx<AdminUser> adminUser = AdminUser().obs;
+  static final FcmRepo _fcmRepo = FcmRepo();
 
   @override
   void onInit() {
@@ -46,7 +52,33 @@ class AppDIController extends GetxController with WidgetsBindingObserver {
     _initVendorFoundNotifications();
     initWebsockets();
     _setupLocationServices();
+    _postUserDeviceTokens();
     _getAdminUser();
+  }
+
+  static Future<void> _postUserDeviceTokens() async {
+    try {
+      dynamic params = {
+        ApiParams.deviceToken: await FirebaseMessaging.instance.getToken() ?? "",
+        ApiParams.deviceType: Platform.isAndroid ? AppDeviceType.android.typeValue : AppDeviceType.ios.typeValue,
+      };
+      log("UserDeviceTokens POST Params: $params");
+      var response = await _fcmRepo.postUserDeviceTokens(params);
+      if (response is String) {
+        log("UserDeviceTokens failed from controller response: $response");
+      } else {
+        UserDeviceTokenModel userDeviceToken = response as UserDeviceTokenModel;
+        if (userDeviceToken.status == 200 || userDeviceToken.status == 201) {
+          log("UserDeviceTokens submitted successfully from controller: ${userDeviceToken.status} ${userDeviceToken.data?.userId}");
+        } else {
+          log("UserDeviceTokens failed from controller: ${userDeviceToken.status}");
+        }
+      }
+    } catch (e) {
+      log("UserDeviceTokens catch error from controller: ${e.toString()}");
+    } finally {
+      // statement
+    }
   }
 
   static Future<void> refreshAdminUser({String? userId}) async {

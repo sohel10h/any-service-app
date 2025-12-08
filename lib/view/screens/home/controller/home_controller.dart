@@ -95,6 +95,8 @@ class HomeController extends GetxController {
     getAdminServiceCategories();
   }
 
+  void goToSearchScreen() => Get.toNamed(AppRoutes.searchScreen);
+
   void openBudgetRangeBottomSheet(BuildContext context) async {
     final currentContext = Get.context ?? context;
     await Future.delayed(const Duration(milliseconds: 300));

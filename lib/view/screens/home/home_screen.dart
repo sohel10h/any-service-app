@@ -75,27 +75,32 @@ class HomeScreen extends GetWidget<HomeController> {
     return Row(
       children: [
         Expanded(
-          child: CustomTextField(
-            height: 35.h,
-            controller: controller.searchController,
-            focusNode: controller.searchFocusNode,
-            hintText: "Search services...",
-            labelStyle: TextStyle(
-              fontSize: 12.sp,
-              color: AppColors.text414651,
-              fontWeight: FontWeight.w500,
-            ),
-            hintStyle: TextStyle(
-              fontSize: 12.sp,
-              color: AppColors.text757575,
-              fontWeight: FontWeight.w400,
-            ),
-            prefixIconPath: "assets/svgs/search.svg",
-            textInputAction: TextInputAction.search,
-            onChanged: (searchServices) => controller.formKey.currentState?.validate(),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6.r),
-              borderSide: BorderSide(color: AppColors.borderE3E7EC),
+          child: Hero(
+            tag: "homeSearchBar",
+            child: CustomTextField(
+              height: 35.h,
+              controller: controller.searchController,
+              focusNode: controller.searchFocusNode,
+              readonly: true,
+              hintText: "Search services...",
+              labelStyle: TextStyle(
+                fontSize: 12.sp,
+                color: AppColors.text414651,
+                fontWeight: FontWeight.w500,
+              ),
+              hintStyle: TextStyle(
+                fontSize: 12.sp,
+                color: AppColors.text757575,
+                fontWeight: FontWeight.w400,
+              ),
+              prefixIconPath: "assets/svgs/search.svg",
+              textInputAction: TextInputAction.search,
+              onChanged: (searchServices) => controller.formKey.currentState?.validate(),
+              onTap: () => controller.goToSearchScreen(),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6.r),
+                borderSide: BorderSide(color: AppColors.borderE3E7EC),
+              ),
             ),
           ),
         ),

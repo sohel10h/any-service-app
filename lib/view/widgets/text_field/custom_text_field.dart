@@ -24,6 +24,7 @@ class CustomTextField extends StatefulWidget {
   final Function(String value)? onChanged;
   final String? Function(String?)? validator;
   final OutlineInputBorder? enabledBorder;
+  final VoidCallback? onTap;
 
   const CustomTextField({
     super.key,
@@ -47,6 +48,7 @@ class CustomTextField extends StatefulWidget {
     this.onChanged,
     this.validator,
     this.enabledBorder,
+    this.onTap,
   });
 
   @override
@@ -115,6 +117,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       validator: (value) => widget.validator != null ? widget.validator!(value) : null,
       maxLines: widget.maxLines ?? 1,
       onChanged: widget.onChanged != null ? (value) => widget.onChanged?.call(value) : null,
+      onTap: widget.readonly == true && widget.onTap != null ? widget.onTap : null,
       cursorColor: AppColors.primary,
       style: widget.style,
       decoration: InputDecoration(

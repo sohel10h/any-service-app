@@ -6,6 +6,7 @@ import 'package:service_la/view/screens/landing/controller/landing_controller.da
 import 'package:service_la/view/screens/chats/controller/chats_list_controller.dart';
 import 'package:service_la/view/screens/chats/controller/chats_room_controller.dart';
 import 'package:service_la/view/screens/settings/controller/settings_controller.dart';
+import 'package:service_la/view/screens/search/controller/search_screen_controller.dart';
 import 'package:service_la/view/screens/auth/sign_in/controller/sign_in_controller.dart';
 import 'package:service_la/view/screens/auth/sign_up/controller/sign_up_controller.dart';
 import 'package:service_la/view/screens/category_screen/controller/category_controller.dart';
@@ -47,5 +48,6 @@ class ViewModelBindings extends Bindings {
     Get.lazyPut<ChatsRoomController>(() => ChatsRoomController(), fenix: true);
     Get.lazyPut<NotificationsController>(() => NotificationsController(), fenix: true);
     Get.lazyPut<ImageViewerController>(() => ImageViewerController(), fenix: true);
+    Get.lazyPut<SearchScreenController>(() => SearchScreenController(), fenix: true);
   }
 }

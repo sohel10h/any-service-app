@@ -170,23 +170,34 @@ class RideSharingMapController extends GetxController {
   Future<List<Map<String, dynamic>>> _fetchPlaceAutocomplete(String input) async {
     if (googleApiKey.isEmpty) return [];
     final country = userCountryCode.value;
-    final url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    final url = 'https://places.googleapis.com/v1/places:autocomplete';
     try {
-      final response = await _dio.get(url, queryParameters: {
-        'input': input,
-        'key': googleApiKey,
-        'language': 'en',
-        'components': 'country:$country',
-        'types': 'geocode',
-      });
+      final response = await _dio.post(
+        url,
+        queryParameters: {
+          'key': googleApiKey,
+        },
+        data: {
+          "input": input,
+          "languageCode": "en",
+          "locationBias": {
+            "rectangle": {
+              "low": {"latitude": 0.0, "longitude": 0.0},
+              "high": {"latitude": 90.0, "longitude": 180.0}
+            }
+          },
+          "includedPrimaryTypes": ["geocode"],
+          "regionCode": country, // ISO country code
+        },
+      );
       if (response.statusCode == 200) {
         final data = response.data;
-        final predictions = data['predictions'] as List<dynamic>? ?? [];
+        final predictions = data['suggestions'] as List<dynamic>? ?? [];
         return predictions.map<Map<String, dynamic>>((p) {
           return {
-            'place_id': p['place_id'],
-            'description': p['description'],
-            'structured_formatting': p['structured_formatting'],
+            'place_id': p['placePrediction']['placeId'],
+            'description': p['placePrediction']['text']['text'],
+            'structured_formatting': p['placePrediction']['structuredFormat'],
           };
         }).toList();
       }
@@ -198,19 +209,24 @@ class RideSharingMapController extends GetxController {
 
   Future<LatLng?> _getLatLngFromPlaceId(String placeId) async {
     if (googleApiKey.isEmpty) return null;
-    final url = 'https://maps.googleapis.com/maps/api/place/details/json';
+    final url = 'https://places.googleapis.com/v1/places:lookup';
     try {
-      final response = await _dio.get(url, queryParameters: {
-        'place_id': placeId,
-        'key': googleApiKey,
-        'fields': 'geometry,name,formatted_address',
-      });
+      final response = await _dio.post(
+        url,
+        queryParameters: {
+          'key': googleApiKey,
+        },
+        data: {
+          "placeId": placeId,
+          "fields": ["id", "location", "formattedAddress", "displayName"]
+        },
+      );
       if (response.statusCode == 200) {
-        final result = response.data['result'];
-        final location = result?['geometry']?['location'];
+        final result = response.data['place'];
+        final location = result?['location'];
         if (location != null) {
-          final lat = (location['lat'] as num).toDouble();
-          final lng = (location['lng'] as num).toDouble();
+          final lat = (location['latitude'] as num).toDouble();
+          final lng = (location['longitude'] as num).toDouble();
           return LatLng(lat, lng);
         }
       }

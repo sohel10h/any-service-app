@@ -9,6 +9,7 @@ class CustomTextField extends StatefulWidget {
   final String? label;
   final TextStyle? labelStyle;
   final String? prefixIconPath;
+  final TextStyle? style;
   final String hintText;
   final TextStyle? hintStyle;
   final double? height;
@@ -32,6 +33,7 @@ class CustomTextField extends StatefulWidget {
     this.labelStyle,
     this.prefixIconPath,
     required this.hintText,
+    this.style,
     this.hintStyle,
     this.height,
     this.maxLines,
@@ -114,6 +116,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       maxLines: widget.maxLines ?? 1,
       onChanged: widget.onChanged != null ? (value) => widget.onChanged?.call(value) : null,
       cursorColor: AppColors.primary,
+      style: widget.style,
       decoration: InputDecoration(
         contentPadding: widget.contentPadding,
         prefixIcon: widget.prefixIconPath == null

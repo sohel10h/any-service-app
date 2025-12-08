@@ -33,19 +33,19 @@ class CustomServiceRequestBidFilter extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 6.w),
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.container155DFC : AppColors.containerF3F4F6,
+                    color: isSelected ? AppColors.primary : AppColors.white,
                     borderRadius: BorderRadius.circular(10.r),
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                              color: AppColors.container155DFC.withValues(alpha: 0.3),
+                              color: AppColors.primary.withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
                           ]
                         : [],
                     border: Border.all(
-                      color: isSelected ? AppColors.container155DFC : Colors.grey.shade300,
+                      color: isSelected ? AppColors.primary : AppColors.borderE8E8E8,
                       width: 1,
                     ),
                   ),

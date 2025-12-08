@@ -24,8 +24,8 @@ class ServiceRequestBottomSheet extends GetWidget<HomeController> {
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.black.withValues(alpha: 0.08),
-                blurRadius: 10,
+                color: AppColors.primary.withValues(alpha: 0.08),
+                blurRadius: 10.r,
                 offset: const Offset(0, -2),
               ),
             ],
@@ -94,15 +94,15 @@ class ServiceRequestBottomSheet extends GetWidget<HomeController> {
     return ListTile(
       leading: SvgPicture.asset(
         assetName,
-        width: 20.w,
-        height: 20.h,
+        width: 18.w,
+        height: 18.h,
       ),
       title: Text(
         text,
         style: TextStyle(
-          fontSize: 15.sp,
+          fontSize: 12.sp,
           color: AppColors.text101828,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
         ),
       ),
       onTap: onTap,

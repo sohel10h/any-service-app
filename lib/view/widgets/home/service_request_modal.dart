@@ -84,8 +84,15 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                         child: Container(
                           height: 50.h,
                           decoration: BoxDecoration(
-                            color: AppColors.containerF4F4F4,
+                            color: AppColors.white,
                             borderRadius: BorderRadius.circular(8.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withValues(alpha: 0.4),
+                                blurRadius: 10.r,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -115,7 +122,6 @@ class ServiceRequestModal extends GetWidget<HomeController> {
 
   Widget _header(BuildContext context) {
     const double rightWidgetWidth = 70;
-
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
       child: SizedBox(
@@ -128,7 +134,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
               child: Text(
                 "Create request",
                 style: TextStyle(
-                  fontSize: 17.sp,
+                  fontSize: 15.sp,
                   color: AppColors.text101828,
                   fontWeight: FontWeight.w700,
                 ),
@@ -173,15 +179,15 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                           child: ElevatedButton(
                             onPressed: isDisabled ? null : () => controller.onTapPostButton(context),
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4.r),
+                                borderRadius: BorderRadius.circular(8.r),
                               ),
                             ),
                             child: Text(
                               "Post",
                               style: TextStyle(
-                                fontSize: 12.sp,
+                                fontSize: 11.sp,
                                 color: AppColors.white,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -214,8 +220,8 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                   radius: 16.r,
                   child: NetworkImageLoader(
                     AppDIController.adminUser.value.picture?.virtualPath ?? "",
-                    height: 35.w,
-                    width: 35.w,
+                    height: 30.w,
+                    width: 30.w,
                     radius: 32.r,
                     isUserImage: true,
                   ),
@@ -224,7 +230,7 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                 Text(
                   AppDIController.signInDetails.value.data?.userName ?? "",
                   style: TextStyle(
-                    fontSize: 15.sp,
+                    fontSize: 12.sp,
                     color: AppColors.text101828,
                     fontWeight: FontWeight.w600,
                   ),
@@ -254,6 +260,11 @@ class ServiceRequestModal extends GetWidget<HomeController> {
                         controller: controller.companyNameController,
                         focusNode: controller.companyNameFocusNode,
                         hintText: "Enter your company name",
+                        hintStyle: TextStyle(
+                          fontSize: 13.sp,
+                          color: AppColors.text99A1AF,
+                          fontWeight: FontWeight.w400,
+                        ),
                         onChanged: (companyName) => controller.onCompanyNameTextChanged(companyName),
                       ),
                     ],
@@ -265,15 +276,15 @@ class ServiceRequestModal extends GetWidget<HomeController> {
           controller: controller.serviceController,
           focusNode: controller.serviceFocusNode,
           hintText: "What service do you need?",
-          labelStyle: TextStyle(
-            fontSize: 15.sp,
+          style: TextStyle(
+            fontSize: 16.sp,
             color: AppColors.text414651,
             fontWeight: FontWeight.w500,
           ),
           hintStyle: TextStyle(
-            fontSize: 18.sp,
+            fontSize: 15.sp,
             color: AppColors.text99A1AF,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
           ),
           maxLines: 5,
           textInputType: TextInputType.multiline,
@@ -292,7 +303,6 @@ class ServiceRequestModal extends GetWidget<HomeController> {
               itemBuilder: (context, index) {
                 final image = controller.selectedImages[index];
                 final isLoading = controller.imageLoadingFlags.length > index ? controller.imageLoadingFlags[index] : false;
-
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.w),
                   child: Stack(

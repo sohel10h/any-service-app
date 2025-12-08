@@ -16,8 +16,15 @@ class ServiceRequestBudgetRangeBottomSheet extends GetWidget<HomeController> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(16.r),
+          top: Radius.circular(24.r),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.08),
+            blurRadius: 10.r,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       child: SafeArea(
         top: false,

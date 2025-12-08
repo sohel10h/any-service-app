@@ -28,11 +28,12 @@ class DialogHelper {
     );
   }
 
-  static void showBottomSheet() async {
+  static void showServiceRequestBottomSheet() async {
     await Future.delayed(const Duration(milliseconds: 50));
     await Get.bottomSheet(
       const ServiceRequestBottomSheet(),
       isScrollControlled: true,
+      barrierColor: Colors.transparent,
       backgroundColor: Colors.transparent,
     );
   }
@@ -51,6 +52,7 @@ class DialogHelper {
     Get.bottomSheet(
       const ServiceRequestBudgetRangeBottomSheet(),
       isScrollControlled: true,
+      barrierColor: Colors.transparent,
       backgroundColor: Colors.transparent,
     );
   }

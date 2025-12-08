@@ -21,7 +21,7 @@ class LandingController extends GetxController {
       isHideBottomNav.value = true;
       DialogHelper.showServiceRequestModal(context);
       await Future.delayed(const Duration(microseconds: 100));
-      DialogHelper.showBottomSheet();
+      DialogHelper.showServiceRequestBottomSheet();
       return;
     }
     if (index == 3) {

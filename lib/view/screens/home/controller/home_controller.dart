@@ -347,7 +347,7 @@ class HomeController extends GetxController {
       FileOptionModel(
         id: 4,
         image: "assets/svgs/more_horizontal.svg",
-        onTap: () => DialogHelper.showBottomSheet(),
+        onTap: () => DialogHelper.showServiceRequestBottomSheet(),
       ),
     ];
   }

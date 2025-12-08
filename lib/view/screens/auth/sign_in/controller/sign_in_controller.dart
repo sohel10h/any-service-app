@@ -65,6 +65,7 @@ class SignInController extends GetxController {
             icon: Icons.check,
             backgroundColor: AppColors.green,
           );
+          await AppDIController.refreshUserDeviceTokens();
           _goToLandingScreen();
         } else {
           HelperFunction.snackbar("Sign in failed. Please check your email and password.");

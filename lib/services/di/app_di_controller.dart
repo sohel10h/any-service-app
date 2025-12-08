@@ -56,6 +56,10 @@ class AppDIController extends GetxController with WidgetsBindingObserver {
     _getAdminUser();
   }
 
+  static Future<void> refreshUserDeviceTokens() async {
+    await _postUserDeviceTokens();
+  }
+
   static Future<void> _postUserDeviceTokens() async {
     try {
       dynamic params = {

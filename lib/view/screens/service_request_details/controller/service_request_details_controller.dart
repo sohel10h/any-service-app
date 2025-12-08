@@ -65,6 +65,13 @@ class ServiceRequestDetailsController extends GetxController {
     _getServices();
   }
 
+  void goToImageViewerScreen(String imageUrl) {
+    Get.toNamed(
+      AppRoutes.imageViewerScreen,
+      arguments: {"imageUrl": imageUrl},
+    );
+  }
+
   void sortBidsByTopRatedUser(List<BidModel>? bids) {
     if (bids == null) return;
     bids.sort((a, b) {

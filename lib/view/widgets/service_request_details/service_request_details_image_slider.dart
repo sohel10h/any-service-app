@@ -27,12 +27,18 @@ class ServiceRequestDetailsImageSlider extends GetWidget<ServiceRequestDetailsCo
                     onPageChanged: (index) => controller.currentImageSliderIndex.value = index + 1,
                     itemBuilder: (context, index) {
                       final picture = serviceDetails.pictures?[index] ?? PictureModel();
-                      return NetworkImageLoader(
-                        picture.virtualPath ?? "",
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                        borderRadius: BorderRadius.circular(0.r),
+                      return Hero(
+                        tag: picture.virtualPath ?? "",
+                        child: GestureDetector(
+                          onTap: () => controller.goToImageViewerScreen(picture.virtualPath ?? ""),
+                          child: NetworkImageLoader(
+                            picture.virtualPath ?? "",
+                            width: double.infinity,
+                            height: double.infinity,
+                            fit: BoxFit.cover,
+                            borderRadius: BorderRadius.circular(0.r),
+                          ),
+                        ),
                       );
                     },
                   ),

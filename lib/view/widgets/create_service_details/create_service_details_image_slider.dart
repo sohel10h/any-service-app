@@ -26,12 +26,18 @@ class CreateServiceDetailsImageSlider extends GetWidget<CreateServiceDetailsCont
                     onPageChanged: (index) => controller.currentIndex.value = index,
                     itemBuilder: (context, index) {
                       final picture = controller.createServiceDetailsData.value.pictures?[index] ?? PictureModel();
-                      return NetworkImageLoader(
-                        picture.virtualPath ?? "",
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                        borderRadius: BorderRadius.circular(0.r),
+                      return Hero(
+                        tag: picture.virtualPath ?? "",
+                        child: GestureDetector(
+                          onTap: () => controller.goToImageViewerScreen(picture.virtualPath ?? ""),
+                          child: NetworkImageLoader(
+                            picture.virtualPath ?? "",
+                            width: double.infinity,
+                            height: double.infinity,
+                            fit: BoxFit.cover,
+                            borderRadius: BorderRadius.circular(0.r),
+                          ),
+                        ),
                       );
                     },
                   ),

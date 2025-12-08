@@ -20,6 +20,13 @@ class CreateServiceDetailsController extends GetxController {
     _getAdminServicesDetails();
   }
 
+  void goToImageViewerScreen(String imageUrl) {
+    Get.toNamed(
+      AppRoutes.imageViewerScreen,
+      arguments: {"imageUrl": imageUrl},
+    );
+  }
+
   Future<void> onRefresh() async {
     await _getAdminServicesDetails();
   }

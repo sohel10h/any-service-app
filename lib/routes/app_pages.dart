@@ -9,6 +9,7 @@ import 'package:service_la/view/screens/settings/settings_screen.dart';
 import 'package:service_la/view/screens/auth/sign_in/sign_in_screen.dart';
 import 'package:service_la/view/screens/auth/sign_up/sign_up_screen.dart';
 import 'package:service_la/view/screens/category_screen/category_screen.dart';
+import 'package:service_la/view/screens/image_viewer/image_viewer_screen.dart';
 import 'package:service_la/view/screens/chats/chats_archived_list_screen.dart';
 import 'package:service_la/view/screens/ride_sharing/ride_sharing_screen.dart';
 import 'package:service_la/view/screens/notification/notifications_screen.dart';
@@ -109,6 +110,12 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.vendorProfileScreen,
       page: () => const VendorProfileScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.imageViewerScreen,
+      page: () => const ImageViewerScreen(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 120),
     ),
   ];
 }

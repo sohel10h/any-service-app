@@ -84,7 +84,8 @@ class ServiceRequestDetailsController extends GetxController {
   }
 
   void goToProfileScreen(String? userId) {
-    Get.delete<VendorProfileController>();
+    VendorProfileController controller = Get.find<VendorProfileController>();
+    controller.loadProfile(userId);
     Get.toNamed(
       AppRoutes.vendorProfileScreen,
       arguments: {

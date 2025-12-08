@@ -178,7 +178,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                 ),
                 SizedBox(width: 4.w),
                 Text(
-                  "${bid.vendor?.rating ?? 0}",
+                  "${bid.vendor?.rating?.toStringAsFixed(2) ?? 0}",
                   style: TextStyle(
                     fontSize: 13.sp,
                     color: AppColors.text364153,
@@ -186,7 +186,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  " (${bid.vendor?.rating ?? 0})", //TODO: need reviewsCount value from API
+                  " (${bid.vendor?.rating?.toStringAsFixed(2) ?? 0})", //TODO: need reviewsCount value from API
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: AppColors.text6A7282,

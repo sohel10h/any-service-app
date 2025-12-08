@@ -163,7 +163,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        "${controller.bidData.value?.vendor?.rating ?? 0}",
+                        "${controller.bidData.value?.vendor?.rating?.toStringAsFixed(2) ?? 0}",
                         style: TextStyle(
                           fontSize: 13.sp,
                           color: AppColors.text364153,
@@ -171,7 +171,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                         ),
                       ),
                       Text(
-                        " (${controller.bidData.value?.vendor?.rating ?? 0})", //TODO: need reviewsCount value from API
+                        " (${controller.bidData.value?.vendor?.rating?.toStringAsFixed(2) ?? 0})", //TODO: need reviewsCount value from API
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: AppColors.text6A7282,

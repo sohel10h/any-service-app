@@ -47,7 +47,7 @@ class VendorProfileController extends GetxController with GetTickerProviderState
   int totalPagesVendorReviews = 1;
   final Rxn<ServiceRequestStatus> selectedServiceRequestStatus = Rxn<ServiceRequestStatus>();
   RxBool isDropdownDisabled = false.obs;
-  late TabController tabController;
+  TabController? tabController;
 
   @override
   void onInit() {
@@ -60,7 +60,7 @@ class VendorProfileController extends GetxController with GetTickerProviderState
 
   @override
   void onReady() {
-    _refreshAll();
+    refreshAll();
     super.onReady();
   }
 
@@ -70,15 +70,16 @@ class VendorProfileController extends GetxController with GetTickerProviderState
     _initTabViews();
     _initTabCounts();
     _setupTabController();
-    _refreshAll();
+    refreshAll();
   }
 
-  void _refreshAll() async {
+  Future<void> refreshAll() async {
     await _getAdminUser();
     await _getServices();
   }
 
   Future<void> _getServices() async {
+    totalPagesVendorReviews = 1;
     if (userId?.value == null) {
       await _getServiceServiceRequestBids(isRefresh: true);
       await _getServicesMe();
@@ -513,15 +514,20 @@ class VendorProfileController extends GetxController with GetTickerProviderState
 
   void _setupTabController() {
     try {
-      tabController.dispose();
+      if (tabController != null) {
+        tabController?.dispose();
+      }
     } catch (_) {}
     tabController = TabController(
       length: tabs.length,
       vsync: this,
     );
-    tabController.addListener(() {
-      selectedTabIndex.value = tabController.index;
-    });
+    if (tabController != null) {
+      tabController?.addListener(() {
+        selectedTabIndex.value = (tabController?.index ?? 0);
+      });
+    }
+    log("TabController: ${tabController?.length}");
   }
 
   void _initTabCounts() {
@@ -549,7 +555,9 @@ class VendorProfileController extends GetxController with GetTickerProviderState
 
   @override
   void onClose() {
-    tabController.dispose();
+    if (tabController != null) {
+      tabController?.dispose();
+    }
     super.onClose();
   }
 }

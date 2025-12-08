@@ -31,6 +31,7 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
             }
             Get.back();
             AppDIController.refreshAdminUser();
+            controller.loadProfile(null);
           }
         },
         child: Scaffold(
@@ -42,6 +43,7 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
               }
               Future.microtask(() => Get.back());
               AppDIController.refreshAdminUser();
+              controller.loadProfile(null);
             },
             actions: [
               GestureDetector(
@@ -95,11 +97,14 @@ class VendorProfileScreen extends GetWidget<VendorProfileController> {
                   body: RefreshIndicator(
                     color: AppColors.primary,
                     backgroundColor: AppColors.white,
-                    onRefresh: () => AppDIController.refreshAdminUser(userId: controller.userId?.value),
+                    onRefresh: controller.refreshAll,
                     notificationPredicate: (notification) {
                       return notification.depth == 1;
                     },
                     child: Obx(() {
+                      if (controller.tabController == null) {
+                        return const CustomProgressBar();
+                      }
                       return TabBarView(
                         controller: controller.tabController,
                         physics: const NeverScrollableScrollPhysics(),

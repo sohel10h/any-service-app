@@ -64,6 +64,8 @@ class VendorProfileController extends GetxController with GetTickerProviderState
     super.onReady();
   }
 
+  void goToVendorProfileEditScreen() => Get.toNamed(AppRoutes.vendorProfileEditScreen);
+
   void loadProfile(String? id) {
     userId?.value = id;
     vendorReviewResponse.value = null;

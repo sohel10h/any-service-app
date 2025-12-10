@@ -62,13 +62,15 @@ class ApiService {
   }
 
   /// ================================> put Data ===============================>
-  Future<dynamic> put(String endpoint, var params) async {
+  Future<dynamic> put(String endpoint, var params, {bool isItFile = false}) async {
     Response response;
     try {
       String authToken = StorageHelper.getValue(StorageHelper.authToken) ?? "";
       log("AuthToken PUT = $authToken");
       if (authToken.isNotEmpty) {
         _dio.options.headers["Authorization"] = "Bearer $authToken";
+        if (isItFile) _dio.options.headers["Content-Type"] = "multipart/form-data";
+        if (isItFile) _dio.options.headers["accept"] = "*/*";
       }
       response = await _dio.put(endpoint, data: params);
       return response;

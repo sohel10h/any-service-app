@@ -22,4 +22,5 @@ abstract class AppRoutes {
   static const String vendorProfileScreen = '/vendorProfileScreen';
   static const String imageViewerScreen = '/imageViewerScreen';
   static const String searchScreen = '/searchScreen';
+  static const String vendorProfileEditScreen = '/vendorProfileEditScreen';
 }

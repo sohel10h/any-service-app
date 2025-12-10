@@ -82,4 +82,14 @@ class AdminRepo {
       return e;
     }
   }
+
+  Future<dynamic> putAdminUser(String userId, dynamic params) async {
+    try {
+      dynamic response = await _adminApiService.putAdminUser(userId, params);
+      log("AdminUser put details from admin repo: $response");
+      return AdminUserModel.fromJson(jsonDecode(response.toString()));
+    } catch (e) {
+      return e;
+    }
+  }
 }

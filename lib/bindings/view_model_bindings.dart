@@ -17,6 +17,7 @@ import 'package:service_la/view/screens/create_service/controller/create_service
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 import 'package:service_la/view/screens/ride_sharing/controller/ride_sharing_map_controller.dart';
 import 'package:service_la/view/screens/auth/verification/controller/otp_verification_controller.dart';
+import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_edit_controller.dart';
 import 'package:service_la/view/screens/create_service/controller/create_service_details_controller.dart';
 import 'package:service_la/view/screens/auth/sign_up_complete/controller/sign_up_complete_controller.dart';
 import 'package:service_la/view/screens/best_selling_services/controller/best_selling_services_controller.dart';
@@ -49,5 +50,6 @@ class ViewModelBindings extends Bindings {
     Get.lazyPut<NotificationsController>(() => NotificationsController(), fenix: true);
     Get.lazyPut<ImageViewerController>(() => ImageViewerController(), fenix: true);
     Get.lazyPut<SearchScreenController>(() => SearchScreenController(), fenix: true);
+    Get.lazyPut<VendorProfileEditController>(() => VendorProfileEditController(), fenix: true);
   }
 }

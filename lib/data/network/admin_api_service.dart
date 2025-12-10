@@ -12,4 +12,6 @@ abstract class AdminApiService {
   Future<dynamic> getServiceCategories({Map<String, dynamic>? queryParams});
 
   Future<dynamic> getAdminUser(String userId);
+
+  Future<dynamic> putAdminUser(String userId, dynamic params);
 }

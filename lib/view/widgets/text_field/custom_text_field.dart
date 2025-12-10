@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,6 +19,7 @@ class CustomTextField extends StatefulWidget {
   final bool? readonly;
   final Widget? suffixIcon;
   final TextInputType? textInputType;
+  final List<TextInputFormatter>? inputFormatters;
   final TextInputAction? textInputAction;
   final Color? fillColor;
   final EdgeInsetsGeometry? contentPadding;
@@ -42,6 +44,7 @@ class CustomTextField extends StatefulWidget {
     this.readonly = false,
     this.suffixIcon,
     this.textInputType,
+    this.inputFormatters,
     this.textInputAction,
     this.fillColor,
     this.contentPadding,
@@ -120,6 +123,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onTap: widget.readonly == true && widget.onTap != null ? widget.onTap : null,
       cursorColor: AppColors.primary,
       style: widget.style,
+      inputFormatters: widget.inputFormatters,
       decoration: InputDecoration(
         contentPadding: widget.contentPadding,
         prefixIcon: widget.prefixIconPath == null

@@ -42,4 +42,5 @@ class ApiParams {
   static const String createdAt = "created_at";
   static const String userId = "user_id";
   static const String page = "page";
+  static const String mobile = "mobile";
 }

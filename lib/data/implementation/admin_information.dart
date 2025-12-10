@@ -48,7 +48,17 @@ class AdminInformation extends AdminApiService {
 
   @override
   Future getAdminUser(String userId) async {
-    dynamic response = await ApiService().get(ApiConstant.getAdminUserPath.replaceAll("#userId#", userId));
+    dynamic response = await ApiService().get(ApiConstant.getPutAdminUserPath.replaceAll("#userId#", userId));
+    return response;
+  }
+
+  @override
+  Future putAdminUser(String userId, dynamic params) async {
+    dynamic response = await ApiService().put(
+      ApiConstant.getPutAdminUserPath.replaceAll("#userId#", userId),
+      params,
+      isItFile: true,
+    );
     return response;
   }
 }

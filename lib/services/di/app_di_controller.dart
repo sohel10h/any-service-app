@@ -56,6 +56,11 @@ class AppDIController extends GetxController with WidgetsBindingObserver {
     _getAdminUser();
   }
 
+  static void updateAdminUser(AdminUser user) {
+    log("AdminUserResponse: storing admin user model response... ${user.toJson()}");
+    adminUser.value = user;
+  }
+
   static Future<void> refreshUserDeviceTokens() async {
     await _postUserDeviceTokens();
   }
@@ -141,10 +146,9 @@ class AppDIController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  static SignInModel setSignInDetails(SignInModel signIn) {
+  static void setSignInDetails(SignInModel signIn) {
     log("SignInResponse: storing signin model response... ${signIn.toJson()}");
     signInDetails.value = signIn;
-    return signInDetails.value;
   }
 
   static void initWebsockets() async {

@@ -80,7 +80,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                 SizedBox(width: 8.w),
                 if (controller.userId?.value == null)
                   ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: controller.goToVendorProfileEditScreen,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),

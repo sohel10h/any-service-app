@@ -221,9 +221,17 @@ class HelperFunction {
   static String calculateAverageBidPrice(List<BidModel>? bids) {
     try {
       final totalBid = bids?.length ?? 0;
+      if (totalBid == 0) {
+        return "0.0";
+      }
       double totalPriceValue = 0.0;
-      bids?.forEach((bid) => totalPriceValue += (bid.proposedPrice ?? 0.0));
+      bids?.forEach((bid) {
+        totalPriceValue += (bid.proposedPrice ?? 0.0);
+      });
       final averageBidPrice = totalPriceValue / totalBid;
+      if (averageBidPrice.isNaN || averageBidPrice.isInfinite) {
+        return "0.0";
+      }
       return averageBidPrice.toStringAsFixed(2);
     } catch (e) {
       log("CalculateAverageBidPrice: ${e.toString()}");

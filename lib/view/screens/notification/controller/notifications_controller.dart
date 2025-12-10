@@ -1,35 +1,104 @@
+import 'dart:developer';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
+import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/services/api_constants/api_params.dart';
+import 'package:service_la/data/repository/notification_repo.dart';
+import 'package:service_la/data/model/network/common/notification_model.dart';
+import 'package:service_la/data/model/network/notification_response_model.dart';
 
 class NotificationsController extends GetxController {
-  final dummyNotifications = [
-    {
-      "title": "New Message",
-      "body": "You have received a new message from Alex.",
-      "time": "2 min ago",
-      "icon": Icons.message,
-      "color": Colors.blue,
-    },
-    {
-      "title": "Service Update",
-      "body": "Your request has been accepted by a provider.",
-      "time": "10 min ago",
-      "icon": Icons.check_circle,
-      "color": Colors.green,
-    },
-    {
-      "title": "Reminder",
-      "body": "Don’t forget your appointment tomorrow at 10 AM.",
-      "time": "1 hr ago",
-      "icon": Icons.alarm,
-      "color": Colors.orange,
-    },
-    {
-      "title": "Promotion",
-      "body": "Get 20% off your next booking!",
-      "time": "Yesterday",
-      "icon": Icons.local_offer,
-      "color": Colors.purple,
-    },
-  ];
+  final NotificationRepo _notificationRepo = NotificationRepo();
+  Rxn<NotificationResponseModel> notificationResponse = Rxn<NotificationResponseModel>();
+  RxList<NotificationModel> notifications = <NotificationModel>[].obs;
+  RxBool isLoadingNotifications = false.obs;
+  RxBool isLoadingMoreNotifications = false.obs;
+  int currentPageNotifications = 1;
+  int totalPagesNotifications = 1;
+
+  @override
+  void onInit() {
+    _getNotifications(isRefresh: true);
+    super.onInit();
+  }
+
+  Future<void> loadNextPageNotifications() async {
+    if (currentPageNotifications < totalPagesNotifications && !isLoadingMoreNotifications.value) {
+      isLoadingMoreNotifications.value = true;
+      currentPageNotifications++;
+      await _getNotifications();
+    }
+  }
+
+  Future<void> refreshNotifications({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    await _getNotifications(isRefresh: isRefresh, isLoadingEmpty: isLoadingEmpty);
+  }
+
+  Future<void> _getNotifications({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    if (isLoadingEmpty) totalPagesNotifications = 1;
+    if (isRefresh) {
+      currentPageNotifications = 1;
+      notifications.clear();
+    }
+    if (currentPageNotifications > totalPagesNotifications) return;
+    if (isRefresh || isLoadingEmpty) {
+      isLoadingNotifications.value = true;
+    }
+    try {
+      Map<String, dynamic> queryParams = {
+        ApiParams.page: currentPageNotifications,
+      };
+      var response = await _notificationRepo.getNotifications(queryParams: queryParams);
+      if (response is String) {
+        log("Notifications get failed from controller response: $response");
+      } else {
+        NotificationResponseModel notificationResponseData = response as NotificationResponseModel;
+        if (notificationResponseData.status == 200 || notificationResponseData.status == 201) {
+          if (notificationResponse.value == null) {
+            notificationResponse.value = notificationResponseData;
+          }
+          final data = notificationResponseData.notificationData?.notifications ?? [];
+          if (isRefresh) {
+            notifications.assignAll(data);
+          } else {
+            notifications.addAll(data);
+          }
+          currentPageNotifications = notificationResponseData.notificationData?.meta?.page ?? currentPageNotifications;
+          totalPagesNotifications = notificationResponseData.notificationData?.meta?.totalPages ?? totalPagesNotifications;
+        } else {
+          if (notificationResponseData.status == 401 ||
+              (notificationResponseData.errors != null &&
+                  notificationResponseData.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _notificationRepo.getNotifications(queryParams: queryParams),
+            );
+            if (retryResponse is NotificationResponseModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              if (notificationResponse.value == null) {
+                notificationResponse.value = retryResponse;
+              }
+              final data = retryResponse.notificationData?.notifications ?? [];
+              if (isRefresh) {
+                notifications.assignAll(data);
+              } else {
+                notifications.addAll(data);
+              }
+              currentPageNotifications = retryResponse.notificationData?.meta?.page ?? currentPageNotifications;
+              totalPagesNotifications = retryResponse.notificationData?.meta?.totalPages ?? totalPagesNotifications;
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("Notifications get failed from controller: ${notificationResponseData.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("Notifications get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingNotifications.value = false;
+      isLoadingMoreNotifications.value = false;
+    }
+  }
 }

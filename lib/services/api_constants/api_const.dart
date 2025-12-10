@@ -44,6 +44,9 @@ class ApiConstant {
   static const String getChatsMessagesPath = "/api/chats/messages/#conversationId#";
   static const String getChatsMessagesUserPath = "/api/chats/messages/user/#userId#";
 
+  // END POINTS - Notifications
+  static const String getNotificationsPath = "/api/notifications";
+
   // END POINTS - Others
   static const String getServiceCategoriesPath = "/categories/homepage";
   static const String getAllServiceCategoriesPath = "/categories";

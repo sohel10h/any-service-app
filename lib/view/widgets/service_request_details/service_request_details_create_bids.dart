@@ -26,19 +26,19 @@ class ServiceRequestDetailsCreateBids extends GetWidget<ServiceRequestDetailsCon
             child: Text(
               "Services",
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: 12.sp,
                 color: AppColors.text414651,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 8.h),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Obx(
               () => CustomDropdownChip<ServiceMeData>(
                 width: double.infinity,
-                height: 48.h,
+                height: 36.h,
                 options: controller.serviceMeDataList,
                 selectedValue: controller.selectedServiceMeData,
                 hint: "Select services",
@@ -50,33 +50,54 @@ class ServiceRequestDetailsCreateBids extends GetWidget<ServiceRequestDetailsCon
               ),
             ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 12.h),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: CustomTextField(
               controller: controller.descriptionController,
               focusNode: controller.descriptionFocusNode,
               label: "Bids Description",
+              labelStyle: TextStyle(
+                fontSize: 12.sp,
+                color: AppColors.text414651,
+                fontWeight: FontWeight.w500,
+              ),
               hintText: "Enter description",
+              hintStyle: TextStyle(
+                fontSize: 12.sp,
+                color: AppColors.text717680.withValues(alpha: .6),
+                fontWeight: FontWeight.w500,
+              ),
               maxLines: 4,
               onChanged: (description) => controller.formKey.currentState?.validate(),
               validator: Validators.requiredWithFieldName("Description").call,
             ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 12.h),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: CustomTextField(
               controller: controller.priceController,
               focusNode: controller.priceFocusNode,
+              contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
               label: "Price",
+              labelStyle: TextStyle(
+                fontSize: 12.sp,
+                color: AppColors.text414651,
+                fontWeight: FontWeight.w500,
+              ),
               hintText: "৳2000",
+              hintStyle: TextStyle(
+                fontSize: 12.sp,
+                color: AppColors.text717680.withValues(alpha: .6),
+                fontWeight: FontWeight.w500,
+              ),
               textInputType: TextInputType.number,
               onChanged: (price) => controller.formKey.currentState?.validate(),
               validator: Validators.requiredWithFieldName("Price").call,
             ),
           ),
-          SizedBox(height: 30.h),
+          SizedBox(height: 24.h),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Obx(
@@ -85,7 +106,16 @@ class ServiceRequestDetailsCreateBids extends GetWidget<ServiceRequestDetailsCon
                       width: double.infinity,
                       child: OutlinedButton(
                         onPressed: () => controller.isBidEdit.value = false,
-                        child: const Text("Cancel"),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                        ),
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     )
                   : const SizedBox.shrink(),
@@ -101,7 +131,16 @@ class ServiceRequestDetailsCreateBids extends GetWidget<ServiceRequestDetailsCon
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: controller.onTapServiceRequestBids,
-                        child: Text(controller.isBidEdit.value ? "Edit" : "Submit"),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                        ),
+                        child: Text(
+                          controller.isBidEdit.value ? "Edit" : "Submit",
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
             ),

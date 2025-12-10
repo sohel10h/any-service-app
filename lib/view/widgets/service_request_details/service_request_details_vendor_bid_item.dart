@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
@@ -48,8 +49,8 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                         onTap: () => controller.goToProfileScreen(bid?.vendor?.id),
                         child: NetworkImageLoader(
                           controller.bidData.value?.vendor?.virtualPath ?? "",
-                          width: 42.w,
-                          height: 42.w,
+                          width: 32.w,
+                          height: 32.w,
                           borderRadius: BorderRadius.circular(30.r),
                         ),
                       ),
@@ -61,7 +62,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                             Text(
                               controller.bidData.value?.vendor?.name ?? "",
                               style: TextStyle(
-                                fontSize: 16.sp,
+                                fontSize: 13.sp,
                                 color: AppColors.text101828,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -71,7 +72,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                             Text(
                               controller.bidData.value?.vendor?.name ?? "", //TODO: need user title value from API
                               style: TextStyle(
-                                fontSize: 13.sp,
+                                fontSize: 11.sp,
                                 color: AppColors.text6A7282,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -93,8 +94,8 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                                   child: Text(
                                     "\$${controller.bidData.value?.proposedPrice ?? 0}",
                                     style: TextStyle(
-                                      fontSize: 24.sp,
-                                      color: AppColors.container155DFC,
+                                      fontSize: 16.sp,
+                                      color: AppColors.primary,
                                       fontWeight: FontWeight.w700,
                                     ),
                                     maxLines: 1,
@@ -102,7 +103,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                                     textAlign: TextAlign.end,
                                   ),
                                 ),
-                                if (true) //TODO: need isBest value from API
+                                if (false) //TODO: need isBest value from API
                                   Expanded(
                                     child: Wrap(
                                       alignment: WrapAlignment.end,
@@ -130,16 +131,16 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                                   ),
                               ],
                             ),
-                            if (true) //TODO: need belowBudget value from API
+                            if (HelperFunction.isBidBelowBudget(controller.serviceDetailsData.value.budgetMin, bid?.proposedPrice))
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.check_circle, color: AppColors.green, size: 12.sp),
+                                  Icon(Icons.check_circle, color: AppColors.green, size: 9.sp),
                                   SizedBox(width: 4.w),
                                   Text(
                                     "Below budget",
                                     style: TextStyle(
-                                      fontSize: 11.sp,
+                                      fontSize: 9.sp,
                                       color: AppColors.text6A7282,
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -158,14 +159,14 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                     children: [
                       SvgPicture.asset(
                         "assets/svgs/rating.svg",
-                        width: 14.w,
-                        height: 14.h,
+                        width: 10.w,
+                        height: 10.h,
                       ),
                       SizedBox(width: 4.w),
                       Text(
                         "${controller.bidData.value?.vendor?.rating?.toStringAsFixed(2) ?? 0}",
                         style: TextStyle(
-                          fontSize: 13.sp,
+                          fontSize: 11.sp,
                           color: AppColors.text364153,
                           fontWeight: FontWeight.w600,
                         ),
@@ -173,7 +174,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                       Text(
                         " (${controller.bidData.value?.vendor?.rating?.toStringAsFixed(2) ?? 0})", //TODO: need reviewsCount value from API
                         style: TextStyle(
-                          fontSize: 12.sp,
+                          fontSize: 11.sp,
                           color: AppColors.text6A7282,
                           fontWeight: FontWeight.w400,
                         ),
@@ -181,14 +182,14 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                       SizedBox(width: 8.w),
                       SvgPicture.asset(
                         "assets/svgs/check_circle.svg",
-                        width: 14.w,
-                        height: 14.h,
+                        width: 10.w,
+                        height: 10.h,
                       ),
                       SizedBox(width: 4.w),
                       Text(
                         "${controller.bidData.value?.vendor?.serviceCompletedCount ?? 0} jobs",
                         style: TextStyle(
-                          fontSize: 12.sp,
+                          fontSize: 11.sp,
                           color: AppColors.text4A5565,
                           fontWeight: FontWeight.w400,
                         ),
@@ -196,15 +197,15 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                       SizedBox(width: 8.w),
                       SvgPicture.asset(
                         "assets/svgs/clock_outline.svg",
-                        width: 14.w,
-                        height: 14.h,
+                        width: 10.w,
+                        height: 10.h,
                         colorFilter: ColorFilter.mode(AppColors.text6A7282, BlendMode.srcIn),
                       ),
                       SizedBox(width: 4.w),
                       Text(
                         "1 hour ago", //TODO need responseTime value from API
                         style: TextStyle(
-                          fontSize: 12.sp,
+                          fontSize: 11.sp,
                           color: AppColors.text6A7282,
                           fontWeight: FontWeight.w400,
                         ),
@@ -215,7 +216,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                   Text(
                     controller.bidData.value?.message ?? "",
                     style: TextStyle(
-                      fontSize: 13.sp,
+                      fontSize: 12.sp,
                       color: AppColors.text364153,
                       fontWeight: FontWeight.w400,
                     ),
@@ -228,14 +229,14 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                       _buildTagItem(
                         iconPath: "assets/svgs/calendar_outline.svg",
                         text: "Available next week", //TODO: need availability value from API
-                        iconColor: AppColors.text1447E6,
-                        textColor: AppColors.text1447E6,
+                        iconColor: AppColors.primary,
+                        textColor: AppColors.primary,
                       ),
                       _buildTagItem(
                         iconPath: "assets/svgs/clock_outline.svg",
                         text: "4-5 hours", //TODO: need duration value from API
-                        iconColor: AppColors.text364153,
-                        textColor: AppColors.text364153,
+                        iconColor: AppColors.primary,
+                        textColor: AppColors.primary,
                       ),
                     ],
                   ),
@@ -307,9 +308,9 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
         maxWidth: 0.65.sw,
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
         decoration: BoxDecoration(
-          color: AppColors.containerEFF6FF,
+          color: AppColors.primary.withValues(alpha: .05),
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
@@ -319,8 +320,8 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
               flex: 0,
               child: SvgPicture.asset(
                 iconPath,
-                width: 14.w,
-                height: 14.h,
+                width: 10.w,
+                height: 10.h,
                 colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
               ),
             ),
@@ -333,7 +334,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                 overflow: TextOverflow.ellipsis,
                 softWrap: false,
                 style: TextStyle(
-                  fontSize: 12.sp,
+                  fontSize: 11.sp,
                   color: textColor,
                   fontWeight: FontWeight.w500,
                 ),
@@ -367,14 +368,14 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.check_circle, color: Colors.white, size: 18.sp),
+                          Icon(Icons.check_circle, color: AppColors.white, size: 15.sp),
                           SizedBox(width: 8.w),
                           Flexible(
                             child: Text(
                               isBothApproved ? userAndVendorApprovedMessage : userApprovedMessage,
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13.sp,
+                                color: AppColors.white,
+                                fontSize: 11.sp,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -390,7 +391,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                     : [
                         SizedBox(height: 8.h),
                         (controller.isApprovedLoadingMap[bid?.id ?? ""]?.value ?? false)
-                            ? CustomProgressBar(color: AppColors.container155DFC)
+                            ? CustomProgressBar()
                             : ElevatedButton(
                                 onPressed: () => controller.onTapAcceptBidButton(
                                   bid?.id ?? "",
@@ -398,22 +399,23 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                                   isVendor: true,
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(double.infinity, 42.h),
-                                  backgroundColor: AppColors.container155DFC,
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                                  minimumSize: Size(double.infinity, 32.h),
+                                  backgroundColor: AppColors.primary,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.r),
+                                    borderRadius: BorderRadius.circular(10.r),
                                   ),
                                 ),
                                 child: Text(
                                   "Accept Bid",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
                       ],
-            isBothApproved ? const SizedBox.shrink() : SizedBox(height: 10.h),
+            isBothApproved || !controller.isProvider.value ? const SizedBox.shrink() : SizedBox(height: 8.h),
             isBothApproved
                 ? const SizedBox.shrink()
                 : Row(
@@ -464,7 +466,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                             ),
                     ],
                   ),
-            isBothApproved ? const SizedBox.shrink() : SizedBox(height: 4.h),
+            isBothApproved || !controller.isProvider.value ? const SizedBox.shrink() : SizedBox(height: 4.h),
           ],
         );
       },
@@ -486,7 +488,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
         decoration: BoxDecoration(
           color: containerColor,
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(8.r),
           border: Border.all(color: borderColor),
         ),
         child: Center(
@@ -496,8 +498,8 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
             children: [
               SvgPicture.asset(
                 iconPath,
-                width: 14.w,
-                height: 14.h,
+                width: 12.w,
+                height: 12.h,
                 colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
               ),
               if (label != null) ...[
@@ -506,7 +508,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                   child: Text(
                     label,
                     style: TextStyle(
-                      fontSize: 13.sp,
+                      fontSize: 11.sp,
                       color: color,
                       fontWeight: FontWeight.w500,
                     ),

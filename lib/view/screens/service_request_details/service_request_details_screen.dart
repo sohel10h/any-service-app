@@ -59,7 +59,6 @@ class ServiceRequestDetailsScreen extends GetWidget<ServiceRequestDetailsControl
               ...controller.isProvider.value || serviceDetails.status == ServiceRequestStatus.completed.typeValue
                   ? []
                   : [
-                      SizedBox(height: 24.h),
                       const ServiceRequestDetailsCreateBids(),
                     ],
             ],

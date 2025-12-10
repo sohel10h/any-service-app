@@ -27,17 +27,17 @@ class ServiceRequestDetailsBidComparisonSection extends GetWidget<ServiceRequest
               children: [
                 SvgPicture.asset(
                   "assets/svgs/trending_down.svg",
-                  width: 17.w,
-                  height: 17.h,
+                  width: 15.w,
+                  height: 15.h,
                 ),
                 SizedBox(width: 6.w),
                 Expanded(
                   child: Text(
                     "Best Value from ${bids?.length ?? 0} $bidText",
                     style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 12.sp,
                       color: AppColors.text59168B,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
@@ -95,7 +95,7 @@ class ServiceRequestDetailsBidComparisonSection extends GetWidget<ServiceRequest
           Text(
             value,
             style: TextStyle(
-              fontSize: 18.sp,
+              fontSize: 16.sp,
               color: valueColor,
               fontWeight: FontWeight.w700,
             ),

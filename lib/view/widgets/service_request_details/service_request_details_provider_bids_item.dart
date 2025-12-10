@@ -62,8 +62,8 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                   onTap: () => controller.goToProfileScreen(bid.vendor?.id),
                   child: NetworkImageLoader(
                     bid.vendor?.virtualPath ?? "",
-                    width: 42.w,
-                    height: 42.w,
+                    width: 32.w,
+                    height: 32.w,
                     borderRadius: BorderRadius.circular(30.r),
                     isUserImage: true,
                   ),
@@ -76,7 +76,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                       Text(
                         bid.vendor?.name ?? "",
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 13.sp,
                           color: AppColors.text101828,
                           fontWeight: FontWeight.w700,
                         ),
@@ -86,7 +86,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                       Text(
                         bid.vendor?.name ?? "", //TODO: need user title value from API
                         style: TextStyle(
-                          fontSize: 13.sp,
+                          fontSize: 11.sp,
                           color: AppColors.text6A7282,
                           fontWeight: FontWeight.w400,
                         ),
@@ -108,8 +108,8 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                             child: Text(
                               "\$${bid.proposedPrice ?? 0}",
                               style: TextStyle(
-                                fontSize: 24.sp,
-                                color: AppColors.container155DFC,
+                                fontSize: 16.sp,
+                                color: AppColors.primary,
                                 fontWeight: FontWeight.w700,
                               ),
                               maxLines: 1,
@@ -149,12 +149,12 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.check_circle, color: AppColors.green, size: 12.sp),
+                            Icon(Icons.check_circle, color: AppColors.green, size: 9.sp),
                             SizedBox(width: 4.w),
                             Text(
                               "Below budget",
                               style: TextStyle(
-                                fontSize: 11.sp,
+                                fontSize: 9.sp,
                                 color: AppColors.text6A7282,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -173,14 +173,14 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
               children: [
                 SvgPicture.asset(
                   "assets/svgs/rating.svg",
-                  width: 14.w,
-                  height: 14.h,
+                  width: 10.w,
+                  height: 10.h,
                 ),
                 SizedBox(width: 4.w),
                 Text(
                   "${bid.vendor?.rating?.toStringAsFixed(2) ?? 0}",
                   style: TextStyle(
-                    fontSize: 13.sp,
+                    fontSize: 11.sp,
                     color: AppColors.text364153,
                     fontWeight: FontWeight.w600,
                   ),
@@ -188,7 +188,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                 Text(
                   " (${bid.vendor?.rating?.toStringAsFixed(2) ?? 0})", //TODO: need reviewsCount value from API
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 11.sp,
                     color: AppColors.text6A7282,
                     fontWeight: FontWeight.w400,
                   ),
@@ -196,14 +196,14 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                 SizedBox(width: 8.w),
                 SvgPicture.asset(
                   "assets/svgs/check_circle.svg",
-                  width: 14.w,
-                  height: 14.h,
+                  width: 10.w,
+                  height: 10.h,
                 ),
                 SizedBox(width: 4.w),
                 Text(
                   "${bid.vendor?.serviceCompletedCount ?? 0} jobs",
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 11.sp,
                     color: AppColors.text4A5565,
                     fontWeight: FontWeight.w400,
                   ),
@@ -211,15 +211,15 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                 SizedBox(width: 8.w),
                 SvgPicture.asset(
                   "assets/svgs/clock_outline.svg",
-                  width: 14.w,
-                  height: 14.h,
+                  width: 10.w,
+                  height: 10.h,
                   colorFilter: ColorFilter.mode(AppColors.text6A7282, BlendMode.srcIn),
                 ),
                 SizedBox(width: 4.w),
                 Text(
                   "1 hour ago", //TODO need responseTime value from API
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 11.sp,
                     color: AppColors.text6A7282,
                     fontWeight: FontWeight.w400,
                   ),
@@ -230,7 +230,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
             Text(
               bid.message ?? "",
               style: TextStyle(
-                fontSize: 13.sp,
+                fontSize: 12.sp,
                 color: AppColors.text364153,
                 fontWeight: FontWeight.w400,
               ),
@@ -243,14 +243,14 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                 _buildTagItem(
                   iconPath: "assets/svgs/calendar_outline.svg",
                   text: "Available next week", //TODO: need availability value from API
-                  iconColor: AppColors.text1447E6,
-                  textColor: AppColors.text1447E6,
+                  iconColor: AppColors.primary,
+                  textColor: AppColors.primary,
                 ),
                 _buildTagItem(
                   iconPath: "assets/svgs/clock_outline.svg",
                   text: "4-5 hours", //TODO: need duration value from API
-                  iconColor: AppColors.text364153,
-                  textColor: AppColors.text364153,
+                  iconColor: AppColors.primary,
+                  textColor: AppColors.primary,
                 ),
               ],
             ),
@@ -273,9 +273,9 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
         maxWidth: 0.65.sw,
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
         decoration: BoxDecoration(
-          color: AppColors.containerEFF6FF,
+          color: AppColors.primary.withValues(alpha: .05),
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
@@ -285,8 +285,8 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
               flex: 0,
               child: SvgPicture.asset(
                 iconPath,
-                width: 14.w,
-                height: 14.h,
+                width: 10.w,
+                height: 10.h,
                 colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
               ),
             ),
@@ -299,7 +299,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 softWrap: false,
                 style: TextStyle(
-                  fontSize: 12.sp,
+                  fontSize: 11.sp,
                   color: textColor,
                   fontWeight: FontWeight.w500,
                 ),
@@ -314,10 +314,10 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
   Widget _buildActions() {
     return Column(
       children: [
-        SizedBox(height: 8.h),
         ...!((bid.userApproved ?? false) && (bid.vendorApproved ?? false))
             ? []
             : [
+                SizedBox(height: 8.h),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                   decoration: BoxDecoration(
@@ -327,14 +327,14 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.check_circle, color: Colors.white, size: 18.sp),
+                      Icon(Icons.check_circle, color: AppColors.white, size: 15.sp),
                       SizedBox(width: 8.w),
                       Flexible(
                         child: Text(
                           "This bid has been approved and is ready for further action.",
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13.sp,
+                            color: AppColors.white,
+                            fontSize: 11.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -346,6 +346,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
         ...!((bid.status == ServiceRequestBidStatus.rejected.typeValue))
             ? []
             : [
+                SizedBox(height: 8.h),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                   decoration: BoxDecoration(
@@ -355,14 +356,14 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.cancel, color: Colors.white, size: 18.sp),
+                      Icon(Icons.cancel, color: AppColors.white, size: 15.sp),
                       SizedBox(width: 8.w),
                       Flexible(
                         child: Text(
                           "This bid has been rejected and will not proceed further.",
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13.sp,
+                            color: AppColors.white,
+                            fontSize: 11.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -381,46 +382,51 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
           if (isBothApproved) return const SizedBox.shrink();
           final isRejected = bid.status == ServiceRequestBidStatus.rejected.typeValue;
           if (isRejected) return const SizedBox.shrink();
-
           return Column(
             children: [
+              SizedBox(height: 8.h),
               if (loading)
-                CustomProgressBar(color: AppColors.container155DFC)
+                CustomProgressBar()
               else
                 (isApproved
                     ? ElevatedButton(
                         onPressed: onAccept,
                         style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 42.h),
-                          backgroundColor: AppColors.container155DFC,
+                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                          minimumSize: Size(double.infinity, 32.h),
+                          backgroundColor: AppColors.primary,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                        ),
-                        child: Text(
-                          buttonLabel,
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
-                        ),
-                      )
-                    : OutlinedButton(
-                        onPressed: onAccept,
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 42.h),
-                          side: BorderSide(color: AppColors.container155DFC),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
                         child: Text(
                           buttonLabel,
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 12.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.container155DFC,
+                          ),
+                        ),
+                      )
+                    : OutlinedButton(
+                        onPressed: onAccept,
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                          minimumSize: Size(double.infinity, 32.h),
+                          side: BorderSide(color: AppColors.primary),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                        ),
+                        child: Text(
+                          buttonLabel,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       )),
-              SizedBox(height: 10.h),
+              SizedBox(height: 8.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -470,7 +476,9 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
             ],
           );
         }),
-        SizedBox(height: 4.h),
+        controller.isBidBothApproved.value || bid.status == ServiceRequestBidStatus.rejected.typeValue
+            ? const SizedBox.shrink()
+            : SizedBox(height: 4.h),
       ],
     );
   }
@@ -492,7 +500,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
         decoration: BoxDecoration(
           color: containerColor,
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(8.r),
           border: Border.all(color: borderColor),
         ),
         child: Center(
@@ -502,14 +510,14 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
             children: [
               (isShortlistedLoading?.value ?? false) || (isRejectedLoading?.value ?? false)
                   ? CustomProgressBar(
-                      size: 14.sp,
+                      size: 12.sp,
                       strokeWidth: 2,
                       color: (isShortlistedLoading?.value ?? false) ? AppColors.text8200DB : AppColors.red,
                     )
                   : SvgPicture.asset(
                       iconPath,
-                      width: 14.w,
-                      height: 14.h,
+                      width: 12.w,
+                      height: 12.h,
                       colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
                     ),
               if (label != null) ...[
@@ -518,7 +526,7 @@ class ServiceRequestDetailsProviderBidsItem extends StatelessWidget {
                   child: Text(
                     label,
                     style: TextStyle(
-                      fontSize: 13.sp,
+                      fontSize: 11.sp,
                       color: color,
                       fontWeight: FontWeight.w500,
                     ),

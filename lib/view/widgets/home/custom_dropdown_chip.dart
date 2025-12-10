@@ -55,8 +55,8 @@ class CustomDropdownChip<T> extends StatelessWidget {
                     if (iconPath != null) ...[
                       SvgPicture.asset(
                         iconPath ?? "",
-                        width: 16.w,
-                        height: 16.h,
+                        width: 12.w,
+                        height: 12.h,
                       ),
                       SizedBox(width: 6.w),
                     ],
@@ -64,7 +64,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
                       child: Text(
                         hasOptions ? hint ?? "Select" : "No options",
                         style: TextStyle(
-                          fontSize: 13.sp,
+                          fontSize: 12.sp,
                           color: AppColors.text364153,
                           fontWeight: FontWeight.w500,
                         ),
@@ -83,8 +83,8 @@ class CustomDropdownChip<T> extends StatelessWidget {
                               if (iconPath != null) ...[
                                 SvgPicture.asset(
                                   iconPath ?? "",
-                                  width: 16.w,
-                                  height: 16.h,
+                                  width: 12.w,
+                                  height: 12.h,
                                 ),
                                 SizedBox(width: 6.w),
                               ],
@@ -92,7 +92,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
                                 child: Text(
                                   labelBuilder(option),
                                   style: TextStyle(
-                                    fontSize: 13.sp,
+                                    fontSize: 12.sp,
                                     color: (isDisabled ?? false) ? AppColors.text364153.withValues(alpha: 0.5) : AppColors.text364153,
                                     fontWeight: FontWeight.w500,
                                   ),

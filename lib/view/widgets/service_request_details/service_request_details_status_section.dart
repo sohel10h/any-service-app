@@ -16,33 +16,35 @@ class ServiceRequestDetailsStatusSection extends GetWidget<ServiceRequestDetails
       IconData icon;
       String message;
       Widget? actionButton;
-
       final serviceDetailsData = controller.serviceDetailsData.value;
       final status = serviceDetailsData.status ?? 0;
       final serviceRequestId = serviceDetailsData.id ?? "";
       final vendor = !controller.isProvider.value;
-
       if (status == ServiceRequestStatus.inProgress.typeValue) {
-        bgColor = AppColors.yellow;
+        bgColor = AppColors.yellowDark;
         icon = Icons.hourglass_top;
         message = "This service request is currently in progress and awaiting further action.";
         actionButton = vendor
             ? null
-            : ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.white,
-                  foregroundColor: AppColors.yellow,
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+            : OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  elevation: 0,
+                  foregroundColor: Colors.transparent,
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  side: BorderSide.none,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.r),
                   ),
-                  textStyle: TextStyle(
-                    fontSize: 12.sp,
+                ),
+                onPressed: () => controller.onTapFinalizeButton(serviceRequestId, ServiceRequestStatus.completed.typeValue),
+                child: Text(
+                  "Finalize",
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    color: AppColors.primary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                onPressed: () => controller.onTapFinalizeButton(serviceRequestId, ServiceRequestStatus.completed.typeValue),
-                child: const Text("Finalize"),
               );
       } else if (status == ServiceRequestStatus.completed.typeValue) {
         bgColor = AppColors.green;
@@ -54,6 +56,7 @@ class ServiceRequestDetailsStatusSection extends GetWidget<ServiceRequestDetails
       }
 
       return Container(
+        width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: bgColor,
@@ -61,14 +64,14 @@ class ServiceRequestDetailsStatusSection extends GetWidget<ServiceRequestDetails
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: AppColors.white, size: 18.sp),
+            Icon(icon, color: AppColors.white, size: 15.sp),
             SizedBox(width: 8.w),
             Flexible(
               child: Text(
                 message,
                 style: TextStyle(
                   color: AppColors.white,
-                  fontSize: 13.sp,
+                  fontSize: 11.sp,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -77,8 +80,8 @@ class ServiceRequestDetailsStatusSection extends GetWidget<ServiceRequestDetails
               SizedBox(width: 12.w),
               controller.isLoadingServiceRequestStatus.value
                   ? Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                      child: CustomProgressBar(color: AppColors.white, size: 24, strokeWidth: 2),
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      child: CustomProgressBar(color: AppColors.white, size: 20.sp, strokeWidth: 2),
                     )
                   : actionButton,
             ],

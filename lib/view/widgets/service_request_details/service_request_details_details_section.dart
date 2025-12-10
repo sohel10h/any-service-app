@@ -22,7 +22,7 @@ class ServiceRequestDetailsDetailsSection extends GetWidget<ServiceRequestDetail
               Text(
                 "Service Details",
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 12.sp,
                   color: AppColors.text0A0A0A,
                   fontWeight: FontWeight.w700,
                 ),
@@ -85,7 +85,7 @@ class ServiceRequestDetailsDetailsSection extends GetWidget<ServiceRequestDetail
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: AppColors.text4A5565,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 SizedBox(height: 4.h),
@@ -93,7 +93,7 @@ class ServiceRequestDetailsDetailsSection extends GetWidget<ServiceRequestDetail
                     Text(
                       subtitle ?? "",
                       style: TextStyle(
-                        fontSize: 13.sp,
+                        fontSize: 12.sp,
                         color: AppColors.text101828,
                         fontWeight: FontWeight.w400,
                       ),

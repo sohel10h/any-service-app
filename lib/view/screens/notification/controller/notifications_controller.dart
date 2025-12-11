@@ -1,14 +1,16 @@
 import 'dart:developer';
 import 'package:get/get.dart';
+import 'package:service_la/common/utils/enum_helper.dart';
+import 'package:service_la/data/model/network/websocket/websocket_notification_read_model.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/repository/notification_repo.dart';
 import 'package:service_la/data/model/network/common/notification_model.dart';
 import 'package:service_la/data/model/network/notification_response_model.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 
 class NotificationsController extends GetxController {
   final NotificationRepo _notificationRepo = NotificationRepo();
-  Rxn<NotificationResponseModel> notificationResponse = Rxn<NotificationResponseModel>();
   RxList<NotificationModel> notifications = <NotificationModel>[].obs;
   RxBool isLoadingNotifications = false.obs;
   RxBool isLoadingMoreNotifications = false.obs;
@@ -18,7 +20,29 @@ class NotificationsController extends GetxController {
   @override
   void onInit() {
     _getNotifications(isRefresh: true);
+    ever(AppDIController.notificationRead, (notificationRead) {
+      onWebsocketReceived(notificationRead);
+    });
     super.onInit();
+  }
+
+  void onWebsocketReceived(WebsocketNotificationReadModel notificationRead) {
+    notifications.singleWhere((notification) => notification.id == notificationRead.notificationId).isRead = true;
+    notifications.refresh();
+  }
+
+  void sendNotificationStatus(String? notificationId) async {
+    if (notificationId == null) return;
+    final payload = {
+      ApiParams.type: WebsocketPayloadType.markRead.typeValue,
+      ApiParams.target: WebsocketPayloadType.notification.name,
+      ApiParams.notificationId: notificationId,
+    };
+    try {
+      await AppDIController.sendWebsocketsData(payload);
+    } catch (e) {
+      log("WebsocketsSendParams error from controller: ${e.toString()}");
+    }
   }
 
   Future<void> loadNextPageNotifications() async {
@@ -53,9 +77,6 @@ class NotificationsController extends GetxController {
       } else {
         NotificationResponseModel notificationResponseData = response as NotificationResponseModel;
         if (notificationResponseData.status == 200 || notificationResponseData.status == 201) {
-          if (notificationResponse.value == null) {
-            notificationResponse.value = notificationResponseData;
-          }
           final data = notificationResponseData.notificationData?.notifications ?? [];
           if (isRefresh) {
             notifications.assignAll(data);
@@ -74,9 +95,6 @@ class NotificationsController extends GetxController {
               () => _notificationRepo.getNotifications(queryParams: queryParams),
             );
             if (retryResponse is NotificationResponseModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              if (notificationResponse.value == null) {
-                notificationResponse.value = retryResponse;
-              }
               final data = retryResponse.notificationData?.notifications ?? [];
               if (isRefresh) {
                 notifications.assignAll(data);

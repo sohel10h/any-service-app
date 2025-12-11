@@ -25,6 +25,7 @@ import 'package:service_la/data/model/network/websocket/websocket_vendor_model.d
 import 'package:service_la/data/model/network/websocket/websocket_message_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_response_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_service_request_model.dart';
+import 'package:service_la/data/model/network/websocket/websocket_notification_read_model.dart';
 import 'package:service_la/view/screens/service_request_details/controller/service_request_details_controller.dart';
 
 class AppDIController extends GetxController with WidgetsBindingObserver {
@@ -41,6 +42,7 @@ class AppDIController extends GetxController with WidgetsBindingObserver {
   static RxBool isLoadingAdminUser = false.obs;
   static Rx<AdminUser> adminUser = AdminUser().obs;
   static final FcmRepo _fcmRepo = FcmRepo();
+  static final Rx<WebsocketNotificationReadModel> notificationRead = WebsocketNotificationReadModel().obs;
 
   @override
   void onInit() {
@@ -131,9 +133,9 @@ class AppDIController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  static Future<void> sendWebsocketsMessageData(Map<String, dynamic> messagePayload) async {
-    log("WebsocketsMessageSendParams: $messagePayload");
-    WebSocketService.to.send(messagePayload);
+  static Future<void> sendWebsocketsData(Map<String, dynamic> payload) async {
+    log("WebsocketsSendParams: $payload");
+    WebSocketService.to.send(payload);
   }
 
   Future<void> _setupLocationServices() async {
@@ -156,12 +158,23 @@ class AppDIController extends GetxController with WidgetsBindingObserver {
       await HelperFunction.initWebSockets(authToken);
       _checkWebsocketsNotificationData();
       _checkWebsocketsMessageData();
+      _checkWebsocketsNotificationReadData();
     }
+  }
+
+  static void _checkWebsocketsNotificationReadData() async {
+    WebSocketService.to.on(WebsocketPayloadType.notificationRead.typeValue, (payload) async {
+      log("WebsocketsNotificationReadResponse from AppDIController: ${payload['raw']}");
+      if (payload['raw'] == null) return;
+      final model = WebsocketNotificationReadModel.fromMap(payload['raw']);
+      notificationRead.value = model;
+    });
   }
 
   static void _checkWebsocketsMessageData() async {
     WebSocketService.to.on(WebsocketPayloadType.message.name, (payload) async {
       log("WebsocketsMessageResponse from AppDIController: ${payload['raw']}");
+      if (payload['raw'] == null) return;
       final model = WebsocketMessageModel.fromMap(payload['raw']);
       message.value = model;
       _sendWebsocketsMessagesNotifications(message.value);
@@ -188,6 +201,8 @@ class AppDIController extends GetxController with WidgetsBindingObserver {
 
   static void _checkWebsocketsNotificationData() async {
     WebSocketService.to.on(WebsocketPayloadType.notification.name, (payload) async {
+      log("WebsocketsNotificationResponse from AppDIController: ${payload['raw']}");
+      if (payload['raw'] == null) return;
       int? type = HelperFunction.getWebsocketNotificationType(payload['raw']);
       unreadNotificationCount.value = HelperFunction.getWebsocketNotificationUnreadCount(payload['raw']);
       log("WebsocketsResponseType from AppDIController: ${type ?? 0}");

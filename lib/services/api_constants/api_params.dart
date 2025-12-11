@@ -43,4 +43,6 @@ class ApiParams {
   static const String userId = "user_id";
   static const String page = "page";
   static const String mobile = "mobile";
+  static const String target = "target";
+  static const String notificationId = "notification_id";
 }

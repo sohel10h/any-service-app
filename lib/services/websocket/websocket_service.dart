@@ -10,6 +10,7 @@ import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/model/network/websocket/websocket_message_model.dart';
 import 'package:service_la/data/model/network/websocket/websocket_notification_model.dart';
+import 'package:service_la/data/model/network/websocket/websocket_notification_read_model.dart';
 
 class WebSocketService extends GetxService with WidgetsBindingObserver {
   static WebSocketService get to => Get.find<WebSocketService>();
@@ -209,6 +210,15 @@ class WebSocketService extends GetxService with WidgetsBindingObserver {
         _emitInternal(WebsocketPayloadType.message.name, wrapped);
         return;
       }
+    }
+    if (type == WebsocketPayloadType.notificationRead.typeValue) {
+      final model = WebsocketNotificationReadModel.fromMap(payload);
+      final wrapped = {
+        'raw': payload,
+        'parsed': model,
+      };
+      _emitInternal(WebsocketPayloadType.notificationRead.typeValue, wrapped);
+      return;
     }
     _callHandlers(type, payload);
   }

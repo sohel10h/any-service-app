@@ -94,7 +94,7 @@ class NotificationItem extends StatelessWidget {
                 ),
                 if (!isRead) SizedBox(height: 4.h),
                 Text(
-                  "Service Request",
+                  notification.title ?? "",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

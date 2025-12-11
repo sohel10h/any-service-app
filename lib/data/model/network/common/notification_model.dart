@@ -5,7 +5,7 @@ class NotificationModel {
   final String? createdOnUtc;
   final String? body;
   final String? pictureUrl;
-  final bool? isRead;
+  bool? isRead;
 
   NotificationModel({
     this.id,

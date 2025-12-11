@@ -26,11 +26,17 @@ enum NotificationType {
 }
 
 enum WebsocketPayloadType {
-  joined,
-  left,
-  message,
-  notification,
-  error,
+  joined("joined"),
+  left("left"),
+  message("message"),
+  notification("notification"),
+  notificationRead("notification_read"),
+  error("error"),
+  markRead("mark_read");
+
+  final String typeValue;
+
+  const WebsocketPayloadType(this.typeValue);
 }
 
 enum WebsocketParamType {

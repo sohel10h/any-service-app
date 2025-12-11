@@ -165,7 +165,7 @@ class ChatsRoomController extends GetxController {
       ApiParams.content: text,
     };
     try {
-      await AppDIController.sendWebsocketsMessageData(payload);
+      await AppDIController.sendWebsocketsData(payload);
     } catch (e) {
       markMessageAsFailed(localMessage.id ?? "");
     }

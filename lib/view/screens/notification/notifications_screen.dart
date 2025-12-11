@@ -59,7 +59,7 @@ class NotificationsScreen extends GetWidget<NotificationsController> {
                 if (index < controller.notifications.length) {
                   final notification = notifications[index];
                   return GestureDetector(
-                    onTap: (notification.isRead ?? true) ? null : () => controller.sendNotificationStatus(notification.id),
+                    onTap: () => controller.goToNotificationsDetailsScreen(notification),
                     child: NotificationItem(notification: notification),
                   );
                 }

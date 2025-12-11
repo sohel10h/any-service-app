@@ -258,4 +258,50 @@ class HelperFunction {
   static bool isBidBelowBudget(num? budgetMin, num? bidPrice) {
     return ((budgetMin ?? 0.0).toDouble() > (bidPrice ?? 0.0).toDouble());
   }
+
+  static NotificationType? mapType(int? value) {
+    if (value == null) return null;
+    return NotificationType.values.firstWhere(
+      (e) => e.typeValue == value,
+      orElse: () => NotificationType.email,
+    );
+  }
+
+  static String badgeText(NotificationType? type) {
+    switch (type) {
+      case NotificationType.email:
+        return "EMAIL";
+      case NotificationType.sms:
+        return "SMS";
+      case NotificationType.serviceRequest:
+        return "SERVICE";
+      case NotificationType.bid:
+        return "BID";
+      case NotificationType.vendorFound:
+        return "FOUND";
+      case NotificationType.vendorNotFound:
+        return "NO VENDOR";
+      default:
+        return "INFO";
+    }
+  }
+
+  static Color badgeColor(NotificationType? type) {
+    switch (type) {
+      case NotificationType.email:
+        return Colors.blueAccent;
+      case NotificationType.sms:
+        return Colors.green;
+      case NotificationType.serviceRequest:
+        return Colors.orange;
+      case NotificationType.bid:
+        return Colors.purple;
+      case NotificationType.vendorFound:
+        return Colors.teal;
+      case NotificationType.vendorNotFound:
+        return Colors.redAccent;
+      default:
+        return Colors.grey;
+    }
+  }
 }

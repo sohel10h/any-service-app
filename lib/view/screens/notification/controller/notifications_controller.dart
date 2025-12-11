@@ -1,13 +1,14 @@
 import 'dart:developer';
 import 'package:get/get.dart';
+import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
-import 'package:service_la/data/model/network/websocket/websocket_notification_read_model.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/repository/notification_repo.dart';
 import 'package:service_la/data/model/network/common/notification_model.dart';
 import 'package:service_la/data/model/network/notification_response_model.dart';
-import 'package:service_la/services/di/app_di_controller.dart';
+import 'package:service_la/data/model/network/websocket/websocket_notification_read_model.dart';
 
 class NotificationsController extends GetxController {
   final NotificationRepo _notificationRepo = NotificationRepo();
@@ -26,12 +27,24 @@ class NotificationsController extends GetxController {
     super.onInit();
   }
 
+  void goToNotificationsDetailsScreen(NotificationModel notification) async {
+    if (!(notification.isRead ?? false)) {
+      await sendNotificationStatus(notification.id);
+    }
+    Get.toNamed(
+      AppRoutes.notificationsDetailsScreen,
+      arguments: {
+        "notification": notification,
+      },
+    );
+  }
+
   void onWebsocketReceived(WebsocketNotificationReadModel notificationRead) {
     notifications.singleWhere((notification) => notification.id == notificationRead.notificationId).isRead = true;
     notifications.refresh();
   }
 
-  void sendNotificationStatus(String? notificationId) async {
+  Future<void> sendNotificationStatus(String? notificationId) async {
     if (notificationId == null) return;
     final payload = {
       ApiParams.type: WebsocketPayloadType.markRead.typeValue,

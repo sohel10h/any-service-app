@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/common/utils/date_time/format_date.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 import 'package:service_la/data/model/network/common/notification_model.dart';
@@ -14,9 +15,9 @@ class NotificationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isRead = notification.isRead ?? false;
-    final NotificationType? typeEnum = _mapType(notification.type);
-    final badgeColor = _badgeColor(typeEnum);
-    final badgeText = _badgeText(typeEnum);
+    final NotificationType? typeEnum = HelperFunction.mapType(notification.type);
+    final badgeColor = HelperFunction.badgeColor(typeEnum);
+    final badgeText = HelperFunction.badgeText(typeEnum);
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
@@ -121,51 +122,5 @@ class NotificationItem extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  NotificationType? _mapType(int? value) {
-    if (value == null) return null;
-    return NotificationType.values.firstWhere(
-      (e) => e.typeValue == value,
-      orElse: () => NotificationType.email,
-    );
-  }
-
-  String _badgeText(NotificationType? type) {
-    switch (type) {
-      case NotificationType.email:
-        return "EMAIL";
-      case NotificationType.sms:
-        return "SMS";
-      case NotificationType.serviceRequest:
-        return "SERVICE";
-      case NotificationType.bid:
-        return "BID";
-      case NotificationType.vendorFound:
-        return "FOUND";
-      case NotificationType.vendorNotFound:
-        return "NO VENDOR";
-      default:
-        return "INFO";
-    }
-  }
-
-  Color _badgeColor(NotificationType? type) {
-    switch (type) {
-      case NotificationType.email:
-        return Colors.blueAccent;
-      case NotificationType.sms:
-        return Colors.green;
-      case NotificationType.serviceRequest:
-        return Colors.orange;
-      case NotificationType.bid:
-        return Colors.purple;
-      case NotificationType.vendorFound:
-        return Colors.teal;
-      case NotificationType.vendorNotFound:
-        return Colors.redAccent;
-      default:
-        return Colors.grey;
-    }
   }
 }

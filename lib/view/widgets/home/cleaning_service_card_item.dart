@@ -12,7 +12,7 @@ class CleaningServiceCardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.w),
+      padding: EdgeInsets.symmetric(horizontal: 4.w),
       child: Container(
         width: 280.w,
         padding: EdgeInsets.all(16.sp),
@@ -37,20 +37,20 @@ class CleaningServiceCardItem extends StatelessWidget {
                 Stack(
                   children: [
                     CircleAvatar(
-                      radius: 18.r,
+                      radius: 16.r,
                       child: NetworkImageLoader(
                         "${service["profileImageUrl"]}",
-                        width: 35.w,
-                        height: 35.w,
+                        width: 30.w,
+                        height: 30.w,
                         isUserImage: true,
                       ),
                     ),
                     Positioned(
-                      right: 0,
-                      bottom: 2,
+                      right: 2,
+                      bottom: 3,
                       child: Container(
-                        width: 8.w,
-                        height: 8.w,
+                        width: 6.w,
+                        height: 6.w,
                         decoration: BoxDecoration(
                           color: AppColors.container00C950,
                           shape: BoxShape.circle,
@@ -78,19 +78,19 @@ class CleaningServiceCardItem extends StatelessWidget {
                       Text(
                         "${service["providerName"]}",
                         style: TextStyle(
-                          fontSize: 14.sp,
-                          color: AppColors.text4A5565,
+                          fontSize: 11.sp,
+                          color: AppColors.text6A7282,
+                          fontWeight: FontWeight.w500,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 6.h),
                     ],
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 24.h),
+            SizedBox(height: 8.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -100,15 +100,15 @@ class CleaningServiceCardItem extends StatelessWidget {
                     children: [
                       SvgPicture.asset(
                         "assets/svgs/rating.svg",
-                        width: 11.w,
-                        height: 11.h,
+                        width: 10.w,
+                        height: 10.h,
                       ),
                       SizedBox(width: 4.w),
                       Expanded(
                         child: Text(
                           "${service["rating"]}",
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 11.sp,
                             color: AppColors.black,
                             fontWeight: FontWeight.w700,
                           ),
@@ -125,8 +125,8 @@ class CleaningServiceCardItem extends StatelessWidget {
                   child: Text(
                     "\$${service["price"]}",
                     style: TextStyle(
-                      fontSize: 14.sp,
-                      color: AppColors.black,
+                      fontSize: 12.sp,
+                      color: AppColors.primary,
                       fontWeight: FontWeight.w700,
                     ),
                     textAlign: TextAlign.end,
@@ -136,12 +136,12 @@ class CleaningServiceCardItem extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 12.h),
+            SizedBox(height: 8.h),
             Text(
               "Posted ${service["postedTime"]}",
               style: TextStyle(
-                fontSize: 12.sp,
-                color: AppColors.text4A5565,
+                fontSize: 11.sp,
+                color: AppColors.text6A7282,
                 fontWeight: FontWeight.w400,
               ),
               maxLines: 1,

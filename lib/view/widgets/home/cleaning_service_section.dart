@@ -36,7 +36,7 @@ class CleaningServiceSection extends StatelessWidget {
                 Text(
                   "Cleaning",
                   style: TextStyle(
-                    fontSize: 17.sp,
+                    fontSize: 13.sp,
                     color: AppColors.text101828,
                     fontWeight: FontWeight.w600,
                   ),
@@ -60,15 +60,15 @@ class CleaningServiceSection extends StatelessWidget {
                 Text(
                   "View all",
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 11.sp,
                     color: AppColors.primary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 SvgPicture.asset(
                   "assets/svgs/arrow_right_small.svg",
-                  width: 16.w,
-                  height: 16.h,
+                  width: 14.w,
+                  height: 14.h,
                 )
               ],
             ),
@@ -80,7 +80,7 @@ class CleaningServiceSection extends StatelessWidget {
 
   Widget _buildListView() {
     return SizedBox(
-      height: 180.h,
+      height: 135.h,
       child: ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,

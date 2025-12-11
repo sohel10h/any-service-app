@@ -24,13 +24,13 @@ class BestSellingServicesScreen extends GetWidget<BestSellingServicesController>
           final bestSellingServices = controller.bestSellingServiceData;
           if (isLoading) {
             return GridView.builder(
-              padding: EdgeInsets.all(12.sp),
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
               physics: const AlwaysScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 2.w,
+                crossAxisSpacing: 0.w,
                 mainAxisSpacing: 12.h,
-                childAspectRatio: 0.8,
+                childAspectRatio: 0.88,
               ),
               itemCount: 10,
               itemBuilder: (_, __) => const BestSellingServicesItemShimmer(),
@@ -47,13 +47,13 @@ class BestSellingServicesScreen extends GetWidget<BestSellingServicesController>
             );
           }
           return GridView.builder(
-            padding: EdgeInsets.all(12.sp),
+            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
             physics: const AlwaysScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 2.w,
+              crossAxisSpacing: 0.w,
               mainAxisSpacing: 12.h,
-              childAspectRatio: 0.8,
+              childAspectRatio: 0.88,
             ),
             itemCount: bestSellingServices.length,
             itemBuilder: (context, index) {

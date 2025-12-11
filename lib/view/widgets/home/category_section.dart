@@ -43,8 +43,8 @@ class CategorySection extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-            fontSize: 14.sp,
-            color: AppColors.text333333,
+            fontSize: 13.sp,
+            color: AppColors.text101828,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -53,17 +53,17 @@ class CategorySection extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                "Show all",
+                "View all",
                 style: TextStyle(
-                  fontSize: 12.sp,
+                  fontSize: 11.sp,
                   color: AppColors.primary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               SvgPicture.asset(
                 "assets/svgs/arrow_right_small.svg",
-                width: 16.w,
-                height: 16.h,
+                width: 14.w,
+                height: 14.h,
               )
             ],
           ),
@@ -116,7 +116,7 @@ class CategorySection extends StatelessWidget {
         itemCount: serviceCategories.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 1.8,
+          childAspectRatio: 2.3,
           crossAxisSpacing: 8.w,
           mainAxisSpacing: 12.h,
         ),

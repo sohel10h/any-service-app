@@ -39,7 +39,7 @@ class BestSellingServicesSection extends StatelessWidget {
                 Text(
                   "Best Selling Services",
                   style: TextStyle(
-                    fontSize: 17.sp,
+                    fontSize: 13.sp,
                     color: AppColors.text101828,
                     fontWeight: FontWeight.w600,
                   ),
@@ -63,15 +63,15 @@ class BestSellingServicesSection extends StatelessWidget {
                 Text(
                   "View all",
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 11.sp,
                     color: AppColors.primary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 SvgPicture.asset(
                   "assets/svgs/arrow_right_small.svg",
-                  width: 16.w,
-                  height: 16.h,
+                  width: 14.w,
+                  height: 14.h,
                 )
               ],
             ),
@@ -88,7 +88,7 @@ class BestSellingServicesSection extends StatelessWidget {
         final bestSellingServices = controller.bestSellingServiceData;
         if (isLoading) {
           return SizedBox(
-            height: 210.h,
+            height: 200.h,
             child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
@@ -117,7 +117,7 @@ class BestSellingServicesSection extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: 210.h,
+          height: 200.h,
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,

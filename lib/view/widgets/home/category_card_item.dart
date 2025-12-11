@@ -24,8 +24,8 @@ class CategoryCardItem extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              height: 52.w,
-              width: 52.w,
+              height: 40.w,
+              width: 40.w,
               padding: EdgeInsets.all(10.sp),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.r),
@@ -78,8 +78,8 @@ class CategoryCardItem extends StatelessWidget {
                         child: Text(
                           "${serviceCategory.id?.length} Providers", // TODO: need this providers value from API
                           style: TextStyle(
-                            fontSize: 10.sp,
-                            color: AppColors.black.withValues(alpha: .6),
+                            fontSize: 9.sp,
+                            color: AppColors.text6A7282,
                             fontWeight: FontWeight.w400,
                           ),
                           maxLines: 1,

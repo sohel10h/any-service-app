@@ -18,7 +18,7 @@ class BestSellingServicesCardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.w),
+      padding: EdgeInsets.symmetric(horizontal: 4.w),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
@@ -69,8 +69,8 @@ class BestSellingServicesCardItem extends StatelessWidget {
                         children: [
                           SvgPicture.asset(
                             "assets/svgs/star.svg",
-                            width: 14.w,
-                            height: 14.h,
+                            width: 10.w,
+                            height: 10.h,
                           ),
                           SizedBox(width: 4.w),
                           Text(
@@ -98,14 +98,14 @@ class BestSellingServicesCardItem extends StatelessWidget {
                         children: [
                           SvgPicture.asset(
                             "assets/svgs/rating.svg",
-                            width: 14.w,
-                            height: 14.h,
+                            width: 10.w,
+                            height: 10.h,
                           ),
                           SizedBox(width: 4.w),
                           Text(
                             "${bestSellingService.rating?.toStringAsFixed(2) ?? 0}",
                             style: TextStyle(
-                              fontSize: 10.sp,
+                              fontSize: 9.sp,
                               color: AppColors.text101828,
                               fontWeight: FontWeight.w700,
                             ),
@@ -126,7 +126,7 @@ class BestSellingServicesCardItem extends StatelessWidget {
                       child: Text(
                         "\$${bestSellingService.price?.toDouble().toStringAsFixed(2) ?? 0}",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 11.sp,
                           color: AppColors.primary,
                           fontWeight: FontWeight.w700,
                         ),
@@ -162,7 +162,7 @@ class BestSellingServicesCardItem extends StatelessWidget {
                     Text(
                       bestSellingService.name ?? "",
                       style: TextStyle(
-                        fontSize: 12.sp,
+                        fontSize: 11.sp,
                         color: AppColors.text101828,
                         fontWeight: FontWeight.w700,
                       ),
@@ -174,8 +174,8 @@ class BestSellingServicesCardItem extends StatelessWidget {
                       children: [
                         SvgPicture.asset(
                           "assets/svgs/rating.svg",
-                          width: 14.w,
-                          height: 14.h,
+                          width: 10.w,
+                          height: 10.h,
                         ),
                         SizedBox(width: 4.w),
                         Expanded(
@@ -204,9 +204,9 @@ class BestSellingServicesCardItem extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          'Book Now',
+                          "Book Now",
                           style: TextStyle(
-                            fontSize: 10.sp,
+                            fontSize: 9.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

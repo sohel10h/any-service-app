@@ -39,7 +39,8 @@ class NotificationsController extends GetxController {
     );
   }
 
-  void onWebsocketReceived(WebsocketNotificationReadModel notificationRead) {
+  void onWebsocketReceived(WebsocketNotificationReadModel? notificationRead) {
+    if (notificationRead == null) return;
     notifications.singleWhere((notification) => notification.id == notificationRead.notificationId).isRead = true;
     notifications.refresh();
   }

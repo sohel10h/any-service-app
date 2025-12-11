@@ -43,7 +43,6 @@ class CustomBottomNavBar extends StatelessWidget {
         children: List.generate(items.length, (index) {
           final item = items[index];
           final isSelected = currentIndex == index;
-
           return GestureDetector(
             onTap: () => onTap(index),
             child: AnimatedContainer(
@@ -67,8 +66,8 @@ class CustomBottomNavBar extends StatelessWidget {
                 children: [
                   SvgPicture.asset(
                     item.iconPath,
-                    width: 22.w,
-                    height: 22.h,
+                    width: 16.w,
+                    height: 16.h,
                     colorFilter: ColorFilter.mode(
                       isSelected ? AppColors.white : AppColors.black,
                       BlendMode.srcIn,

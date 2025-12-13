@@ -80,7 +80,7 @@ class CleaningServiceSection extends StatelessWidget {
 
   Widget _buildListView() {
     return SizedBox(
-      height: 135.h,
+      height: 145.h,
       child: ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,

@@ -25,7 +25,7 @@ class VendorProfileServices extends GetWidget<VendorProfileController> {
                   child: Text(
                     "Services",
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 12.sp,
                       color: AppColors.text101828,
                       fontWeight: FontWeight.w700,
                     ),
@@ -35,10 +35,10 @@ class VendorProfileServices extends GetWidget<VendorProfileController> {
                 ElevatedButton.icon(
                   onPressed: controller.goToCreateServiceScreen,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.container155DFC,
+                    backgroundColor: AppColors.primary,
                     padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                   ),
                   label: Row(
@@ -46,15 +46,15 @@ class VendorProfileServices extends GetWidget<VendorProfileController> {
                     children: [
                       SvgPicture.asset(
                         "assets/svgs/add_small.svg",
-                        width: 14.w,
-                        height: 14.h,
+                        width: 12.w,
+                        height: 12.h,
                         colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
                       ),
                       SizedBox(width: 6.w),
                       Text(
                         "Create Service",
                         style: TextStyle(
-                          fontSize: 12.sp,
+                          fontSize: 11.sp,
                           color: AppColors.white,
                           fontWeight: FontWeight.w600,
                         ),

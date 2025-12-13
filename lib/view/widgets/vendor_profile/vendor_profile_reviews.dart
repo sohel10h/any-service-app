@@ -20,7 +20,7 @@ class VendorProfileReviews extends GetWidget<VendorProfileController> {
                 child: Text(
                   "Reviews",
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 12.sp,
                     color: AppColors.text101828,
                     fontWeight: FontWeight.w700,
                   ),
@@ -33,7 +33,7 @@ class VendorProfileReviews extends GetWidget<VendorProfileController> {
                   return Text(
                     "$reviewsCount total",
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 11.sp,
                       color: AppColors.text4A5565,
                       fontWeight: FontWeight.w400,
                     ),

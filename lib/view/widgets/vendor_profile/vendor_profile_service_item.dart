@@ -34,9 +34,9 @@ class VendorProfileServiceItem extends StatelessWidget {
             children: [
               NetworkImageLoader(
                 service.picture?.virtualPath ?? "",
-                width: 70.w,
-                height: 70.w,
-                borderRadius: BorderRadius.circular(12.r),
+                width: 40.w,
+                height: 40.w,
+                borderRadius: BorderRadius.circular(8.r),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -74,7 +74,7 @@ class VendorProfileServiceItem extends StatelessWidget {
                       service.price == null ? "${service.priceStart ?? 0}-${service.priceEnd ?? 0}" : "${service.price ?? 0}",
                       style: TextStyle(
                         fontSize: 10.sp,
-                        color: AppColors.container155DFC,
+                        color: AppColors.primary,
                         fontWeight: FontWeight.w400,
                       ),
                       maxLines: 1,

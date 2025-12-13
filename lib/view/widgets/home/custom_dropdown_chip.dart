@@ -9,6 +9,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
   final double? width;
   final double? height;
   final RxList<T> options;
+  final double? fontSize;
   final Rx<T?> selectedValue;
   final String? iconPath;
   final String? hint;
@@ -21,6 +22,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
     this.width,
     this.height,
     required this.options,
+    this.fontSize,
     required this.selectedValue,
     this.iconPath,
     this.hint,
@@ -64,7 +66,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
                       child: Text(
                         hasOptions ? hint ?? "Select" : "No options",
                         style: TextStyle(
-                          fontSize: 12.sp,
+                          fontSize: fontSize ?? 12.sp,
                           color: AppColors.text364153,
                           fontWeight: FontWeight.w500,
                         ),
@@ -92,7 +94,7 @@ class CustomDropdownChip<T> extends StatelessWidget {
                                 child: Text(
                                   labelBuilder(option),
                                   style: TextStyle(
-                                    fontSize: 12.sp,
+                                    fontSize: fontSize ?? 12.sp,
                                     color: (isDisabled ?? false) ? AppColors.text364153.withValues(alpha: 0.5) : AppColors.text364153,
                                     fontWeight: FontWeight.w500,
                                   ),

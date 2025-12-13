@@ -47,8 +47,8 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                   children: [
                     NetworkImageLoader(
                       user.picture?.virtualPath ?? "",
-                      width: 84.w,
-                      height: 84.w,
+                      width: 70.w,
+                      height: 70.w,
                       borderRadius: BorderRadius.circular(60.r),
                       isUserImage: true,
                     ),
@@ -57,8 +57,8 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                         right: -6,
                         bottom: -4,
                         child: Container(
-                          width: 32.w,
-                          height: 32.w,
+                          width: 24.w,
+                          height: 24.w,
                           decoration: BoxDecoration(
                             color: AppColors.primary,
                             shape: BoxShape.circle,
@@ -68,8 +68,8 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                             padding: EdgeInsets.zero,
                             icon: SvgPicture.asset(
                               "assets/svgs/camera.svg",
-                              width: 16.w,
-                              height: 16.h,
+                              width: 12.w,
+                              height: 12.h,
                             ),
                             onPressed: () {},
                           ),
@@ -93,15 +93,15 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                       children: [
                         SvgPicture.asset(
                           "assets/svgs/edit.svg",
-                          width: 14.w,
-                          height: 14.h,
+                          width: 10.w,
+                          height: 10.h,
                           colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
                         ),
                         SizedBox(width: 6.w),
                         Text(
                           "Edit Profile",
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: 11.sp,
                             color: AppColors.white,
                             fontWeight: FontWeight.w600,
                           ),
@@ -118,7 +118,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                 Text(
                   user.name ?? AppDIController.signInDetails.value.data?.userName ?? "",
                   style: TextStyle(
-                    fontSize: 17.sp,
+                    fontSize: 13.sp,
                     color: AppColors.text101828,
                     fontWeight: FontWeight.w700,
                   ),
@@ -126,7 +126,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                 Text(
                   "Deep Cleaning Expert", //TODO: need to get this field value from API
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 11.sp,
                     color: AppColors.text4A5565,
                     fontWeight: FontWeight.w400,
                   ),
@@ -135,15 +135,15 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                   children: [
                     SvgPicture.asset(
                       "assets/svgs/location_outline.svg",
-                      width: 14.w,
-                      height: 14.h,
+                      width: 12.w,
+                      height: 12.h,
                       colorFilter: ColorFilter.mode(AppColors.text4A5565, BlendMode.srcIn),
                     ),
                     SizedBox(width: 4.w),
                     Text(
                       "San Francisco, CA", //TODO: need to get this field value from API
                       style: TextStyle(
-                        fontSize: 12.sp,
+                        fontSize: 11.sp,
                         color: AppColors.text4A5565,
                         fontWeight: FontWeight.w400,
                       ),
@@ -184,7 +184,7 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
     final ratingText = Text(
       value,
       style: TextStyle(
-        fontSize: 14.sp,
+        fontSize: 12.sp,
         color: AppColors.text101828,
         fontWeight: FontWeight.w700,
       ),
@@ -209,8 +209,8 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                     children: [
                       SvgPicture.asset(
                         iconPath,
-                        width: 12.w,
-                        height: 12.h,
+                        width: 10.w,
+                        height: 10.h,
                       ),
                       SizedBox(width: 2.w),
                       ratingText,
@@ -246,8 +246,8 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
               children: [
                 SvgPicture.asset(
                   "assets/svgs/email.svg",
-                  width: 14.w,
-                  height: 14.h,
+                  width: 12.w,
+                  height: 12.h,
                   colorFilter: ColorFilter.mode(AppColors.text364153, BlendMode.srcIn),
                 ),
                 SizedBox(width: 8.w),
@@ -266,8 +266,8 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
               children: [
                 SvgPicture.asset(
                   "assets/svgs/phone.svg",
-                  width: 14.w,
-                  height: 14.h,
+                  width: 12.w,
+                  height: 12.h,
                   colorFilter: ColorFilter.mode(AppColors.text364153, BlendMode.srcIn),
                 ),
                 SizedBox(width: 8.w),
@@ -286,8 +286,8 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
               children: [
                 SvgPicture.asset(
                   "assets/svgs/calendar_outline.svg",
-                  width: 14.w,
-                  height: 14.h,
+                  width: 12.w,
+                  height: 12.h,
                   colorFilter: ColorFilter.mode(AppColors.text364153, BlendMode.srcIn),
                 ),
                 SizedBox(width: 8.w),
@@ -311,10 +311,10 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
         decoration: BoxDecoration(
           color: AppColors.containerF0FDF4,
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(8.r),
           border: Border.all(color: AppColors.borderB9F8CF),
         ),
         child: Row(
@@ -322,14 +322,14 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
           children: [
             SvgPicture.asset(
               "assets/svgs/check_circle.svg",
-              width: 14.w,
-              height: 14.h,
+              width: 12.w,
+              height: 12.h,
             ),
             SizedBox(width: 8.w),
             Text(
               "Verified Provider", //TODO: need to get this field value from API
               style: TextStyle(
-                fontSize: 12.sp,
+                fontSize: 11.sp,
                 color: AppColors.text008236,
                 fontWeight: FontWeight.w500,
               ),

@@ -56,7 +56,7 @@ class VendorProfileReviewItem extends StatelessWidget {
                         Text(
                           review.user?.name ?? "",
                           style: TextStyle(
-                            fontSize: 13.sp,
+                            fontSize: 12.sp,
                             color: AppColors.text101828,
                             fontWeight: FontWeight.w600,
                           ),
@@ -74,8 +74,8 @@ class VendorProfileReviewItem extends StatelessWidget {
                                   index < (review.review?.rating?.toInt() ?? 0)
                                       ? "assets/svgs/rating.svg"
                                       : "assets/svgs/rating_outline.svg",
-                                  width: 14.w,
-                                  height: 14.h,
+                                  width: 12.w,
+                                  height: 12.h,
                                 ),
                               );
                             },
@@ -106,7 +106,7 @@ class VendorProfileReviewItem extends StatelessWidget {
               Text(
                 review.review?.reviewText ?? "",
                 style: TextStyle(
-                  fontSize: 12.sp,
+                  fontSize: 11.sp,
                   color: AppColors.text4A5565,
                   fontWeight: FontWeight.w400,
                   height: 1.4,

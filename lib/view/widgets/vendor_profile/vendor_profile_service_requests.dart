@@ -21,7 +21,7 @@ class VendorProfileServiceRequests extends GetWidget<VendorProfileController> {
                 child: Text(
                   "Service Requests",
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 12.sp,
                     color: AppColors.text101828,
                     fontWeight: FontWeight.w700,
                   ),
@@ -30,23 +30,22 @@ class VendorProfileServiceRequests extends GetWidget<VendorProfileController> {
                 ),
               ),
               SizedBox(width: 8.w),
-              Expanded(
-                child: Obx(
-                  () => CustomDropdownChip<ServiceRequestStatus>(
-                    width: double.infinity,
-                    height: 36.h,
-                    options: ServiceRequestStatus.values.obs,
-                    selectedValue: controller.selectedServiceRequestStatus,
-                    hint: "Select status",
-                    labelBuilder: (status) => status.name.toUpperCase(),
-                    onChanged: (status) {
-                      if (status == ServiceRequestStatus.all) {
-                        controller.selectedServiceRequestStatus.value = null;
-                      }
-                      controller.refreshServiceRequestsMe(isLoadingStatus: true, isLoadingEmpty: true);
-                    },
-                    isDisabled: controller.isDropdownDisabled.value,
-                  ),
+              Obx(
+                () => CustomDropdownChip<ServiceRequestStatus>(
+                  width: Get.width / 3,
+                  height: 30.h,
+                  options: ServiceRequestStatus.values.obs,
+                  selectedValue: controller.selectedServiceRequestStatus,
+                  hint: "Select status",
+                  fontSize: 11.sp,
+                  labelBuilder: (status) => status.name.toUpperCase(),
+                  onChanged: (status) {
+                    if (status == ServiceRequestStatus.all) {
+                      controller.selectedServiceRequestStatus.value = null;
+                    }
+                    controller.refreshServiceRequestsMe(isLoadingStatus: true, isLoadingEmpty: true);
+                  },
+                  isDisabled: controller.isDropdownDisabled.value,
                 ),
               ),
             ],

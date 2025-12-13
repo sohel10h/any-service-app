@@ -76,7 +76,7 @@ class VendorProfileBidItem extends StatelessWidget {
                     child: Text(
                       bid.serviceRequestTitle ?? "",
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 12.sp,
                         color: AppColors.text101828,
                         fontWeight: FontWeight.w700,
                       ),
@@ -90,8 +90,8 @@ class VendorProfileBidItem extends StatelessWidget {
                     child: Text(
                       "\$${bid.proposedPrice ?? 0}",
                       style: TextStyle(
-                        fontSize: 17.sp,
-                        color: AppColors.container155DFC,
+                        fontSize: 13.sp,
+                        color: AppColors.primary,
                         fontWeight: FontWeight.w700,
                       ),
                       maxLines: 1,
@@ -105,7 +105,7 @@ class VendorProfileBidItem extends StatelessWidget {
               Text(
                 "Customer: ${bid.serviceRequestUser ?? ""}",
                 style: TextStyle(
-                  fontSize: 12.sp,
+                  fontSize: 11.sp,
                   color: AppColors.text4A5565,
                   fontWeight: FontWeight.w400,
                 ),

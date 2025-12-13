@@ -76,9 +76,9 @@ class VendorProfileServiceRequestItem extends StatelessWidget {
                 children: [
                   NetworkImageLoader(
                     serviceRequest.picture?.virtualPath ?? "",
-                    width: 70.w,
-                    height: 70.w,
-                    borderRadius: BorderRadius.circular(12.r),
+                    width: 40.w,
+                    height: 40.w,
+                    borderRadius: BorderRadius.circular(8.r),
                   ),
                   SizedBox(width: 8.w),
                   Expanded(
@@ -86,7 +86,7 @@ class VendorProfileServiceRequestItem extends StatelessWidget {
                     child: Text(
                       serviceRequest.title ?? "",
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 12.sp,
                         color: AppColors.text101828,
                         fontWeight: FontWeight.w700,
                       ),
@@ -96,17 +96,21 @@ class VendorProfileServiceRequestItem extends StatelessWidget {
                   ),
                   SizedBox(width: 8.w),
                   Expanded(
-                    flex: 1,
-                    child: Text(
-                      "\$${serviceRequest.budgetMin?.toStringAsFixed(0) ?? 0} - \$${serviceRequest.budgetMax?.toStringAsFixed(0) ?? 0}",
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: AppColors.container155DFC,
-                        fontWeight: FontWeight.w700,
+                    flex: 2,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "\$${serviceRequest.budgetMin?.toStringAsFixed(0) ?? 0} - \$${serviceRequest.budgetMax?.toStringAsFixed(0) ?? 0}",
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.end,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.end,
                     ),
                   ),
                 ],
@@ -115,7 +119,7 @@ class VendorProfileServiceRequestItem extends StatelessWidget {
               Text(
                 "Customer: ${serviceRequest.createdBy?.name ?? ""}",
                 style: TextStyle(
-                  fontSize: 12.sp,
+                  fontSize: 11.sp,
                   color: AppColors.text4A5565,
                   fontWeight: FontWeight.w400,
                 ),

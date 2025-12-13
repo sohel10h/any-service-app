@@ -18,7 +18,7 @@ class VendorProfileTab extends GetWidget<VendorProfileController> {
         return TabBar(
           controller: controller.tabController,
           isScrollable: false,
-          indicatorColor: AppColors.container155DFC,
+          indicatorColor: AppColors.primary,
           dividerColor: Colors.transparent,
           padding: EdgeInsets.zero,
           labelPadding: EdgeInsets.zero,
@@ -38,7 +38,7 @@ class VendorProfileTab extends GetWidget<VendorProfileController> {
                       tabText,
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isSelected ? AppColors.container155DFC : AppColors.text6A7282,
+                        color: isSelected ? AppColors.primary : AppColors.text6A7282,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -49,7 +49,7 @@ class VendorProfileTab extends GetWidget<VendorProfileController> {
                         vertical: 2.h,
                       ),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppColors.containerFB2C36 : AppColors.containerF3F4F6,
+                        color: isSelected ? AppColors.primary : AppColors.containerF3F4F6,
                         borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: Text(

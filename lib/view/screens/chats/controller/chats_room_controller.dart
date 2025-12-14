@@ -37,14 +37,6 @@ class ChatsRoomController extends GetxController {
     });
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-    ever(chatsMessages, (_) {
-      Future.delayed(const Duration(milliseconds: 100), _scrollToBottom);
-    });
-  }
-
   void goToProfileScreen(String? userId) {
     Get.delete<VendorProfileController>();
     Get.toNamed(

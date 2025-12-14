@@ -24,7 +24,7 @@ class SignInScreen extends GetWidget<SignInController> {
                 SvgPicture.asset(
                   "assets/svgs/logo.svg",
                   width: 40.w,
-                  height: 56.h,
+                  height: 50.h,
                   fit: BoxFit.contain,
                 ),
                 SizedBox(height: 24.h),
@@ -33,7 +33,7 @@ class SignInScreen extends GetWidget<SignInController> {
                   child: Text(
                     "Welcome Back",
                     style: TextStyle(
-                      fontSize: 24.sp,
+                      fontSize: 16.sp,
                       color: AppColors.text181D27,
                       fontWeight: FontWeight.w600,
                     ),
@@ -46,14 +46,14 @@ class SignInScreen extends GetWidget<SignInController> {
                   child: Text(
                     "Please enter your details.",
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 12.sp,
                       color: AppColors.text535862,
                       fontWeight: FontWeight.w400,
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: 12.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: CustomTextField(
@@ -66,7 +66,7 @@ class SignInScreen extends GetWidget<SignInController> {
                     validator: Validators.email.call,
                   ),
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: 12.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Obx(
@@ -80,8 +80,8 @@ class SignInScreen extends GetWidget<SignInController> {
                         onPressed: () => controller.isPasswordVisible.toggle(),
                         icon: SvgPicture.asset(
                           controller.isPasswordVisible.value ? "assets/svgs/logo.svg" : "assets/svgs/close_eye.svg",
-                          width: 24.w,
-                          height: 24.h,
+                          width: 16.w,
+                          height: 16.h,
                           colorFilter: ColorFilter.mode(
                             controller.isPasswordVisible.value ? AppColors.primary : AppColors.lightBlack,
                             BlendMode.srcIn,
@@ -124,7 +124,7 @@ class SignInScreen extends GetWidget<SignInController> {
                                 "Remember for 30 days",
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  fontSize: 12.sp,
+                                  fontSize: 11.sp,
                                   color: AppColors.text414651,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -138,7 +138,7 @@ class SignInScreen extends GetWidget<SignInController> {
                         child: Text(
                           "Forgot Password?",
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: 11.sp,
                             color: AppColors.textF25B39,
                             fontWeight: FontWeight.w600,
                           ),
@@ -171,7 +171,7 @@ class SignInScreen extends GetWidget<SignInController> {
                         child: Text(
                           "Don’t have an account?",
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 11.sp,
                             color: AppColors.text535862,
                             fontWeight: FontWeight.w400,
                           ),
@@ -184,7 +184,7 @@ class SignInScreen extends GetWidget<SignInController> {
                         child: Text(
                           "Sign up",
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 11.sp,
                             color: AppColors.textF25B39,
                             fontWeight: FontWeight.w600,
                           ),

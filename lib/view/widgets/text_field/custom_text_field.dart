@@ -93,7 +93,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 widget.label ?? "",
                 style: widget.labelStyle ??
                     TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 12.sp,
                       color: AppColors.text414651,
                       fontWeight: FontWeight.w500,
                     ),
@@ -122,18 +122,23 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onChanged: widget.onChanged != null ? (value) => widget.onChanged?.call(value) : null,
       onTap: widget.readonly == true && widget.onTap != null ? widget.onTap : null,
       cursorColor: AppColors.primary,
-      style: widget.style,
+      style: widget.style ??
+          TextStyle(
+            fontSize: 13.sp,
+            color: AppColors.text101828,
+            fontWeight: FontWeight.w500,
+          ),
       inputFormatters: widget.inputFormatters,
       decoration: InputDecoration(
-        contentPadding: widget.contentPadding,
+        contentPadding: widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         prefixIcon: widget.prefixIconPath == null
             ? null
             : Padding(
                 padding: EdgeInsets.all(12.r),
                 child: SvgPicture.asset(
                   widget.prefixIconPath ?? "",
-                  width: 24.w,
-                  height: 24.h,
+                  width: 16.w,
+                  height: 16.h,
                   colorFilter: ColorFilter.mode(
                     isFocused ? AppColors.primary : AppColors.lightBlack,
                     BlendMode.srcIn,
@@ -144,7 +149,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         hintText: widget.hintText,
         hintStyle: widget.hintStyle ??
             TextStyle(
-              fontSize: 14.sp,
+              fontSize: 11.sp,
               color: isFocused ? AppColors.text717680 : AppColors.text717680.withValues(alpha: .60),
               fontWeight: FontWeight.w400,
             ),

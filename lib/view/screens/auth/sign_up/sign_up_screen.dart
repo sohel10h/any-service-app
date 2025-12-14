@@ -29,7 +29,7 @@ class SignUpScreen extends GetWidget<SignUpController> {
                         child: SvgPicture.asset(
                           "assets/svgs/logo.svg",
                           width: 40.w,
-                          height: 56.h,
+                          height: 50.h,
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -37,7 +37,7 @@ class SignUpScreen extends GetWidget<SignUpController> {
                       Text(
                         "Sign up",
                         style: TextStyle(
-                          fontSize: 24.sp,
+                          fontSize: 16.sp,
                           color: AppColors.text181D27,
                           fontWeight: FontWeight.w600,
                         ),
@@ -47,7 +47,7 @@ class SignUpScreen extends GetWidget<SignUpController> {
                       Text(
                         "Start turning your ideas into reality.",
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 12.sp,
                           color: AppColors.text535862,
                           fontWeight: FontWeight.w400,
                         ),
@@ -83,13 +83,13 @@ class SignUpScreen extends GetWidget<SignUpController> {
                           onPressed: () {},
                           icon: Image.asset(
                             "assets/images/google.png",
-                            width: 25.w,
-                            height: 25.h,
+                            width: 18.w,
+                            height: 18.h,
                           ),
                           label: Text(
                             "Google",
                             style: TextStyle(
-                              fontSize: 12.sp,
+                              fontSize: 11.sp,
                               color: AppColors.textA1A1A1,
                               fontWeight: FontWeight.w500,
                             ),
@@ -110,13 +110,13 @@ class SignUpScreen extends GetWidget<SignUpController> {
                           onPressed: () {},
                           icon: SvgPicture.asset(
                             "assets/svgs/apple.svg",
-                            width: 22.w,
-                            height: 22.h,
+                            width: 18.w,
+                            height: 18.h,
                           ),
                           label: Text(
                             "Apple",
                             style: TextStyle(
-                              fontSize: 12.sp,
+                              fontSize: 11.sp,
                               color: AppColors.textA1A1A1,
                               fontWeight: FontWeight.w500,
                             ),
@@ -145,7 +145,7 @@ class SignUpScreen extends GetWidget<SignUpController> {
                           child: Text(
                             "OR",
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: 12.sp,
                               color: AppColors.text181D27,
                               fontWeight: FontWeight.w400,
                             ),
@@ -176,7 +176,7 @@ class SignUpScreen extends GetWidget<SignUpController> {
                       child: Text(
                         "Already have an account",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 11.sp,
                           color: AppColors.text414651,
                           fontWeight: FontWeight.w500,
                           decoration: TextDecoration.underline,

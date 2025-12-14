@@ -24,15 +24,15 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 16.w),
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.r),
           ),
           textStyle: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -40,21 +40,21 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           backgroundColor: AppColors.white,
           foregroundColor: AppColors.primary,
-          padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 16.w),
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
           side: BorderSide(color: AppColors.primary),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.r),
           ),
           textStyle: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0),
+            borderRadius: BorderRadius.circular(5.r),
           ),
         ),
       ),

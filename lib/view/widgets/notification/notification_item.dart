@@ -28,8 +28,8 @@ class NotificationItem extends StatelessWidget {
         children: [
           NetworkImageLoader(
             notification.pictureUrl ?? "",
-            width: 56.w,
-            height: 56.h,
+            width: 40.w,
+            height: 40.h,
             borderRadius: BorderRadius.circular(4.r),
           ),
           SizedBox(width: 14.w),
@@ -99,9 +99,9 @@ class NotificationItem extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 13.sp,
+                    fontSize: 12.sp,
                     color: AppColors.text101828,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 SizedBox(height: 6.h),
@@ -110,7 +110,7 @@ class NotificationItem extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 11.sp,
                     color: AppColors.text6A7282,
                     fontWeight: FontWeight.w400,
                   ),

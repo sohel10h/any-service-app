@@ -12,7 +12,11 @@ String formatTimeAgo(String? dateTime) {
     final DateTime created = DateTime.parse(dateTime).toLocal();
     final DateTime now = DateTime.now();
     final Duration diff = now.difference(created);
-    if (diff.inHours < 24) {
+    if (diff.inMinutes < 1) {
+      return "Just now";
+    } else if (diff.inMinutes < 60) {
+      return "${diff.inMinutes} minute${diff.inMinutes == 1 ? '' : 's'} ago";
+    } else if (diff.inHours < 24) {
       return "${diff.inHours} hour${diff.inHours == 1 ? '' : 's'} ago";
     } else if (diff.inDays == 1) {
       return "1 day ago";
@@ -33,7 +37,7 @@ String formatTimeAgo(String? dateTime) {
       return DateFormat("MMMM d, yyyy").format(created);
     }
   } catch (e) {
-    return "Invalid date";
+    return "Unknown time";
   }
 }
 

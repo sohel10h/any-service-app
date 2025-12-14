@@ -79,34 +79,29 @@ class VendorProfileHeader extends GetWidget<VendorProfileController> {
                 ),
                 SizedBox(width: 8.w),
                 if (controller.userId?.value == null)
-                  ElevatedButton.icon(
+                  OutlinedButton.icon(
                     onPressed: controller.goToVendorProfileEditScreen,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.r),
+                        borderRadius: BorderRadius.circular(30.r),
                       ),
+                      side: BorderSide(color: AppColors.primary, width: 1.2),
                     ),
-                    label: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          "assets/svgs/edit.svg",
-                          width: 10.w,
-                          height: 10.h,
-                          colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
-                        ),
-                        SizedBox(width: 6.w),
-                        Text(
-                          "Edit Profile",
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            color: AppColors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+                    icon: SvgPicture.asset(
+                      "assets/svgs/edit.svg",
+                      width: 10.w,
+                      height: 10.h,
+                      colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
+                    ),
+                    label: Text(
+                      "Edit Profile",
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
               ],

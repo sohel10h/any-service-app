@@ -10,7 +10,7 @@ class AppTheme {
       colorSchemeSeed: AppColors.primary,
       scaffoldBackgroundColor: AppColors.scaffoldBackground,
       brightness: Brightness.light,
-      textTheme: GoogleFonts.interTextTheme(),
+      textTheme: GoogleFonts.ubuntuTextTheme(),
       appBarTheme: AppBarTheme(
         foregroundColor: AppColors.black,
         backgroundColor: AppColors.scaffoldBackground,

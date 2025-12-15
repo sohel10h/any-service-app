@@ -9,6 +9,7 @@ import 'package:service_la/view/widgets/common/custom_app_bar.dart';
 import 'package:service_la/common/utils/date_time/format_date.dart';
 import 'package:service_la/view/widgets/chats/chats_tile_shimmer.dart';
 import 'package:service_la/view/widgets/common/custom_progress_bar.dart';
+import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/chats/controller/chats_list_controller.dart';
 
 class ChatsListScreen extends GetWidget<ChatsListController> {
@@ -28,7 +29,7 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                 title: Text(
                   "${controller.selectedChats.length}",
                   style: TextStyle(
-                    fontSize: 17.sp,
+                    fontSize: 14.sp,
                     color: AppColors.text101828,
                     fontWeight: FontWeight.w700,
                   ),
@@ -38,6 +39,7 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                     return IconButton(
                       icon: Icon(
                         controller.isSelectedPinned.value ? Icons.push_pin : Icons.push_pin_outlined,
+                        size: 18.sp,
                         color: AppColors.black,
                       ),
                       tooltip: "Pin",
@@ -48,7 +50,11 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                     );
                   }),
                   IconButton(
-                    icon: const Icon(Icons.delete_outline_outlined, color: AppColors.black),
+                    icon: Icon(
+                      Icons.delete_outline_outlined,
+                      size: 18.sp,
+                      color: AppColors.black,
+                    ),
                     tooltip: "Delete",
                     onPressed: () {
                       controller.deleteChats(controller.selectedChats);
@@ -56,14 +62,22 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.notifications_off_outlined, color: AppColors.black),
+                    icon: Icon(
+                      Icons.notifications_off_outlined,
+                      size: 18.sp,
+                      color: AppColors.black,
+                    ),
                     tooltip: "Notifications Off",
                     onPressed: () {
                       // disable notifications
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.archive_outlined, color: AppColors.black),
+                    icon: Icon(
+                      Icons.archive_outlined,
+                      size: 18.sp,
+                      color: AppColors.black,
+                    ),
                     tooltip: "Archive",
                     onPressed: () {
                       controller.toggleArchive(controller.selectedChats);
@@ -71,7 +85,11 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                     },
                   ),
                   PopupMenuButton<String>(
-                    icon: const Icon(Icons.more_vert, color: AppColors.black),
+                    icon: Icon(
+                      Icons.more_vert,
+                      size: 18.sp,
+                      color: AppColors.black,
+                    ),
                     onSelected: (value) {
                       if (value == "mute") {
                         // handle mute
@@ -80,6 +98,8 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                         controller.clearSelection();
                       }
                     },
+                    offset: const Offset(-22, 0),
+                    position: PopupMenuPosition.under,
                     itemBuilder: (context) => [
                       const PopupMenuItem(value: "mute", child: Text("Mute")),
                       const PopupMenuItem(value: "delete", child: Text("Delete")),
@@ -92,12 +112,20 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                 actions: [
                   IconButton(
                     tooltip: "Camera",
-                    icon: const Icon(Icons.camera_alt_outlined, color: AppColors.black),
+                    icon: Icon(
+                      Icons.camera_alt_outlined,
+                      size: 18.sp,
+                      color: AppColors.black,
+                    ),
                     onPressed: () {},
                   ),
                   PopupMenuButton<String>(
-                    icon: const Icon(Icons.more_vert, color: AppColors.black),
-                    offset: const Offset(-35, -1),
+                    icon: Icon(
+                      Icons.more_vert,
+                      size: 18.sp,
+                      color: AppColors.black,
+                    ),
+                    offset: const Offset(-22, 0),
                     position: PopupMenuPosition.under,
                     itemBuilder: (context) => [
                       const PopupMenuItem(value: "settings", child: Text("Settings")),
@@ -110,28 +138,26 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                child: TextField(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                child: CustomTextField(
                   controller: controller.searchController,
+                  focusNode: controller.searchFocusNode,
+                  fillColor: Colors.grey.shade100,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 0.h),
+                  hintText: "Search...",
+                  prefixIconPath: "assets/svgs/search.svg",
+                  suffixIcon: Obx(() {
+                    final text = controller.searchQuery.value;
+                    if (text.isEmpty) return const SizedBox.shrink();
+                    return IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => controller.searchController.clear(),
+                    );
+                  }),
                   onChanged: (val) => controller.searchQuery.value = val,
-                  decoration: InputDecoration(
-                    hintText: "Search...",
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: Obx(() {
-                      final text = controller.searchQuery.value;
-                      if (text.isEmpty) return const SizedBox.shrink();
-                      return IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => controller.searchController.clear(),
-                      );
-                    }),
-                    filled: true,
-                    fillColor: Colors.grey.shade100,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 0.h),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(24.r),
-                      borderSide: BorderSide.none,
-                    ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24.r),
+                    borderSide: BorderSide.none,
                   ),
                   textInputAction: TextInputAction.search,
                 ),
@@ -177,7 +203,7 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                                 Text(
                                   "No chats yet",
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 12.sp,
                                     color: AppColors.text6A7282,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -186,7 +212,7 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                                 Text(
                                   "Start a conversation\n and it will appear here.",
                                   style: TextStyle(
-                                    fontSize: 12.sp,
+                                    fontSize: 11.sp,
                                     color: AppColors.text6A7282.withValues(alpha: 0.7),
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -205,17 +231,17 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
                           if (index < list.length) {
                             if (archivedCount > 0 && index == 0) {
                               return ListTile(
-                                contentPadding: EdgeInsets.only(left: 16.w, right: 12.w),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
                                 onTap: controller.goToChatsArchivedListScreen,
                                 leading: CircleAvatar(
-                                  radius: 18.r,
+                                  radius: 16.r,
                                   backgroundColor: Colors.grey.shade200,
-                                  child: Icon(Icons.archive_outlined, size: 18.sp),
+                                  child: Icon(Icons.archive_outlined, size: 14.sp),
                                 ),
                                 title: Text(
                                   "Archived",
                                   style: TextStyle(
-                                    fontSize: 13.sp,
+                                    fontSize: 12.sp,
                                     color: AppColors.text6A7282,
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -276,13 +302,14 @@ class ChatsListScreen extends GetWidget<ChatsListController> {
         floatingActionButton: Padding(
           padding: EdgeInsets.only(bottom: 8.h),
           child: FloatingActionButton(
+            mini: true,
             heroTag: "add_contact_fab",
             foregroundColor: AppColors.white,
             backgroundColor: AppColors.primary,
             onPressed: () {
               controller.addNewContact(HelperFunction.userImage3);
             },
-            child: const Icon(Icons.person_add_outlined),
+            child: Icon(Icons.person_add_outlined, size: 16.sp),
           ),
         ),
         bottomNavigationBar: Obx(() {

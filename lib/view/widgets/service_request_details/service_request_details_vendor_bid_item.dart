@@ -258,7 +258,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
                           decoration: BoxDecoration(
-                            color: AppColors.container155DFC,
+                            color: AppColors.primary,
                             borderRadius: BorderRadius.circular(8.r),
                             boxShadow: [
                               BoxShadow(

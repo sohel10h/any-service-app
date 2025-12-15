@@ -29,7 +29,7 @@ class ChatsRoomScreen extends GetWidget<ChatsRoomController> {
               Text(
                 controller.chatUsername,
                 style: TextStyle(
-                  fontSize: 17.sp,
+                  fontSize: 12.sp,
                   color: AppColors.text101828,
                   fontWeight: FontWeight.w700,
                 ),
@@ -52,20 +52,29 @@ class ChatsRoomScreen extends GetWidget<ChatsRoomController> {
         actions: [
           IconButton(
             tooltip: "Video call",
-            icon: const Icon(Icons.videocam_outlined, color: AppColors.black),
+            icon: Icon(
+              Icons.videocam_outlined,
+              size: 18.sp,
+              color: AppColors.black,
+            ),
             onPressed: () {},
           ),
           IconButton(
             tooltip: "Audio call",
-            icon: const Icon(Icons.call_outlined, color: AppColors.black),
+            icon: Icon(
+              Icons.call_outlined,
+              size: 18.sp,
+              color: AppColors.black,
+            ),
             onPressed: () {},
           ),
           PopupMenuButton<String>(
             icon: Icon(
               Icons.more_vert,
+              size: 18.sp,
               color: AppColors.black,
             ),
-            offset: const Offset(-35, -1),
+            offset: const Offset(-22, 0),
             position: PopupMenuPosition.under,
             onSelected: (value) {
               if (value == "settings") {
@@ -104,8 +113,8 @@ class ChatsRoomScreen extends GetWidget<ChatsRoomController> {
                   final isLoadingMore = controller.isLoadingMoreChatsMessages.value;
                   if (isLoading) {
                     return ListView.separated(
-                      padding: EdgeInsets.only(top: 4.h, bottom: 100.h),
-                      itemCount: 10,
+                      padding: EdgeInsets.all(12.sp),
+                      itemCount: 15,
                       separatorBuilder: (_, __) => SizedBox(height: 8.h),
                       itemBuilder: (_, index) {
                         final isMe = index % 2 == 0;
@@ -129,7 +138,7 @@ class ChatsRoomScreen extends GetWidget<ChatsRoomController> {
                             Text(
                               "No chats messages yet",
                               style: TextStyle(
-                                fontSize: 14.sp,
+                                fontSize: 12.sp,
                                 color: AppColors.text6A7282,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -138,7 +147,7 @@ class ChatsRoomScreen extends GetWidget<ChatsRoomController> {
                             Text(
                               "Start sending messages\n and they’ll appear here instantly.",
                               style: TextStyle(
-                                fontSize: 12.sp,
+                                fontSize: 11.sp,
                                 color: AppColors.text6A7282.withValues(alpha: 0.7),
                                 fontWeight: FontWeight.w400,
                               ),

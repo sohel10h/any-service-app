@@ -26,14 +26,18 @@ class ChatsArchivedListScreen extends GetWidget<ChatsListController> {
                 title: Text(
                   "${controller.selectedChats.length}",
                   style: TextStyle(
-                    fontSize: 17.sp,
+                    fontSize: 14.sp,
                     color: AppColors.text101828,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 actions: [
                   IconButton(
-                    icon: const Icon(Icons.delete_outline_outlined, color: AppColors.black),
+                    icon: Icon(
+                      Icons.delete_outline_outlined,
+                      size: 18.sp,
+                      color: AppColors.black,
+                    ),
                     tooltip: "Delete",
                     onPressed: () {
                       controller.deleteArchivedChats(controller.selectedChats);
@@ -44,6 +48,7 @@ class ChatsArchivedListScreen extends GetWidget<ChatsListController> {
                     return IconButton(
                       icon: Icon(
                         controller.isSelectedPinned.value ? Icons.archive_outlined : Icons.unarchive_outlined,
+                        size: 18.sp,
                         color: AppColors.black,
                       ),
                       tooltip: "Archive",
@@ -54,7 +59,11 @@ class ChatsArchivedListScreen extends GetWidget<ChatsListController> {
                     );
                   }),
                   PopupMenuButton<String>(
-                    icon: const Icon(Icons.more_vert, color: AppColors.black),
+                    icon: Icon(
+                      Icons.more_vert,
+                      size: 18.sp,
+                      color: AppColors.black,
+                    ),
                     onSelected: (value) {
                       if (value == "mute") {
                         // handle mute
@@ -63,6 +72,8 @@ class ChatsArchivedListScreen extends GetWidget<ChatsListController> {
                         controller.clearSelection();
                       }
                     },
+                    offset: const Offset(-22, 0),
+                    position: PopupMenuPosition.under,
                     itemBuilder: (context) => [
                       const PopupMenuItem(value: "mute", child: Text("Mute")),
                       const PopupMenuItem(value: "delete", child: Text("Delete")),
@@ -74,8 +85,12 @@ class ChatsArchivedListScreen extends GetWidget<ChatsListController> {
                 title: "Archived",
                 actions: [
                   PopupMenuButton<String>(
-                    icon: const Icon(Icons.more_vert, color: AppColors.black),
-                    offset: const Offset(-35, -1),
+                    icon: Icon(
+                      Icons.more_vert,
+                      size: 18.sp,
+                      color: AppColors.black,
+                    ),
+                    offset: const Offset(-22, 0),
                     position: PopupMenuPosition.under,
                     itemBuilder: (context) => [
                       const PopupMenuItem(value: "settings", child: Text("Settings")),

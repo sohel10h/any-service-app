@@ -13,34 +13,66 @@ class ChatsMessageShimmer extends StatelessWidget {
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: CustomShimmerWidget(
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 4.h),
-          padding: EdgeInsets.all(12.sp),
-          constraints: const BoxConstraints(maxWidth: 260),
-          decoration: BoxDecoration(
-            color: isMe ? AppColors.primary.withValues(alpha: .3) : AppColors.dividerE9EAEB.withValues(alpha: .2),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16.r),
-              topRight: Radius.circular(16.r),
-              bottomLeft: isMe ? Radius.circular(16.r) : const Radius.circular(0),
-              bottomRight: isMe ? const Radius.circular(0) : Radius.circular(16.r),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 4.h),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.75,
             ),
-          ),
-          child: Column(
-            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 12.h,
-                width: 120.w,
-                color: Colors.white,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+              decoration: BoxDecoration(
+                color: isMe ? AppColors.primary.withValues(alpha: .3) : AppColors.dividerE9EAEB.withValues(alpha: .25),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12.r),
+                  topRight: Radius.circular(12.r),
+                  bottomLeft: isMe ? Radius.circular(16.r) : Radius.circular(0),
+                  bottomRight: isMe ? Radius.circular(0) : Radius.circular(16.r),
+                ),
               ),
-              SizedBox(height: 8.h),
-              Container(
-                height: 10.h,
-                width: 40.w,
-                color: Colors.white,
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 56.w, bottom: 6.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          height: 11.h,
+                          width: 160.w,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                        ),
+                        SizedBox(height: 6.h),
+                        Container(
+                          height: 11.h,
+                          width: 110.w,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      height: 9.h,
+                      width: 38.w,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

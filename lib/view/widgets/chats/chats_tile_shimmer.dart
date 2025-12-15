@@ -9,12 +9,12 @@ class ChatsTileShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomShimmerWidget(
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 6.h, horizontal: 12.w),
+        margin: EdgeInsets.symmetric(vertical: 0.h, horizontal: 4.w),
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 12.w),
           leading: Container(
-            height: 44.w,
-            width: 44.w,
+            height: 36.w,
+            width: 36.w,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(30.r),
@@ -51,8 +51,8 @@ class ChatsTileShimmer extends StatelessWidget {
               ),
               SizedBox(height: 6.h),
               Container(
-                height: 18.w,
-                width: 18.w,
+                height: 14.w,
+                width: 14.w,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,

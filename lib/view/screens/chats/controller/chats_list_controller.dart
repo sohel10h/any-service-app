@@ -12,6 +12,7 @@ import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile
 
 class ChatsListController extends GetxController {
   final TextEditingController searchController = TextEditingController();
+  final FocusNode searchFocusNode = FocusNode();
   final RxString searchQuery = "".obs;
   final RxInt selectedBottomIndex = 0.obs;
   var selectedChats = <String>[].obs;
@@ -26,6 +27,7 @@ class ChatsListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _addListenerFocusNodes();
     searchController.addListener(() {
       searchQuery.value = searchController.text;
     });
@@ -277,9 +279,14 @@ class ChatsListController extends GetxController {
     });
   }
 
+  void _addListenerFocusNodes() {
+    searchFocusNode.addListener(update);
+  }
+
   @override
   void onClose() {
     searchController.dispose();
+    searchFocusNode.dispose();
     super.onClose();
   }
 }

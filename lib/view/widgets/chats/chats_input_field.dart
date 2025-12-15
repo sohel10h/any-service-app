@@ -36,6 +36,11 @@ class ChatsInputField extends StatelessWidget {
                 onChanged: (val) => isTyping.value = val.trim().isNotEmpty,
                 decoration: InputDecoration(
                   hintText: "Message",
+                  hintStyle: TextStyle(
+                    fontSize: 12.sp,
+                    color: AppColors.text717680.withValues(alpha: .60),
+                    fontWeight: FontWeight.w400,
+                  ),
                   filled: true,
                   fillColor: Colors.grey.shade100,
                   border: OutlineInputBorder(
@@ -44,7 +49,7 @@ class ChatsInputField extends StatelessWidget {
                   ),
                   contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                   prefixIcon: IconButton(
-                    icon: const Icon(Icons.emoji_emotions_outlined),
+                    icon: Icon(Icons.emoji_emotions_outlined, size: 18.sp),
                     color: AppColors.text6A7282,
                     onPressed: onEmoji,
                   ),
@@ -53,13 +58,13 @@ class ChatsInputField extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.attach_file),
+                          icon: Icon(Icons.attach_file, size: 18.sp),
                           color: AppColors.text6A7282,
                           onPressed: onAttachment,
                         ),
                         if (!isTyping.value)
                           IconButton(
-                            icon: const Icon(Icons.camera_alt_outlined),
+                            icon: Icon(Icons.camera_alt_outlined, size: 18.sp),
                             color: AppColors.text6A7282,
                             onPressed: onCamera,
                           ),
@@ -76,6 +81,7 @@ class ChatsInputField extends StatelessWidget {
                 child: IconButton(
                   icon: Icon(
                     isTyping.value ? Icons.send : Icons.mic,
+                    size: 18.sp,
                     color: Colors.white,
                   ),
                   onPressed: () {

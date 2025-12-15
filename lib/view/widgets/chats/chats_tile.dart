@@ -37,7 +37,7 @@ class ChatsTile extends StatelessWidget {
     return Container(
       color: isSelected ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
       child: ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 12.w),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
         onTap: onTap,
         onLongPress: onLongPress,
         leading: Stack(
@@ -47,8 +47,8 @@ class ChatsTile extends StatelessWidget {
               onTap: () => controller.goToProfileScreen(userId),
               child: NetworkImageLoader(
                 iconPath,
-                height: 44.w,
-                width: 44.w,
+                height: 36.w,
+                width: 36.w,
                 radius: 30.r,
                 isUserImage: true,
               ),
@@ -58,8 +58,8 @@ class ChatsTile extends StatelessWidget {
                 right: 0.0,
                 bottom: 0.0,
                 child: Container(
-                  height: 18.w,
-                  width: 18.w,
+                  height: 12.w,
+                  width: 12.w,
                   decoration: BoxDecoration(
                     color: AppColors.primary,
                     shape: BoxShape.circle,
@@ -67,7 +67,7 @@ class ChatsTile extends StatelessWidget {
                   child: Icon(
                     Icons.check,
                     color: AppColors.white,
-                    size: 12.sp,
+                    size: 10.sp,
                   ),
                 ),
               ),
@@ -113,7 +113,7 @@ class ChatsTile extends StatelessWidget {
                     padding: EdgeInsets.only(right: 4.w, top: unread > 0 ? 0.h : 4.h),
                     child: Icon(
                       Icons.push_pin,
-                      size: 14.sp,
+                      size: 12.sp,
                       color: AppColors.text6A7282,
                     ),
                   ),

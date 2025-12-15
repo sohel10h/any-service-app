@@ -94,9 +94,9 @@ class CreateServiceDetailsReviewsSection extends GetWidget<CreateServiceDetailsC
                   onTap: () => controller.goToProfileScreen(userId),
                   child: NetworkImageLoader(
                     image,
-                    width: 35.w,
-                    height: 35.w,
-                    borderRadius: BorderRadius.circular(60.r),
+                    width: 28.w,
+                    height: 28.w,
+                    borderRadius: BorderRadius.circular(30.r),
                     isUserImage: true,
                   ),
                 ),
@@ -125,8 +125,8 @@ class CreateServiceDetailsReviewsSection extends GetWidget<CreateServiceDetailsC
                               padding: EdgeInsets.only(right: 3.w),
                               child: SvgPicture.asset(
                                 index < rating ? "assets/svgs/rating.svg" : "assets/svgs/rating_outline.svg",
-                                width: 16.w,
-                                height: 16.h,
+                                width: 12.w,
+                                height: 12.h,
                               ),
                             );
                           },
@@ -157,7 +157,7 @@ class CreateServiceDetailsReviewsSection extends GetWidget<CreateServiceDetailsC
             Text(
               review,
               style: TextStyle(
-                fontSize: 12.sp,
+                fontSize: 11.sp,
                 color: AppColors.text4A5565,
                 fontWeight: FontWeight.w400,
               ),
@@ -181,7 +181,7 @@ class CreateServiceDetailsReviewsSection extends GetWidget<CreateServiceDetailsC
               child: Text(
                 "Reviews (${reviews?.length ?? 0})",
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 12.sp,
                   color: AppColors.text101828,
                   fontWeight: FontWeight.w600,
                 ),
@@ -198,9 +198,9 @@ class CreateServiceDetailsReviewsSection extends GetWidget<CreateServiceDetailsC
                   children: [
                     Flexible(
                       child: Text(
-                        "See all",
+                        "View all",
                         style: TextStyle(
-                          fontSize: 12.sp,
+                          fontSize: 11.sp,
                           color: AppColors.primary,
                           fontWeight: FontWeight.w500,
                         ),
@@ -210,8 +210,8 @@ class CreateServiceDetailsReviewsSection extends GetWidget<CreateServiceDetailsC
                     ),
                     SvgPicture.asset(
                       "assets/svgs/arrow_right_small.svg",
-                      width: 16.w,
-                      height: 16.h,
+                      width: 14.w,
+                      height: 14.h,
                     ),
                   ],
                 ),

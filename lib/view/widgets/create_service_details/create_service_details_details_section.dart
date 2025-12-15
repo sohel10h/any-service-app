@@ -36,7 +36,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 10.w),
                       decoration: BoxDecoration(
-                        color: AppColors.containerEFF6FF,
+                        color: AppColors.primary.withValues(alpha: .05),
                         borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: Row(
@@ -46,7 +46,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                             width: 6.w,
                             height: 6.w,
                             decoration: BoxDecoration(
-                              color: AppColors.container2B7FFF,
+                              color: AppColors.primary,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -55,7 +55,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                             category.name ?? "",
                             style: TextStyle(
                               fontSize: 10.sp,
-                              color: AppColors.text1447E6,
+                              color: AppColors.primary,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -72,7 +72,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
               child: Text(
                 createServiceDetails.name?.capitalizeFirst ?? "",
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 13.sp,
                   color: AppColors.text101828,
                   fontWeight: FontWeight.w400,
                 ),
@@ -85,8 +85,8 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                 children: [
                   SvgPicture.asset(
                     "assets/svgs/rating.svg",
-                    width: 14.w,
-                    height: 14.h,
+                    width: 12.w,
+                    height: 12.h,
                   ),
                   SizedBox(width: 4.w),
                   Flexible(
@@ -97,9 +97,9 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: "${createServiceDetails.rating ?? "0"}",
+                            text: createServiceDetails.rating?.toStringAsFixed(2) ?? "0",
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: 12.sp,
                               color: AppColors.text101828,
                               fontWeight: FontWeight.w600,
                             ),
@@ -108,7 +108,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                           TextSpan(
                             text: "(${createServiceDetails.totalReview ?? "0"} reviews)",
                             style: TextStyle(
-                              fontSize: 12.sp,
+                              fontSize: 11.sp,
                               color: AppColors.text6A7282,
                               fontWeight: FontWeight.w400,
                             ),
@@ -132,7 +132,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                     child: Text(
                       "${createServiceDetails.serviceCompletedCount ?? "0"} jobs completed",
                       style: TextStyle(
-                        fontSize: 12.sp,
+                        fontSize: 11.sp,
                         color: AppColors.text4A5565,
                         fontWeight: FontWeight.w400,
                       ),
@@ -155,7 +155,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                     Text(
                       "\$${(createServiceDetails.price as double?)?.toStringAsFixed(2) ?? "0"}",
                       style: TextStyle(
-                        fontSize: 18.sp,
+                        fontSize: 14.sp,
                         color: AppColors.primary,
                         fontWeight: FontWeight.w700,
                       ),
@@ -166,7 +166,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                     Text(
                       "starting price",
                       style: TextStyle(
-                        fontSize: 12.sp,
+                        fontSize: 11.sp,
                         color: AppColors.text4A5565,
                         fontWeight: FontWeight.w400,
                       ),
@@ -187,7 +187,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                       TextSpan(
                         text: "Price range:",
                         style: TextStyle(
-                          fontSize: 18.sp,
+                          fontSize: 14.sp,
                           color: AppColors.text6A7282,
                           fontWeight: FontWeight.w500,
                         ),
@@ -197,7 +197,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
                         text: "\$${createServiceDetails.priceStart ?? "0"}"
                             " - \$${createServiceDetails.priceEnd ?? "0"}",
                         style: TextStyle(
-                          fontSize: 18.sp,
+                          fontSize: 14.sp,
                           color: AppColors.primary,
                           fontWeight: FontWeight.w500,
                         ),
@@ -222,7 +222,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
               child: Text(
                 "Description",
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 12.sp,
                   color: AppColors.text101828,
                   fontWeight: FontWeight.w600,
                 ),
@@ -234,7 +234,7 @@ class CreateServiceDetailsDetailsSection extends GetWidget<CreateServiceDetailsC
               child: Text(
                 createServiceDetails.description ?? "",
                 style: TextStyle(
-                  fontSize: 12.sp,
+                  fontSize: 11.sp,
                   color: AppColors.text4A5565,
                   fontWeight: FontWeight.w400,
                 ),

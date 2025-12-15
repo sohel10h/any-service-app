@@ -74,7 +74,7 @@ class CategorySection extends StatelessWidget {
 
   Widget _buildGrid() {
     return Obx(() {
-      final isLoading = controller.isLoadingBestSellingServices.value;
+      final isLoading = controller.isLoadingServiceCategories.value;
       final serviceCategories = controller.serviceCategories;
       if (isLoading) {
         return GridView.builder(

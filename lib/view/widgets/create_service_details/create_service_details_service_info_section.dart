@@ -66,16 +66,16 @@ class CreateServiceDetailsServiceInfoSection extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.all(6.sp),
-            width: 28.w,
-            height: 28.h,
+            width: 24.w,
+            height: 24.h,
             decoration: BoxDecoration(
               color: AppColors.white,
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: SvgPicture.asset(
               iconPath,
-              width: 14.w,
-              height: 14.h,
+              width: 12.w,
+              height: 12.h,
               colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
             ),
           ),
@@ -98,7 +98,7 @@ class CreateServiceDetailsServiceInfoSection extends StatelessWidget {
                 Text(
                   subtitle,
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 11.sp,
                     color: AppColors.text101828,
                     fontWeight: FontWeight.w600,
                   ),

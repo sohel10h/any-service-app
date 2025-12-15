@@ -20,7 +20,7 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
           child: Text(
             "Service Provider",
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 12.sp,
               color: AppColors.text101828,
               fontWeight: FontWeight.w600,
             ),
@@ -56,8 +56,8 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                             onTap: () => controller.goToProfileScreen(serviceDetails.user?.id),
                             child: NetworkImageLoader(
                               serviceDetails.user?.virtualPath ?? "",
-                              width: 49.w,
-                              height: 49.w,
+                              width: 36.w,
+                              height: 36.w,
                               borderRadius: BorderRadius.circular(60.r),
                               isUserImage: true,
                             ),
@@ -66,10 +66,10 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                             right: -4,
                             bottom: -2,
                             child: Container(
-                              width: 17.w,
-                              height: 17.w,
+                              width: 14.w,
+                              height: 14.w,
                               decoration: BoxDecoration(
-                                color: AppColors.container155DFC,
+                                color: AppColors.primary,
                                 shape: BoxShape.circle,
                                 border: Border.all(color: AppColors.white, width: 2),
                               ),
@@ -95,7 +95,7 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                             Text(
                               serviceDetails.user?.name ?? "",
                               style: TextStyle(
-                                fontSize: 14.sp,
+                                fontSize: 12.sp,
                                 color: AppColors.text101828,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -107,8 +107,8 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                               children: [
                                 SvgPicture.asset(
                                   "assets/svgs/rating.svg",
-                                  width: 12.w,
-                                  height: 12.h,
+                                  width: 10.w,
+                                  height: 10.h,
                                 ),
                                 SizedBox(width: 4.w),
                                 Flexible(
@@ -119,9 +119,9 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                                     text: TextSpan(
                                       children: [
                                         TextSpan(
-                                          text: "${serviceDetails.user?.rating ?? "0"}",
+                                          text: serviceDetails.user?.rating?.toStringAsFixed(2) ?? "0",
                                           style: TextStyle(
-                                            fontSize: 12.sp,
+                                            fontSize: 11.sp,
                                             color: AppColors.text101828,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -208,10 +208,10 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                             );
                           },
                           style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 12.h),
-                            side: BorderSide(color: AppColors.primary, width: 2.h),
+                            padding: EdgeInsets.symmetric(vertical: 8.h),
+                            side: BorderSide(color: AppColors.primary, width: 1.5.h),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.r),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                           ),
                           child: Row(
@@ -219,14 +219,14 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                             children: [
                               SvgPicture.asset(
                                 "assets/svgs/message_outline.svg",
-                                width: 14.w,
-                                height: 14.h,
+                                width: 10.w,
+                                height: 10.h,
                               ),
                               SizedBox(width: 6.w),
                               Text(
                                 "Message",
                                 style: TextStyle(
-                                  fontSize: 12.sp,
+                                  fontSize: 11.sp,
                                   color: AppColors.primary,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -239,16 +239,16 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
                       OutlinedButton(
                         onPressed: () {},
                         style: OutlinedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 12.h),
-                          side: BorderSide(color: AppColors.containerD1D5DC, width: 2.h),
+                          padding: EdgeInsets.symmetric(vertical: 8.h),
+                          side: BorderSide(color: AppColors.containerD1D5DC, width: 1.5.h),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
                         ),
                         child: SvgPicture.asset(
                           "assets/svgs/phone_outline.svg",
-                          width: 15.w,
-                          height: 15.h,
+                          width: 10.w,
+                          height: 10.h,
                         ),
                       ),
                     ],
@@ -290,8 +290,8 @@ class CreateServiceDetailsProviderProfileSection extends GetWidget<CreateService
           Text(
             value,
             style: TextStyle(
-              fontSize: 12.sp,
-              color: value.contains("%") ? AppColors.text00A63E : AppColors.container155DFC,
+              fontSize: 11.sp,
+              color: value.contains("%") ? AppColors.text00A63E : AppColors.primary,
               fontWeight: FontWeight.w700,
             ),
             maxLines: 1,

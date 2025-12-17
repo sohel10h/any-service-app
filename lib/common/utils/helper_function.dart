@@ -38,6 +38,7 @@ class HelperFunction {
   static String userImage10 = "https://i.pravatar.cc/150?img=57";
   static String userImage11 = "https://i.pravatar.cc/150?img=59";
   static String userImage12 = "https://i.pravatar.cc/150?img=60";
+  static const String gMapsApiKey = String.fromEnvironment("G_MAPS_API_KEY");
 
   static void changeStatusBarColor() => SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(

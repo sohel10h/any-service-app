@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
 
 class RideSharingMapController extends GetxController {
-  String googleApiKey = 'AIzaSyDRjM3xxFgdn4_67tNnr_XY91Qw5HXw5AU';
   final googleMapController = Rxn<GoogleMapController>();
   final Rxn<Position> currentPosition = Rxn<Position>();
   final Rxn<LatLng> initialCameraTarget = Rxn<LatLng>();
@@ -168,14 +168,14 @@ class RideSharingMapController extends GetxController {
   }
 
   Future<List<Map<String, dynamic>>> _fetchPlaceAutocomplete(String input) async {
-    if (googleApiKey.isEmpty) return [];
+    if (HelperFunction.gMapsApiKey.isEmpty) return [];
     final country = userCountryCode.value;
     final url = 'https://places.googleapis.com/v1/places:autocomplete';
     try {
       final response = await _dio.post(
         url,
         queryParameters: {
-          'key': googleApiKey,
+          'key': HelperFunction.gMapsApiKey,
         },
         data: {
           "input": input,
@@ -208,13 +208,13 @@ class RideSharingMapController extends GetxController {
   }
 
   Future<LatLng?> _getLatLngFromPlaceId(String placeId) async {
-    if (googleApiKey.isEmpty) return null;
+    if (HelperFunction.gMapsApiKey.isEmpty) return null;
     final url = 'https://places.googleapis.com/v1/places:lookup';
     try {
       final response = await _dio.post(
         url,
         queryParameters: {
-          'key': googleApiKey,
+          'key': HelperFunction.gMapsApiKey,
         },
         data: {
           "placeId": placeId,
@@ -323,7 +323,7 @@ class RideSharingMapController extends GetxController {
   }
 
   Future<String?> fetchEncodedPolyline(LatLng origin, LatLng dest) async {
-    if (googleApiKey.isEmpty || googleApiKey.contains('<YOUR')) {
+    if (HelperFunction.gMapsApiKey.isEmpty || HelperFunction.gMapsApiKey.contains('<YOUR')) {
       debugPrint('Google API key is not set.');
       return null;
     }
@@ -334,7 +334,7 @@ class RideSharingMapController extends GetxController {
         options: dio.Options(
           headers: {
             'Content-Type': 'application/json',
-            'X-Goog-Api-Key': googleApiKey,
+            'X-Goog-Api-Key': HelperFunction.gMapsApiKey,
             'X-Goog-FieldMask': 'routes.polyline.encodedPolyline',
           },
         ),

@@ -55,5 +55,7 @@
         <string>We need your location to show nearby rides and routes.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
         <string>We need your location to continue navigation and tracking.</string>
+    <key>G_MAPS_API_KEY</key>
+    <string>$(G_MAPS_API_KEY)</string>
 </dict>
 </plist>

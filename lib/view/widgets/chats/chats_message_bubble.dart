@@ -52,7 +52,7 @@ class ChatsMessageBubble extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 11.sp,
                       color: textColor,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                     softWrap: true,
                   ),

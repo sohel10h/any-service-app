@@ -439,7 +439,7 @@ class VendorProfileController extends GetxController with GetTickerProviderState
     serviceMeDataList.clear();
     isLoadingServices.value = true;
     try {
-      var response = await _serviceRepo.getServicesMe();
+      var response = await _serviceRepo.getServicesMe(AppDIController.loginUserId);
       if (response is String) {
         log("ServicesMe get failed from controller response: $response");
       } else {
@@ -465,7 +465,9 @@ class VendorProfileController extends GetxController with GetTickerProviderState
                   serviceMe.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRepo.getServicesMe());
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _serviceRepo.getServicesMe(AppDIController.loginUserId),
+            );
             if (retryResponse is ServiceMeModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceMeDataList.value = retryResponse.serviceMeData ?? [];
               if (userId?.value == null) {

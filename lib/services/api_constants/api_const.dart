@@ -32,7 +32,7 @@ class ApiConstant {
   static const String putServiceRequestBidsStatusPath = "/api/service-request-bids/status/#bidId#";
 
   // END POINTS - Services
-  static const String getServicesMePath = "/api/services/me";
+  static const String getServicesMePath = "/api/services/#userId#";
   static const String getBestSellingServicesPath = "/services/best-sellers";
 
   // END POINTS - Vendor details

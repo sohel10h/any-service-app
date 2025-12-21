@@ -4,8 +4,8 @@ import 'package:service_la/services/api_service/api_service.dart';
 
 class ServiceInformation extends ServiceApiService {
   @override
-  Future getServicesMe() async {
-    dynamic response = await ApiService().get(ApiConstant.getServicesMePath);
+  Future getServicesMe(String userId) async {
+    dynamic response = await ApiService().get(ApiConstant.getServicesMePath.replaceAll("#userId#", userId));
     return response;
   }
 

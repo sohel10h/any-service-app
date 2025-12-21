@@ -8,9 +8,9 @@ import 'package:service_la/data/model/network/best_selling_service_model.dart';
 class ServiceRepo {
   final ServiceApiService _serviceApiService = ServiceInformation();
 
-  Future<dynamic> getServicesMe() async {
+  Future<dynamic> getServicesMe(String userId) async {
     try {
-      dynamic response = await _serviceApiService.getServicesMe();
+      dynamic response = await _serviceApiService.getServicesMe(userId);
       log("ServicesMe get details from service repo: $response");
       return ServiceMeModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {

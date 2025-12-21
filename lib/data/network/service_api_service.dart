@@ -1,5 +1,5 @@
 abstract class ServiceApiService {
-  Future<dynamic> getServicesMe();
+  Future<dynamic> getServicesMe(String userId);
 
   Future<dynamic> getBestSellingServices();
 }

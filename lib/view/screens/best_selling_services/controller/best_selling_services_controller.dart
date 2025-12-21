@@ -41,7 +41,7 @@ class BestSellingServicesController extends GetxController {
                   sellingService.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRepo.getServicesMe());
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRepo.getBestSellingServices());
             if (retryResponse is BestSellingServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               bestSellingServiceData.value = retryResponse.bestSellingServices ?? [];
             } else {

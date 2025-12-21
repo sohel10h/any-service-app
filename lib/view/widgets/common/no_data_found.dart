@@ -28,7 +28,7 @@ class NoDataFound extends StatelessWidget {
             message ?? "No data found!",
             style: textStyle ??
                 TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 12.sp,
                   color: AppColors.text6A7282,
                   fontWeight: FontWeight.w500,
                 ),
@@ -37,7 +37,7 @@ class NoDataFound extends StatelessWidget {
         if (isRefresh ?? true)
           IconButton(
             onPressed: onPressed ?? () {},
-            icon: Icon(Icons.refresh, color: AppColors.text6A7282, size: iconSize),
+            icon: Icon(Icons.refresh, color: AppColors.text6A7282, size: iconSize ?? 18.sp),
           )
       ],
     );

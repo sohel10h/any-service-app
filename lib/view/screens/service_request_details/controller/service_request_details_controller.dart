@@ -14,6 +14,7 @@ import 'package:service_la/data/model/network/service_me_model.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
 import 'package:service_la/data/model/network/service_details_response_model.dart';
 import 'package:service_la/data/model/network/create_service_request_bid_model.dart';
+import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/view/screens/vendor_profile/controller/vendor_profile_controller.dart';
 import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_bids_section.dart';
 import 'package:service_la/view/widgets/service_request_details/service_request_details_provider_final_bids_section.dart';
@@ -599,7 +600,7 @@ class ServiceRequestDetailsController extends GetxController {
   Future<void> _getServicesMe() async {
     if (isProvider.value) return; // check if service creator
     try {
-      var response = await _serviceRepo.getServicesMe();
+      var response = await _serviceRepo.getServicesMe(AppDIController.loginUserId);
       if (response is String) {
         log("ServicesMe get failed from controller response: $response");
       } else {
@@ -612,7 +613,9 @@ class ServiceRequestDetailsController extends GetxController {
                   serviceMe.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRepo.getServicesMe());
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _serviceRepo.getServicesMe(AppDIController.loginUserId),
+            );
             if (retryResponse is ServiceMeModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               serviceMeDataList.value = retryResponse.serviceMeData ?? [];
             } else {

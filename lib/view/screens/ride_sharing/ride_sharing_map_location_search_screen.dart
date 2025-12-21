@@ -146,6 +146,7 @@ class RideSharingMapLocationSearchScreen extends GetWidget<RideSharingMapLocatio
                 focusNode: controller.priceFocusNode,
                 contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
                 textInputType: TextInputType.number,
+                decimalRange: 2,
                 hintText: "Enter proposed price",
               ),
             ],

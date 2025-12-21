@@ -86,6 +86,7 @@ class CreateServiceScreen extends GetWidget<CreateServiceController> {
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
                             child: CustomTextField(
@@ -94,6 +95,7 @@ class CreateServiceScreen extends GetWidget<CreateServiceController> {
                               label: "From",
                               hintText: "৳1000",
                               textInputType: TextInputType.number,
+                              decimalRange: 2,
                               onChanged: (priceFrom) => controller.formKey.currentState?.validate(),
                               validator: Validators.requiredWithFieldName("Price From").call,
                             ),
@@ -106,6 +108,7 @@ class CreateServiceScreen extends GetWidget<CreateServiceController> {
                               label: "To",
                               hintText: "৳5000",
                               textInputType: TextInputType.number,
+                              decimalRange: 2,
                               onChanged: (priceTo) => controller.formKey.currentState?.validate(),
                               validator: Validators.requiredWithFieldName("Price To").call,
                             ),
@@ -122,6 +125,7 @@ class CreateServiceScreen extends GetWidget<CreateServiceController> {
                         label: "Price",
                         hintText: "৳2000",
                         textInputType: TextInputType.number,
+                        decimalRange: 2,
                         onChanged: (price) => controller.formKey.currentState?.validate(),
                         validator: Validators.requiredWithFieldName("Price").call,
                       ),

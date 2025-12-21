@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/view/widgets/text_field/custom_decimal_text_input_formatter.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -20,6 +21,7 @@ class CustomTextField extends StatefulWidget {
   final Widget? suffixIcon;
   final TextInputType? textInputType;
   final List<TextInputFormatter>? inputFormatters;
+  final int? decimalRange;
   final TextInputAction? textInputAction;
   final Color? fillColor;
   final EdgeInsetsGeometry? contentPadding;
@@ -45,6 +47,7 @@ class CustomTextField extends StatefulWidget {
     this.suffixIcon,
     this.textInputType,
     this.inputFormatters,
+    this.decimalRange,
     this.textInputAction,
     this.fillColor,
     this.contentPadding,
@@ -128,7 +131,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
             color: AppColors.text101828,
             fontWeight: FontWeight.w500,
           ),
-      inputFormatters: widget.inputFormatters,
+      inputFormatters: [
+        ...?widget.inputFormatters,
+        if (widget.decimalRange != null) CustomDecimalTextInputFormatter(decimalRange: widget.decimalRange!),
+      ],
       decoration: InputDecoration(
         contentPadding: widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         prefixIcon: widget.prefixIconPath == null

@@ -93,6 +93,7 @@ class ServiceRequestDetailsCreateBids extends GetWidget<ServiceRequestDetailsCon
                 fontWeight: FontWeight.w500,
               ),
               textInputType: TextInputType.number,
+              decimalRange: 2,
               onChanged: (price) => controller.formKey.currentState?.validate(),
               validator: Validators.requiredWithFieldName("Price").call,
             ),

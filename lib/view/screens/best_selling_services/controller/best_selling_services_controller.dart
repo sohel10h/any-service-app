@@ -3,12 +3,13 @@ import 'package:get/get.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/data/repository/service_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/data/model/network/common/service_model.dart';
 import 'package:service_la/data/model/network/best_selling_service_model.dart';
 
 class BestSellingServicesController extends GetxController {
   final ServiceRepo _serviceRepo = ServiceRepo();
   RxBool isLoadingBestSellingServices = false.obs;
-  RxList<BestSellingServiceData> bestSellingServiceData = <BestSellingServiceData>[].obs;
+  RxList<ServiceModel> bestSellingServices = <ServiceModel>[].obs;
 
   @override
   void onInit() {
@@ -34,7 +35,7 @@ class BestSellingServicesController extends GetxController {
       } else {
         BestSellingServiceModel sellingService = response as BestSellingServiceModel;
         if (sellingService.status == 200 || sellingService.status == 201) {
-          bestSellingServiceData.value = sellingService.bestSellingServices ?? [];
+          bestSellingServices.value = sellingService.bestSellingServices ?? [];
         } else {
           if (sellingService.status == 401 ||
               (sellingService.errors != null &&
@@ -43,7 +44,7 @@ class BestSellingServicesController extends GetxController {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(() => _serviceRepo.getBestSellingServices());
             if (retryResponse is BestSellingServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              bestSellingServiceData.value = retryResponse.bestSellingServices ?? [];
+              bestSellingServices.value = retryResponse.bestSellingServices ?? [];
             } else {
               log("Retry request failed after token refresh");
             }

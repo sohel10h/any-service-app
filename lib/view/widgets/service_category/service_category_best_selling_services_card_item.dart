@@ -4,12 +4,13 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/data/model/network/common/service_model.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
+import 'package:service_la/data/model/network/best_selling_service_model.dart';
 
-class BestSellingServicesCardItem extends StatelessWidget {
+class ServiceCategoryBestSellingServicesCardItem extends StatelessWidget {
   final VoidCallback onTap;
   final ServiceModel bestSellingService;
 
-  const BestSellingServicesCardItem({
+  const ServiceCategoryBestSellingServicesCardItem({
     super.key,
     required this.onTap,
     required this.bestSellingService,

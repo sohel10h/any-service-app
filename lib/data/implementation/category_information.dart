@@ -21,4 +21,10 @@ class CategoryInformation extends CategoryApiService {
     );
     return response;
   }
+
+  @override
+  Future getServicesBestSellersCategories(String categoryId) async {
+    dynamic response = await ApiService().get(ApiConstant.getServicesBestSellersCategoryPath.replaceAll("#categoryId#", categoryId));
+    return response;
+  }
 }

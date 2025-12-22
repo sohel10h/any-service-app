@@ -138,7 +138,7 @@ class CategorySection extends StatelessWidget {
                 );
               },
               child: CategoryCardItem(
-                onTap: controller.goToServiceCategoryScreen,
+                onTap: () => controller.goToServiceCategoryScreen(serviceCategory.id ?? ""),
                 serviceCategory: serviceCategory,
               ),
             ),

@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/data/repository/category_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/data/model/network/common/service_model.dart';
 import 'package:service_la/data/model/network/common/category_model.dart';
 import 'package:service_la/data/model/network/all_service_category_response_model.dart';
+import 'package:service_la/data/model/network/best_selling_service_category_model.dart';
 
 class ServiceCategoryController extends GetxController {
   String categoryId = "";
@@ -18,13 +20,60 @@ class ServiceCategoryController extends GetxController {
   RxBool isLoadingMoreServiceCategories = false.obs;
   int currentPageServiceCategories = 1;
   int totalPagesServiceCategories = 1;
+  RxBool isLoadingServicesBestSellersCategories = false.obs;
+  RxList<ServiceModel> bestSellingServices = <ServiceModel>[].obs;
 
   @override
   void onInit() {
     _getArguments();
+    getServicesBestSellersCategories();
     _getAllServiceCategories(isRefresh: true);
     super.onInit();
   }
+
+  void goToCreateServiceDetailsScreen(String serviceId) => Get.toNamed(
+        AppRoutes.createServiceDetailsScreen,
+        arguments: {"serviceId": serviceId},
+      );
+
+  Future<void> getServicesBestSellersCategories() async {
+    isLoadingServicesBestSellersCategories.value = true;
+    try {
+      var response = await _categoryRepo.getServicesBestSellersCategories(categoryId);
+      if (response is String) {
+        log("ServicesBestSellersCategories get failed from controller response: $response");
+      } else {
+        BestSellingServiceCategoryModel sellingService = response as BestSellingServiceCategoryModel;
+        if (sellingService.status == 200 || sellingService.status == 201) {
+          bestSellingServices.value = sellingService.bestSellingServiceCategory?.services ?? [];
+        } else {
+          if (sellingService.status == 401 ||
+              (sellingService.errors != null &&
+                  sellingService.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _categoryRepo.getServicesBestSellersCategories(categoryId),
+            );
+            if (retryResponse is BestSellingServiceCategoryModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              bestSellingServices.value = retryResponse.bestSellingServiceCategory?.services ?? [];
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("ServicesBestSellersCategories get failed from controller: ${sellingService.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("ServicesBestSellersCategories get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingServicesBestSellersCategories.value = false;
+    }
+  }
+
+  void goToBestSellingServicesScreen() => Get.toNamed(AppRoutes.bestSellingServicesScreen);
 
   void goToNotificationsScreen() => Get.toNamed(AppRoutes.notificationsScreen);
 

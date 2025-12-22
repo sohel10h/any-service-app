@@ -18,6 +18,7 @@ import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/local/file_option_model.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 import 'package:service_la/data/repository/service_request_repo.dart';
+import 'package:service_la/data/model/network/common/service_model.dart';
 import 'package:service_la/data/model/network/common/category_model.dart';
 import 'package:service_la/data/model/network/best_selling_service_model.dart';
 import 'package:service_la/data/model/network/upload_admin_picture_model.dart';
@@ -64,7 +65,7 @@ class HomeController extends GetxController {
   RxBool isLoadingServiceRequests = false.obs;
   final ServiceRepo _serviceRepo = ServiceRepo();
   RxBool isLoadingBestSellingServices = false.obs;
-  RxList<BestSellingServiceData> bestSellingServiceData = <BestSellingServiceData>[].obs;
+  RxList<ServiceModel> bestSellingServiceData = <ServiceModel>[].obs;
   RxList<CategoryModel> serviceCategories = <CategoryModel>[].obs;
   RxBool isLoadingServiceCategories = false.obs;
   final List<Map<String, dynamic>> cleaningServices = [
@@ -97,7 +98,10 @@ class HomeController extends GetxController {
     getAdminServiceCategories();
   }
 
-  void goToServiceCategoryScreen() => Get.toNamed(AppRoutes.serviceCategoryScreen);
+  void goToServiceCategoryScreen(String categoryId) => Get.toNamed(
+        AppRoutes.serviceCategoryScreen,
+        arguments: {"categoryId": categoryId},
+      );
 
   void goToSearchScreen(String heroTag) => Get.toNamed(
         AppRoutes.searchScreen,

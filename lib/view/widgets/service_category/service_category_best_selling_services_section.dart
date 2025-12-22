@@ -4,14 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/no_data_found.dart';
-import 'package:service_la/view/screens/home/controller/home_controller.dart';
-import 'package:service_la/view/widgets/home/best_selling_services_card_item.dart';
-import 'package:service_la/view/widgets/home/best_selling_services_item_shimmer.dart';
+import 'package:service_la/view/screens/service_category_screen/controller/service_category_controller.dart';
+import 'package:service_la/view/widgets/service_category/service_category_best_selling_services_card_item.dart';
+import 'package:service_la/view/widgets/service_category/service_category_best_selling_services_item_shimmer.dart';
 
-class BestSellingServicesSection extends StatelessWidget {
-  final HomeController controller;
+class ServiceCategoryBestSellingServicesSection extends StatelessWidget {
+  final ServiceCategoryController controller;
 
-  const BestSellingServicesSection({super.key, required this.controller});
+  const ServiceCategoryBestSellingServicesSection({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +84,8 @@ class BestSellingServicesSection extends StatelessWidget {
   Widget _buildListView() {
     return Obx(
       () {
-        final isLoading = controller.isLoadingBestSellingServices.value;
-        final bestSellingServices = controller.bestSellingServiceData;
+        final isLoading = controller.isLoadingServicesBestSellersCategories.value;
+        final bestSellingServices = controller.bestSellingServices;
         if (isLoading) {
           return SizedBox(
             height: 200.h,
@@ -95,7 +95,7 @@ class BestSellingServicesSection extends StatelessWidget {
               padding: EdgeInsets.all(12.sp),
               itemCount: 5,
               itemBuilder: (context, index) {
-                return const BestSellingServicesItemShimmer();
+                return const ServiceCategoryBestSellingServicesItemShimmer();
               },
             ),
           );
@@ -112,7 +112,7 @@ class BestSellingServicesSection extends StatelessWidget {
               ),
               isRefresh: true,
               iconSize: 14.sp,
-              onPressed: () => controller.getBestSellingServices(),
+              onPressed: () => controller.getServicesBestSellersCategories(),
             ),
           );
         }
@@ -125,7 +125,7 @@ class BestSellingServicesSection extends StatelessWidget {
             itemCount: bestSellingServices.length,
             itemBuilder: (context, index) {
               final bestSellingService = bestSellingServices[index];
-              return BestSellingServicesCardItem(
+              return ServiceCategoryBestSellingServicesCardItem(
                 onTap: () => controller.goToCreateServiceDetailsScreen(bestSellingService.id ?? ""),
                 bestSellingService: bestSellingService,
               );

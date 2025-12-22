@@ -20,7 +20,10 @@ class CategoryController extends GetxController {
     _getAllServiceCategories(isRefresh: true);
   }
 
-  void goToServiceCategoryScreen() => Get.toNamed(AppRoutes.serviceCategoryScreen);
+  void goToServiceCategoryScreen(String categoryId) => Get.toNamed(
+        AppRoutes.serviceCategoryScreen,
+        arguments: {"categoryId": categoryId},
+      );
 
   Future<void> loadNextPageAllServiceCategories() async {
     if (currentPageServiceCategories < totalPagesServiceCategories && !isLoadingMoreServiceCategories.value) {

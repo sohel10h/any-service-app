@@ -21,7 +21,7 @@ class BestSellingServicesScreen extends GetWidget<BestSellingServicesController>
         onRefresh: controller.refreshBestSellingServices,
         child: Obx(() {
           final isLoading = controller.isLoadingBestSellingServices.value;
-          final bestSellingServices = controller.bestSellingServiceData;
+          final bestSellingServices = controller.bestSellingServices;
           if (isLoading) {
             return GridView.builder(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),

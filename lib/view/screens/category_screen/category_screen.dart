@@ -57,7 +57,10 @@ class CategoryScreen extends GetWidget<CategoryController> {
               itemBuilder: (context, index) {
                 if (index < controller.serviceCategories.length) {
                   final serviceCategory = serviceCategories[index];
-                  return CategoryCardItem(serviceCategory: serviceCategory);
+                  return CategoryCardItem(
+                    onTap: controller.goToServiceCategoryScreen,
+                    serviceCategory: serviceCategory,
+                  );
                 }
                 return Obx(
                   () => controller.isLoadingMoreServiceCategories.value

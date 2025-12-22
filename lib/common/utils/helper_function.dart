@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:service_la/common/utils/enum_helper.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/data/model/network/chat_model.dart';
 import 'package:service_la/services/api_constants/api_const.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
@@ -304,5 +305,21 @@ class HelperFunction {
       default:
         return Colors.grey;
     }
+  }
+
+  static Widget heroFlightFix(
+    BuildContext flightContext,
+    Animation<double> animation,
+    HeroFlightDirection direction,
+    BuildContext fromContext,
+    BuildContext toContext,
+  ) {
+    return Material(
+      color: Colors.transparent,
+      child: SizedBox(
+        height: 36.h,
+        child: toContext.widget,
+      ),
+    );
   }
 }

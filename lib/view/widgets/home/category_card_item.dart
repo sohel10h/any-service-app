@@ -5,14 +5,19 @@ import 'package:service_la/data/model/network/common/category_model.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 
 class CategoryCardItem extends StatelessWidget {
+  final VoidCallback onTap;
   final CategoryModel serviceCategory;
 
-  const CategoryCardItem({super.key, required this.serviceCategory});
+  const CategoryCardItem({
+    super.key,
+    required this.serviceCategory,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {}, // TODO: future implement
+      onTap: onTap,
       borderRadius: BorderRadius.circular(16.r),
       child: Container(
         decoration: BoxDecoration(

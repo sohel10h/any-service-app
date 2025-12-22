@@ -137,7 +137,10 @@ class CategorySection extends StatelessWidget {
                   child: Transform.translate(offset: offset, child: child),
                 );
               },
-              child: CategoryCardItem(serviceCategory: serviceCategory),
+              child: CategoryCardItem(
+                onTap: controller.goToServiceCategoryScreen,
+                serviceCategory: serviceCategory,
+              ),
             ),
           );
         },

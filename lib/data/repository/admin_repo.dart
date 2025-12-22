@@ -7,8 +7,6 @@ import 'package:service_la/data/implementation/admin_information.dart';
 import 'package:service_la/data/model/network/create_service_model.dart';
 import 'package:service_la/data/model/network/upload_admin_picture_model.dart';
 import 'package:service_la/data/model/network/create_service_details_model.dart';
-import 'package:service_la/data/model/network/service_category_response_model.dart';
-import 'package:service_la/data/model/network/admin_service_category_response_model.dart';
 
 class AdminRepo {
   final AdminApiService _adminApiService = AdminInformation();
@@ -48,26 +46,6 @@ class AdminRepo {
       dynamic response = await _adminApiService.getAdminServicesDetails(serviceId);
       log("AdminServicesDetails get details from admin repo: $response");
       return CreateServiceDetailsModel.fromJson(jsonDecode(response.toString()));
-    } catch (e) {
-      return e;
-    }
-  }
-
-  Future<dynamic> getAllServiceCategories({Map<String, dynamic>? queryParams}) async {
-    try {
-      dynamic response = await _adminApiService.getAllServiceCategories(queryParams: queryParams);
-      log("AdminServiceCategories get details from admin repo: $response");
-      return AdminServiceCategoryResponseModel.fromJson(jsonDecode(response.toString()));
-    } catch (e) {
-      return e;
-    }
-  }
-
-  Future<dynamic> getServiceCategories({Map<String, dynamic>? queryParams}) async {
-    try {
-      dynamic response = await _adminApiService.getServiceCategories(queryParams: queryParams);
-      log("ServiceCategories get details from admin repo: $response");
-      return ServiceCategoryResponseModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {
       return e;
     }

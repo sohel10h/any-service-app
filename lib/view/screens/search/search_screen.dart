@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/view/widgets/text_field/custom_text_field.dart';
 import 'package:service_la/view/screens/search/controller/search_screen_controller.dart';
 
@@ -38,27 +39,37 @@ class SearchScreen extends GetView<SearchScreenController> {
                       ),
                       SizedBox(width: 12.w),
                       Expanded(
-                        child: CustomTextField(
-                          height: 35.h,
-                          controller: controller.searchController,
-                          focusNode: controller.searchFocusNode,
-                          hintText: "Search services...",
-                          labelStyle: TextStyle(
-                            fontSize: 12.sp,
-                            color: AppColors.text414651,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          hintStyle: TextStyle(
-                            fontSize: 12.sp,
-                            color: AppColors.text757575,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          prefixIconPath: "assets/svgs/search.svg",
-                          textInputAction: TextInputAction.search,
-                          onChanged: (searchServices) => controller.formKey.currentState?.validate(),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6.r),
-                            borderSide: BorderSide(color: AppColors.borderE3E7EC),
+                        child: SizedBox(
+                          height: 36.h,
+                          child: Hero(
+                            tag: controller.heroTag,
+                            flightShuttleBuilder: HelperFunction.heroFlightFix,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: CustomTextField(
+                                height: 35.h,
+                                controller: controller.searchController,
+                                focusNode: controller.searchFocusNode,
+                                hintText: "Search services...",
+                                labelStyle: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: AppColors.text414651,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                hintStyle: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: AppColors.text757575,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                prefixIconPath: "assets/svgs/search.svg",
+                                textInputAction: TextInputAction.search,
+                                onChanged: (searchServices) => controller.formKey.currentState?.validate(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(6.r),
+                                  borderSide: BorderSide(color: AppColors.borderE3E7EC),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),

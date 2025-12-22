@@ -12,6 +12,7 @@ import 'package:service_la/common/utils/dialog_helper.dart';
 import 'package:service_la/data/repository/admin_repo.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/data/repository/service_repo.dart';
+import 'package:service_la/data/repository/category_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/local/file_option_model.dart';
@@ -56,6 +57,7 @@ class HomeController extends GetxController {
   RxString maxBudget = "".obs;
   final ServiceRequestRepo _serviceRequestRepo = ServiceRequestRepo();
   final AdminRepo _adminRepo = AdminRepo();
+  final CategoryRepo _categoryRepo = CategoryRepo();
   RxString serviceDescription = "".obs;
   RxString companyName = "".obs;
   RxList<String> attachmentIds = <String>[].obs;
@@ -95,7 +97,12 @@ class HomeController extends GetxController {
     getAdminServiceCategories();
   }
 
-  void goToSearchScreen() => Get.toNamed(AppRoutes.searchScreen);
+  void goToServiceCategoryScreen() => Get.toNamed(AppRoutes.serviceCategoryScreen);
+
+  void goToSearchScreen(String heroTag) => Get.toNamed(
+        AppRoutes.searchScreen,
+        arguments: {"heroTag": heroTag},
+      );
 
   void openBudgetRangeBottomSheet(BuildContext context) async {
     final currentContext = Get.context ?? context;
@@ -119,7 +126,7 @@ class HomeController extends GetxController {
       Map<String, dynamic> queryParams = {
         ApiParams.type: ClientPlatform.app.name,
       };
-      var response = await _adminRepo.getServiceCategories(queryParams: queryParams);
+      var response = await _categoryRepo.getServiceCategories(queryParams: queryParams);
       if (response is String) {
         log("ServiceCategories get failed from controller response: $response");
       } else {
@@ -134,7 +141,7 @@ class HomeController extends GetxController {
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(
-              () => _adminRepo.getServiceCategories(queryParams: queryParams),
+              () => _categoryRepo.getServiceCategories(queryParams: queryParams),
             );
             if (retryResponse is ServiceCategoryResponseModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               final data = retryResponse.categories?.where((category) => category.showInHomepage == true) ?? [];

@@ -1,12 +1,17 @@
 import 'dart:developer';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/data/repository/category_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
 import 'package:service_la/data/model/network/common/category_model.dart';
 import 'package:service_la/data/model/network/all_service_category_response_model.dart';
 
-class CategoryController extends GetxController {
+class ServiceCategoryController extends GetxController {
+  String categoryId = "";
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController searchController = TextEditingController();
+  FocusNode searchFocusNode = FocusNode();
   final CategoryRepo _categoryRepo = CategoryRepo();
   RxList<CategoryModel> serviceCategories = <CategoryModel>[].obs;
   RxBool isLoadingServiceCategories = false.obs;
@@ -16,11 +21,19 @@ class CategoryController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
+    _getArguments();
     _getAllServiceCategories(isRefresh: true);
+    super.onInit();
   }
 
-  void goToServiceCategoryScreen() => Get.toNamed(AppRoutes.serviceCategoryScreen);
+  void goToNotificationsScreen() => Get.toNamed(AppRoutes.notificationsScreen);
+
+  void goToChatsListScreen() => Get.toNamed(AppRoutes.chatsListScreen);
+
+  void goToSearchScreen(String heroTag) => Get.toNamed(
+        AppRoutes.searchScreen,
+        arguments: {"heroTag": heroTag},
+      );
 
   Future<void> loadNextPageAllServiceCategories() async {
     if (currentPageServiceCategories < totalPagesServiceCategories && !isLoadingMoreServiceCategories.value) {
@@ -94,6 +107,12 @@ class CategoryController extends GetxController {
     } finally {
       isLoadingServiceCategories.value = false;
       isLoadingMoreServiceCategories.value = false;
+    }
+  }
+
+  void _getArguments() {
+    if (Get.arguments != null) {
+      categoryId = Get.arguments["categoryId"] ?? "";
     }
   }
 }

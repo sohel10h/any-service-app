@@ -47,9 +47,13 @@ class ApiConstant {
   // END POINTS - Notifications
   static const String getNotificationsPath = "/api/notifications";
 
-  // END POINTS - Others
+  // END POINTS - Categories
   static const String getServiceCategoriesPath = "/categories/homepage";
   static const String getAllServiceCategoriesPath = "/categories";
+  static const String getServicesBestSellersCategoryPath = "/services/best-sellers/category/#categoryId#";
+  static const String getCategoriesTopSellingPath = "/categories/top-selling";
+
+  // END POINTS - Reviews
   static const String getVendorReviewsPath = "/api/reviews/vendor/#userId#";
 
   // Functions

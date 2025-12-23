@@ -23,8 +23,24 @@ class CategoryInformation extends CategoryApiService {
   }
 
   @override
-  Future getServicesBestSellersCategories(String categoryId) async {
-    dynamic response = await ApiService().get(ApiConstant.getServicesBestSellersCategoryPath.replaceAll("#categoryId#", categoryId));
+  Future getCategoryBestSellersServices(String categoryId, {Map<String, dynamic>? queryParams}) async {
+    dynamic response = await ApiService().get(
+      ApiConstant.dynamicQueryParams(
+        ApiConstant.getCategoryBestSellersServicesPath.replaceAll("#categoryId#", categoryId),
+        queryParams: queryParams,
+      ),
+    );
+    return response;
+  }
+
+  @override
+  Future getCategoryServices(String categoryId, {Map<String, dynamic>? queryParams}) async {
+    dynamic response = await ApiService().get(
+      ApiConstant.dynamicQueryParams(
+        ApiConstant.getCategoryServicesPath.replaceAll("#categoryId#", categoryId),
+        queryParams: queryParams,
+      ),
+    );
     return response;
   }
 }

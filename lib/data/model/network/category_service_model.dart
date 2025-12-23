@@ -2,49 +2,48 @@ import 'dart:convert';
 import 'package:service_la/data/model/network/common/meta_model.dart';
 import 'package:service_la/data/model/network/common/service_model.dart';
 
-BestSellingServiceCategoryModel bestSellingServiceCategoryModelFromJson(String str) =>
-    BestSellingServiceCategoryModel.fromJson(json.decode(str));
+CategoryServiceModel categoryServiceModelFromJson(String str) => CategoryServiceModel.fromJson(json.decode(str));
 
-String bestSellingServiceCategoryModelToJson(BestSellingServiceCategoryModel data) => json.encode(data.toJson());
+String categoryServiceModelToJson(CategoryServiceModel data) => json.encode(data.toJson());
 
-class BestSellingServiceCategoryModel {
+class CategoryServiceModel {
   final bool? isSuccess;
   final int? status;
   final dynamic errors;
-  final BestSellingServiceCategory? bestSellingServiceCategory;
+  final CategoryService? categoryService;
 
-  BestSellingServiceCategoryModel({
+  CategoryServiceModel({
     this.isSuccess,
     this.status,
     this.errors,
-    this.bestSellingServiceCategory,
+    this.categoryService,
   });
 
-  factory BestSellingServiceCategoryModel.fromJson(Map<String, dynamic> json) => BestSellingServiceCategoryModel(
+  factory CategoryServiceModel.fromJson(Map<String, dynamic> json) => CategoryServiceModel(
         isSuccess: json["isSuccess"],
         status: json["status"],
         errors: json["errors"],
-        bestSellingServiceCategory: json["data"] == null ? null : BestSellingServiceCategory.fromJson(json["data"]),
+        categoryService: json["data"] == null ? null : CategoryService.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
         "isSuccess": isSuccess,
         "status": status,
         "errors": errors,
-        "data": bestSellingServiceCategory?.toJson(),
+        "data": categoryService?.toJson(),
       };
 }
 
-class BestSellingServiceCategory {
+class CategoryService {
   final MetaModel? meta;
   final List<ServiceModel>? services;
 
-  BestSellingServiceCategory({
+  CategoryService({
     this.meta,
     this.services,
   });
 
-  factory BestSellingServiceCategory.fromJson(Map<String, dynamic> json) => BestSellingServiceCategory(
+  factory CategoryService.fromJson(Map<String, dynamic> json) => CategoryService(
         meta: json["meta"] == null ? null : MetaModel.fromJson(json["meta"]),
         services: json["services"] == null ? [] : List<ServiceModel>.from(json["services"]!.map((x) => ServiceModel.fromJson(x))),
       );

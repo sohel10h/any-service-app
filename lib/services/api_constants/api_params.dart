@@ -45,4 +45,5 @@ class ApiParams {
   static const String mobile = "mobile";
   static const String target = "target";
   static const String notificationId = "notification_id";
+  static const String limit = "limit";
 }

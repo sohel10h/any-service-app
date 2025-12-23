@@ -50,8 +50,8 @@ class ApiConstant {
   // END POINTS - Categories
   static const String getServiceCategoriesPath = "/categories/homepage";
   static const String getAllServiceCategoriesPath = "/categories";
-  static const String getServicesBestSellersCategoryPath = "/services/best-sellers/category/#categoryId#";
-  static const String getCategoriesTopSellingPath = "/categories/top-selling";
+  static const String getCategoryBestSellersServicesPath = "/category/best-sellers/#categoryId#";
+  static const String getCategoryServicesPath = "/category/services/#categoryId#";
 
   // END POINTS - Reviews
   static const String getVendorReviewsPath = "/api/reviews/vendor/#userId#";

@@ -3,5 +3,7 @@ abstract class CategoryApiService {
 
   Future<dynamic> getServiceCategories({Map<String, dynamic>? queryParams});
 
-  Future<dynamic> getServicesBestSellersCategories(String categoryId);
+  Future<dynamic> getCategoryBestSellersServices(String categoryId, {Map<String, dynamic>? queryParams});
+
+  Future<dynamic> getCategoryServices(String categoryId, {Map<String, dynamic>? queryParams});
 }

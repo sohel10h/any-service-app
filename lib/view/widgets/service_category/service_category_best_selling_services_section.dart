@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/no_data_found.dart';
@@ -29,51 +28,24 @@ class ServiceCategoryBestSellingServicesSection extends StatelessWidget {
   Widget _buildHeader() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Best Selling Services",
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    color: AppColors.text101828,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  "Most requested this week",
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    color: AppColors.text6A7282,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
+          Text(
+            "Best Selling Services",
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: AppColors.text101828,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          GestureDetector(
-            onTap: controller.goToBestSellingServicesScreen,
-            child: Row(
-              children: [
-                Text(
-                  "View all",
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SvgPicture.asset(
-                  "assets/svgs/arrow_right_small.svg",
-                  width: 14.w,
-                  height: 14.h,
-                )
-              ],
+          SizedBox(height: 4.h),
+          Text(
+            "Most requested this week",
+            style: TextStyle(
+              fontSize: 11.sp,
+              color: AppColors.text6A7282,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ],
@@ -84,8 +56,8 @@ class ServiceCategoryBestSellingServicesSection extends StatelessWidget {
   Widget _buildListView() {
     return Obx(
       () {
-        final isLoading = controller.isLoadingServicesBestSellersCategories.value;
-        final bestSellingServices = controller.bestSellingServices;
+        final isLoading = controller.isLoadingCategoryBestSellersServices.value;
+        final categoryBestSellersServices = controller.categoryBestSellersServices;
         if (isLoading) {
           return SizedBox(
             height: 200.h,
@@ -100,19 +72,22 @@ class ServiceCategoryBestSellingServicesSection extends StatelessWidget {
             ),
           );
         }
-        if (bestSellingServices.isEmpty) {
-          return Padding(
-            padding: EdgeInsets.all(12.sp),
-            child: NoDataFound(
-              message: "No best selling services are found!",
-              textStyle: TextStyle(
-                fontSize: 11.sp,
-                color: AppColors.text6A7282,
-                fontWeight: FontWeight.w400,
+        if (categoryBestSellersServices.isEmpty) {
+          return SizedBox(
+            height: 200.h,
+            child: Padding(
+              padding: EdgeInsets.all(12.sp),
+              child: NoDataFound(
+                message: "No best selling services are found!",
+                textStyle: TextStyle(
+                  fontSize: 11.sp,
+                  color: AppColors.text6A7282,
+                  fontWeight: FontWeight.w400,
+                ),
+                isRefresh: true,
+                iconSize: 14.sp,
+                onPressed: () => controller.refreshCategoryBestSellersServices(),
               ),
-              isRefresh: true,
-              iconSize: 14.sp,
-              onPressed: () => controller.getServicesBestSellersCategories(),
             ),
           );
         }
@@ -122,12 +97,12 @@ class ServiceCategoryBestSellingServicesSection extends StatelessWidget {
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.all(12.sp),
-            itemCount: bestSellingServices.length,
+            itemCount: categoryBestSellersServices.length,
             itemBuilder: (context, index) {
-              final bestSellingService = bestSellingServices[index];
+              final categoryBestSellersService = categoryBestSellersServices[index];
               return ServiceCategoryBestSellingServicesCardItem(
-                onTap: () => controller.goToCreateServiceDetailsScreen(bestSellingService.id ?? ""),
-                bestSellingService: bestSellingService,
+                onTap: () => controller.goToCreateServiceDetailsScreen(categoryBestSellersService.id ?? ""),
+                categoryBestSellersService: categoryBestSellersService,
               );
             },
           ),

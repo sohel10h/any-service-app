@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/data/repository/category_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/network/common/service_model.dart';
 import 'package:service_la/data/model/network/common/category_model.dart';
-import 'package:service_la/data/model/network/all_service_category_response_model.dart';
-import 'package:service_la/data/model/network/best_selling_service_category_model.dart';
+import 'package:service_la/data/model/network/category_service_model.dart';
+import 'package:service_la/data/model/network/category_best_seller_service_model.dart';
 
 class ServiceCategoryController extends GetxController {
   String categoryId = "";
@@ -20,57 +21,20 @@ class ServiceCategoryController extends GetxController {
   RxBool isLoadingMoreServiceCategories = false.obs;
   int currentPageServiceCategories = 1;
   int totalPagesServiceCategories = 1;
-  RxBool isLoadingServicesBestSellersCategories = false.obs;
-  RxList<ServiceModel> bestSellingServices = <ServiceModel>[].obs;
+  RxList<ServiceModel> categoryBestSellersServices = <ServiceModel>[].obs;
+  RxBool isLoadingCategoryBestSellersServices = false.obs;
+  RxList<ServiceModel> categoryServices = <ServiceModel>[].obs;
+  RxBool isLoadingCategoryServices = false.obs;
+  RxBool isLoadingMoreCategoryServices = false.obs;
+  int currentPageCategoryServices = 1;
+  int totalPagesCategoryServices = 1;
 
   @override
   void onInit() {
     _getArguments();
-    getServicesBestSellersCategories();
-    _getAllServiceCategories(isRefresh: true);
+    _getCategoryBestSellersServices();
+    _getCategoryServices(isRefresh: true);
     super.onInit();
-  }
-
-  void goToCreateServiceDetailsScreen(String serviceId) => Get.toNamed(
-        AppRoutes.createServiceDetailsScreen,
-        arguments: {"serviceId": serviceId},
-      );
-
-  Future<void> getServicesBestSellersCategories() async {
-    isLoadingServicesBestSellersCategories.value = true;
-    try {
-      var response = await _categoryRepo.getServicesBestSellersCategories(categoryId);
-      if (response is String) {
-        log("ServicesBestSellersCategories get failed from controller response: $response");
-      } else {
-        BestSellingServiceCategoryModel sellingService = response as BestSellingServiceCategoryModel;
-        if (sellingService.status == 200 || sellingService.status == 201) {
-          bestSellingServices.value = sellingService.bestSellingServiceCategory?.services ?? [];
-        } else {
-          if (sellingService.status == 401 ||
-              (sellingService.errors != null &&
-                  sellingService.errors.any((error) =>
-                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
-            log("Token expired detected, refreshing...");
-            final retryResponse = await ApiService().postRefreshTokenAndRetry(
-              () => _categoryRepo.getServicesBestSellersCategories(categoryId),
-            );
-            if (retryResponse is BestSellingServiceCategoryModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              bestSellingServices.value = retryResponse.bestSellingServiceCategory?.services ?? [];
-            } else {
-              log("Retry request failed after token refresh");
-            }
-            return;
-          }
-          log("ServicesBestSellersCategories get failed from controller: ${sellingService.status}");
-          return;
-        }
-      }
-    } catch (e) {
-      log("ServicesBestSellersCategories get catch error from controller: ${e.toString()}");
-    } finally {
-      isLoadingServicesBestSellersCategories.value = false;
-    }
   }
 
   void goToBestSellingServicesScreen() => Get.toNamed(AppRoutes.bestSellingServicesScreen);
@@ -84,78 +48,132 @@ class ServiceCategoryController extends GetxController {
         arguments: {"heroTag": heroTag},
       );
 
-  Future<void> loadNextPageAllServiceCategories() async {
-    if (currentPageServiceCategories < totalPagesServiceCategories && !isLoadingMoreServiceCategories.value) {
-      isLoadingMoreServiceCategories.value = true;
-      currentPageServiceCategories++;
-      await _getAllServiceCategories();
+  void goToCreateServiceDetailsScreen(String serviceId) => Get.toNamed(
+        AppRoutes.createServiceDetailsScreen,
+        arguments: {"serviceId": serviceId},
+      );
+
+  Future<void> refreshApiCall() async {
+    _getCategoryBestSellersServices();
+    _getCategoryServices(isRefresh: true);
+  }
+
+  Future<void> loadNextPageCategoryServices() async {
+    if (currentPageCategoryServices < totalPagesServiceCategories && !isLoadingMoreCategoryServices.value) {
+      isLoadingMoreCategoryServices.value = true;
+      currentPageCategoryServices++;
+      await _getCategoryServices();
     }
   }
 
-  Future<void> refreshAllServiceCategories({bool isRefresh = false, bool isLoadingEmpty = false}) async {
-    await _getAllServiceCategories(isRefresh: isRefresh, isLoadingEmpty: isLoadingEmpty);
+  Future<void> refreshCategoryServices({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    await _getCategoryServices(isRefresh: isRefresh, isLoadingEmpty: isLoadingEmpty);
   }
 
-  Future<void> _getAllServiceCategories({bool isRefresh = false, bool isLoadingEmpty = false}) async {
-    if (isLoadingEmpty) totalPagesServiceCategories = 1;
+  Future<void> _getCategoryServices({bool isRefresh = false, bool isLoadingEmpty = false}) async {
+    if (isLoadingEmpty) totalPagesCategoryServices = 1;
     if (isRefresh) {
-      currentPageServiceCategories = 1;
+      currentPageCategoryServices = 1;
       serviceCategories.clear();
     }
-    if (currentPageServiceCategories > totalPagesServiceCategories) return;
+    if (currentPageCategoryServices > totalPagesCategoryServices) return;
     if (isRefresh || isLoadingEmpty) {
-      isLoadingServiceCategories.value = true;
+      isLoadingCategoryServices.value = true;
     }
     try {
       Map<String, dynamic> queryParams = {
-        'page': currentPageServiceCategories,
+        ApiParams.page: currentPageCategoryServices,
       };
-      var response = await _categoryRepo.getAllServiceCategories(queryParams: queryParams);
+      var response = await _categoryRepo.getCategoryServices(categoryId, queryParams: queryParams);
       if (response is String) {
-        log("ServiceCategories get failed from controller response: $response");
+        log("CategoryServices get failed from controller response: $response");
       } else {
-        AllServiceCategoryResponseModel serviceCategory = response as AllServiceCategoryResponseModel;
-        if (serviceCategory.status == 200 || serviceCategory.status == 201) {
-          final data = serviceCategory.serviceCategory?.categories ?? [];
+        CategoryServiceModel categoryService = response as CategoryServiceModel;
+        if (categoryService.status == 200 || categoryService.status == 201) {
+          final data = categoryService.categoryService?.services ?? [];
           if (isRefresh) {
-            serviceCategories.assignAll(data);
+            categoryServices.assignAll(data);
           } else {
-            serviceCategories.addAll(data);
+            categoryServices.addAll(data);
           }
-          currentPageServiceCategories = serviceCategory.serviceCategory?.meta?.page ?? currentPageServiceCategories;
-          totalPagesServiceCategories = serviceCategory.serviceCategory?.meta?.totalPages ?? totalPagesServiceCategories;
+          currentPageCategoryServices = categoryService.categoryService?.meta?.page ?? currentPageCategoryServices;
+          totalPagesCategoryServices = categoryService.categoryService?.meta?.totalPages ?? totalPagesCategoryServices;
         } else {
-          if (serviceCategory.status == 401 ||
-              (serviceCategory.errors != null &&
-                  serviceCategory.errors.any((error) =>
+          if (categoryService.status == 401 ||
+              (categoryService.errors != null &&
+                  categoryService.errors.any((error) =>
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(
-              () => _categoryRepo.getAllServiceCategories(queryParams: queryParams),
+              () => _categoryRepo.getCategoryServices(categoryId, queryParams: queryParams),
             );
-            if (retryResponse is AllServiceCategoryResponseModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
-              final data = retryResponse.serviceCategory?.categories ?? [];
+            if (retryResponse is CategoryServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              final data = retryResponse.categoryService?.services ?? [];
               if (isRefresh) {
-                serviceCategories.assignAll(data);
+                categoryServices.assignAll(data);
               } else {
-                serviceCategories.addAll(data);
+                categoryServices.addAll(data);
               }
-              currentPageServiceCategories = retryResponse.serviceCategory?.meta?.page ?? currentPageServiceCategories;
-              totalPagesServiceCategories = retryResponse.serviceCategory?.meta?.totalPages ?? totalPagesServiceCategories;
+              currentPageCategoryServices = retryResponse.categoryService?.meta?.page ?? currentPageCategoryServices;
+              totalPagesCategoryServices = retryResponse.categoryService?.meta?.totalPages ?? totalPagesCategoryServices;
             } else {
               log("Retry request failed after token refresh");
             }
             return;
           }
-          log("ServiceCategories get failed from controller: ${serviceCategory.status}");
+          log("CategoryServices get failed from controller: ${categoryService.status}");
           return;
         }
       }
     } catch (e) {
-      log("ServiceCategories get catch error from controller: ${e.toString()}");
+      log("CategoryServices get catch error from controller: ${e.toString()}");
     } finally {
-      isLoadingServiceCategories.value = false;
-      isLoadingMoreServiceCategories.value = false;
+      isLoadingCategoryServices.value = false;
+      isLoadingMoreCategoryServices.value = false;
+    }
+  }
+
+  Future<void> refreshCategoryBestSellersServices() async {
+    await _getCategoryBestSellersServices();
+  }
+
+  Future<void> _getCategoryBestSellersServices() async {
+    isLoadingCategoryBestSellersServices.value = true;
+    try {
+      Map<String, dynamic> queryParams = {
+        ApiParams.limit: "100",
+      };
+      var response = await _categoryRepo.getCategoryBestSellersServices(categoryId, queryParams: queryParams);
+      if (response is String) {
+        log("CategoryBestSellersServices get failed from controller response: $response");
+      } else {
+        CategoryBestSellerServiceModel categoryBestSellerService = response as CategoryBestSellerServiceModel;
+        if (categoryBestSellerService.status == 200 || categoryBestSellerService.status == 201) {
+          categoryBestSellersServices.value = categoryBestSellerService.services ?? [];
+        } else {
+          if (categoryBestSellerService.status == 401 ||
+              (categoryBestSellerService.errors != null &&
+                  categoryBestSellerService.errors.any((error) =>
+                      error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
+            log("Token expired detected, refreshing...");
+            final retryResponse = await ApiService().postRefreshTokenAndRetry(
+              () => _categoryRepo.getCategoryBestSellersServices(categoryId, queryParams: queryParams),
+            );
+            if (retryResponse is CategoryBestSellerServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
+              categoryBestSellersServices.value = retryResponse.services ?? [];
+            } else {
+              log("Retry request failed after token refresh");
+            }
+            return;
+          }
+          log("CategoryBestSellersServices get failed from controller: ${categoryBestSellerService.status}");
+          return;
+        }
+      }
+    } catch (e) {
+      log("CategoryBestSellersServices get catch error from controller: ${e.toString()}");
+    } finally {
+      isLoadingCategoryBestSellersServices.value = false;
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:service_la/routes/app_routes.dart';
 import 'package:service_la/data/repository/category_repo.dart';
 import 'package:service_la/services/api_service/api_service.dart';
+import 'package:service_la/services/api_constants/api_params.dart';
 import 'package:service_la/data/model/network/common/category_model.dart';
 import 'package:service_la/data/model/network/all_service_category_response_model.dart';
 
@@ -49,7 +50,7 @@ class CategoryController extends GetxController {
     }
     try {
       Map<String, dynamic> queryParams = {
-        'page': currentPageServiceCategories,
+        ApiParams.page: currentPageServiceCategories,
       };
       var response = await _categoryRepo.getAllServiceCategories(queryParams: queryParams);
       if (response is String) {

@@ -5,14 +5,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/data/model/network/common/service_model.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 
-class ServiceCategoryBestSellingServicesCardItem extends StatelessWidget {
+class ServiceCategoryCategoryServicesCardItem extends StatelessWidget {
   final VoidCallback onTap;
-  final ServiceModel categoryBestSellersService;
+  final ServiceModel categoryService;
 
-  const ServiceCategoryBestSellingServicesCardItem({
+  const ServiceCategoryCategoryServicesCardItem({
     super.key,
     required this.onTap,
-    required this.categoryBestSellersService,
+    required this.categoryService,
   });
 
   @override
@@ -40,7 +40,7 @@ class ServiceCategoryBestSellingServicesCardItem extends StatelessWidget {
               Stack(
                 children: [
                   NetworkImageLoader(
-                    categoryBestSellersService.picture?.virtualPath ?? "",
+                    categoryService.picture?.virtualPath ?? "",
                     height: 84.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -103,7 +103,7 @@ class ServiceCategoryBestSellingServicesCardItem extends StatelessWidget {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            "${categoryBestSellersService.rating?.toStringAsFixed(2) ?? 0}",
+                            "${categoryService.rating?.toStringAsFixed(2) ?? 0}",
                             style: TextStyle(
                               fontSize: 9.sp,
                               color: AppColors.text101828,
@@ -124,7 +124,7 @@ class ServiceCategoryBestSellingServicesCardItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Text(
-                        "\$${categoryBestSellersService.price?.toDouble().toStringAsFixed(2) ?? 0}",
+                        "\$${categoryService.price?.toDouble().toStringAsFixed(2) ?? 0}",
                         style: TextStyle(
                           fontSize: 11.sp,
                           color: AppColors.primary,
@@ -143,7 +143,7 @@ class ServiceCategoryBestSellingServicesCardItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: Text(
-                        "${categoryBestSellersService.serviceCompletedCount ?? 0} Booked",
+                        "${categoryService.serviceCompletedCount ?? 0} Booked",
                         style: TextStyle(
                           fontSize: 8.sp,
                           color: AppColors.white,
@@ -160,7 +160,7 @@ class ServiceCategoryBestSellingServicesCardItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      categoryBestSellersService.name ?? "",
+                      categoryService.name ?? "",
                       style: TextStyle(
                         fontSize: 11.sp,
                         color: AppColors.text101828,
@@ -180,7 +180,7 @@ class ServiceCategoryBestSellingServicesCardItem extends StatelessWidget {
                         SizedBox(width: 4.w),
                         Expanded(
                           child: Text(
-                            categoryBestSellersService.description ?? "",
+                            categoryService.description ?? "",
                             style: TextStyle(
                               fontSize: 9.sp,
                               color: AppColors.text6A7282,

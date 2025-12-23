@@ -3,8 +3,8 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/custom_shimmer_widget.dart';
 
-class ServiceCategoryBestSellingServicesItemShimmer extends StatelessWidget {
-  const ServiceCategoryBestSellingServicesItemShimmer({super.key});
+class ServiceCategoryCategoryServicesItemShimmer extends StatelessWidget {
+  const ServiceCategoryCategoryServicesItemShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {

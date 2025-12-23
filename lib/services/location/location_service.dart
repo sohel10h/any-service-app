@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -163,21 +164,37 @@ class LocationService extends GetxService {
   Future<String?> getAddressFromLatLng(Position pos) async {
     try {
       final places = await placemarkFromCoordinates(pos.latitude, pos.longitude);
-      if (places.isNotEmpty) {
-        final p = places.first;
-        final parts = [
-          if (p.name?.isNotEmpty ?? false) p.name,
-          if (p.locality?.isNotEmpty ?? false) p.locality,
-          if (p.subLocality?.isNotEmpty ?? false) p.subLocality,
-          if (p.administrativeArea?.isNotEmpty ?? false) p.administrativeArea,
-          if (p.country?.isNotEmpty ?? false) p.country,
-        ];
-        return parts.where((s) => s != null && s.isNotEmpty).join(', ');
+      if (places.isEmpty) return null;
+      final p = places.first;
+      bool isPlusCode(String? value) {
+        if (value == null) return false;
+        final regex = RegExp(
+          r'^[23456789CFGHJMPQRVWX]{4}\+[23456789CFGHJMPQRVWX]{2,}$',
+        );
+        return regex.hasMatch(value);
       }
+
+      final List<String> parts = [];
+      void add(String? value) {
+        if (value == null) return;
+        final v = value.trim();
+        if (v.isEmpty) return;
+        if (isPlusCode(v)) return;
+        if (parts.any((e) => e.toLowerCase() == v.toLowerCase())) return;
+        parts.add(v);
+      }
+
+      add(p.street ?? p.name);
+      add(p.subLocality);
+      add(p.locality);
+      add(p.postalCode);
+      final address = parts.join(', ');
+      log("DeviceLocationAddress: $address");
+      return address;
     } catch (e) {
-      // ignore
+      log("Address error: $e");
+      return null;
     }
-    return null;
   }
 
   void disposeService() {

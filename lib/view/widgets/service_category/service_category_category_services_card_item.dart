@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:service_la/view/widgets/common/custom_badge.dart';
 import 'package:service_la/data/model/network/common/service_model.dart';
 import 'package:service_la/view/widgets/common/network_image_loader.dart';
 
@@ -15,6 +15,19 @@ class ServiceCategoryCategoryServicesCardItem extends StatelessWidget {
     required this.categoryService,
   });
 
+  String get priceText {
+    final price = categoryService.price;
+    final start = categoryService.priceStart;
+    final end = categoryService.priceEnd;
+    if (price != null && price != 0) {
+      return '\$${price.toStringAsFixed(2)}';
+    }
+    if (start != null && start != 0 && end != null && end != 0) {
+      return '\$${start.toStringAsFixed(2)} – \$${end.toStringAsFixed(2)}';
+    }
+    return '\$0';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -25,12 +38,12 @@ class ServiceCategoryCategoryServicesCardItem extends StatelessWidget {
           width: 180.w,
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(14.r),
             boxShadow: [
               BoxShadow(
-                color: AppColors.black.withValues(alpha: .2),
-                blurRadius: 6,
-                offset: Offset(0, 2),
+                color: AppColors.black.withValues(alpha: .08),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -40,47 +53,26 @@ class ServiceCategoryCategoryServicesCardItem extends StatelessWidget {
               Stack(
                 children: [
                   NetworkImageLoader(
-                    categoryService.picture?.virtualPath ?? "",
-                    height: 84.h,
+                    (categoryService.pictures?.isEmpty ?? true)
+                        ? categoryService.picture?.virtualPath ?? ""
+                        : categoryService.pictures?.first.virtualPath ?? "",
+                    height: 120.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12.r),
-                      topRight: Radius.circular(12.r),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(14.r),
                     ),
                   ),
                   Positioned(
                     top: 8.h,
                     left: 8.w,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            AppColors.containerFB2C36, // TODO: need this field value from API
-                            AppColors.containerFF6900, // TODO: need this field value from API
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(16.r),
-                      ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svgs/star.svg",
-                            width: 10.w,
-                            height: 10.h,
-                          ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            "Best", // TODO: need this field value from API
-                            style: TextStyle(
-                              fontSize: 9.sp,
-                              color: AppColors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+                    child: CustomBadge(
+                      icon: "assets/svgs/star.svg",
+                      text: "Best",
+                      gradient: const LinearGradient(
+                        colors: [
+                          AppColors.containerFB2C36,
+                          AppColors.containerFF6900,
                         ],
                       ),
                     ),
@@ -88,74 +80,17 @@ class ServiceCategoryCategoryServicesCardItem extends StatelessWidget {
                   Positioned(
                     top: 8.h,
                     right: 8.w,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        color: AppColors.white.withValues(alpha: .95),
-                        borderRadius: BorderRadius.circular(16.r),
-                      ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svgs/rating.svg",
-                            width: 10.w,
-                            height: 10.h,
-                          ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            "${categoryService.rating?.toStringAsFixed(2) ?? 0}",
-                            style: TextStyle(
-                              fontSize: 9.sp,
-                              color: AppColors.text101828,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 8.w,
-                    bottom: 8.h,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        color: AppColors.white.withValues(alpha: .95),
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Text(
-                        "\$${categoryService.price?.toDouble().toStringAsFixed(2) ?? 0}",
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 8.w,
-                    bottom: 8.h,
-                    child: Container(
-                      padding: EdgeInsets.all(8.sp),
-                      decoration: BoxDecoration(
-                        color: AppColors.container00C950,
-                        borderRadius: BorderRadius.circular(16.r),
-                      ),
-                      child: Text(
-                        "${categoryService.serviceCompletedCount ?? 0} Booked",
-                        style: TextStyle(
-                          fontSize: 8.sp,
-                          color: AppColors.white,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+                    child: CustomBadge(
+                      icon: "assets/svgs/rating.svg",
+                      text: categoryService.rating?.toStringAsFixed(1) ?? "0.0",
+                      backgroundColor: AppColors.white,
+                      textColor: AppColors.text101828,
                     ),
                   ),
                 ],
               ),
               Padding(
-                padding: EdgeInsets.all(8.sp),
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -163,34 +98,48 @@ class ServiceCategoryCategoryServicesCardItem extends StatelessWidget {
                       categoryService.name ?? "",
                       style: TextStyle(
                         fontSize: 11.sp,
+                        fontWeight: FontWeight.w700,
                         color: AppColors.text101828,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      categoryService.description ?? "",
+                      style: TextStyle(
+                        fontSize: 9.sp,
+                        color: AppColors.text6A7282,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      priceText,
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: AppColors.primary,
                         fontWeight: FontWeight.w700,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 4.h),
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          "assets/svgs/rating.svg",
-                          width: 10.w,
-                          height: 10.h,
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.container00C950,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Text(
+                        "${categoryService.serviceCompletedCount ?? 0} Booked",
+                        style: TextStyle(
+                          fontSize: 8.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.white,
                         ),
-                        SizedBox(width: 4.w),
-                        Expanded(
-                          child: Text(
-                            categoryService.description ?? "",
-                            style: TextStyle(
-                              fontSize: 9.sp,
-                              color: AppColors.text6A7282,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     SizedBox(height: 4.h),
                     SizedBox(
@@ -198,7 +147,7 @@ class ServiceCategoryCategoryServicesCardItem extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
+                          padding: EdgeInsets.symmetric(vertical: 10.h),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.r),
                           ),
@@ -206,8 +155,8 @@ class ServiceCategoryCategoryServicesCardItem extends StatelessWidget {
                         child: Text(
                           "Book Now",
                           style: TextStyle(
-                            fontSize: 9.sp,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),

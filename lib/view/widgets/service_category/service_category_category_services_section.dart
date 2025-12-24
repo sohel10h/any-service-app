@@ -43,7 +43,7 @@ class ServiceCategoryCategoryServicesSection extends StatelessWidget {
             crossAxisCount: 2,
             crossAxisSpacing: 0.w,
             mainAxisSpacing: 8.h,
-            childAspectRatio: 0.85,
+            childAspectRatio: 0.61,
           );
           if (isLoading) {
             return GridView.builder(
@@ -73,7 +73,7 @@ class ServiceCategoryCategoryServicesSection extends StatelessWidget {
               if (index < categoryServices.length) {
                 final categoryService = categoryServices[index];
                 return ServiceCategoryCategoryServicesCardItem(
-                  onTap: () {},
+                  onTap: () => controller.goToCreateServiceDetailsScreen(categoryService.id ?? ""),
                   categoryService: categoryService,
                 );
               }

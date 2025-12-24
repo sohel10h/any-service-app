@@ -72,8 +72,8 @@ class VendorProfileServiceItem extends StatelessWidget {
                     SizedBox(height: 4.h),
                     Text(
                       service.price == null || service.price == 0
-                          ? "${service.priceStart ?? 0}-${service.priceEnd ?? 0}"
-                          : "${service.price ?? 0}",
+                          ? "\$${service.priceStart ?? 0} - \$${service.priceEnd ?? 0}"
+                          : "\$${service.price ?? 0}",
                       style: TextStyle(
                         fontSize: 10.sp,
                         color: AppColors.primary,

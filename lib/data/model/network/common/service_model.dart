@@ -1,5 +1,5 @@
-import 'package:service_la/data/model/network/common/category_model.dart';
 import 'package:service_la/data/model/network/common/picture_model.dart';
+import 'package:service_la/data/model/network/common/category_model.dart';
 
 class ServiceModel {
   final String? id;
@@ -14,6 +14,7 @@ class ServiceModel {
   final int? serviceCompletedCount;
   final int? totalReview;
   final PictureModel? picture;
+  final List<PictureModel>? pictures;
 
   ServiceModel({
     this.id,
@@ -28,6 +29,7 @@ class ServiceModel {
     this.serviceCompletedCount,
     this.totalReview,
     this.picture,
+    this.pictures,
   });
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) => ServiceModel(
@@ -43,6 +45,7 @@ class ServiceModel {
         serviceCompletedCount: json["service_completed_count"],
         totalReview: json["total_review"],
         picture: json["picture"] == null ? null : PictureModel.fromJson(json["picture"]),
+        pictures: json["pictures"] == null ? null : List<PictureModel>.from(json["pictures"]!.map((x) => PictureModel.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -58,5 +61,6 @@ class ServiceModel {
         "service_completed_count": serviceCompletedCount,
         "total_review": totalReview,
         "picture": picture?.toJson(),
+        "pictures": pictures == null ? [] : List<dynamic>.from(pictures!.map((x) => x.toJson())),
       };
 }

@@ -140,10 +140,7 @@ class ServiceCategoryController extends GetxController {
   Future<void> _getCategoryBestSellersServices() async {
     isLoadingCategoryBestSellersServices.value = true;
     try {
-      Map<String, dynamic> queryParams = {
-        ApiParams.limit: "100",
-      };
-      var response = await _categoryRepo.getCategoryBestSellersServices(categoryId, queryParams: queryParams);
+      var response = await _categoryRepo.getCategoryBestSellersServices(categoryId);
       if (response is String) {
         log("CategoryBestSellersServices get failed from controller response: $response");
       } else {
@@ -157,7 +154,7 @@ class ServiceCategoryController extends GetxController {
                       error.errorMessage.toLowerCase().contains("expired") || error.errorMessage.toLowerCase().contains("jwt")))) {
             log("Token expired detected, refreshing...");
             final retryResponse = await ApiService().postRefreshTokenAndRetry(
-              () => _categoryRepo.getCategoryBestSellersServices(categoryId, queryParams: queryParams),
+              () => _categoryRepo.getCategoryBestSellersServices(categoryId),
             );
             if (retryResponse is CategoryBestSellerServiceModel && (retryResponse.status == 200 || retryResponse.status == 201)) {
               categoryBestSellersServices.value = retryResponse.services ?? [];

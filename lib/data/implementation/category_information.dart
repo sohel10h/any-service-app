@@ -23,12 +23,9 @@ class CategoryInformation extends CategoryApiService {
   }
 
   @override
-  Future getCategoryBestSellersServices(String categoryId, {Map<String, dynamic>? queryParams}) async {
+  Future getCategoryBestSellersServices(String categoryId) async {
     dynamic response = await ApiService().get(
-      ApiConstant.dynamicQueryParams(
-        ApiConstant.getCategoryBestSellersServicesPath.replaceAll("#categoryId#", categoryId),
-        queryParams: queryParams,
-      ),
+      ApiConstant.getCategoryBestSellersServicesPath.replaceAll("#categoryId#", categoryId),
     );
     return response;
   }

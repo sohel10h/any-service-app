@@ -86,9 +86,10 @@ class BestSellingServicesSection extends StatelessWidget {
       () {
         final isLoading = controller.isLoadingBestSellingServices.value;
         final bestSellingServices = controller.bestSellingServiceData;
+        final height = 210.h;
         if (isLoading) {
           return SizedBox(
-            height: 200.h,
+            height: height,
             child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
@@ -101,23 +102,26 @@ class BestSellingServicesSection extends StatelessWidget {
           );
         }
         if (bestSellingServices.isEmpty) {
-          return Padding(
-            padding: EdgeInsets.all(12.sp),
-            child: NoDataFound(
-              message: "No best selling services are found!",
-              textStyle: TextStyle(
-                fontSize: 11.sp,
-                color: AppColors.text6A7282,
-                fontWeight: FontWeight.w400,
+          return SizedBox(
+            height: height,
+            child: Padding(
+              padding: EdgeInsets.all(12.sp),
+              child: NoDataFound(
+                message: "No best selling services are found!",
+                textStyle: TextStyle(
+                  fontSize: 11.sp,
+                  color: AppColors.text6A7282,
+                  fontWeight: FontWeight.w400,
+                ),
+                isRefresh: true,
+                iconSize: 14.sp,
+                onPressed: () => controller.getBestSellingServices(),
               ),
-              isRefresh: true,
-              iconSize: 14.sp,
-              onPressed: () => controller.getBestSellingServices(),
             ),
           );
         }
         return SizedBox(
-          height: 200.h,
+          height: height,
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,

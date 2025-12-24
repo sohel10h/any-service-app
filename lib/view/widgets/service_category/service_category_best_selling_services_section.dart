@@ -28,24 +28,31 @@ class ServiceCategoryBestSellingServicesSection extends StatelessWidget {
   Widget _buildHeader() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            "Best Selling Services",
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: AppColors.text101828,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            "Most requested this week",
-            style: TextStyle(
-              fontSize: 11.sp,
-              color: AppColors.text6A7282,
-              fontWeight: FontWeight.w400,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Best Selling Services",
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: AppColors.text101828,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  "Most requested this week",
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: AppColors.text6A7282,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -58,9 +65,10 @@ class ServiceCategoryBestSellingServicesSection extends StatelessWidget {
       () {
         final isLoading = controller.isLoadingCategoryBestSellersServices.value;
         final categoryBestSellersServices = controller.categoryBestSellersServices;
+        final height = 210.h;
         if (isLoading) {
           return SizedBox(
-            height: 200.h,
+            height: height,
             child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
@@ -74,7 +82,7 @@ class ServiceCategoryBestSellingServicesSection extends StatelessWidget {
         }
         if (categoryBestSellersServices.isEmpty) {
           return SizedBox(
-            height: 200.h,
+            height: height,
             child: Padding(
               padding: EdgeInsets.all(12.sp),
               child: NoDataFound(
@@ -92,7 +100,7 @@ class ServiceCategoryBestSellingServicesSection extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: 200.h,
+          height: height,
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,

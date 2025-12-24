@@ -30,9 +30,9 @@ class CategoryRepo {
     }
   }
 
-  Future<dynamic> getCategoryBestSellersServices(String categoryId, {Map<String, dynamic>? queryParams}) async {
+  Future<dynamic> getCategoryBestSellersServices(String categoryId) async {
     try {
-      dynamic response = await _categoryApiService.getCategoryBestSellersServices(categoryId, queryParams: queryParams);
+      dynamic response = await _categoryApiService.getCategoryBestSellersServices(categoryId);
       log("CategoryBestSellersServices get details from category repo: $response");
       return CategoryBestSellerServiceModel.fromJson(jsonDecode(response.toString()));
     } catch (e) {

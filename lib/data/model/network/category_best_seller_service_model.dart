@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:service_la/data/model/network/common/service_model.dart';
-import 'package:service_la/data/model/network/common/category_model.dart';
 
 CategoryBestSellerServiceModel categoryBestSellerServiceModelFromJson(String str) =>
     CategoryBestSellerServiceModel.fromJson(json.decode(str));
@@ -24,7 +23,7 @@ class CategoryBestSellerServiceModel {
         isSuccess: json["isSuccess"],
         status: json["status"],
         errors: json["errors"],
-        services: json["data"] == null ? [] : List<ServiceModel>.from(json["data"]!.map((x) => CategoryModel.fromJson(x))),
+        services: json["data"] == null ? [] : List<ServiceModel>.from(json["data"]!.map((x) => ServiceModel.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {

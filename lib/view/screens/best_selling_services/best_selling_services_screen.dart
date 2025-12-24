@@ -22,16 +22,17 @@ class BestSellingServicesScreen extends GetWidget<BestSellingServicesController>
         child: Obx(() {
           final isLoading = controller.isLoadingBestSellingServices.value;
           final bestSellingServices = controller.bestSellingServices;
+          final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 0.w,
+            mainAxisSpacing: 8.h,
+            childAspectRatio: 0.85,
+          );
           if (isLoading) {
             return GridView.builder(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
               physics: const AlwaysScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 0.w,
-                mainAxisSpacing: 12.h,
-                childAspectRatio: 0.88,
-              ),
+              gridDelegate: gridDelegate,
               itemCount: 10,
               itemBuilder: (_, __) => const BestSellingServicesItemShimmer(),
             );
@@ -49,12 +50,7 @@ class BestSellingServicesScreen extends GetWidget<BestSellingServicesController>
           return GridView.builder(
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
             physics: const AlwaysScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 0.w,
-              mainAxisSpacing: 12.h,
-              childAspectRatio: 0.88,
-            ),
+            gridDelegate: gridDelegate,
             itemCount: bestSellingServices.length,
             itemBuilder: (context, index) {
               final bestSellingService = bestSellingServices[index];

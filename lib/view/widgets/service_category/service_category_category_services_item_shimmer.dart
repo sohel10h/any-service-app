@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:service_la/common/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:service_la/view/widgets/common/custom_shimmer_widget.dart';
@@ -12,7 +13,7 @@ class ServiceCategoryCategoryServicesItemShimmer extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 4.w),
       child: CustomShimmerWidget(
         child: Container(
-          width: 180.w,
+          width: Get.width / 2,
           decoration: BoxDecoration(
             color: AppColors.white,
             borderRadius: BorderRadius.circular(12.r),

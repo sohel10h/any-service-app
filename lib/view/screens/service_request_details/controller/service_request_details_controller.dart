@@ -379,8 +379,11 @@ class ServiceRequestDetailsController extends GetxController {
             bidData.value?.vendorApproved = approvedBid.bid?.vendorApproved;
           }
           bidData.refresh();
-          final isBothApproved = (bidData.value?.userApproved ?? false) && (bidData.value?.vendorApproved ?? false);
-          if (isBothApproved) {
+          isBidBothApproved.value = serviceDetailsData.value.bids?.any(
+                (bid) => (bid.userApproved ?? false) && (bid.vendorApproved ?? false),
+              ) ??
+              false;
+          if (isBidBothApproved.value) {
             serviceDetailsData.value.status = ServiceRequestStatus.inProgress.typeValue;
           }
           serviceDetailsData.refresh();
@@ -419,6 +422,13 @@ class ServiceRequestDetailsController extends GetxController {
                 bidData.value?.vendorApproved = retryResponse.bid?.vendorApproved;
               }
               bidData.refresh();
+              isBidBothApproved.value = serviceDetailsData.value.bids?.any(
+                    (bid) => (bid.userApproved ?? false) && (bid.vendorApproved ?? false),
+                  ) ??
+                  false;
+              if (isBidBothApproved.value) {
+                serviceDetailsData.value.status = ServiceRequestStatus.inProgress.typeValue;
+              }
               serviceDetailsData.refresh();
               final bid = retryResponse.bid;
               final bidId = bid?.id;

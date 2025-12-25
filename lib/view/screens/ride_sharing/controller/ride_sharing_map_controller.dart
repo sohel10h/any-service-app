@@ -9,6 +9,7 @@ import 'package:service_la/common/utils/app_colors.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_la/common/utils/helper_function.dart';
 import 'package:service_la/services/di/app_di_controller.dart';
+import 'package:service_la/services/location/location_service.dart';
 
 class RideSharingMapController extends GetxController {
   final googleMapController = Rxn<GoogleMapController>();
@@ -54,6 +55,7 @@ class RideSharingMapController extends GetxController {
   String proposedPrice = "";
   final RxInt tabIndex = 0.obs;
   String vehicleIconPath = "";
+  Timer? _debounceTimer;
   final List<Map<String, dynamic>> rideOptions = [
     {
       "avatar": "https://i.pravatar.cc/150?img=12",
@@ -302,15 +304,93 @@ class RideSharingMapController extends GetxController {
     if (encoded != null && encoded.isNotEmpty) {
       final points = decodeEncodedPolyline(encoded);
       _routePoints.assignAll(points);
-      polylines.add(Polyline(polylineId: const PolylineId('route'), color: AppColors.primary, points: _routePoints, width: 6));
+      polylines.add(
+        Polyline(
+          polylineId: const PolylineId('route'),
+          color: AppColors.primary,
+          points: _routePoints,
+          width: 6,
+        ),
+      );
       if (_routePoints.isNotEmpty) {
         vehiclePosition.value = _routePoints.first;
         final marker = await _vehicleMarker(vehiclePosition.value!, vehicleRotation.value);
         markers.removeWhere((m) => m.markerId.value == 'vehicle');
         markers.add(marker);
       }
-      if (startMove) startVehicleAnimation();
+      if (startMove) startVehicleFollowDevice();
     }
+  }
+
+  void startVehicleFollowDevice({Duration debounce = const Duration(seconds: 3)}) {
+    _animationTimer?.cancel();
+    _debounceTimer?.cancel();
+    LocationService.to.currentPosition.listen((pos) async {
+      if (pos == null || to.value == null) return;
+      // Debounce: only run once every X seconds
+      if (_debounceTimer?.isActive ?? false) return;
+      _debounceTimer = Timer(debounce, () {});
+      final currentLatLng = LatLng(pos.latitude, pos.longitude);
+      // Fetch new route from current location to destination
+      final encoded = await fetchEncodedPolyline(currentLatLng, to.value!);
+      if (encoded != null && encoded.isNotEmpty) {
+        final points = decodeEncodedPolyline(encoded);
+        _routePoints.assignAll(points);
+        polylines.removeWhere((p) => p.polylineId.value == 'route');
+        polylines.add(
+          Polyline(
+            polylineId: const PolylineId('route'),
+            color: AppColors.primary,
+            points: _routePoints,
+            width: 6,
+          ),
+        );
+      }
+      // Snap vehicle to nearest point on updated route
+      final snapped = _nearestPointOnRoute(currentLatLng, _routePoints);
+      _moveVehicleSmoothly(snapped);
+    });
+  }
+
+  Future<void> _moveVehicleSmoothly(LatLng target) async {
+    if (vehiclePosition.value == null) {
+      vehiclePosition.value = target;
+      return;
+    }
+    final start = vehiclePosition.value!;
+    final end = target;
+    const steps = 20; // more steps = smoother
+    int currentStep = 0;
+    Timer.periodic(const Duration(milliseconds: 50), (timer) async {
+      currentStep++;
+      final lat = start.latitude + (end.latitude - start.latitude) * (currentStep / steps);
+      final lng = start.longitude + (end.longitude - start.longitude) * (currentStep / steps);
+      final interpolated = LatLng(lat, lng);
+      vehicleRotation.value = bearingBetweenLatLng(start, end);
+      vehiclePosition.value = interpolated;
+      markers.removeWhere((m) => m.markerId.value == 'vehicle');
+      final marker = await _vehicleMarker(interpolated, vehicleRotation.value);
+      markers.add(marker);
+      if (currentStep >= steps) timer.cancel();
+    });
+  }
+
+  LatLng _nearestPointOnRoute(LatLng current, List<LatLng> route) {
+    LatLng nearest = route.first;
+    double minDistance = double.infinity;
+    for (final point in route) {
+      final distance = Geolocator.distanceBetween(
+        current.latitude,
+        current.longitude,
+        point.latitude,
+        point.longitude,
+      );
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearest = point;
+      }
+    }
+    return nearest;
   }
 
   void clearRoute() {

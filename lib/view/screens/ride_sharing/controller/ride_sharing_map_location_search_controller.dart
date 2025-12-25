@@ -12,7 +12,6 @@ import 'package:service_la/services/di/app_di_controller.dart';
 import 'package:service_la/common/utils/storage/storage_helper.dart';
 
 class RideSharingMapLocationSearchController extends GetxController {
-  String googleApiKey = 'AIzaSyDRjM3xxFgdn4_67tNnr_XY91Qw5HXw5AU';
   final Rxn<Position> currentPosition = Rxn<Position>();
   final Rxn<LatLng> from = Rxn<LatLng>();
   final Rxn<LatLng> to = Rxn<LatLng>();
@@ -23,6 +22,14 @@ class RideSharingMapLocationSearchController extends GetxController {
   RxBool isPriceToggleOn = false.obs;
   final FocusNode locationFromFocusNode = FocusNode();
   final FocusNode locationToFocusNode = FocusNode();
+  final RxBool isFromFocused = false.obs;
+  final RxBool isFromTextEmpty = true.obs;
+  final RxBool isToFocused = false.obs;
+  final RxBool isToTextEmpty = true.obs;
+  final RxBool isFromSearchedLocation = false.obs;
+  final RxBool isToSearchedLocation = false.obs;
+  RxMap<String, dynamic> fromSearchedLocation = <String, dynamic>{}.obs;
+  RxMap<String, dynamic> toSearchedLocation = <String, dynamic>{}.obs;
   final FocusNode priceFocusNode = FocusNode();
   final StreamController<List<Map<String, dynamic>>> _fromSuggestionsController = StreamController.broadcast();
   final StreamController<List<Map<String, dynamic>>> _toSuggestionsController = StreamController.broadcast();
@@ -49,17 +56,33 @@ class RideSharingMapLocationSearchController extends GetxController {
   }
 
   void onLocationItemTap(Map<String, dynamic> item) async {
-    await HelperFunction.hideKeyboard();
-    _goToRideSharingMapScreen(
-      toLatitude: item["lat"] ?? 0.0,
-      toLongitude: item["lng"] ?? 0.0,
-      description: item["description"] ?? "",
-      estimatedTime: item["estimatedTime"] ?? "",
-      distanceKm: item["distanceKm"] ?? 0.0,
-    );
+    if (isFromSearchedLocation.value) {
+      fromSearchedLocation.value = item;
+      locationFromController.text = item["description"] ?? "";
+      locationToFocusNode.requestFocus();
+    } else {
+      if (isToSearchedLocation.value) {
+        toSearchedLocation.value = item;
+        locationToController.text = item["description"] ?? "";
+      }
+      await HelperFunction.hideKeyboard();
+      _goToRideSharingMapScreen(
+        fromLatitude: fromSearchedLocation["lat"],
+        fromLongitude: fromSearchedLocation["lng"],
+        fromDescription: fromSearchedLocation["description"],
+        toLatitude: item["lat"] ?? 0.0,
+        toLongitude: item["lng"] ?? 0.0,
+        description: item["description"] ?? "",
+        estimatedTime: item["estimatedTime"] ?? "",
+        distanceKm: item["distanceKm"] ?? 0.0,
+      );
+    }
   }
 
   void _goToRideSharingMapScreen({
+    double? fromLatitude,
+    double? fromLongitude,
+    String? fromDescription,
     required double toLatitude,
     required double toLongitude,
     required String description,
@@ -69,9 +92,9 @@ class RideSharingMapLocationSearchController extends GetxController {
       Get.toNamed(
         AppRoutes.rideSharingMapScreen,
         arguments: {
-          "fromLatitude": currentPosition.value?.latitude ?? 0.0,
-          "fromLongitude": currentPosition.value?.longitude ?? 0.0,
-          "fromDescription": locationFromController.text,
+          "fromLatitude": fromSearchedLocation.isNotEmpty ? fromLatitude ?? 0.0 : currentPosition.value?.latitude ?? 0.0,
+          "fromLongitude": fromSearchedLocation.isNotEmpty ? fromLongitude ?? 0.0 : currentPosition.value?.longitude ?? 0.0,
+          "fromDescription": fromSearchedLocation.isNotEmpty ? fromDescription ?? "" : locationFromController.text,
           "toLatitude": toLatitude,
           "toLongitude": toLongitude,
           "toDescription": description,
@@ -144,13 +167,13 @@ class RideSharingMapLocationSearchController extends GetxController {
   }
 
   Future<List<Map<String, dynamic>>> _fetchPlaceAutocomplete(String input, double? currentLat, double? currentLng) async {
-    if (googleApiKey.isEmpty) return [];
+    if (HelperFunction.gMapsApiKey.isEmpty) return [];
     final country = userCountryCode.value;
     final url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     try {
       final response = await _dio.get(url, queryParameters: {
         'input': input,
-        'key': googleApiKey,
+        'key': HelperFunction.gMapsApiKey,
         'language': 'en',
         'components': 'country:$country',
       });
@@ -164,7 +187,7 @@ class RideSharingMapLocationSearchController extends GetxController {
           final detailsUrl = 'https://maps.googleapis.com/maps/api/place/details/json';
           final detailsResponse = await _dio.get(detailsUrl, queryParameters: {
             'place_id': placeId,
-            'key': googleApiKey,
+            'key': HelperFunction.gMapsApiKey,
             'fields': 'geometry,address_component,formatted_address,name',
           });
           String? locality;
@@ -323,8 +346,23 @@ class RideSharingMapLocationSearchController extends GetxController {
   }
 
   void _addListenerFocusNodes() {
-    locationFromFocusNode.addListener(update);
-    locationToFocusNode.addListener(update);
+    locationFromFocusNode.addListener(() {
+      isFromFocused.value = locationFromFocusNode.hasFocus;
+      isFromSearchedLocation.value = isFromFocused.value;
+    });
+    locationFromController.addListener(() {
+      isFromTextEmpty.value = locationFromController.text.trim().isEmpty;
+    });
+    locationToFocusNode.addListener(() {
+      isToFocused.value = locationToFocusNode.hasFocus;
+      isToSearchedLocation.value = isToFocused.value;
+    });
+    locationToController.addListener(() {
+      isToTextEmpty.value = locationToController.text.trim().isEmpty;
+    });
+    Future.delayed(Duration.zero, () {
+      locationToFocusNode.requestFocus();
+    });
     priceFocusNode.addListener(update);
   }
 

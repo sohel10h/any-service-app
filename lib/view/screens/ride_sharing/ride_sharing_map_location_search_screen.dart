@@ -82,6 +82,8 @@ class RideSharingMapLocationSearchScreen extends GetWidget<RideSharingMapLocatio
               children: [
                 Obx(() {
                   final isLoading = controller.isLoadingCurrentLocation.value;
+                  final isFromFocused = controller.isFromFocused.value;
+                  final isFromTextEmpty = controller.isFromTextEmpty.value;
                   return isLoading
                       ? CustomTextFieldShimmer()
                       : CustomTextField(
@@ -89,17 +91,42 @@ class RideSharingMapLocationSearchScreen extends GetWidget<RideSharingMapLocatio
                           focusNode: controller.locationFromFocusNode,
                           contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
                           hintText: "From",
-                          onChanged: (val) => controller.onQueryChanged(val, isFrom: true),
-                        );
+                          suffixIcon: (isFromFocused && !isFromTextEmpty)
+                              ? IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    controller.locationFromController.clear();
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                          onChanged: (val) {
+                            controller.isFromSearchedLocation.value = isFromFocused;
+                            controller.onQueryChanged(val, isFrom: true);
+                          });
                 }),
                 SizedBox(height: 16.h),
-                CustomTextField(
-                  controller: controller.locationToController,
-                  focusNode: controller.locationToFocusNode,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-                  hintText: "To",
-                  onChanged: (val) => controller.onQueryChanged(val, isFrom: false),
-                ),
+                Obx(() {
+                  final isToFocused = controller.isToFocused.value;
+                  final isToTextEmpty = controller.isToTextEmpty.value;
+                  return CustomTextField(
+                    controller: controller.locationToController,
+                    focusNode: controller.locationToFocusNode,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+                    hintText: "To",
+                    suffixIcon: (isToFocused && !isToTextEmpty)
+                        ? IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              controller.locationToController.clear();
+                            },
+                          )
+                        : const SizedBox.shrink(),
+                    onChanged: (val) {
+                      controller.isToSearchedLocation.value = isToFocused;
+                      controller.onQueryChanged(val, isFrom: false);
+                    },
+                  );
+                }),
               ],
             ),
           ),

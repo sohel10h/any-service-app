@@ -52,6 +52,7 @@ class ServiceRequestDetailsVendorBidItem extends GetWidget<ServiceRequestDetails
                           width: 32.w,
                           height: 32.w,
                           borderRadius: BorderRadius.circular(30.r),
+                          isUserImage: true,
                         ),
                       ),
                       SizedBox(width: 6.w),

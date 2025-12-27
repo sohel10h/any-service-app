@@ -2,6 +2,7 @@ class NotificationModel {
   final String? id;
   final String? title;
   final int? type;
+  final String? typeId;
   final String? createdOnUtc;
   final String? body;
   final String? pictureUrl;
@@ -11,6 +12,7 @@ class NotificationModel {
     this.id,
     this.title,
     this.type,
+    this.typeId,
     this.createdOnUtc,
     this.body,
     this.pictureUrl,
@@ -21,6 +23,7 @@ class NotificationModel {
         id: json["id"],
         title: json["title"],
         type: json["type"],
+        typeId: json["type_id"],
         createdOnUtc: json["created_on_utc"],
         body: json["body"],
         pictureUrl: json["picture_url"],
@@ -31,6 +34,7 @@ class NotificationModel {
         "id": id,
         "title": title,
         "type": type,
+        "type_id": typeId,
         "created_on_utc": createdOnUtc,
         "body": body,
         "picture_url": pictureUrl,

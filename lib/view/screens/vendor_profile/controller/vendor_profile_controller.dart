@@ -99,7 +99,7 @@ class VendorProfileController extends GetxController with GetTickerProviderState
     });
   }
 
-  void goToServiceDetailsScreen(String serviceRequestId) {
+  void goToServiceRequestDetailsScreen(String serviceRequestId) {
     Get.delete<ServiceRequestDetailsController>();
     Get.toNamed(
       AppRoutes.serviceRequestDetailsScreen,

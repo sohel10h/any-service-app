@@ -27,10 +27,33 @@ class NotificationsController extends GetxController {
     super.onInit();
   }
 
-  void goToNotificationsDetailsScreen(NotificationModel notification) async {
+  void onTapNotificationItem(NotificationModel notification) {
+    _checkNotificationReadStatus(notification);
+    _checkNotificationItemAction(notification);
+  }
+
+  void _checkNotificationItemAction(NotificationModel notification) {
+    if (notification.type == NotificationType.serviceRequest.typeValue || notification.type == NotificationType.bid.typeValue) {
+      _goToServiceRequestDetailsScreen(notification.typeId ?? "");
+    } else {
+      _goToNotificationsDetailsScreen(notification);
+    }
+  }
+
+  void _goToServiceRequestDetailsScreen(String serviceRequestId) {
+    Get.toNamed(
+      AppRoutes.serviceRequestDetailsScreen,
+      arguments: {"serviceRequestId": serviceRequestId},
+    );
+  }
+
+  void _checkNotificationReadStatus(NotificationModel notification) async {
     if (!(notification.isRead ?? false)) {
       await sendNotificationStatus(notification.id);
     }
+  }
+
+  void _goToNotificationsDetailsScreen(NotificationModel notification) {
     Get.toNamed(
       AppRoutes.notificationsDetailsScreen,
       arguments: {

@@ -234,7 +234,7 @@ class HomeController extends GetxController {
             backgroundColor: AppColors.green,
           );
           await Future.delayed(Duration(milliseconds: 100));
-          _goToServiceDetailsScreen(serviceRequest.serviceDetailsData?.id ?? "");
+          _goToServiceRequestDetailsScreen(serviceRequest.serviceDetailsData?.id ?? "");
         } else {
           if (serviceRequest.status == 401 ||
               (serviceRequest.errors != null &&
@@ -253,7 +253,7 @@ class HomeController extends GetxController {
                 backgroundColor: AppColors.green,
               );
               await Future.delayed(Duration(milliseconds: 100));
-              _goToServiceDetailsScreen(retryResponse.serviceDetailsData?.id ?? "");
+              _goToServiceRequestDetailsScreen(retryResponse.serviceDetailsData?.id ?? "");
             } else {
               log("Retry request failed after token refresh");
             }
@@ -271,7 +271,7 @@ class HomeController extends GetxController {
     }
   }
 
-  void _goToServiceDetailsScreen(String serviceRequestId) {
+  void _goToServiceRequestDetailsScreen(String serviceRequestId) {
     Get.delete<ServiceRequestDetailsController>();
     Get.toNamed(
       AppRoutes.serviceRequestDetailsScreen,

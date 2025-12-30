@@ -15,6 +15,7 @@ class CategoryModel {
   final bool? showInHomepage;
   final int? totalCompleted;
   final int? serviceCount;
+  final int? totalServiceProviders;
   final PictureModel? picture;
   final List<PictureModel>? pictures;
 
@@ -33,6 +34,7 @@ class CategoryModel {
     this.showInHomepage,
     this.totalCompleted,
     this.serviceCount,
+    this.totalServiceProviders,
     this.picture,
     this.pictures,
   });
@@ -52,6 +54,7 @@ class CategoryModel {
         showInHomepage: json["show_in_homepage"],
         totalCompleted: json["total_completed"],
         serviceCount: json["service_count"],
+        totalServiceProviders: json["total_service_providers"],
         picture: json["picture"] == null ? null : PictureModel.fromJson(json["picture"]),
         pictures: json["pictures"] == null ? [] : List<PictureModel>.from(json["pictures"]!.map((x) => x)),
       );
@@ -71,6 +74,7 @@ class CategoryModel {
         "show_in_homepage": showInHomepage,
         "total_completed": totalCompleted,
         "service_count": serviceCount,
+        "total_service_providers": totalServiceProviders,
         "picture": picture?.toJson(),
         "pictures": pictures == null ? [] : List<dynamic>.from(pictures!.map((x) => x)),
       };

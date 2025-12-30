@@ -81,7 +81,7 @@ class CategoryCardItem extends StatelessWidget {
                       SizedBox(width: 4.w),
                       Expanded(
                         child: Text(
-                          "${serviceCategory.id?.length} Providers", // TODO: need this providers value from API
+                          "${serviceCategory.totalServiceProviders ?? 0} Providers",
                           style: TextStyle(
                             fontSize: 9.sp,
                             color: AppColors.text6A7282,
